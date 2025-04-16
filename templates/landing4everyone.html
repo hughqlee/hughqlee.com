@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="hughqlee 랜딩페이지 : 누구나 만드는 랜딩페이지 강의 결과물 예시">
+    <meta name="keywords" content="hughqlee, 랜딩페이지, 랜딩페이지 강의, 랜딩페이지 예시">
+    <title>누구나 만드는 랜딩 페이지</title>
+</head>
+<body style="text-align: center;">
+    <section style="margin-bottom: 100px;">
+        <div style="margin: 30px auto; max-width: 600px; padding: 20px; border: 1px solid #eee; border-radius: 10px; background-color: #f9f9f9;">
+            <h2 style="color: #333;">🚀 누구나 만드는 랜딩 페이지 강의</h2>
+            
+            <div style="display: flex; margin: 20px 0; justify-content: space-around; flex-wrap: wrap;">
+                <div style="text-align: center; margin: 10px;">
+                    <span style="font-size: 24px; color: #4CAF50;">✅</span>
+                    <p><strong>무료</strong></p>
+                </div>
+                <div style="text-align: center; margin: 10px;">
+                    <span style="font-size: 24px; color: #2196F3;">⏱️</span>
+                    <p><strong>1시간 이내</strong></p>
+                </div>
+                <div style="text-align: center; margin: 10px;">
+                    <span style="font-size: 24px; color: #FF9800;">👶</span>
+                    <p><strong>초보 가능</strong></p>
+                </div>
+            </div>
+            
+            <p style="line-height: 1.6; margin-bottom: 20px;">
+                코딩을 처음 접하는 분들도 쉽게 따라할 수 있는 랜딩 페이지 제작 강의입니다. <br>
+                단 1시간 만에 나만의 멋진 웹페이지를 만들고 전 세계에 공개해보세요!
+            </p>
+            <a href="https://hughqlee.github.io/landing4everyone" target="_blank">
+                <img src="{{ url_for('static', filename='screenshot_landing4everyone.png') }}" style="width: 100%;" />
+            </a>
+            <h3 style="color: #555;">이런 분들에게 추천해요</h3>
+            <ul style="text-align: left; line-height: 1.6;">
+                <li>웹 개발을 시작하고 싶은 초보자</li>
+                <li>자신의 프로젝트나 서비스를 홍보하고 싶은 분</li>
+                <li>짧은 시간에 실용적인 결과물을 만들고 싶은 분</li>
+            </ul>
+            
+            <p style="font-weight: bold; margin-top: 20px; color: #E91E63;">
+                지금 바로 신청하고 나만의 랜딩 페이지를 만들어보세요!
+            </p>
+        </div>
+    </section>
+    <footer style="position: fixed; bottom: 10px; width: 100%;">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeo5u5l0oLKNneQDKfwKq1TO7PIB3HBOYu14RFtoS6FkGPIhQ/viewform?usp=sharing"
+            target="_blank">    
+            <button class="cta-button">지금 바로 신청하기!</button>
+        </a>
+    </footer>
+</body>
+<style>
+    .cta-button {
+        padding: 10px;
+        max-width: 400px;
+        width: 80%;
+        background-color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+    /* ✅ 클릭 효과 (마우스 클릭 시) */
+    .cta-button:active {
+        background-color: gray;
+        transform: scale(0.95);
+    }
+
+    /* 이미지 스타일링 */
+    img {
+        max-width: 400px;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 16px 0;
+    }
+</style>
+<script>
+    const API_URL = ''
+
+    document.querySelector('.cta-button').addEventListener('click', async function() {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+        const data = await response.json();
+        console.log(data);
+    });
+</script>
+</html>

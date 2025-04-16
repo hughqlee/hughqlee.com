@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hughqlee</title>
+    
+    <meta name="naver-site-verification" content="426abcbd0274918d7e281fa9f4be96bc88a1438a" />
+    <!-- 기본 메타 태그 -->
+    <meta name="description" content="AI 개발자 hughqlee입니다. 컴퓨터 비전, 딥러닝 프로젝트 경험과 기술 스택을 소개합니다.">
+    <meta name="keywords" content="AI 개발자, 머신러닝, 딥러닝, 컴퓨터 비전, Python, Torch, PyTorch, AI, 개발자, 포트폴리오, 프로젝트, 경험, 기술 스택">
+    <meta name="author" content="hughqlee">
+
+    <!-- Open Graph 메타 태그 -->
+    <meta property="og:title" content="hughqlee | AI 개발자">
+    <meta property="og:description" content="AI 개발자 hughqlee입니다. 컴퓨터 비전, 딥러닝 프로젝트 경험과 기술 스택을 소개합니다.">
+    <meta property="og:image" content="https://hughqlee.com{{ url_for('static', filename='face.PNG') }}">
+    <meta property="og:url" content="https://hughqlee.com">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="hughqlee Portfolio">
+
+    <!-- Twitter 메타 태그 -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="hughqlee | AI 개발자">
+    <meta name="twitter:description" content="AI 개발자 hughqlee입니다. 컴퓨터 비전, 딥러닝 프로젝트 경험과 기술 스택을 소개합니다.">
+    <meta name="twitter:image" content="https://hughqlee.com{{ url_for('static', filename='face.PNG') }}">
+
+    <!-- 파비콘 -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='face.PNG') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='face.PNG') }}">
+
+    <!-- 구조화된 데이터 -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "hughqlee",
+        "jobTitle": "AI 개발자",
+        "url": "https://hughqlee.com",
+        "sameAs": [
+            "https://github.com/hughqlee",
+            "https://linkedin.com/in/hughqlee"
+        ],
+        "image": "https://hughqlee.com{{ url_for('static', filename='face.PNG') }}",
+        "description": "AI 개발자 hughqlee입니다.",
+        "knowsAbout": [
+            "Computer Vision",
+            "Deep Learning",
+            "Python",
+            "Torch",
+            "OpenCV",
+            "Numpy",
+            "Pandas"
+        ]
+    }
+    </script>
+</head>
+<body style="text-align: center;">
+    <header>
+        <img src="{{ url_for('static', filename='face.PNG') }}" style="margin: 1rem auto; width: 200px; border: 1px black solid; border-radius: 50%;" />
+        <h1 style="margin-top: 0;">hugh q lee</h1>
+        <p>I like to make something.</p>
+        <div style="margin: 10px 0;">
+            <a href="https://linkedin.com/in/hughqlee" style="margin: 0 10px; text-decoration: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#333333">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+            </a>
+            <a href="https://www.threads.net/@hughqlee" style="margin: 0 10px; text-decoration: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#333333">
+                    <path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"/>
+                </svg>
+            </a>
+            <a href="https://hughqlee.tistory.com" style="margin: 0 10px; text-decoration: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#333333">
+                    <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
+                </svg>
+            </a>
+        </div>
+        <hr />
+    </he¸ader>
+    <section>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                </div>
+                <a href="/landing4everyone" class="timeline-content">
+                    <span class="timeline-date">현재</span>
+                    <h3>개인 프로젝트</h3>
+                    <p>누구나 만드는 랜딩 페이지</p>
+                </a>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-content">
+                    <span class="timeline-date">2021년 - 현재</span>
+                    <h3>㈜제핏</h3>
+                    <p class="position">인공지능 개발자</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-content">
+                    <span class="timeline-date">2020</span>
+                    <h3>Programmers KDT</h3>
+                    <p>인공지능 데브코스 Adversarial Example 프로젝트</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+    .timeline {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 1rem 2rem;
+        position: relative;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 32px;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background: #E0E0E0;
+        border-radius: 2px;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin: 3rem 0;
+        padding-left: 3rem;
+    }
+
+    .timeline-marker {
+        position: absolute;
+        left: 0;
+        transform: translateX(-14px);
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .timeline-dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid #000;
+        box-shadow: 0 0 0 4px #fff;
+        transition: all 0.3s ease;
+    }
+
+    .timeline-content {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 3px;
+        border: 1px solid #E0E0E0;
+        position: relative;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        color: inherit;
+    }
+
+    .timeline-content::before {
+        content: '';
+        position: absolute;
+        left: -8px;
+        top: 20px;
+        width: 16px;
+        height: 16px;
+        background: #fff;
+        transform: rotate(45deg);
+        border-left: 1px solid #E0E0E0;
+        border-bottom: 1px solid #E0E0E0;
+    }
+
+    .timeline-date {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        background: #000;
+        color: #fff;
+        border-radius: 3px;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+    .timeline-content h3 {
+        margin: 0.5rem 0;
+        color: #000;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .position {
+        color: #37352F;
+        font-weight: 500;
+        margin: 0.5rem 0;
+    }
+
+    .timeline-content p {
+        margin: 0;
+        color: #37352F;
+    }
+
+    .timeline-item:hover .timeline-dot {
+        transform: scale(1.2);
+        background: #000;
+    }
+
+    .timeline-content:hover {
+        transform: translateX(5px);
+        border-color: #000;
+        text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+        .timeline {
+            padding: 1rem;
+        }
+        
+        .timeline::before {
+            left: 24px;
+        }
+        
+        .timeline-item {
+            padding-left: 2.5rem;
+        }
+        
+        .timeline-marker {
+            transform: translateX(-22px);
+        }
+        
+        .timeline-content {
+            padding: 1rem;
+        }
+    }
+    </style>
+</body>
+</html>
