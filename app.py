@@ -60,7 +60,7 @@ def action():
             return jsonify({"error": "Missing Origin header"}), 400
         
         # 정규식을 사용하여 GitHub Pages URL에서 username 추출
-        match = re.match(r"https?://([a-zA-Z0-9]+)\.github\.io", origin)
+        match = re.match(r"https?://([a-zA-Z0-9\-]+)\.github\.io", origin)
         
         if match:
             # 매칭된 username 반환

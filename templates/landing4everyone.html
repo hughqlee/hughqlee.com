@@ -8,7 +8,7 @@
     <title>누구나 만드는 랜딩 페이지</title>
 </head>
 <body style="text-align: center;">
-    <section style="margin-bottom: 100px;">
+    <section id="landingSection" style="margin-bottom: 100px;">
         <div style="margin: 30px auto; max-width: 600px; padding: 20px; border: 1px solid #eee; border-radius: 10px; background-color: #f9f9f9;">
             <h2 style="color: #333;">🚀 누구나 만드는 랜딩 페이지 강의</h2>
             
@@ -42,16 +42,524 @@
             </ul>
             
             <p style="font-weight: bold; margin-top: 20px; color: #E91E63;">
-                지금 바로 신청하고 나만의 랜딩 페이지를 만들어보세요!
+                지금 바로 수강하고 나만의 랜딩 페이지를 만들어보세요!
             </p>
         </div>
     </section>
-    <footer style="position: fixed; bottom: 10px; width: 100%;">
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeo5u5l0oLKNneQDKfwKq1TO7PIB3HBOYu14RFtoS6FkGPIhQ/viewform?usp=sharing"
-            target="_blank">    
-            <button class="cta-button">지금 바로 신청하기!</button>
-        </a>
-    </footer>
+
+    <!-- 강의 섹션 (처음에는 숨김) -->
+    <section id="courseSection" style="display: none; margin-bottom: 100px;">
+        <div style="margin: 30px auto; max-width: 800px; padding: 20px; border: 1px solid #eee; border-radius: 10px; background-color: #f9f9f9;">
+            <h2 style="margin-bottom: 30px;">📚 누구나 만드는 랜딩 페이지 강의</h2>
+            <div class="curriculum">
+                <div class="lesson" data-lesson="1">
+                    <div class="lesson-header">
+                        <h3>1. 노션 페이스로 프로필 만들기</h3>
+                    </div>
+                    <div class="lesson-content">
+                        <div style="display: flex; justify-content: center; margin: 20px 0;">
+                            <img src="{{ url_for('static', filename='notion_faces.png') }}" style="width: 100%; max-width: 500px;" />
+                        </div>
+                        <ul>
+                            <li>
+                                <a href="https://faces.notion.com/" target="_blank">https://faces.notion.com/</a>로 접속하기
+                            </li>
+                            <li>새로운 얼굴 버튼을 눌러서 새 프로필 이미지 만들기</li>
+                            <li>또는 랜덤 버튼을 눌러서 랜덤 프로필 이미지 만들기</li>
+                            <li>다음 버튼 눌러서 생성한 이미지 다운로드하기</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="lesson" data-lesson="2" style="display: none;">
+                    <div class="lesson-header">
+                        <h3>2. HTML로 홈페이지 만들기</h3>
+                    </div>
+                    <div class="lesson-content">
+                        <div style="display: flex; justify-content: center; margin: 20px 0;">
+                            <img src="{{ url_for('static', filename='html_structure.jpeg') }}" style="width: 100%; max-width: 500px;" />
+                        </div>
+                        <ul>
+                            <li>
+                                <strong>HTML이란?</strong>
+                                <p style="margin: 10px 0; color: #666;">
+                                    HTML은 웹페이지를 만드는 가장 기본적인 언어입니다. 
+                                    마치 집을 지을 때의 설계도와 같아요!
+                                </p>
+                            </li>
+                            <li>
+                                <strong>기본 구조</strong>
+                                <ul>
+                                    <li>
+                                        <code>&lt;!DOCTYPE html&gt;</code>
+                                        <p style="margin: 5px 0; color: #666;">"이 문서는 HTML입니다!"라고 알려주는 문장이에요.</p>
+                                    </li>
+                                    <li>
+                                        <code>&lt;html&gt;</code>
+                                        <p style="margin: 5px 0; color: #666;">웹페이지의 시작과 끝을 나타내는 태그입니다.</p>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>주요 태그들</strong>
+                                <ul>
+                                    <li>
+                                        <code>&lt;h1&gt;제목&lt;/h1&gt;</code>
+                                        <p style="margin: 5px 0; color: #666;">가장 큰 제목을 만들 때 사용합니다.</p>
+                                    </li>
+                                    <li>
+                                        <code>&lt;p&gt;내용&lt;/p&gt;</code>
+                                        <p style="margin: 5px 0; color: #666;">일반적인 글을 쓸 때 사용합니다.</p>
+                                    </li>
+                                    <li>
+                                        <code>&lt;img src="사진.jpg" /&gt;</code>
+                                        <p style="margin: 5px 0; color: #666;">사진을 넣을 때 사용합니다.</p>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>실습 예제</strong>
+                                <div style="position: relative;">
+                                    <button onclick="copyCode()" style="position: absolute; right: 10px; top: 10px; padding: 5px 10px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                        코드 복사하기
+                                    </button>
+                                    <pre><code id="exampleCode">&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;meta name="description" content="hughqlee 랜딩페이지 : 누구나 만드는 랜딩페이지 강의 결과물 예시"&gt;
+    &lt;meta name="keywords" content="hughqlee, 랜딩페이지, 랜딩페이지 강의, 랜딩페이지 예시"&gt;
+    &lt;title&gt;hughqlee 랜딩페이지&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="text-align: center;"&gt;
+    &lt;header&gt;
+        &lt;h1 style="margin-bottom: 0;"&gt;누구나 만드는 랜딩 페이지&lt;/h1&gt;
+        &lt;p&gt;웹페이지에서 나를 팔아보자!&lt;/p&gt;
+        &lt;img src="face.PNG" style="margin: auto; width: 100px; border: 1px black solid; border-radius: 50%;" /&gt;
+        &lt;h3 style="margin: 0;"&gt;hughqlee&lt;/h3&gt;
+    &lt;/header&gt;
+    &lt;section style="margin-bottom: 100px;"&gt;
+        &lt;p&gt;이곳에 자신을 광고하세요.&lt;/p&gt;
+        &lt;p&gt;그리고 성과를 아래 표에서 확인하세요.&lt;/p&gt;
+        &lt;h3&gt;수강생 랭킹&lt;/h3&gt;
+        &lt;table style="margin: auto; max-width: 400px; width: 80%;"&gt; 
+            &lt;tr&gt;
+                &lt;th&gt;순위&lt;/th&gt;
+                &lt;th&gt;이름&lt;/th&gt;
+                &lt;th&gt;득표수&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/section&gt;
+    &lt;footer style="position: fixed; bottom: 10px; width: 100%;"&gt;
+        &lt;button class="cta-button"&gt;hughqlee에게 투표하기&lt;/button&gt;
+    &lt;/footer&gt;
+&lt;/body&gt;
+&lt;style&gt;
+    th {
+        width: 25%;
+    }
+    
+    a {
+        text-decoration: none;
+        background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+        -webkit-background-clip: text;
+        color: transparent;
+    }
+    
+    .cta-button {
+        padding: 10px;
+        max-width: 400px;
+        width: 80%;
+        background-color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+    
+    /* ✅ 클릭 효과 (마우스 클릭 시) */
+    .cta-button:active {
+        background-color: gray;
+        transform: scale(0.95);
+    }
+&lt;/style&gt;
+&lt;/html&gt;</code></pre>
+                                </div>
+                                <p style="margin: 10px 0; color: #666;">
+                                    위 코드를 복사해서 텍스트 에디터에 붙여넣고, 
+                                    파일 이름을 'index.html'로 저장하면 나만의 랜딩 페이지가 만들어집니다!
+                                </p>
+                                <p style="margin: 10px 0; color: #666; font-weight: bold;">
+                                    💡 주의: 코드에서 'hughqlee'라고 표시된 부분을 자신의 GitHub 사용자 이름으로 변경해주세요!
+                                    변경해야 할 부분:
+                                    <ul style="margin: 5px 0; color: #666;">
+                                        <li>meta 태그의 description과 keywords</li>
+                                        <li>title 태그</li>
+                                        <li>header 섹션의 h3 태그</li>
+                                        <li>footer 섹션의 button 태그</li>
+                                    </ul>
+                                </p>
+                                <p style="margin: 10px 0; color: #666; font-weight: bold;">
+                                    💡 파일 저장 방법:
+                                    <ul style="margin: 5px 0; color: #666;">
+                                        <li>텍스트 에디터에서 'index.html'이라는 이름으로 저장하세요.</li>
+                                        <li>앞서 저장한 프로필 사진(face.PNG)과 같은 폴더에 저장해야 사진이 정상적으로 표시됩니다.</li>
+                                        <li>예: 프로필 사진이 'C:\Users\사용자이름\Desktop\landing' 폴더에 있다면, index.html도 같은 폴더에 저장하세요.</li>
+                                    </ul>
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="lesson" data-lesson="3" style="display: none;">
+                    <div class="lesson-header">
+                        <h3>3. CSS로 스타일링하기</h3>
+                    </div>
+                    <div class="lesson-content">
+                    <div style="display: flex; justify-content: center; margin: 20px 0;">
+                        <img src="{{ url_for('static', filename='css_structure.jpeg') }}" style="width: 100%; max-width: 500px;" />
+                    </div>
+                    <ul>
+                        <li>
+                            <strong>CSS란?</strong>
+                            <p style="margin: 10px 0; color: #666;">
+                                CSS는 웹페이지의 디자인을 담당하는 언어입니다. 
+                                마치 집을 꾸미는 인테리어와 같아요!
+                            </p>
+                        </li>
+                        <li>
+                            <strong>기본 문법</strong>
+                            <ul>
+                                <li>
+                                    <code>선택자 { 속성: 값; }</code>
+                                    <p style="margin: 5px 0; color: #666;">어떤 요소에 어떤 스타일을 적용할지 정하는 문법입니다.</p>
+                                </li>
+                                <li>
+                                    <code>.클래스명 { }</code>
+                                    <p style="margin: 5px 0; color: #666;">클래스를 가진 요소들을 선택합니다.</p>
+                                </li>
+                                <li>
+                                    <code>#아이디 { }</code>
+                                    <p style="margin: 5px 0; color: #666;">특정 아이디를 가진 요소를 선택합니다.</p>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>주요 속성들</strong>
+                            <ul>
+                                <li>
+                                    <code>color: 색상;</code>
+                                    <p style="margin: 5px 0; color: #666;">글자 색상을 정합니다.</p>
+                                </li>
+                                <li>
+                                    <code>background-color: 색상;</code>
+                                    <p style="margin: 5px 0; color: #666;">배경 색상을 정합니다.</p>
+                                </li>
+                                <li>
+                                    <code>margin: 여백;</code>
+                                    <p style="margin: 5px 0; color: #666;">바깥쪽 여백을 정합니다.</p>
+                                </li>
+                                <li>
+                                    <code>padding: 여백;</code>
+                                    <p style="margin: 5px 0; color: #666;">안쪽 여백을 정합니다.</p>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>CSS 적용 방법</strong>
+                            <p style="margin: 10px 0; color: #666;">
+                                CSS를 적용하는 방법은 크게 두 가지가 있습니다:
+                            </p>
+                            <ul>
+                                <li>
+                                    <strong>1. 인라인 스타일 (Inline Style)</strong>
+                                    <p style="margin: 5px 0; color: #666;">
+                                        HTML 태그에 직접 style 속성을 사용하는 방법입니다.
+                                        예시:
+                                    </p>
+                                    <code>&lt;h1 style="margin-bottom: 0;"&gt;제목&lt;/h1&gt;</code>
+                                    <p style="margin: 5px 0; color: #666;">
+                                        장점: 간단하고 직관적입니다.<br>
+                                        단점: 같은 스타일을 여러 요소에 적용할 때 비효율적입니다.
+                                    </p>
+                                </li>
+                                <li>
+                                    <strong>2. style 태그 사용</strong>
+                                    <p style="margin: 5px 0; color: #666;">
+                                        HTML 문서의 &lt;head&gt; 또는 &lt;body&gt; 태그 안에 &lt;style&gt; 태그를 사용하는 방법입니다.
+                                        예시:
+                                    </p>
+                                    <code>&lt;style&gt;
+    .cta-button {
+        padding: 10px;
+        background-color: white;
+    }
+&lt;/style&gt;</code>
+                                    <p style="margin: 5px 0; color: #666;">
+                                        장점: 여러 요소에 같은 스타일을 쉽게 적용할 수 있습니다.<br>
+                                        단점: HTML 파일이 길어질 수 있습니다.
+                                    </p>
+                                </li>
+                            </ul>
+                            <p style="margin: 10px 0; color: #666; font-style: italic;">
+                                💡 실습 예제에서는 두 가지 방법을 모두 사용하고 있습니다.
+                                인라인 스타일은 개별 요소의 스타일을, style 태그는 여러 요소에 공통으로 적용되는 스타일을 정의하는 데 사용됩니다.
+                            </p>
+                        </li>
+                        <li>
+                            <strong>실습 예제</strong>
+                            <div style="position: relative;">
+                                <button onclick="copyCode()" style="position: absolute; right: 10px; top: 10px; padding: 5px 10px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    코드 복사하기
+                                </button>
+                                <pre><code id="exampleCode">&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;meta name="description" content="hughqlee 랜딩페이지 : 누구나 만드는 랜딩페이지 강의 결과물 예시"&gt;
+    &lt;meta name="keywords" content="hughqlee, 랜딩페이지, 랜딩페이지 강의, 랜딩페이지 예시"&gt;
+    &lt;title&gt;hughqlee 랜딩페이지&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="text-align: center;"&gt;
+    &lt;header&gt;
+        &lt;h1 style="margin-bottom: 0;"&gt;누구나 만드는 랜딩 페이지&lt;/h1&gt;
+        &lt;p&gt;웹페이지에서 나를 팔아보자!&lt;/p&gt;
+        &lt;img src="face.PNG" style="margin: auto; width: 100px; border: 1px black solid; border-radius: 50%;" /&gt;
+        &lt;h3 style="margin: 0;"&gt;hughqlee&lt;/h3&gt;
+    &lt;/header&gt;
+    &lt;section style="margin-bottom: 100px;"&gt;
+        &lt;p&gt;이곳에 자신을 광고하세요.&lt;/p&gt;
+        &lt;p&gt;그리고 성과를 아래 표에서 확인하세요.&lt;/p&gt;
+        &lt;h3&gt;수강생 랭킹&lt;/h3&gt;
+        &lt;table style="margin: auto; max-width: 400px; width: 80%;"&gt; 
+            &lt;tr&gt;
+                &lt;th&gt;순위&lt;/th&gt;
+                &lt;th&gt;이름&lt;/th&gt;
+                &lt;th&gt;득표수&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/section&gt;
+    &lt;footer style="position: fixed; bottom: 10px; width: 100%;"&gt;
+        &lt;button class="cta-button"&gt;hughqlee에게 투표하기&lt;/button&gt;
+    &lt;/footer&gt;
+&lt;/body&gt;
+&lt;style&gt;
+    th {
+        width: 25%;
+    }
+    
+    a {
+        text-decoration: none;
+        background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+        -webkit-background-clip: text;
+        color: transparent;
+    }
+    
+    .cta-button {
+        padding: 10px;
+        max-width: 400px;
+        width: 80%;
+        background-color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+    
+    /* ✅ 클릭 효과 (마우스 클릭 시) */
+    .cta-button:active {
+        background-color: gray;
+        transform: scale(0.95);
+    }
+&lt;/style&gt;
+&lt;/html&gt;</code></pre>
+                            </div>
+                            <p style="margin: 10px 0; color: #666;">
+                                위 코드를 복사해서 텍스트 에디터에 붙여넣고, 
+                                파일 이름을 'index.html'로 저장하면 나만의 랜딩 페이지가 만들어집니다!
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="lesson" data-lesson="4" style="display: none;">
+                <div class="lesson-header">
+                    <h3>4. JavaScript로 기능 추가하기</h3>
+                </div>
+                <div class="lesson-content">
+                    <div style="display: flex; justify-content: center; margin: 20px 0;">
+                        <img src="{{ url_for('static', filename='script_structure.jpeg') }}" style="width: 100%; max-width: 500px;" />
+                    </div>
+                    <ul>
+                        <li>
+                            <strong>JavaScript란?</strong>
+                            <p style="margin: 10px 0; color: #666;">
+                                JavaScript는 웹페이지에 동적인 기능을 추가하는 프로그래밍 언어입니다.
+                                우리는 HTML 파일의 맨 아래, &lt;/body&gt; 태그 바로 위에 &lt;script&gt; 태그를 추가하여 JavaScript 코드를 작성합니다.
+                            </p>
+                        </li>
+                        <li>
+                            <strong>API 연동하기</strong>
+                            <p style="margin: 10px 0; color: #666;">
+                                서버와 통신하여 데이터를 주고받는 방법입니다.
+                                우리는 투표 기능을 위해 API를 사용합니다.
+                            </p>
+                            <code>const API_URL = 'https://hughqlee.com/api/v1/action'</code>
+                            <p style="margin: 5px 0; color: #666;">
+                                API_URL은 서버의 주소를 저장하는 변수입니다.
+                            </p>
+                        </li>
+                        <li>
+                            <strong>페이지 로드 시 실행하기</strong>
+                            <p style="margin: 10px 0; color: #666;">
+                                웹페이지가 처음 로드될 때 실행되는 코드입니다.
+                            </p>
+                            <code>window.onload = updateTable;</code>
+                            <p style="margin: 5px 0; color: #666;">
+                                페이지가 로드되면 updateTable 함수가 실행되어 순위표를 업데이트합니다.
+                            </p>
+                        </li>
+                        <li>
+                            <strong>버튼 클릭 이벤트 처리하기</strong>
+                            <p style="margin: 10px 0; color: #666;">
+                                투표 버튼을 클릭했을 때 실행되는 코드입니다.
+                            </p>
+                            <code>document.querySelector('.cta-button').addEventListener('click', async function() {
+    const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+    const data = await response.json();
+    console.log(data);
+    updateTable()
+});</code>
+                            <p style="margin: 5px 0; color: #666;">
+                                버튼을 클릭하면 서버에 POST 요청을 보내고, 응답을 받은 후 순위표를 업데이트합니다.
+                            </p>
+                        </li>
+                        <li>
+                            <strong>순위표 업데이트하기</strong>
+                            <p style="margin: 10px 0; color: #666;">
+                                서버에서 데이터를 가져와 순위표를 업데이트하는 함수입니다.
+                            </p>
+                            <code>async function updateTable() {
+    const getResponse = await fetch(API_URL, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    const getData = await getResponse.json();
+    const table = document.querySelector('table');
+    table.innerHTML = `
+      &lt;tr&gt;
+        &lt;th&gt;순위&lt;/th&gt;
+        &lt;th&gt;이름&lt;/th&gt;
+        &lt;th&gt;득표수&lt;/th&gt;
+        &lt;th&gt;링크&lt;/th&gt;
+      &lt;/tr&gt;
+    `;
+    
+    getData.sort((a, b) => b.count - a.count);
+
+    getData.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          &lt;td&gt;${index + 1}&lt;/td&gt;
+          &lt;td&gt;${item.username}&lt;/td&gt;
+          &lt;td&gt;${item.count}&lt;/td&gt;
+          &lt;td&gt;&lt;a href="https://${item.username}.github.io/landing4everyone"&gt;&lt;b&gt;이동&lt;/b&gt;&lt;/a&gt;&lt;/td&gt;
+        `;
+        table.appendChild(row);
+    });
+}</code>
+                            <p style="margin: 5px 0; color: #666;">
+                                서버에서 데이터를 가져와 순위순으로 정렬한 후, 테이블에 표시합니다.
+                            </p>
+                        </li>
+                        <li>
+                            <strong>실습 예제</strong>
+                            <div style="position: relative;">
+                                <button onclick="copyCode()" style="position: absolute; right: 10px; top: 10px; padding: 5px 10px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    코드 복사하기
+                                </button>
+                                <pre><code id="exampleCode">&lt;script&gt;
+    const API_URL = 'https://hughqlee.com/api/v1/action'
+
+    window.onload = updateTable;
+
+    document.querySelector('.cta-button').addEventListener('click', async function() {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+        const data = await response.json();
+        console.log(data);
+        updateTable()
+    });
+
+    async function updateTable() {
+        const getResponse = await fetch(API_URL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const getData = await getResponse.json();
+        const table = document.querySelector('table');
+        table.innerHTML = `
+          &lt;tr&gt;
+            &lt;th&gt;순위&lt;/th&gt;
+            &lt;th&gt;이름&lt;/th&gt;
+            &lt;th&gt;득표수&lt;/th&gt;
+            &lt;th&gt;링크&lt;/th&gt;
+          &lt;/tr&gt;
+        `;
+        
+        getData.sort((a, b) => b.count - a.count);
+
+        getData.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              &lt;td&gt;${index + 1}&lt;/td&gt;
+              &lt;td&gt;${item.username}&lt;/td&gt;
+              &lt;td&gt;${item.count}&lt;/td&gt;
+              &lt;td&gt;&lt;a href="https://${item.username}.github.io/landing4everyone"&gt;&lt;b&gt;이동&lt;/b&gt;&lt;/a&gt;&lt;/td&gt;
+            `;
+            table.appendChild(row);
+        });
+    }
+&lt;/script&gt;</code></pre>
+                            </div>
+                            <p style="margin: 10px 0; color: #666;">
+                                위 코드를 복사해서 HTML 파일의 &lt;/body&gt; 태그 바로 위에 붙여넣으면, 
+                                투표 기능과 실시간 순위표가 동작하는 웹페이지가 완성됩니다!
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pagination">
+            <span class="pagination-dot active" data-page="1"></span>
+            <span class="pagination-dot" data-page="2"></span>
+            <span class="pagination-dot" data-page="3"></span>
+            <span class="pagination-dot" data-page="4"></span>
+        </div>
+    </div>
+</section>
+<footer style="position: fixed; bottom: 10px; width: 100%;">
+    <button class="cta-button">지금 바로 수강하기!</button>
+</footer>
 </body>
 <style>
     .cta-button {
@@ -79,19 +587,236 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         margin: 16px 0;
     }
+
+    /* 모달 스타일 */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 500px;
+        width: 90%;
+    }
+
+    /* 강의 커리큘럼 스타일 개선 */
+    .curriculum {
+        text-align: left;
+        margin-top: 20px;
+    }
+
+    .lesson {
+        margin: 30px 0;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .lesson-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .lesson h3 {
+        color: #2196F3;
+        margin: 0;
+        font-size: 1.2em;
+    }
+
+    .lesson-time {
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .lesson-content {
+        padding: 10px 0;
+    }
+
+    .lesson-content ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .lesson-content li {
+        margin: 8px 0;
+        color: #444;
+        line-height: 1.4;
+    }
+
+    /* 페이지네이션 스타일 */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+        gap: 10px;
+    }
+
+    .pagination-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: #ddd;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .pagination-dot.active {
+        background-color: #2196F3;
+        transform: scale(1.2);
+    }
+
+    .pagination-dot:hover {
+        background-color: #1976D2;
+    }
+
+    /* 코드 블록 스타일 */
+    code {
+        display: block;
+        background-color: #f5f5f5;
+        padding: 10px;
+        border-radius: 4px;
+        margin: 5px 0;
+        font-family: monospace;
+        white-space: pre-wrap;
+        font-size: 14px;
+    }
+
+    pre {
+        margin: 10px 0;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border-radius: 4px;
+        overflow-x: auto;
+    }
+
+    .lesson-content ul ul {
+        margin-left: 20px;
+        margin-top: 5px;
+    }
+
+    .lesson-content li {
+        margin: 15px 0;
+    }
+
+    strong {
+        color: #2196F3;
+        font-size: 1.1em;
+    }
+
+    p {
+        line-height: 1.6;
+    }
 </style>
 <script>
-    const API_URL = ''
+    let currentLesson = 1;
+    const totalLessons = 4;
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const minSwipeDistance = 50;
 
-    document.querySelector('.cta-button').addEventListener('click', async function() {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+    function showLesson(lessonNumber) {
+        // 모든 레슨 숨기기
+        document.querySelectorAll('.lesson').forEach(lesson => {
+            lesson.style.display = 'none';
         });
-        const data = await response.json();
-        console.log(data);
+        
+        // 선택된 레슨 표시
+        document.querySelector(`.lesson[data-lesson="${lessonNumber}"]`).style.display = 'block';
+        
+        // 페이지네이션 업데이트
+        document.querySelectorAll('.pagination-dot').forEach(dot => {
+            dot.classList.remove('active');
+            if (parseInt(dot.dataset.page) === lessonNumber) {
+                dot.classList.add('active');
+            }
+        });
+        
+        currentLesson = lessonNumber;
+    }
+
+    function handleSwipe() {
+        const swipeDistance = touchEndX - touchStartX;
+        
+        if (Math.abs(swipeDistance) < minSwipeDistance) return;
+        
+        if (swipeDistance > 0 && currentLesson > 1) {
+            // 오른쪽으로 스와이프 (이전 페이지)
+            showLesson(currentLesson - 1);
+        } else if (swipeDistance < 0 && currentLesson < totalLessons) {
+            // 왼쪽으로 스와이프 (다음 페이지)
+            showLesson(currentLesson + 1);
+        }
+    }
+
+    // 터치 이벤트 처리
+    document.querySelector('.curriculum').addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
     });
+
+    document.querySelector('.curriculum').addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+
+    // 마우스 이벤트 처리
+    document.querySelector('.curriculum').addEventListener('mousedown', (e) => {
+        touchStartX = e.screenX;
+    });
+
+    document.querySelector('.curriculum').addEventListener('mouseup', (e) => {
+        touchEndX = e.screenX;
+        handleSwipe();
+    });
+
+    document.querySelector('.cta-button').addEventListener('click', function(e) {
+        // 강의 섹션 표시
+        document.getElementById('courseSection').style.display = 'block';
+        document.getElementById('landingSection').style.display = 'none';
+        
+        // CTA 버튼 숨기기
+        this.style.display = 'none';
+        
+        // 첫 번째 레슨 표시
+        showLesson(1);
+        
+        // 강의 섹션으로 부드럽게 스크롤
+        setTimeout(() => {
+            document.getElementById('courseSection').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }, 100);
+    });
+
+    // 페이지네이션 클릭 이벤트
+    document.querySelectorAll('.pagination-dot').forEach(dot => {
+        dot.addEventListener('click', function() {
+            const lessonNumber = parseInt(this.dataset.page);
+            showLesson(lessonNumber);
+        });
+    });
+
+    function copyCode() {
+        const code = document.getElementById('exampleCode').textContent;
+        navigator.clipboard.writeText(code).then(() => {
+            alert('코드가 복사되었습니다!');
+        });
+    }
 </script>
 </html>

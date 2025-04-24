@@ -85,17 +85,6 @@
                 <div class="timeline-marker">
                     <div class="timeline-dot"></div>
                 </div>
-                <a href="/landing4everyone" class="timeline-content">
-                    <span class="timeline-date">현재</span>
-                    <h3>개인 프로젝트</h3>
-                    <p>누구나 만드는 랜딩 페이지</p>
-                </a>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-marker">
-                    <div class="timeline-dot"></div>
-                </div>
                 <div class="timeline-content">
                     <span class="timeline-date">2021년 - 현재</span>
                     <h3>㈜제핏</h3>
@@ -113,6 +102,16 @@
                     <p>인공지능 데브코스 Adversarial Example 프로젝트</p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <section style="margin-top: 3rem;">
+        <h2 style="margin-bottom: 2rem;">Side Projects</h2>
+        <div class="project-grid">
+            <a href="/landing4everyone" class="project-card">
+                <h3>누구나 만드는 랜딩 페이지</h3>
+                <p>현재 진행 중인 개인 프로젝트</p>
+            </a>
         </div>
     </section>
 
@@ -241,11 +240,54 @@
         }
         
         .timeline-marker {
-            transform: translateX(-22px);
+            transform: translateX(-8px);
         }
         
         .timeline-content {
             padding: 1rem;
+        }
+    }
+
+    .project-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .project-card {
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 3px;
+        border: 1px solid #E0E0E0;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s ease;
+    }
+
+    .project-card:hover {
+        transform: translateY(-5px);
+        border-color: #000;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .project-card h3 {
+        margin: 0 0 0.5rem 0;
+        color: #000;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .project-card p {
+        margin: 0;
+        color: #37352F;
+    }
+
+    @media (max-width: 600px) {
+        .project-grid {
+            padding: 0 1rem;
         }
     }
     </style>
