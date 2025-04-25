@@ -338,16 +338,3 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,macos,windows,flask
-
-# Large image files
-static/github_new.jpeg
-static/github_setting_pages.png
-static/github_repo_uploaded.png
-static/github_upload.png
-static/github_repo.png
-static/script_structure.jpeg
-static/css_structure.jpeg
-static/html_structure.jpeg
-static/notion_faces.png
-static/screenshot_landing4everyone.png
-static/face.PNG
