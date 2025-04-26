@@ -78,7 +78,7 @@
             </a>
         </div>
         <hr />
-    </he¸ader>
+    </header>
     <section>
         <div class="timeline">
             <div class="timeline-item">
@@ -110,7 +110,7 @@
         <div class="project-grid">
             <a href="/landing4everyone" class="project-card">
                 <h3>누구나 만드는 랜딩 페이지</h3>
-                <p>현재 진행 중인 개인 프로젝트</p>
+                <p>HTML과 CSS 기초만으로 나만의 랜딩 페이지를 만들고 GitHub에 배포하는 방법을 배워보세요. 코딩 초보자도 쉽게 따라할 수 있습니다!</p>
             </a>
         </div>
     </section>
@@ -259,35 +259,70 @@
 
     .project-card {
         background: #fff;
-        padding: 1.5rem;
-        border-radius: 3px;
+        padding: 2rem;
+        border-radius: 12px;
         border: 1px solid #E0E0E0;
         text-decoration: none;
         color: inherit;
         transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .project-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #FF6B6B, #4ECDC4);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
     }
 
     .project-card:hover {
         transform: translateY(-5px);
-        border-color: #000;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        border-color: transparent;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .project-card:hover::before {
+        transform: scaleX(1);
     }
 
     .project-card h3 {
-        margin: 0 0 0.5rem 0;
-        color: #000;
-        font-size: 1.2rem;
-        font-weight: 600;
+        margin: 0 0 1rem 0;
+        color: #2D3436;
+        font-size: 1.4rem;
+        font-weight: 700;
+        position: relative;
     }
 
     .project-card p {
         margin: 0;
-        color: #37352F;
+        color: #636E72;
+        line-height: 1.6;
+        font-size: 1rem;
     }
 
     @media (max-width: 600px) {
         .project-grid {
             padding: 0 1rem;
+            grid-template-columns: 1fr;
+        }
+        
+        .project-card {
+            padding: 1.5rem;
+        }
+
+        .project-card h3 {
+            font-size: 1.2rem;
+        }
+
+        .project-card p {
+            font-size: 0.9rem;
         }
     }
     </style>
