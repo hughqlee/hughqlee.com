@@ -1,11 +1,65 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-98HYEXD6V2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-98HYEXD6V2');
+    </script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="hughqlee 랜딩페이지 : 누구나 만드는 랜딩페이지 강의 결과물 예시">
-    <meta name="keywords" content="hughqlee, 랜딩페이지, 랜딩페이지 강의, 랜딩페이지 예시">
+    <meta name="description" content="누구나 만드는 랜딩 페이지 강의 - HTML과 CSS 기초만으로 나만의 랜딩 페이지를 만들고 GitHub에 배포하는 방법을 배워보세요. 코딩 초보자도 쉽게 따라할 수 있습니다!">
+    <meta name="keywords" content="랜딩페이지, 웹개발, HTML, CSS, GitHub, 웹사이트 만들기, 코딩 강의, 초보자 코딩">
+    <meta name="author" content="hughqlee">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph 메타 태그 -->
+    <meta property="og:title" content="누구나 만드는 랜딩 페이지 강의 | hughqlee">
+    <meta property="og:description" content="HTML과 CSS 기초만으로 나만의 랜딩 페이지를 만들고 GitHub에 배포하는 방법을 배워보세요. 코딩 초보자도 쉽게 따라할 수 있습니다!">
+    <meta property="og:image" content="https://hughqlee.com{{ url_for('static', filename='face.PNG') }}">
+    <meta property="og:url" content="https://hughqlee.com/landing4everyone">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="hughqlee">
+
+    <!-- Twitter 메타 태그 -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="누구나 만드는 랜딩 페이지 강의 | hughqlee">
+    <meta name="twitter:description" content="HTML과 CSS 기초만으로 나만의 랜딩 페이지를 만들고 GitHub에 배포하는 방법을 배워보세요. 코딩 초보자도 쉽게 따라할 수 있습니다!">
+    <meta name="twitter:image" content="https://hughqlee.com{{ url_for('static', filename='face.PNG') }}">
+
+    <!-- 구조화된 데이터 -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Course",
+        "name": "누구나 만드는 랜딩 페이지 강의",
+        "description": "HTML과 CSS 기초만으로 나만의 랜딩 페이지를 만들고 GitHub에 배포하는 방법을 배워보세요. 코딩 초보자도 쉽게 따라할 수 있습니다!",
+        "provider": {
+            "@type": "Person",
+            "name": "hughqlee",
+            "url": "https://hughqlee.com"
+        },
+        "url": "https://hughqlee.com/landing4everyone",
+        "timeRequired": "PT1H",
+        "educationalLevel": "Beginner",
+        "inLanguage": "ko",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "KRW"
+        }
+    }
+    </script>
+    
     <title>누구나 만드는 랜딩 페이지</title>
+    <!-- 파비콘 -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='face.PNG') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='face.PNG') }}">
 </head>
 <body style="text-align: center;">
     <!-- 강의 섹션 -->
