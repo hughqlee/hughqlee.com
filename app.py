@@ -36,12 +36,20 @@ def robots():
     """검색 엔진 크롤러를 위한 robots.txt 파일을 제공하는 라우트"""
     return render_template('robots.txt'), 200, {'Content-Type': 'text/plain'}
 
+@app.route('/ads.txt', methods=['GET'])
+def ads():
+    return render_template('ads.txt'), 200, {'Content-Type': 'text/plain'}
+
 
 '''
 @app.route('/blog', methods=['GET'])
 def blog():
     return "Here is my blog"
 '''
+
+@app.route('/tool4img', methods=['GET'])
+def tool4img():
+    return render_template('tool4img.html')
 
 @app.route('/landing4everyone', methods=['GET'])
 def landing4everyone():

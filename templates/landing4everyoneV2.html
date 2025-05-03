@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>랜딩 페이지 만들기 강좌</title>
+    <style>
+        /* 기본 스타일 */
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .section {
+            padding: 80px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .section:last-child {
+            border-bottom: none;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+        h1:after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: #3498db;
+            margin: 20px auto;
+        }
+        h2 {
+            font-size: 2em;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        h3 {
+            color: #555;
+            margin: 30px 0 15px;
+            font-size: 1.5em;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .content {
+            font-size: 1.1em;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .preview {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .code-block {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Fira Code', monospace;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        .code-block pre {
+            margin: 0;
+        }
+        .code-block code {
+            font-size: 0.9em;
+        }
+        
+        /* 특징 섹션 스타일 */
+        .features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        .feature {
+            display: inline-block;
+            margin: 15px;
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        /* 준비물 섹션 스타일 */
+        .requirements {
+            margin: 30px 0;
+        }
+        .requirement-items {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .requirement-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: left;
+            background: white;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        .requirement-item:hover {
+            border-color: #3498db;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .requirement-icon {
+            margin-right: 15px;
+        }
+        .requirement-icon img {
+            width: 32px;
+            height: 32px;
+        }
+        .requirement-text {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        .requirement-desc {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        /* 목록 스타일 */
+        ul, ol {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        
+        /* 링크 스타일 */
+        a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #2980b9;
+        }
+        
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .section {
+                padding: 40px 0;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .feature {
+                width: 100%;
+                margin: 10px 0;
+            }
+            .requirement-item {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 0강: 결과물 미리보기 -->
+        <section class="section" id="preview">
+            <h1>0강. 결과물 미리보기</h1>
+            <div class="content">
+                <p>이 강좌를 통해 만들게 될 랜딩 페이지의 최종 결과물을 미리 살펴보세요.</p>
+                <div class="preview">
+                    <div class="features">
+                        <div class="feature">
+                            <span class="feature-icon" style="color: #4CAF50;">✅</span>
+                            <p><strong>무료</strong></p>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon" style="color: #2196F3;">⏱️</span>
+                            <p><strong>1시간 이내</strong></p>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon" style="color: #FF9800;">👶</span>
+                            <p><strong>초보 가능</strong></p>
+                        </div>
+                    </div>
+                    <h3>이런 분들에게 추천해요</h3>
+                    <ul>
+                        <li>웹 개발을 시작하고 싶은 초보자</li>
+                        <li>자신의 프로젝트나 서비스를 홍보하고 싶은 분</li>
+                        <li>짧은 시간에 실용적인 결과물을 만들고 싶은 분</li>
+                    </ul>
+                    <div class="requirements">
+                        <h3>📋 강의 준비물</h3>
+                        <div class="requirement-items">
+                            <a href="https://code.visualstudio.com/" target="_blank">
+                                <div class="requirement-item">
+                                    <span class="requirement-icon">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Visual_Studio_Code_1.35_icon.svg">
+                                    </span>
+                                    <span>VSCode 설치</span>
+                                    <span>(코드 작성 프로그램)</span>
+                                </div>
+                            </a>
+                            <a href="https://github.com/" target="_blank">
+                                <div class="requirement-item">
+                                    <span class="requirement-icon">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg">
+                                    </span>
+                                    <span>GitHub 계정</span>
+                                    <span>(웹사이트 배포용)</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1강: 노션 페이스로 프로필 사진 만들기 -->
+        <section class="section" id="profile-picture">
+            <h1>1강. 노션 페이스로 프로필 사진 만들기</h1>
+            <h2 class="subtitle">이미지는 페이지를 채워</h2>
+            <div class="content">
+                <p>노션 페이스를 활용하여 멋진 프로필 사진을 만드는 방법을 배워보세요.</p>
+                <ol>
+                    <li><a href="https://faces.notion.com/" target="_blank">https://faces.notion.com/</a>로 접속하기</li>
+                    <li>새로운 얼굴 버튼을 눌러서 새 프로필 이미지 만들기</li>
+                    <li>또는 랜덤 버튼을 눌러서 랜덤 프로필 이미지 만들기</li>
+                    <li>다음 버튼 눌러서 생성한 이미지 다운로드하기 (파일 이름은 face.PNG로 저장)</li>
+                    <li>특정 경로에 옮겨 저장하기 (예: C:\Users\사용자이름\Desktop\landing\face.PNG)</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- 2강: GitHub Codespace 설정 -->
+        <section class="section" id="github-setup">
+            <h1>2강. GitHub Codespace 설정하기</h1>
+            <div class="content">
+                <p>제공된 코드를 복사하여 GitHub Codespace에 붙여넣고, 자신의 정보로 수정한 후 GitHub Pages로 배포하는 방법을 배웁니다.</p>
+                <div class="code-block">
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;나만의 랜딩 페이지&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;나만의 랜딩 페이지&lt;/h1&gt;
+        &lt;img src="face.PNG" alt="프로필 이미지"&gt;
+    &lt;/header&gt;
+    &lt;main&gt;
+        &lt;p&gt;이곳에 자신을 소개하는 내용을 작성하세요.&lt;/p&gt;
+    &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+                <p>위 코드를 복사하여 GitHub Codespace에 붙여넣고, 자신의 정보로 수정하세요.</p>
+            </div>
+        </section>
+
+        <!-- 3강: HTML 설명 -->
+        <section class="section" id="html-tutorial">
+            <h1>3강. HTML 설명하기</h1>
+            <div class="content">
+                <p>HTML은 웹페이지를 만드는 가장 기본적인 언어입니다. 마치 집을 지을 때의 설계도와 같아요!</p>
+                <h3>기본 구조</h3>
+                <ul>
+                    <li><code>&lt;!DOCTYPE html&gt;</code> - "이 문서는 HTML입니다!"라고 알려주는 문장</li>
+                    <li><code>&lt;html&gt;</code> - 웹페이지의 시작과 끝을 나타내는 태그</li>
+                    <li><code>&lt;head&gt;</code> - 웹페이지의 정보를 담는 부분</li>
+                    <li><code>&lt;body&gt;</code> - 실제로 보여지는 내용을 담는 부분</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 4강: CSS 설명 -->
+        <section class="section" id="css-tutorial">
+            <h1>4강. CSS 설명하기</h1>
+            <div class="content">
+                <p>CSS는 웹페이지의 디자인을 담당하는 언어입니다. HTML이 집의 구조라면, CSS는 인테리어와 같아요!</p>
+                <h3>기본 사용법</h3>
+                <ul>
+                    <li>선택자 - 스타일을 적용할 요소를 선택</li>
+                    <li>속성 - 어떤 스타일을 적용할지 지정</li>
+                    <li>값 - 속성에 적용할 구체적인 값</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 5강: JavaScript 설명 -->
+        <section class="section" id="js-tutorial">
+            <h1>5강. JavaScript 설명하기</h1>
+            <div class="content">
+                <p>JavaScript는 웹페이지에 동적인 기능을 추가하는 프로그래밍 언어입니다. 웹페이지에 생명을 불어넣는 역할을 합니다!</p>
+                <h3>기본 기능</h3>
+                <ul>
+                    <li>이벤트 처리 - 버튼 클릭, 마우스 이동 등의 이벤트에 반응</li>
+                    <li>DOM 조작 - 웹페이지의 요소를 동적으로 변경</li>
+                    <li>데이터 처리 - 서버와 통신하여 데이터를 주고받음</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</body>
+</html> 

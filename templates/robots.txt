@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Allow: /landing4everyone
+Allow: /tool4img
 
 # Sitemap 위치
 Sitemap: https://hughqlee.com/sitemap.xml
