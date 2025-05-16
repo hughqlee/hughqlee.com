@@ -41,11 +41,9 @@ def ads():
     return render_template('ads.txt'), 200, {'Content-Type': 'text/plain'}
 
 
-'''
-@app.route('/blog', methods=['GET'])
-def blog():
-    return "Here is my blog"
-'''
+@app.route('/squardshuffler', methods=['GET'])
+def squardshuffler():
+    return render_template('squardshuffler.html')
 
 @app.route('/tool4img', methods=['GET'])
 def tool4img():

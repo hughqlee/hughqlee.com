@@ -1,0 +1,22 @@
+{
+    "title": "풋살 스쿼드 셔플러",
+    "description": "풋살 경기를 쉽게 구성하세요!",
+    "shuffleButton": "팀 랜덤 셔플",
+    "teamLabel": "팀",
+    "noPlayers": "아직 선수 없음",
+    "addPlayer": "선수 추가",
+    "editPlayer": "선수 이름 수정",
+    "deletePlayer": "선수 삭제",
+    "confirmDelete": "선수를 삭제하시겠습니까?",
+    "playerAdded": "선수가 {teamName}에 추가되었습니다.",
+    "playerUpdated": "선수의 이름이 수정되었습니다.",
+    "playerDeleted": "선수가 삭제되었습니다.",
+    "playerMoved": "선수가 {teamName}으로 이동되었습니다.",
+    "teamActivated": "팀이 활성화되었습니다.",
+    "teamDeactivated": "팀이 비활성화되었습니다.",
+    "teamsShuffled": "팀이 랜덤하게 재구성되었습니다.",
+    "noActiveTeams": "활성화된 팀이 없습니다.",
+    "noPlayersToShuffle": "셔플할 선수가 없습니다.",
+    "changeLanguage": "언어 변경",
+    "changeTheme": "테마 전환"
+} 

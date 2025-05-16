@@ -1,0 +1,22 @@
+{
+    "title": "เครื่องสลับทีมฟุตซอล",
+    "description": "จัดการการแข่งขันฟุตซอลของคุณได้อย่างง่ายดาย!",
+    "shuffleButton": "สลับทีมแบบสุ่ม",
+    "teamLabel": "ทีม",
+    "noPlayers": "ยังไม่มีผู้เล่น",
+    "addPlayer": "เพิ่มผู้เล่น",
+    "editPlayer": "แก้ไขชื่อผู้เล่น",
+    "deletePlayer": "ลบผู้เล่น",
+    "confirmDelete": "คุณแน่ใจหรือไม่ที่จะลบผู้เล่นคนนี้?",
+    "playerAdded": "เพิ่มผู้เล่นใน{teamName}แล้ว",
+    "playerUpdated": "อัปเดตชื่อผู้เล่นแล้ว",
+    "playerDeleted": "ลบผู้เล่นแล้ว",
+    "playerMoved": "ย้ายผู้เล่นไปยัง{teamName}แล้ว",
+    "teamActivated": "เปิดใช้งานทีมแล้ว",
+    "teamDeactivated": "ปิดใช้งานทีมแล้ว",
+    "teamsShuffled": "สลับทีมใหม่แบบสุ่มแล้ว",
+    "noActiveTeams": "ไม่มีทีมที่เปิดใช้งาน",
+    "noPlayersToShuffle": "ไม่มีผู้เล่นที่จะสลับ",
+    "changeLanguage": "เปลี่ยนภาษา",
+    "changeTheme": "เปลี่ยนธีม"
+} 

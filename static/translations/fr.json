@@ -1,0 +1,22 @@
+{
+    "title": "Mélangeur d'Équipes de Futsal",
+    "description": "Organisez facilement vos matchs de futsal !",
+    "shuffleButton": "Mélanger les Équipes",
+    "teamLabel": "Équipe",
+    "noPlayers": "Pas encore de joueurs",
+    "addPlayer": "Ajouter un Joueur",
+    "editPlayer": "Modifier le Nom du Joueur",
+    "deletePlayer": "Supprimer le Joueur",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce joueur ?",
+    "playerAdded": "Joueur ajouté à {teamName}.",
+    "playerUpdated": "Nom du joueur mis à jour.",
+    "playerDeleted": "Joueur supprimé.",
+    "playerMoved": "Joueur déplacé vers {teamName}.",
+    "teamActivated": "Équipe activée.",
+    "teamDeactivated": "Équipe désactivée.",
+    "teamsShuffled": "Équipes réorganisées aléatoirement.",
+    "noActiveTeams": "Aucune équipe active.",
+    "noPlayersToShuffle": "Pas de joueurs à mélanger.",
+    "changeLanguage": "Changer de Langue",
+    "changeTheme": "Changer de Thème"
+} 

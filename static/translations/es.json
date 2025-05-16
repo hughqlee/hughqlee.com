@@ -1,0 +1,22 @@
+{
+    "title": "Mezclador de Equipos de Fútbol Sala",
+    "description": "¡Organiza tus partidos de fútbol sala fácilmente!",
+    "shuffleButton": "Mezclar Equipos Aleatoriamente",
+    "teamLabel": "Equipo",
+    "noPlayers": "Aún no hay jugadores",
+    "addPlayer": "Añadir Jugador",
+    "editPlayer": "Editar Nombre del Jugador",
+    "deletePlayer": "Eliminar Jugador",
+    "confirmDelete": "¿Está seguro de que desea eliminar este jugador?",
+    "playerAdded": "Jugador añadido a {teamName}.",
+    "playerUpdated": "Nombre del jugador actualizado.",
+    "playerDeleted": "Jugador eliminado.",
+    "playerMoved": "Jugador movido a {teamName}.",
+    "teamActivated": "Equipo activado.",
+    "teamDeactivated": "Equipo desactivado.",
+    "teamsShuffled": "Equipos reorganizados aleatoriamente.",
+    "noActiveTeams": "No hay equipos activos.",
+    "noPlayersToShuffle": "No hay jugadores para mezclar.",
+    "changeLanguage": "Cambiar Idioma",
+    "changeTheme": "Cambiar Tema"
+} 

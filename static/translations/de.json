@@ -1,0 +1,22 @@
+{
+    "title": "Futsal-Team-Mischer",
+    "description": "Organisieren Sie Ihre Futsal-Spiele einfach!",
+    "shuffleButton": "Teams zufällig mischen",
+    "teamLabel": "Team",
+    "noPlayers": "Noch keine Spieler",
+    "addPlayer": "Spieler hinzufügen",
+    "editPlayer": "Spielername bearbeiten",
+    "deletePlayer": "Spieler löschen",
+    "confirmDelete": "Möchten Sie diesen Spieler wirklich löschen?",
+    "playerAdded": "Spieler wurde zu {teamName} hinzugefügt.",
+    "playerUpdated": "Spielername wurde aktualisiert.",
+    "playerDeleted": "Spieler wurde gelöscht.",
+    "playerMoved": "Spieler wurde zu {teamName} verschoben.",
+    "teamActivated": "Team wurde aktiviert.",
+    "teamDeactivated": "Team wurde deaktiviert.",
+    "teamsShuffled": "Teams wurden zufällig neu zusammengestellt.",
+    "noActiveTeams": "Keine aktiven Teams.",
+    "noPlayersToShuffle": "Keine Spieler zum Mischen.",
+    "changeLanguage": "Sprache ändern",
+    "changeTheme": "Design ändern"
+} 

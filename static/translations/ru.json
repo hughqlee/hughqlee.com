@@ -1,0 +1,22 @@
+{
+    "title": "Миксер Команд по Футзалу",
+    "description": "Легко организуйте свои игры по футзалу!",
+    "shuffleButton": "Случайное Распределение Команд",
+    "teamLabel": "Команда",
+    "noPlayers": "Пока нет игроков",
+    "addPlayer": "Добавить Игрока",
+    "editPlayer": "Редактировать Имя Игрока",
+    "deletePlayer": "Удалить Игрока",
+    "confirmDelete": "Вы уверены, что хотите удалить этого игрока?",
+    "playerAdded": "Игрок добавлен в {teamName}.",
+    "playerUpdated": "Имя игрока обновлено.",
+    "playerDeleted": "Игрок удален.",
+    "playerMoved": "Игрок перемещен в {teamName}.",
+    "teamActivated": "Команда активирована.",
+    "teamDeactivated": "Команда деактивирована.",
+    "teamsShuffled": "Команды случайно перераспределены.",
+    "noActiveTeams": "Нет активных команд.",
+    "noPlayersToShuffle": "Нет игроков для распределения.",
+    "changeLanguage": "Изменить Язык",
+    "changeTheme": "Изменить Тему"
+} 

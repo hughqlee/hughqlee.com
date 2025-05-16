@@ -1,0 +1,22 @@
+{
+    "title": "五人制足球队伍分配器",
+    "description": "轻松组织您的五人制足球比赛！",
+    "shuffleButton": "随机分配队伍",
+    "teamLabel": "队伍",
+    "noPlayers": "暂无球员",
+    "addPlayer": "添加球员",
+    "editPlayer": "编辑球员姓名",
+    "deletePlayer": "删除球员",
+    "confirmDelete": "确定要删除这名球员吗？",
+    "playerAdded": "球员已添加到{teamName}。",
+    "playerUpdated": "球员姓名已更新。",
+    "playerDeleted": "球员已被删除。",
+    "playerMoved": "球员已移动到{teamName}。",
+    "teamActivated": "队伍已激活。",
+    "teamDeactivated": "队伍已停用。",
+    "teamsShuffled": "队伍已随机重组。",
+    "noActiveTeams": "没有激活的队伍。",
+    "noPlayersToShuffle": "没有可分配的球员。",
+    "changeLanguage": "更改语言",
+    "changeTheme": "更改主题"
+} 

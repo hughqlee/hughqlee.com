@@ -1,0 +1,22 @@
+{
+    "title": "Trình Xáo Trộn Đội Futsal",
+    "description": "Tổ chức trận đấu futsal của bạn một cách dễ dàng!",
+    "shuffleButton": "Xáo Trộn Đội Ngẫu Nhiên",
+    "teamLabel": "Đội",
+    "noPlayers": "Chưa có cầu thủ",
+    "addPlayer": "Thêm Cầu Thủ",
+    "editPlayer": "Sửa Tên Cầu Thủ",
+    "deletePlayer": "Xóa Cầu Thủ",
+    "confirmDelete": "Bạn có chắc chắn muốn xóa cầu thủ này?",
+    "playerAdded": "Đã thêm cầu thủ vào {teamName}.",
+    "playerUpdated": "Đã cập nhật tên cầu thủ.",
+    "playerDeleted": "Đã xóa cầu thủ.",
+    "playerMoved": "Đã di chuyển cầu thủ đến {teamName}.",
+    "teamActivated": "Đã kích hoạt đội.",
+    "teamDeactivated": "Đã vô hiệu hóa đội.",
+    "teamsShuffled": "Đã xáo trộn đội ngẫu nhiên.",
+    "noActiveTeams": "Không có đội nào được kích hoạt.",
+    "noPlayersToShuffle": "Không có cầu thủ để xáo trộn.",
+    "changeLanguage": "Thay Đổi Ngôn Ngữ",
+    "changeTheme": "Thay Đổi Giao Diện"
+} 

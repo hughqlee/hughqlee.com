@@ -1,0 +1,22 @@
+{
+    "title": "Misturador de Equipes de Futsal",
+    "description": "Organize seus jogos de futsal facilmente!",
+    "shuffleButton": "Misturar Equipes Aleatoriamente",
+    "teamLabel": "Equipe",
+    "noPlayers": "Ainda não há jogadores",
+    "addPlayer": "Adicionar Jogador",
+    "editPlayer": "Editar Nome do Jogador",
+    "deletePlayer": "Excluir Jogador",
+    "confirmDelete": "Tem certeza que deseja excluir este jogador?",
+    "playerAdded": "Jogador adicionado à {teamName}.",
+    "playerUpdated": "Nome do jogador atualizado.",
+    "playerDeleted": "Jogador excluído.",
+    "playerMoved": "Jogador movido para {teamName}.",
+    "teamActivated": "Equipe ativada.",
+    "teamDeactivated": "Equipe desativada.",
+    "teamsShuffled": "Equipes reorganizadas aleatoriamente.",
+    "noActiveTeams": "Não há equipes ativas.",
+    "noPlayersToShuffle": "Não há jogadores para misturar.",
+    "changeLanguage": "Mudar Idioma",
+    "changeTheme": "Mudar Tema"
+} 
