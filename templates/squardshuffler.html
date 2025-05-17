@@ -44,6 +44,7 @@
     <link rel="alternate" href="https://hughqlee.com/squardshuffler?lang=de" hreflang="de" />
     <link rel="alternate" href="https://hughqlee.com/squardshuffler?lang=fr" hreflang="fr" />
     <link rel="alternate" href="https://hughqlee.com/squardshuffler?lang=es" hreflang="es" />
+    <link rel="alternate" href="https://hughqlee.com/squardshuffler?lang=it" hreflang="it" />
     <link rel="alternate" href="https://hughqlee.com/squardshuffler?lang=pt" hreflang="pt" />
     <link rel="alternate" href="https://hughqlee.com/squardshuffler?lang=ru" hreflang="ru" />
     <link rel="alternate" href="https://hughqlee.com/squardshuffler?lang=th" hreflang="th" />
@@ -166,6 +167,7 @@
             display: none;
             z-index: 1000;
             padding: 6px 0;
+            overflow: hidden;
         }
         .language-dropdown.show { display: block; }
         .language-option {
@@ -178,10 +180,13 @@
             text-align: left;
             width: 100%;
             transition: background 0.15s, color 0.15s;
+            box-sizing: border-box;
+            white-space: nowrap;
         }
         .language-option:hover, .language-option.active {
             background: var(--accent);
             color: #fff;
+            width: 100%;
         }
         .language-option:focus {
             outline: 2px solid var(--accent);
@@ -229,20 +234,35 @@
                 padding: 10px 4px 10px 4px;
             }
         }
-        #shuffle-btn {
-            display: flex; align-items: center; justify-content: center;
+        .button-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            margin: 16px auto 0 auto;
+            max-width: 850px;
+            padding: 0 20px;
+        }
+        #shuffle-btn, #kakao-share-btn, #copy-btn {
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
             gap: 8px;
             font-size: 1.1em;
             font-weight: 600;
-            background: var(--accent);
-            color: #fff;
             border-radius: 8px;
             padding: 14px 32px;
-            margin: 32px auto 0 auto;
             box-shadow: 0 2px 8px rgba(0,0,0,0.10);
             border: none;
             cursor: pointer;
             transition: background 0.2s, transform 0.1s;
+            min-width: 140px;
+            flex: 1;
+            max-width: 200px;
+        }
+        #shuffle-btn {
+            background: var(--accent);
+            color: #fff;
         }
         #shuffle-btn:hover {
             background: var(--accent-hover);
@@ -251,6 +271,50 @@
         #shuffle-btn svg {
             width: 22px; height: 22px;
             color: #fff;
+        }
+        #kakao-share-btn {
+            background: #FEE500;
+            color: #000000;
+        }
+        #kakao-share-btn:hover {
+            background: #FDD835;
+            transform: translateY(-2px) scale(1.03);
+        }
+        #kakao-share-btn svg {
+            width: 22px; height: 22px;
+        }
+        #copy-btn {
+            background: var(--card-background);
+            color: var(--text);
+            border: 1.5px solid var(--accent);
+        }
+        #copy-btn:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: translateY(-2px) scale(1.03);
+        }
+        #copy-btn svg {
+            width: 22px; height: 22px;
+            color: var(--accent);
+            transition: color 0.2s;
+        }
+        #copy-btn:hover svg {
+            color: #fff;
+        }
+        @media (max-width: 480px) {
+            .button-container {
+                gap: 8px;
+                padding: 0 10px;
+            }
+            #shuffle-btn, #kakao-share-btn, #copy-btn {
+                padding: 12px 16px;
+                font-size: 1em;
+                min-width: unset;
+            }
+            #shuffle-btn svg, #kakao-share-btn svg, #copy-btn svg {
+                width: 18px;
+                height: 18px;
+            }
         }
         .team-header {
             display: flex; justify-content: space-between; align-items: center;
@@ -448,24 +512,42 @@
             <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
         </svg>
         <div class="language-dropdown" id="language-dropdown">
-            <div class="language-option" data-lang="zh">中文 (중국어)</div>
-            <div class="language-option" data-lang="de">Deutsch (독일어)</div>
-            <div class="language-option" data-lang="en">English (영어)</div>
-            <div class="language-option" data-lang="es">Español (스페인어)</div>
-            <div class="language-option" data-lang="fr">Français (프랑스어)</div>
-            <div class="language-option" data-lang="ja">日本語 (일본어)</div>
+            <div class="language-option" data-lang="en">English</div>
             <div class="language-option" data-lang="ko">한국어</div>
-            <div class="language-option" data-lang="pt">Português (포르투갈어)</div>
-            <div class="language-option" data-lang="ru">Русский (러시아어)</div>
-            <div class="language-option" data-lang="th">ไทย (태국어)</div>
-            <div class="language-option" data-lang="vi">Tiếng Việt (베트남어)</div>
+            <div class="language-option" data-lang="de">Deutsch</div>
+            <div class="language-option" data-lang="es">Español</div>
+            <div class="language-option" data-lang="fr">Français</div>
+            <div class="language-option" data-lang="it">Italiano</div>
+            <div class="language-option" data-lang="pt">Português</div>
+            <div class="language-option" data-lang="ru">Русский</div>
+            <div class="language-option" data-lang="zh">中文</div>
+            <div class="language-option" data-lang="ja">日本語</div>
+            <div class="language-option" data-lang="th">ไทย</div>
+            <div class="language-option" data-lang="vi">Tiếng Việt</div>
         </div>
     </div>
 
     <header>
         <h1>풋살 스쿼드 셔플러</h1>
         <p>풋살 경기를 쉽게 구성하세요!</p>
-        <button id="shuffle-btn">팀 랜덤 셔플</button>
+        <div class="button-container">
+            <button id="shuffle-btn" data-i18n="shuffleButton">랜덤 셔플</button>
+        </div>
+        <div class="button-container">
+            <button id="kakao-share-btn" data-i18n="shareButton">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 3c-4.97 0-9 3.185-9 7.115 0 2.557 1.522 4.82 3.889 6.115-.111.335-.445 1.198-.51 1.39-.165.58-.1.776.385.776.533 0 1.545-.384 2.126-.776.58-.392 1.09-.776 1.09-.776.58 0 1.09.384 1.09.776.58.392 1.593.776 2.126.776.485 0 .55-.196.385-.776-.065-.192-.4-1.055-.51-1.39C19.478 14.935 21 12.672 21 10.115 21 6.185 16.97 3 12 3z"/>
+                </svg>
+                <span data-i18n="shareButton">명단 공유</span>
+            </button>
+            <button id="copy-btn" data-i18n="copyButton">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span data-i18n="copyButton">복사</span>
+            </button>
+        </div>
     </header>
 
     <div class="team-container">
@@ -554,6 +636,7 @@
         <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
     </footer>
 
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
             const LOCAL_STORAGE_KEY = "futsalSquadShufflerData";
@@ -618,7 +701,17 @@
                 document.title = await t('title');
                 document.querySelector('header h1').textContent = await t('title');
                 document.querySelector('header p').textContent = await t('description');
+                
+                // 셔플 버튼 텍스트 업데이트
                 document.getElementById('shuffle-btn').textContent = await t('shuffleButton');
+                
+                // 카카오톡 공유 버튼 텍스트 업데이트
+                const shareButton = document.getElementById('kakao-share-btn');
+                shareButton.querySelector('span').textContent = await t('shareButton');
+                
+                // 복사 버튼 텍스트 업데이트
+                const copyButton = document.getElementById('copy-btn');
+                copyButton.querySelector('span').textContent = await t('copyButton');
                 
                 for (const card of document.querySelectorAll('.team-card')) {
                     const index = Array.from(card.parentNode.children).indexOf(card);
@@ -924,6 +1017,74 @@
                 updateUI();
                 saveToLocalStorage();
                 showToast('팀이 랜덤하게 재구성되었습니다.');
+            });
+
+            // 카카오 SDK 초기화
+            Kakao.init('dc41ec699a1414c2ec4d408bcf7d4308'); // 실제 앱 키로 교체 필요
+
+            // 카카오톡 공유 버튼 이벤트 핸들러
+            document.getElementById('kakao-share-btn').addEventListener('click', () => {
+                // 활성화된 팀만 필터링
+                const activeTeams = teams.filter(team => team.isActive);
+                if (activeTeams.length === 0) {
+                    showToast('활성화된 팀이 없습니다.', true);
+                    return;
+                }
+
+                // 팀 구성원 텍스트 생성
+                let shareText = '';
+                activeTeams.forEach(team => {
+                    shareText += `${team.name}\n`;
+                    if (team.players.length === 0) {
+                        shareText += '선수 없음\n';
+                    } else {
+                        team.players.forEach(player => {
+                            shareText += `${player.name}\n`;
+                        });
+                    }
+                    shareText += '\n';
+                });
+
+                // 카카오톡 공유
+                Kakao.Link.sendDefault({
+                    objectType: 'text',
+                    text: shareText,
+                    link: {
+                        mobileWebUrl: window.location.href,
+                        webUrl: window.location.href,
+                    },
+                });
+            });
+
+            // 텍스트 복사 버튼 이벤트 핸들러
+            document.getElementById('copy-btn').addEventListener('click', () => {
+                // 활성화된 팀만 필터링
+                const activeTeams = teams.filter(team => team.isActive);
+                if (activeTeams.length === 0) {
+                    showToast('활성화된 팀이 없습니다.', true);
+                    return;
+                }
+
+                // 팀 구성원 텍스트 생성
+                let copyText = '';
+                activeTeams.forEach(team => {
+                    copyText += `${team.name}\n`;
+                    if (team.players.length === 0) {
+                        copyText += '선수 없음\n';
+                    } else {
+                        team.players.forEach(player => {
+                            copyText += `${player.name}\n`;
+                        });
+                    }
+                    copyText += '\n';
+                });
+
+                // 클립보드에 복사
+                navigator.clipboard.writeText(copyText).then(() => {
+                    showToast('팀 명단이 클립보드에 복사되었습니다.');
+                }).catch(() => {
+                    showToast('복사에 실패했습니다.', true);
+                });
             });
 
             // 초기화 함수들 호출
