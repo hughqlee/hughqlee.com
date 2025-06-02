@@ -13,31 +13,31 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hughqlee</title>
+    <title>hughqlee.com - No Login, No Install, Just Tools</title>
     
     <meta name="naver-site-verification" content="426abcbd0274918d7e281fa9f4be96bc88a1438a" />
     <!-- 기본 메타 태그 -->
-    <meta name="description" content="AI 개발자 hughqlee입니다. 컴퓨터 비전, 딥러닝 프로젝트 경험과 기술 스택을 소개합니다.">
+    <meta name="description" content="로그인도 설치도 필요 없는 웹 도구 모음. hughqlee.com에서 브라우저만으로 바로 사용해보세요.">
     <meta name="keywords" content="AI 개발자, 머신러닝, 딥러닝, 컴퓨터 비전, Python, Torch, PyTorch, AI, 개발자, 포트폴리오, 프로젝트, 경험, 기술 스택">
     <meta name="author" content="hughqlee">
 
     <!-- Open Graph 메타 태그 -->
-    <meta property="og:title" content="hughqlee | AI 개발자">
-    <meta property="og:description" content="AI 개발자 hughqlee입니다. 컴퓨터 비전, 딥러닝 프로젝트 경험과 기술 스택을 소개합니다.">
-    <meta property="og:image" content="https://hughqlee.com{{ url_for('static', filename='face.PNG') }}">
+    <meta property="og:title" content="hughqlee.com - No Login. No Install. Just Tools.">
+    <meta property="og:description" content="로그인 없이, 설치 없이. 브라우저에서 바로 실행되는 무료 웹앱 도구 모음.">
+    <meta property="og:image" content="https://hughqlee.com/static/og-image.png">
     <meta property="og:url" content="https://hughqlee.com">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="hughqlee Portfolio">
 
     <!-- Twitter 메타 태그 -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="hughqlee | AI 개발자">
-    <meta name="twitter:description" content="AI 개발자 hughqlee입니다. 컴퓨터 비전, 딥러닝 프로젝트 경험과 기술 스택을 소개합니다.">
-    <meta name="twitter:image" content="https://hughqlee.com{{ url_for('static', filename='face.PNG') }}">
+    <meta name="twitter:title" content="hughqlee.com - No Login. No Install. Just Tools.">
+    <meta name="twitter:description" content="브라우저만으로 바로 쓰는 무료 웹 도구 모음. 로그인도, 설치도 필요 없습니다.">
+    <meta name="twitter:image" content="https://hughqlee.com/static/og-image.png">
 
     <!-- 파비콘 -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='face.PNG') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='face.PNG') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/face.PNG">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/face.PNG">
 
     <!-- 구조화된 데이터 -->
     <script type="application/ld+json">
@@ -70,92 +70,41 @@
      crossorigin="anonymous"></script>
 </head>
 <body style="text-align: center;">
-    <header>
-        <img src="{{ url_for('static', filename='face.PNG') }}" style="margin: 1rem auto; width: 200px; border: 1px black solid; border-radius: 50%;" />
-        <h1 style="margin-top: 0;">hugh q lee</h1>
-        <p>I like to make something.</p>
-        <div style="margin: 10px 0;">
-            <a href="https://linkedin.com/in/hughqlee" style="margin: 0 10px; text-decoration: none;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#333333">
-                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                </svg>
-            </a>
-            <a href="https://www.threads.net/@hughqlee" style="margin: 0 10px; text-decoration: none;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#333333">
-                    <path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"/>
-                </svg>
-            </a>
-            <a href="https://hughqlee.tistory.com" style="margin: 0 10px; text-decoration: none;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#333333">
-                    <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
-                </svg>
-            </a>
-        </div>
-        <hr />
+    <header style="text-align:center; margin-top:2rem;">
+      <h1 style="font-size:2.5rem; font-weight:800;">hughqlee.com</h1>
+      <p style="font-size:1.2rem; color:#0984e3; margin-bottom:0.5rem;">No Login, No Install, Just Tools</p>
+      <p style="color:#636e72;">로그인도 설치도 필요 없는 무료 웹 도구 모음.<br>브라우저만 있으면 바로 사용!</p>
     </header>
-    <section>
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="timeline-marker">
-                    <div class="timeline-dot"></div>
-                </div>
-                <div class="timeline-content">
-                    <span class="timeline-date">2021년 - 현재</span>
-                    <h3>㈜제핏</h3>
-                    <p class="position">인공지능 개발자</p>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-marker">
-                    <div class="timeline-dot"></div>
-                </div>
-                <div class="timeline-content">
-                    <span class="timeline-date">2020</span>
-                    <h3>Programmers KDT</h3>
-                    <p>인공지능 데브코스 Adversarial Example 프로젝트</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section style="margin-top: 3rem;">
-        <h2 style="margin-bottom: 2rem;">Side Projects</h2>
-        <div class="project-grid">
-            <a href="/landing4everyone" class="project-card">
-                <div class="project-thumbnail">
-                    <img src="{{ url_for('static', filename='landing4everyone_thumb.png') }}" alt="랜딩 페이지 강의 썸네일">
-                </div>
-                <div class="project-info">
-                    <h3>누구나 만드는 랜딩 페이지</h3>
-                    <p>HTML과 CSS 기초만으로 나만의 랜딩 페이지를 만들고 GitHub에 배포하는 방법을 배워보세요. 코딩 초보자도 쉽게 따라할 수 있습니다!</p>
-                    <div class="project-release">2025 Q1</div>
-                </div>
-            </a>
-            <a href="/tool4img" class="project-card">
-                <div class="project-thumbnail">
-                    <img src="{{ url_for('static', filename='tool4img_thumb.png') }}" alt="이미지 편집 앱 썸네일">
-                </div>
-                <div class="project-info">
-                    <h3>이미지 편집 도구</h3>
-                    <p>맥OS에서 이미지 편집하기 힘들어서, 내가 쓰려고 만든 편집 도구</p>
-                    <div class="project-release">2025 Q2</div>
-                </div>
-            </a>
-            <a href="/squardshuffler" class="project-card">
-                <div class="project-thumbnail">
-                    <img src="{{ url_for('static', filename='squardshuffler_thumb.png') }}" alt="풋살 팀 나누기 썸네일">
-                </div>
-                <div class="project-info">
-                    <h3>풋살 팀 나누기</h3>
-                    <p>풋살 경기를 위한 팀 나누기 도구. 선수들을 랜덤하게 팀에 배정하고, 드래그 앤드롭으로 자유롭게 이동하세요.</p>
-                    <div class="project-release">2025 Q2</div>
-                </div>
-            </a>
-        </div>
-    </section>
-
-    <footer>
+    <main>
+      <div class="tool-grid">
+        <a href="/goaltracker" class="tool-card">
+            <img src="/static/goaltracker/goaltracker_thumb.png" alt="목표 추적기" />
+            <h2>목표 추적기</h2>
+            <p>매일 실천하고 싶은 하나의 목표를 추적하세요</p>
+        </a>
+        <a href="/nine" class="tool-card">
+          <img src="/static/nine/nine_thumb.png" alt="귀여운 병아리" />
+          <h2>귀여운 병아리</h2>
+          <p>OpenAI API와 Three.js로 만든 대화형 병아리</p>
+        </a>
+        <a href="/squardshuffler" class="tool-card">
+          <img src="/static/squardshuffler/squardshuffler_thumb.png" alt="풋살 팀 나누기" />
+          <h2>풋살 팀 나누기</h2>
+          <p>랜덤 팀 배정 및 드래그 앤드롭 지원</p>
+        </a>
+        <a href="/tool4img" class="tool-card">
+          <img src="/static/tool4img/tool4img_thumb.png" alt="이미지 편집기" />
+          <h2>이미지 편집기</h2>
+          <p>설치 없이 바로 쓸 수 있는 간편 이미지 편집기</p>
+        </a>
+        <a href="/landing4everyone" class="tool-card">
+          <img src="/static/landing4everyone/landing4everyone_thumb.png" alt="랜딩 페이지 생성기" />
+          <h2>랜딩 페이지 생성기</h2>
+          <p>HTML/CSS만으로 나만의 랜딩 페이지를 쉽게 제작</p>
+        </a>
+      </div>
+    </main>
+    <footer style="margin-top:3rem;">
         <p>Copyright 2025 hughqlee. All rights reserved.</p>
         <ins class="kakao_ad_area" style="display:none;"
         data-ad-unit = "DAN-Dhow2YdUmv7wOZQR"
@@ -163,241 +112,60 @@
         data-ad-height = "50"></ins>
         <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
     </footer>
-
     <style>
-    .timeline {
-        max-width: 800px;
-        margin: 2rem auto;
-        padding: 1rem 2rem;
-        position: relative;
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 1rem;
     }
-
-    .timeline::before {
-        content: '';
-        position: absolute;
-        left: 32px;
-        top: 0;
-        height: 100%;
-        width: 3px;
-        background: #E0E0E0;
-        border-radius: 2px;
+    .tool-card {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      text-align: center;
+      padding: 2rem 1rem 1.5rem 1rem;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-
-    .timeline-item {
-        position: relative;
-        margin: 3rem 0;
-        padding-left: 3rem;
+    .tool-card:hover {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.10);
     }
-
-    .timeline-marker {
-        position: absolute;
-        left: 0;
-        transform: translateX(-14px);
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .tool-card img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      margin-bottom: 1rem;
     }
-
-    .timeline-dot {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: #fff;
-        border: 2px solid #000;
-        box-shadow: 0 0 0 4px #fff;
-        transition: all 0.3s ease;
+    .tool-card h2 {
+      font-size: 1.2rem;
+      margin: 0.5rem 0 0.3rem 0;
     }
-
-    .timeline-content {
-        background: #fff;
-        padding: 1.5rem;
-        border-radius: 3px;
-        border: 1px solid #E0E0E0;
-        position: relative;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: block;
-        color: inherit;
+    .tool-card p {
+      color: #636e72;
+      font-size: 0.95rem;
     }
-
-    .timeline-content::before {
-        content: '';
-        position: absolute;
-        left: -8px;
-        top: 20px;
-        width: 16px;
-        height: 16px;
-        background: #fff;
-        transform: rotate(45deg);
-        border-left: 1px solid #E0E0E0;
-        border-bottom: 1px solid #E0E0E0;
+    @media (max-width: 900px) {
+      .tool-grid {
+        grid-template-columns: 1fr 1fr;
+        padding: 0 0.5rem;
+      }
     }
-
-    .timeline-date {
-        display: inline-block;
-        padding: 0.3rem 0.8rem;
-        background: #000;
-        color: #fff;
-        border-radius: 3px;
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-    }
-
-    .timeline-content h3 {
-        margin: 0.5rem 0;
-        color: #000;
-        font-size: 1.2rem;
-        font-weight: 600;
-    }
-
-    .position {
-        color: #37352F;
-        font-weight: 500;
-        margin: 0.5rem 0;
-    }
-
-    .timeline-content p {
-        margin: 0;
-        color: #37352F;
-    }
-
-    .timeline-item:hover .timeline-dot {
-        transform: scale(1.2);
-        background: #000;
-    }
-
-    .timeline-content:hover {
-        transform: translateX(5px);
-        border-color: #000;
-        text-decoration: none;
-    }
-
     @media (max-width: 600px) {
-        .timeline {
-            padding: 1rem;
-        }
-        
-        .timeline::before {
-            left: 24px;
-        }
-        
-        .timeline-item {
-            padding-left: 2.5rem;
-        }
-        
-        .timeline-marker {
-            transform: translateX(-8px);
-        }
-        
-        .timeline-content {
-            padding: 1rem;
-        }
+      .tool-grid {
+        grid-template-columns: 1fr;
+        padding: 0 0.5rem;
+      }
     }
-
-    .project-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 0 2rem;
-    }
-
-    .project-card {
-        background: #fff;
-        border-radius: 12px;
-        border: 1px solid #E0E0E0;
-        text-decoration: none;
-        color: inherit;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .project-thumbnail {
-        width: 100%;
-        height: 200px;
-        overflow: hidden;
-        background-color: #f5f5f5;
-    }
-
-    .project-thumbnail img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        transition: transform 0.3s ease;
-    }
-
-    .project-info {
-        padding: 1.5rem;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .project-info h3 {
-        margin: 0 0 1rem 0;
-        color: #2D3436;
-        font-size: 1.4rem;
-        font-weight: 700;
-    }
-
-    .project-info p {
-        margin: 0 0 1rem 0;
-        color: #636E72;
-        line-height: 1.6;
-        font-size: 1rem;
-        flex-grow: 1;
-    }
-
-    .project-release {
-        color: #0984e3;
-        font-size: 0.9rem;
-        font-weight: 500;
-        padding: 0.5rem 0;
-        border-top: 1px solid #E0E0E0;
-    }
-
-    .project-card:hover {
-        transform: translateY(-5px);
-        border-color: transparent;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    }
-
-    .project-card:hover .project-thumbnail img {
-        transform: scale(1.05);
-    }
-
-    @media (max-width: 768px) {
-        .project-grid {
-            grid-template-columns: 1fr;
-            padding: 0 1rem;
-        }
-        
-        .project-card {
-            margin-bottom: 1rem;
-        }
-
-        .project-thumbnail {
-            height: 180px;
-        }
-
-        .project-info {
-            padding: 1.2rem;
-        }
-
-        .project-info h3 {
-            font-size: 1.2rem;
-        }
-
-        .project-info p {
-            font-size: 0.9rem;
-        }
+    .tool-card {
+      margin-bottom: 1rem;
     }
     </style>
 </body>

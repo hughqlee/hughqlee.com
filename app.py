@@ -1,9 +1,13 @@
 import re
+import os
 
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, Response
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from urllib.parse import urlparse
+
+from openai import OpenAI
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -52,6 +56,36 @@ def tool4img():
 @app.route('/landing4everyone', methods=['GET'])
 def landing4everyone():
     return render_template('landing4everyone.html')
+
+@app.route('/nine', methods=['GET'])
+def nine():
+    return render_template('nine.html')
+
+@app.route('/goaltracker', methods=['GET'])
+def goaltracker():
+    return render_template('goaltracker.html')
+
+# API
+
+@app.route('/api/tts', methods=['POST'])
+def tts():    
+    data = request.json
+    text = data.get('text')
+    
+    response = client.audio.speech.create(
+        model="gpt-4o-mini-tts",
+        voice="sage",
+        input=text,
+        instructions="4세 아이의 인형 친구가 되어줘. 귀여운 말투로 한국어를 유창하게 구사해줘."
+    )
+    
+    return Response(
+        response.content,
+        mimetype='audio/wav',
+        headers={
+            'Content-Disposition': 'attachment; filename=speech.wav'
+        }
+    )
 
 @app.route('/api/v1/action', methods=['GET', 'POST'])
 def action():
