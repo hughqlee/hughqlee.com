@@ -110,6 +110,24 @@
             padding: 20px;
             border-radius: 8px;
             text-align: center;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: #333;
         }
 
         input[type="text"] {
@@ -171,6 +189,7 @@
 
     <div id="resultModal" class="modal">
         <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
             <h2 id="resultTitle">게임 클리어!</h2>
             <div id="successResult" style="display: block;">
                 <p>소요 시간: <span id="timeResult">0</span>초</p>
@@ -766,29 +785,54 @@
         }
 
         // SNS 공유 함수들 (성공/실패 구분 메시지)
-        function getShareMessage() {
+        function getShareMessage(platform = 'twitter') {
             const nickname = document.getElementById('nickname').value || '익명';
             const time = clearTime.toFixed(2);
             
-            if (gameSuccess) {
-                return `🎮 ${nickname}님이 벽돌깨기를 ${time}초 만에 클리어했습니다!\n\n🕹️ 게임 플레이: hughqlee.com/brickbreaker\n⭐ 당신도 도전해보세요!`;
+            if (platform === 'threads') {
+                // Threads는 이모지 없는 깔끔한 버전
+                if (gameSuccess) {
+                    return `${nickname}님이 벽돌깨기를 ${time}초 만에 클리어했습니다!\n\n게임 플레이: hughqlee.com/brickbreaker\n당신도 도전해보세요!`;
+                } else {
+                    const progress = getProgressRate();
+                    const destroyed = getDestroyedBricksCount();
+                    return `${nickname}님이 벽돌깨기에 도전했습니다!\n플레이 시간: ${time}초\n벽돌 파괴: ${destroyed}개 (${progress}% 완료)\n\n게임 플레이: hughqlee.com/brickbreaker\n당신도 도전해보세요!`;
+                }
             } else {
-                const progress = getProgressRate();
-                const destroyed = getDestroyedBricksCount();
-                return `🎮 ${nickname}님이 벽돌깨기에 도전했습니다!\n⏱️ 플레이 시간: ${time}초\n🧱 벽돌 파괴: ${destroyed}개 (${progress}% 남음)\n\n🕹️ 게임 플레이: hughqlee.com/brickbreaker\n⭐ 당신도 도전해보세요!`;
+                // Twitter는 이모지 버전
+                if (gameSuccess) {
+                    return `🎮 ${nickname}님이 벽돌깨기를 ${time}초 만에 클리어했습니다!\n\n🕹️ 게임 플레이: hughqlee.com/brickbreaker\n⭐ 당신도 도전해보세요!`;
+                } else {
+                    const progress = getProgressRate();
+                    const destroyed = getDestroyedBricksCount();
+                    return `🎮 ${nickname}님이 벽돌깨기에 도전했습니다!\n⏱️ 플레이 시간: ${time}초\n🧱 벽돌 파괴: ${destroyed}개 (${progress}% 남음)\n\n🕹️ 게임 플레이: hughqlee.com/brickbreaker\n⭐ 당신도 도전해보세요!`;
+                }
             }
         }
 
+        // 이모지 안전 인코딩 함수
+        function safeEncodeURIComponent(str) {
+            return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+                return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+            });
+        }
+
         function shareThreads() {
-            const message = getShareMessage();
+            const message = getShareMessage('threads'); // 이모지 없는 버전
             const url = `https://threads.net/intent/post?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank', 'width=600,height=400');
         }
 
         function shareTwitter() {
-            const message = getShareMessage();
-            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
+            const message = getShareMessage('twitter'); // 이모지 있는 버전
+            const url = `https://twitter.com/intent/tweet?text=${safeEncodeURIComponent(message)}`;
             window.open(url, '_blank', 'width=600,height=400');
+        }
+
+        // 모달 닫기 함수
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+            document.getElementById('startBtn').disabled = false;
         }
     </script>
 </body>
