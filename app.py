@@ -7,6 +7,10 @@ from flask_sqlalchemy import SQLAlchemy
 from urllib.parse import urlparse
 
 from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app = Flask(__name__)
