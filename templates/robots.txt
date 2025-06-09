@@ -4,6 +4,7 @@ Allow: /landing4everyone
 Allow: /tool4img
 Allow: /squardshuffler
 Allow: /goaltracker
+Allow: /brickbreaker
 
 # Sitemap 위치
 Sitemap: https://hughqlee.com/sitemap.xml

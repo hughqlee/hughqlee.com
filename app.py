@@ -44,6 +44,9 @@ def robots():
 def ads():
     return render_template('ads.txt'), 200, {'Content-Type': 'text/plain'}
 
+@app.route('/brickbreaker', methods=['GET'])
+def brickbreaker():
+    return render_template('brickbreaker.html')
 
 @app.route('/squardshuffler', methods=['GET'])
 def squardshuffler():
