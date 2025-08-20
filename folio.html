@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>folio - 솔로프리너 웹사이트 제작</title>
+    <meta name="description" content="솔로프리너와 프리랜서를 위한 웹사이트를 제작해드립니다.">
+    <meta name="keywords" content="솔로프리너, 프리랜서, 웹사이트 제작, 1인 사업자">
+    <meta name="author" content="Hugh Q Lee">
+    <meta property="og:title" content="folio - 솔로프리너 웹사이트 제작">
+    <meta property="og:description" content="솔로프리너와 프리랜서를 위한 웹사이트를 제작해드립니다.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hughqlee.com/folio.html">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://hughqlee.com/folio.html">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* 공통 변수 및 재사용 클래스 */
+        :root {
+            --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
+            --gradient-card: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
+            --gradient-special: linear-gradient(135deg, #1a1f2e 0%, #16213e 100%);
+            --transition-smooth: all 0.3s ease;
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #121212 100%);
+            background-attachment: fixed;
+            color: #ffffff;
+            text-align: center;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4, #10b981);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+        .subtitle {
+            font-size: 1.2em;
+            color: #b0b0b0;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #333, transparent);
+            border: none;
+            margin: 50px 0;
+            border-radius: 1px;
+        }
+
+        
+        /* 카드 그리드 스타일 */
+        .cards-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            padding: 0 20px;
+        }
+        
+        .portfolio-card {
+            background: var(--gradient-card);
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 0;
+            text-align: left;
+            transition: var(--transition-smooth);
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow-card);
+        }
+        
+        .portfolio-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: #444;
+        }
+        
+        .portfolio-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #06b6d4, #10b981);
+            opacity: 0.8;
+        }
+        
+        .card-thumbnail {
+            width: 100%;
+            aspect-ratio: 2 / 1;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .card-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+            display: block;
+        }
+        
+        .card-thumbnail:hover img {
+            transform: scale(1.05);
+        }
+        
+        .thumbnail-placeholder {
+            width: 80px;
+            height: 80px;
+            background: rgba(79, 70, 229, 0.2);
+            border: 2px solid #4f46e5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: #4f46e5;
+        }
+        
+        .card-content {
+            padding: 24px;
+        }
+        
+        .card-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .card-url {
+            font-size: 1em;
+            color: #06b6d4;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-decoration: none;
+            display: inline-block;
+            transition: var(--transition-smooth);
+        }
+        
+        .card-url:hover {
+            color: #10b981;
+            transform: translateX(4px);
+        }
+        
+        .card-description {
+            line-height: 1.6;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+        
+
+        
+        .cta-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 8px 20px;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            display: inline-block;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(10px);
+        }
+        
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 특별한 3번째 카드 스타일 */
+        .special-card {
+            background: var(--gradient-special);
+            border: 2px solid #4f46e5;
+            box-shadow: 0 8px 32px rgba(79, 70, 229, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .special-card::before {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899);
+            height: 4px;
+        }
+        
+        .special-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(79, 70, 229, 0.05) 0%, rgba(124, 58, 237, 0.05) 50%, rgba(236, 72, 153, 0.05) 100%);
+            pointer-events: none;
+        }
+        
+        .special-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            border-color: #7c3aed;
+            box-shadow: 0 20px 60px rgba(79, 70, 229, 0.3);
+        }
+        
+        .special-thumbnail {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+        
+        .special-thumbnail .thumbnail-placeholder {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            font-size: 2.5em;
+        }
+        
+        .special-title {
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.6em;
+        }
+        
+        .special-url {
+            color: #ec4899 !important;
+            font-weight: 700;
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 16px;
+        }
+        
+        .special-cta {
+            background: var(--gradient-primary);
+            box-shadow: 0 8px 32px rgba(79, 70, 229, 0.3);
+            position: relative;
+        }
+        
+        .special-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.1) 100%);
+            border-radius: 12px;
+            pointer-events: none;
+        }
+        
+        .special-button {
+            background: rgba(255, 255, 255, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            font-weight: 700;
+            font-size: 1em;
+            padding: 10px 24px;
+            backdrop-filter: blur(15px);
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 12px;
+        }
+        
+        .special-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 헤더용 CTA 버튼 스타일 */
+        .header-cta {
+            display: inline-block;
+            background: var(--gradient-primary);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 12px 24px;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+            transition: var(--transition-smooth);
+            box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0 40px;
+            max-width: 280px;
+            text-align: center;
+        }
+        
+        .header-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .header-cta:hover::before {
+            left: 100%;
+        }
+        
+        .header-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(79, 70, 229, 0.4);
+            background: linear-gradient(135deg, #5b52f0 0%, #0891b2 100%);
+        }
+        
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
+            h1 {
+                font-size: 2.2em;
+            }
+            .header-cta {
+                max-width: 240px;
+                padding: 10px 20px;
+                font-size: 0.95em;
+                margin: 16px 0 32px;
+            }
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                padding: 0 16px;
+                max-width: 500px;
+            }
+            .portfolio-card {
+                border-radius: 16px;
+            }
+            .card-thumbnail {
+                border-radius: 16px 16px 0 0;
+            }
+            .card-content {
+                padding: 20px;
+            }
+            .card-title {
+                font-size: 1.2em;
+            }
+            .special-title {
+                font-size: 1.3em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-cta {
+                max-width: 200px;
+                padding: 8px 16px;
+                font-size: 0.9em;
+                margin: 12px 0 28px;
+            }
+            .cards-container {
+                padding: 0 12px;
+                gap: 20px;
+            }
+            .card-content {
+                padding: 16px;
+            }
+            .card-title {
+                font-size: 1.1em;
+            }
+            .special-title {
+                font-size: 1.2em;
+            }
+            .card-description {
+                font-size: 0.9em;
+                line-height: 1.5;
+            }
+            .special-button {
+                font-size: 0.9em;
+                padding: 8px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>folio</h1>
+        <p class="subtitle">솔로프리너 · 프리랜서를 위한 웹사이트 제작해드려요.</p>
+        <a href="https://www.threads.com/@hughqlee" class="header-cta" target="_blank">Threads DM 보내기 💬</a>
+        
+        <hr class="divider">
+        
+        <div class="cards-container">
+            <!-- 카드 1: hughqlee.com -->
+            <div class="portfolio-card">
+                <div class="card-thumbnail">
+                    <img src="images/hughqlee.com.jpg" alt="hughqlee.com 미리보기">
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">개발자 포트폴리오</h3>
+                    <a href="https://hughqlee.com" class="card-url" target="_blank">hughqlee.com ↗</a>
+                    <p class="card-description">
+                        프로젝트 필터링 기능과 반응형 디자인이 적용된 개발자 포트폴리오
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 카드 2: prezzii.co.kr -->
+            <div class="portfolio-card">
+                <div class="card-thumbnail">
+                    <img src="images/prezzii.co.kr.jpg" alt="prezzii.co.kr 미리보기">
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">비즈니스 랜딩 페이지</h3>
+                    <a href="https://prezzii.co.kr" class="card-url" target="_blank">prezzii.co.kr ↗</a>
+                    <p class="card-description">
+                        명함 디자인과 일치하는 브랜드 아이덴티티를 반영한 비즈니스 웹사이트
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 카드 3: 제작 신청하기 -->
+            <div class="portfolio-card special-card">
+                <div class="card-thumbnail special-thumbnail">
+                    <div class="thumbnail-placeholder">💬</div>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title special-title">웹사이트 제작 신청</h3>
+                    <p class="card-url special-url">무료 제작 서비스 ✨</p>
+                    <a href="https://www.threads.com/@hughqlee" class="cta-button special-button" target="_blank">Threads DM 보내기 💬</a>
+                </div>
+            </div>
+    </div>
+</body>
+</html>

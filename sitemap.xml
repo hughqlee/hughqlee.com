@@ -12,6 +12,14 @@
         <priority>1.0</priority>
     </url>
     
+    <!-- Portfolio Page -->
+    <url>
+        <loc>https://hughqlee.com/folio.html</loc>
+        <lastmod>2025-01-24</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
     <!-- Projects Pages -->
 
 </urlset>
