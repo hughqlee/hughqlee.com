@@ -3,387 +3,1698 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hughqlee.com</title>
-    <meta name="description" content="Portfolio website of Hugh Q Lee, showcasing various projects in Optics, Microscopy, AI, Robotics, and more.">
-    <meta name="keywords" content="Hugh Lee, Hugh Q Lee, Optics, Fluorescence, Microscopy, AI, Object Detection, Robotics, Robot Arm, ROS2, Raspberry Pi, NVIDIA Jetson">
+    <title>Hugh Q Lee | Vision AI Product Engineer</title>
+    <meta name="description" content="Portfolio of Hugh Q Lee, a Vision AI Product Engineer building computer vision and robotic automation systems for zebrafish lab workflows.">
+    <meta name="keywords" content="Hugh Q Lee, Vision AI, Product Engineer, Lab Automation, Computer Vision, Robotics, Zebrafish, Assay Automation, Microscopy">
     <meta name="author" content="Hugh Q Lee">
-    <meta property="og:title" content="hughqlee.com - Hugh Q Lee's Portfolio">
-    <meta property="og:description" content="Portfolio website of Hugh Q Lee, showcasing various projects in Optics, Microscopy, AI, Robotics, and more.">
+    <meta property="og:title" content="Hugh Q Lee | Vision AI Product Engineer">
+    <meta property="og:description" content="Selected work in vision AI, robotics, microscopy automation, and zebrafish assay systems.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://hughqlee.com">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://hughqlee.com">
     <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #5d6b75;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --danger: #ff8c8c;
+            --shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --radius: 8px;
+            --container: 1120px;
+        }
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #121212 100%);
-            background-attachment: fixed;
-            color: #ffffff;
-            text-align: center;
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-            line-height: 1.6;
+            margin: 0;
             min-height: 100vh;
-            padding: 40px 20px;
+            color: var(--text);
+            font-family: var(--mono);
+            background:
+                linear-gradient(rgba(105, 210, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(105, 210, 255, 0.02) 1px, transparent 1px),
+                radial-gradient(circle at 50% 0%, rgba(105, 210, 255, 0.08), transparent 38%),
+                var(--bg);
+            background-size: 28px 28px, 28px 28px, auto, auto;
         }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.018) 0,
+                rgba(255, 255, 255, 0.018) 1px,
+                transparent 1px,
+                transparent 4px
+            );
+            opacity: 0.24;
+            mix-blend-mode: screen;
         }
-        h1 {
-            font-size: 3em;
-            font-weight: 700;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, #4f46e5, #06b6d4, #10b981);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-        }
-        .subtitle {
-            font-size: 1.2em;
-            color: #b0b0b0;
-            margin-bottom: 40px;
-            font-weight: 300;
-        }
-        .nav-links {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
-        .nav-links a {
-            background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 12px 24px;
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-            position: relative;
+
+        body.modal-open {
             overflow: hidden;
         }
-        .nav-links a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
+
+        a {
+            color: inherit;
         }
-        .nav-links a:hover::before {
-            left: 100%;
+
+        button {
+            font: inherit;
         }
-        .nav-links a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            border-color: #444;
+
+        .page {
+            width: min(calc(100% - 32px), var(--container));
+            margin: 0 auto;
+            padding: 24px 0 64px;
         }
-        .divider {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #333, transparent);
-            border: none;
-            margin: 50px 0;
-            border-radius: 1px;
-        }
-        h2 {
-            font-size: 2.2em;
-            font-weight: 600;
-            margin-bottom: 30px;
-            color: #ffffff;
+
+        .terminal-window {
             position: relative;
-            display: inline-block;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(9, 13, 16, 0.94);
+            box-shadow: var(--shadow);
+            overflow: hidden;
         }
-        h2::after {
-            content: '';
+
+        .terminal-window::after {
+            content: "";
             position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #4f46e5, #06b6d4, #10b981);
-            border-radius: 2px;
+            inset: 0;
+            pointer-events: none;
+            border-radius: inherit;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
         }
-        .project-counter {
+
+        .terminal-bar {
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+        }
+
+        .window-controls {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .window-controls span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--faint);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .window-controls span:nth-child(1) {
+            background: #ff6b6b;
+        }
+
+        .window-controls span:nth-child(2) {
+            background: #f0c674;
+        }
+
+        .window-controls span:nth-child(3) {
+            background: #9ce37d;
+        }
+
+        .terminal-title {
+            margin-right: auto;
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
+        .toolbar-actions,
+        .toolbar-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .toolbar-actions {
+            align-items: center;
+        }
+
+        .toolbar-links a {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            padding: 0 9px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.74rem;
+            background: rgba(255, 255, 255, 0.02);
+            transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+        }
+
+        .toolbar-links a:hover,
+        .toolbar-links a:focus-visible,
+        .language-toggle:hover,
+        .language-toggle:focus-visible {
+            color: var(--text);
+            border-color: var(--line-strong);
+            background: rgba(105, 210, 255, 0.08);
+            outline: none;
+        }
+
+        .language-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 28px;
+            padding: 0 9px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            color: var(--muted);
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            font-size: 0.74rem;
+            transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+        }
+
+        .lang-option {
+            color: var(--faint);
+        }
+
+        .lang-option.is-active {
+            color: var(--accent-green);
+        }
+
+        .lang-divider {
+            color: var(--line-strong);
+        }
+
+        .hero {
+            padding: 24px;
+        }
+
+        .prompt-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+            font-size: clamp(0.86rem, 1.8vw, 1rem);
+            line-height: 1.5;
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        .prompt {
+            color: var(--accent-green);
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 9px;
+            height: 1.15em;
+            background: var(--accent);
+            vertical-align: -0.18em;
+            animation: cursor-blink 1.2s steps(2, start) infinite;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+            gap: 22px;
+            margin-top: 22px;
+        }
+
+        .profile-output {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+            padding: 18px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .profile-header h1 {
+            margin: 0;
+            font-family: var(--sans);
+            font-size: clamp(2.2rem, 6vw, 4.7rem);
+            line-height: 0.92;
+            letter-spacing: -0.06em;
+        }
+
+        .profile-header p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.82rem;
+            text-align: right;
+        }
+
+        .kv-list {
+            display: grid;
+            gap: 10px;
+            margin: 18px 0 0;
+        }
+
+        .kv-row {
+            display: grid;
+            grid-template-columns: 112px minmax(0, 1fr);
+            gap: 14px;
+            align-items: start;
+            min-width: 0;
+        }
+
+        .kv-key {
+            color: var(--faint);
+            font-size: 0.78rem;
+        }
+
+        .kv-value {
+            color: var(--text);
+            line-height: 1.45;
+            min-width: 0;
+        }
+
+        .run-aside {
+            display: grid;
+            gap: 12px;
+        }
+
+        .status-panel {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+            padding: 16px;
+        }
+
+        .panel-label {
+            margin: 0 0 12px;
+            color: var(--faint);
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .status-list {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .status-list li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            color: var(--muted);
+            font-size: 0.84rem;
+        }
+
+        .status-list strong {
+            color: var(--text);
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .status-dot {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            box-shadow: 0 0 14px rgba(156, 227, 125, 0.6);
+            animation: status-pulse 2.6s ease-in-out infinite;
+        }
+
+        .terminal-note {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.55;
+            font-size: 0.86rem;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 18px;
+            margin: 28px 0 16px;
+        }
+
+        .section-head h2 {
+            margin: 0;
+            color: var(--text);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .section-head p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.78rem;
+            text-align: right;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .run-card {
+            position: relative;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            align-content: start;
+            gap: 14px;
+            min-height: 360px;
+            padding: 0;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+            text-align: left;
+            cursor: pointer;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(12px);
+            animation: reveal-up 520ms ease forwards;
+            transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+        }
+
+        .run-card:hover,
+        .run-card:focus-visible {
+            border-color: var(--line-strong);
+            background: var(--panel-soft);
+            transform: translateY(-2px);
+            outline: none;
+        }
+
+        .run-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.018);
+        }
+
+        .run-id {
+            color: var(--accent);
+            font-size: 0.78rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 5px 9px;
+            color: var(--muted);
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 0.72rem;
+            white-space: nowrap;
+        }
+
+        .status-badge::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-green);
+        }
+
+        .status-badge.is-progress::before {
+            background: var(--accent-warn);
+        }
+
+        .run-card-body {
+            display: grid;
+            align-content: start;
+            gap: 14px;
+            padding: 0 16px 16px;
+        }
+
+        .run-command {
+            color: var(--muted);
+            font-size: 0.82rem;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .run-command .prompt {
+            color: var(--accent-green);
+        }
+
+        .run-card h3 {
+            margin: 0;
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: clamp(1.35rem, 3vw, 2.05rem);
+            line-height: 0.98;
+            letter-spacing: -0.045em;
+        }
+
+        .run-summary {
+            display: grid;
+            gap: 10px;
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.015);
+        }
+
+        .summary-row {
+            display: grid;
+            grid-template-columns: 80px minmax(0, 1fr);
+            gap: 12px;
+            color: var(--muted);
+            font-size: 0.82rem;
+            line-height: 1.45;
+        }
+
+        .summary-row span:first-child {
+            color: var(--faint);
+        }
+
+        .summary-row strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .log-preview {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .log-preview li {
+            display: grid;
+            grid-template-columns: 54px minmax(0, 1fr);
+            gap: 10px;
+            color: var(--muted);
+            font-size: 0.78rem;
+            line-height: 1.45;
+        }
+
+        .log-prefix {
+            color: var(--accent-green);
+        }
+
+        .artifact-preview {
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            overflow: hidden;
+            background: #050607;
+        }
+
+        .artifact-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 9px 10px;
+            border-bottom: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 0.74rem;
+        }
+
+        .artifact-preview img {
             display: block;
-            background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
-            border: 1px solid #333;
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-size: 0.9em;
-            color: #06b6d4;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            margin: 0 auto 20px auto;
-            text-align: center;
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            object-position: center 36%;
+            filter: contrast(0.98) brightness(0.82) saturate(0.86);
+        }
+
+        .open-report {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            color: var(--accent);
+            font-size: 0.82rem;
+        }
+
+        .open-report::before {
+            content: "$";
+            color: var(--accent-green);
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(2, 3, 4, 0.78);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .modal[aria-hidden="false"] {
+            display: flex;
+        }
+
+        .modal-dialog {
+            position: relative;
+            width: min(100%, 880px);
+            max-height: min(88vh, 860px);
+            overflow: auto;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+            box-shadow: var(--shadow);
+        }
+
+        .modal-actions {
+            position: sticky;
+            top: 12px;
+            z-index: 2;
+            margin: 12px 12px 0 auto;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
             width: fit-content;
         }
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .tag-filter {
+
+        .modal-close {
             display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin: 20px 0 40px 0;
-            flex-wrap: wrap;
-        }
-        .tag-filter li {
-            background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
-            border: 1px solid #333;
-            border-radius: 20px;
-            padding: 8px 16px;
-            font-size: 0.9em;
-            font-weight: 500;
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            color: var(--muted);
+            background: var(--panel-strong);
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            position: relative;
+            transition: color 160ms ease, border-color 160ms ease;
+        }
+
+        .modal-close:hover,
+        .modal-close:focus-visible {
+            color: var(--text);
+            border-color: var(--line-strong);
+            outline: none;
+        }
+
+        .modal-content {
+            padding: 2px 22px 24px;
+        }
+
+        .report-kicker {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent);
+            font-size: 0.78rem;
+            margin-bottom: 12px;
+        }
+
+        .report-kicker-label {
+            color: var(--faint);
+        }
+
+        .modal-content h3 {
+            margin: 0;
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            line-height: 0.94;
+            letter-spacing: -0.06em;
+        }
+
+        .modal-summary {
+            margin: 14px 0 20px;
+            max-width: 72ch;
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.65;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+            gap: 16px;
+        }
+
+        .report-stack {
+            display: grid;
+            gap: 16px;
+        }
+
+        .report-panel {
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.015);
             overflow: hidden;
         }
-        .tag-filter li::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.2), transparent);
-            transition: left 0.4s;
-        }
-        .tag-filter li:hover::before {
-            left: 100%;
-        }
-        .tag-filter li:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-            border-color: #4f46e5;
-        }
-        .tag-filter li.active {
-            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
-            border-color: #4f46e5;
-            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
-        }
-        .tag-filter li.active:hover {
-            box-shadow: 0 6px 24px rgba(79, 70, 229, 0.4);
-        }
-        ol {
-            list-style: none;
-            padding: 0;
+
+        .report-panel h4 {
             margin: 0;
-        }
-        footer {
-            color: #9e9e9e;
-            font-size: 0.9em;
-        }
-        article {
-            background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
-            border: 1px solid #333;
-            border-radius: 16px;
-            padding: 24px;
-            margin: 20px 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            text-align: left;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-        }
-        article::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #4f46e5, #06b6d4, #10b981);
-            opacity: 0.7;
-        }
-        article:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
-            border-color: #444;
-        }
-        article header h3 {
-            margin: 0 0 16px 0;
-            color: #ffffff;
-            font-size: 1.4em;
-            font-weight: 600;
-            line-height: 1.3;
-        }
-        article p {
-            line-height: 1.6;
-            color: #e0e0e0;
-            margin: 0 0 20px 0;
-            font-size: 0.95em;
-        }
-        article footer {
-            margin-top: auto;
-            padding-top: 16px;
-            border-top: 1px solid #333;
-        }
-        article footer p {
-            margin: 0;
-            color: #9e9e9e;
-            font-size: 0.85em;
-            font-weight: 500;
+            padding: 11px 12px;
+            border-bottom: 1px solid var(--line);
+            color: var(--faint);
+            font-size: 0.76rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.08em;
+            font-weight: 500;
         }
-        .project-item {
-            transition: all 0.3s ease;
+
+        .command-block {
+            margin: 0;
+            padding: 14px 12px;
+            color: var(--text);
+            font-size: 0.86rem;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
-        .project-item.hidden {
-            display: none;
+
+        .workflow-list,
+        .role-list,
+        .stack-list,
+        .evidence-list {
+            list-style: none;
+            margin: 0;
+            padding: 12px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .workflow-list li,
+        .role-list li,
+        .evidence-list li {
+            display: grid;
+            grid-template-columns: 64px minmax(0, 1fr);
+            gap: 10px;
+            color: var(--muted);
+            line-height: 1.5;
+            font-size: 0.85rem;
+        }
+
+        .workflow-list p,
+        .role-list p,
+        .evidence-list p {
+            margin: 0;
+        }
+
+        .workflow-list span,
+        .role-list span,
+        .evidence-list span {
+            color: var(--accent-green);
+        }
+
+        .stack-list {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .stack-list li {
+            min-width: 0;
+            padding: 8px 9px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            color: var(--muted);
+            background: rgba(255, 255, 255, 0.015);
+            font-size: 0.78rem;
+        }
+
+        .report-artifact {
+            margin: 12px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            overflow: hidden;
+            background: #050607;
+        }
+
+        .report-artifact img {
+            display: block;
+            width: 100%;
+            max-height: 260px;
+            object-fit: cover;
+            object-position: center 36%;
+            filter: contrast(0.98) brightness(0.86) saturate(0.88);
+        }
+
+        .report-link {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+
+        .report-link:hover,
+        .report-link:focus-visible {
+            border-color: currentColor;
+            outline: none;
+        }
+
+        @keyframes cursor-blink {
+            0%, 45% {
+                opacity: 1;
+            }
+            46%, 100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes status-pulse {
+            0%, 100% {
+                opacity: 0.55;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes reveal-up {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 880px) {
+            .hero-grid,
+            .report-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                display: grid;
+            }
+
+            .profile-header p {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                width: min(calc(100% - 20px), var(--container));
+                padding: 10px 0 44px;
+            }
+
+            .terminal-bar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .toolbar-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .hero {
+                padding: 16px;
+            }
+
+            .kv-row,
+            .summary-row,
+            .workflow-list li,
+            .role-list li,
+            .evidence-list li {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+
+            .run-card {
+                min-height: 0;
+            }
+
+            .stack-list {
+                grid-template-columns: 1fr;
+            }
+
+            .section-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .section-head p {
+                text-align: left;
+            }
+
+            .modal {
+                padding: 10px;
+            }
+
+            .modal-content {
+                padding: 0 14px 18px;
+            }
+
+            .artifact-preview img {
+                height: 130px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const tagFilters = document.querySelectorAll('.tag-filter li');
-            const projectItems = document.querySelectorAll('ol li');
-            const projectCounter = document.getElementById('projectCounter');
-            const totalProjects = projectItems.length;
-            
-            function updateProjectCounter() {
-                const visibleProjects = document.querySelectorAll('ol li:not(.hidden)').length;
-                projectCounter.textContent = `${visibleProjects} / ${totalProjects}`;
-            }
-            
-            tagFilters.forEach(tag => {
-                tag.addEventListener('click', function() {
-                    const selectedTag = this.getAttribute('data-tag');
-                    
-                    // 활성 태그 업데이트
-                    tagFilters.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // 프로젝트 필터링
-                    projectItems.forEach(item => {
-                        const article = item.querySelector('article');
-                        if (!article) return;
-                        
-                        const projectTags = article.getAttribute('data-tags');
-                        
-                        if (selectedTag === 'all') {
-                            item.classList.remove('hidden');
-                        } else {
-                            if (projectTags && projectTags.includes(selectedTag)) {
-                                item.classList.remove('hidden');
-                            } else {
-                                item.classList.add('hidden');
-                            }
-                        }
-                    });
-                    
-                    // 카운터 업데이트
-                    updateProjectCounter();
-                });
-            });
-            
-            // 초기 카운터 설정
-            updateProjectCounter();
-        });
-    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>이현규 (Hugh Q Lee)</h1>
-        <p class="subtitle">Product Engineer — AI · Biology · Robotics</p>
-        <nav class="nav-links">
-            <a href="https://github.com/hughqlee">GitHub</a>
-            <a href="https://www.linkedin.com/in/hughqlee/">LinkedIn</a>
-            <a href="https://x.com/hughqlee/">X (Twitter)</a>
-        </nav>
-        <hr class="divider">
-        <h2>Tags</h2>
-        <ul class="tag-filter">
-            <li class="active" data-tag="all">All</li>
-            <li data-tag="adversarial-ml">Adversarial ML</li>
-            <li data-tag="django">Django</li>
-            <li data-tag="fluorescence">Fluorescence</li>
-            <li data-tag="microscopy">Microscopy</li>
-            <li data-tag="nvidia-jetson">NVIDIA Jetson</li>
-            <li data-tag="object-detection">Object Detection</li>
-            <li data-tag="optics">Optics</li>
-            <li data-tag="pose-estimation">Pose Estimation</li>
-            <li data-tag="robotarm">RobotArm</li>
-            <li data-tag="zebrafish">Zebrafish</li>
-        </ul>
-        <h2>Projects</h2>
-        <div class="project-counter" id="projectCounter">2 / 2</div>
-        <ol>
-            <li class="project-item">
-                <article data-tags="optics,fluorescence,microscopy,object-detection,pose-estimation,nvidia-jetson,zebrafish">
-                    <header>
-                        <h3>
-                            Automation in Microinjection for Zebrafish Pericardiac Space with image-based motion control and batch agarose microplate
-                            [<a href="https://doi.org/10.1371/journal.pone.0333369" target="_blank" style="color: #ffffff;"> " </a>]
-                        </h3>
-                    </header>
-                    <p>
-                        This project automates pericardial-space microinjection through image-based motion control and a batch agarose microplate. 
-                        It integrates YOLO-based anatomical landmark detection and robotic arm trajectory control for precise injection. 
-                        The system underpins our PLOS ONE manuscript and establishes a foundation for scalable xenograft assays in zebrafish high-throughput screening (HTS).
-                        </p>
-                    <footer>
-                        <p>Fluorescence, Microscopy, NVIDIA Jetson, Object Detection, Optics, Pose Estimation, Zebrafish</p>
-                    </footer>
-                </article>
-            </li>
-            <li class="project-item">
-                <article data-tags="optics,fluorescence,object-detection,zebrafish">
-                    <header>
-                        <h3>Automated Zebrafish Feeding, Digestion, and Locomotion System via FL/IR Imaging</h3>
-                    </header>
-                    <p>
-                        This system integrates dual-mode imaging—infrared (IR) and fluorescence (FL)—to automatically analyze both locomotor activity and feeding-related digestive processes in zebrafish larvae. IR imaging is used to detect movement through object detection, enabling trajectory tracking and velocity calculation. FL imaging quantifies ingestion and digestion by measuring changes in the fluorescent signal area from labeled paramecia. The platform is optimized for synchronized acquisition, processing, and visualization using custom software.
-                    </p>
-                    <footer>
-                        <p>Fluorescence, Object Detection, Optics, Zebrafish</p>
-                    </footer>
-                </article>
-            </li>
-            <li class="project-item">
-                <article data-tags="optics,fluorescence,microscopy,object-detection,nvidia-jetson,pose-estimation,robotarm,zebrafish">
-                    <header>
-                        <h3>Robotic Zebrafish Larva Pipetting and Rotational 3D Imaging Platform</h3>
-                    </header>
-                    <p>
-                        This platform combines a robotic arm–based pipetting system with a rotational imaging setup to enable automated 3D visualization of zebrafish larvae. After aspirating individual larvae into a pipetting tube, the system rotates the tube to capture multi-angle images suitable for 3D reconstruction. The robotic arm and Jetson-based imaging module enable stable, hands-free larval loading, alignment, and rotational imaging, providing high-quality inputs for volumetric analysis.
-                    </p>
-                    <footer>
-                        <p>Fluorescence, Microscopy, NVIDIA Jetson, Object Detection, Optics, Pose Estimation, RobotArm, Zebrafish</p>
-                    </footer>
-                </article>
-            </li>
-            <li class="project-item">
-                <article data-tags="adversarial-ml,object-detection,django">
-                    <header>
-                        <h3>
-                            DeepfakeBlock
-                            [<a href="https://github.com/cheonlian/DeepfakeBlock" target="_blank" style="color: #ffffff;"> " </a>]
-                        </h3>
-                    </header>
-                    <p>
-                        Validated TOG-based adversarial perturbations on YOLOv3 to suppress object detection without perceptible visual changes. The same approach was extended to Faceswap-based deepfake pipelines, where perturbing facial inputs prior to synthesis destabilized latent representations and degraded identity preservation.
-                    </p>
-                    <footer>
-                        <p>Adversarial ML, Django, Object Detection</p>
-                    </footer>
-                </article>
-            </li>
-        </ol>
+    <main class="page">
+        <section class="terminal-window hero" aria-labelledby="site-title">
+            <div class="terminal-bar">
+                <div class="window-controls" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span class="terminal-title">portfolio.agent</span>
+                <div class="toolbar-actions">
+                    <nav class="toolbar-links" aria-label="Social links" id="socialLinks">
+                        <a href="https://github.com/hughqlee" target="_blank" rel="noreferrer">github</a>
+                        <a href="https://www.linkedin.com/in/hughqlee/" target="_blank" rel="noreferrer">linkedin</a>
+                        <a href="https://x.com/hughqlee/" target="_blank" rel="noreferrer">x</a>
+                    </nav>
+                    <button class="language-toggle" type="button" id="languageToggle" aria-pressed="false" aria-label="Switch language to Korean">
+                        <span class="lang-option" data-lang-option="en">EN</span>
+                        <span class="lang-divider">/</span>
+                        <span class="lang-option" data-lang-option="ko">KO</span>
+                    </button>
+                </div>
+            </div>
+            <div class="prompt-line" aria-label="Portfolio command" id="promptLine">
+                <span class="prompt">&gt;</span>
+                <span>agent run portfolio --target vision-ai-lab-automation</span>
+                <span class="cursor" aria-hidden="true"></span>
+            </div>
+            <div class="hero-grid">
+                <div class="profile-output">
+                    <div class="profile-header">
+                        <h1 id="site-title">Hugh Q Lee</h1>
+                        <p id="profileRoleLine">Vision AI Product Engineer<br>Daegu, KR</p>
+                    </div>
+                    <div class="kv-list" aria-label="Profile output" id="profileOutput">
+                        <div class="kv-row">
+                            <span class="kv-key" id="profileKeyName">name</span>
+                            <span class="kv-value" id="profileValueName">이현규 / Hugh Q Lee</span>
+                        </div>
+                        <div class="kv-row">
+                            <span class="kv-key" id="profileKeyRole">role</span>
+                            <span class="kv-value" id="profileValueRole">Builds computer vision, motion control, and robotic assay systems for lab automation.</span>
+                        </div>
+                        <div class="kv-row">
+                            <span class="kv-key" id="profileKeyDomain">domain</span>
+                            <span class="kv-value" id="profileValueDomain">Zebrafish imaging, microinjection, behavior analytics, microscopy automation.</span>
+                        </div>
+                        <div class="kv-row">
+                            <span class="kv-key" id="profileKeyPrinciple">principle</span>
+                            <span class="kv-value" id="profileValuePrinciple">"To see is something extraordinary."</span>
+                        </div>
+                    </div>
+                </div>
+                <aside class="run-aside" aria-label="Portfolio status" id="portfolioStatus">
+                    <div class="status-panel">
+                        <p class="panel-label" id="statusPanelLabel">current process</p>
+                        <ul class="status-list">
+                            <li><span class="status-dot" id="statusPortfolioLabel">portfolio</span><strong id="statusPortfolioValue">ready</strong></li>
+                            <li><span id="statusSelectedLabel">selected_runs</span><strong>4</strong></li>
+                            <li><span id="statusStackLabel">primary_stack</span><strong id="statusStackValue">vision + robotics</strong></li>
+                            <li><span id="statusModeLabel">public_mode</span><strong id="statusModeValue">proprietary-safe</strong></li>
+                        </ul>
+                    </div>
+                    <div class="status-panel">
+                        <p class="panel-label" id="experienceLabel">experience</p>
+                        <p class="terminal-note" id="experienceNote">AI Engineer for Lab Automation at Zefit, 2021-Present.</p>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="gallery-section" aria-labelledby="selected-work-title">
+            <div class="section-head">
+                <h2 id="selected-work-title">&gt; list selected_runs</h2>
+                <p id="selectedWorkDescription">Four applied AI systems for zebrafish assay automation, imaging, and analysis.</p>
+            </div>
+            <div class="gallery-grid" id="galleryGrid"></div>
+        </section>
+    </main>
+
+    <div class="modal" id="projectModal" aria-hidden="true">
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-actions">
+                <button class="language-toggle" type="button" id="modalLanguageToggle" aria-pressed="false" aria-label="Switch language to Korean">
+                    <span class="lang-option" data-lang-option="en">EN</span>
+                    <span class="lang-divider">/</span>
+                    <span class="lang-option" data-lang-option="ko">KO</span>
+                </button>
+                <button class="modal-close" type="button" id="modalClose" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <div class="modal-content" id="modalContent"></div>
+        </div>
     </div>
+
+    <script>
+        const browserLanguage = (navigator.language || "en").toLowerCase();
+        let currentLang = browserLanguage.startsWith("ko") ? "ko" : "en";
+        let lastFocusedElement = null;
+        let activeProjectId = null;
+
+        const copy = {
+            en: {
+                documentTitle: "Hugh Q Lee | Vision AI Product Engineer",
+                socialAria: "Social links",
+                promptAria: "Portfolio command",
+                profileOutputAria: "Profile output",
+                portfolioStatusAria: "Portfolio status",
+                languageToggleAria: "Switch language to Korean",
+                modalCloseAria: "Close",
+                profileRole: "Vision AI Product Engineer",
+                location: "Daegu, KR",
+                profileKeys: {
+                    name: "name",
+                    role: "role",
+                    domain: "domain",
+                    principle: "principle"
+                },
+                profileValues: {
+                    name: "이현규 / Hugh Q Lee",
+                    role: "Builds computer vision, motion control, and robotic assay systems for lab automation.",
+                    domain: "Zebrafish imaging, microinjection, behavior analytics, microscopy automation.",
+                    principle: "\"To see is something extraordinary.\""
+                },
+                status: {
+                    panel: "current process",
+                    portfolio: "portfolio",
+                    ready: "ready",
+                    selectedRuns: "selected_runs",
+                    primaryStack: "primary_stack",
+                    stackValue: "vision + robotics",
+                    publicMode: "public_mode",
+                    publicModeValue: "proprietary-safe"
+                },
+                experience: {
+                    label: "experience",
+                    note: "AI Engineer for Lab Automation at Zefit, 2021-Present."
+                },
+                selectedWorkTitle: "> list selected_runs",
+                selectedWorkDescription: "Four applied AI systems for zebrafish assay automation, imaging, and analysis.",
+                summaryLabels: {
+                    system: "system",
+                    stack: "stack",
+                    outcome: "outcome"
+                },
+                openReport: "open run report",
+                cardAriaSuffix: "run report",
+                artifactPreview: "preview",
+                artifactAltSuffix: "artifact preview",
+                modalLabels: {
+                    command: "Command",
+                    workflow: "Workflow",
+                    engineeringRole: "Engineering Role",
+                    stack: "Stack",
+                    evidence: "Evidence"
+                },
+                reportKicker: "run_report",
+                statusLineLabel: "status",
+                outcomeLineLabel: "outcome"
+            },
+            ko: {
+                documentTitle: "Hugh Q Lee | 비전 AI 프로덕트 엔지니어",
+                socialAria: "소셜 링크",
+                promptAria: "포트폴리오 명령",
+                profileOutputAria: "프로필 출력",
+                portfolioStatusAria: "포트폴리오 상태",
+                languageToggleAria: "언어를 영어로 전환",
+                modalCloseAria: "닫기",
+                profileRole: "비전 AI 프로덕트 엔지니어",
+                location: "Daegu, KR",
+                profileKeys: {
+                    name: "이름",
+                    role: "역할",
+                    domain: "도메인",
+                    principle: "문장"
+                },
+                profileValues: {
+                    name: "이현규 / Hugh Q Lee",
+                    role: "컴퓨터 비전, 모션 제어, 로보틱스 기반의 바이오 실험 자동화 시스템을 만듭니다.",
+                    domain: "제브라피쉬 이미징, 미세주사, 행동 분석, 현미경 자동화.",
+                    principle: "\"본다는 것은 특별한 일입니다.\""
+                },
+                status: {
+                    panel: "현재 프로세스",
+                    portfolio: "포트폴리오",
+                    ready: "준비됨",
+                    selectedRuns: "선택된 실행",
+                    primaryStack: "핵심 스택",
+                    stackValue: "비전 + 로보틱스",
+                    publicMode: "공개 모드",
+                    publicModeValue: "대외비 보호"
+                },
+                experience: {
+                    label: "경력",
+                    note: "Zefit 랩 자동화 AI 엔지니어, 2021-현재."
+                },
+                selectedWorkTitle: "> 선택된 실행 목록",
+                selectedWorkDescription: "제브라피쉬 평가 자동화, 이미징, 분석을 위한 4개의 응용 AI 시스템.",
+                summaryLabels: {
+                    system: "시스템",
+                    stack: "스택",
+                    outcome: "결과"
+                },
+                openReport: "실행 리포트 열기",
+                cardAriaSuffix: "실행 리포트",
+                artifactPreview: "미리보기",
+                artifactAltSuffix: "아티팩트 미리보기",
+                modalLabels: {
+                    command: "명령",
+                    workflow: "워크플로",
+                    engineeringRole: "엔지니어링 역할",
+                    stack: "스택",
+                    evidence: "근거"
+                },
+                reportKicker: "실행_리포트",
+                statusLineLabel: "상태",
+                outcomeLineLabel: "결과"
+            }
+        };
+
+        const projectData = [
+            {
+                id: "toxicity-evaluation-automation",
+                runId: "run_001_toxicity_eval",
+                command: "agent run assay.toxicity --plate 96well --mode autofocus+classify",
+                status: "published",
+                i18n: {
+                    en: {
+                        statusLabel: "completed / proprietary",
+                        title: "Toxicity Evaluation Automation",
+                        fullTitle: "Automated Zebrafish Larva Toxicity Evaluation Platform",
+                        category: "Assay Automation",
+                        summary: "A microscope automation workflow for 96-well toxicity evaluation, combining plate navigation, autofocus, larva detection, condition classification, and result logging.",
+                        stack: ["Computer Vision", "Microscope Automation", "XY/Z Stage", "96-well Plate", "Lightweight ML"],
+                        outcome: "Converted manual toxicity inspection into a repeatable run loop with image capture, AI classification, and structured result records.",
+                        workflow: [
+                            "Traverse a 96-well plate with XY stage control.",
+                            "Autofocus each well with Z stage control.",
+                            "Detect zebrafish larvae from 1x images using a lightweight neural network.",
+                            "Move to the detected point, acquire detailed 4x imagery, classify condition, and log raw images with evaluation results."
+                        ],
+                        engineeringRole: [
+                            "Customized the microscope control workflow around stage movement, autofocus, detection, zoomed capture, and assay logging.",
+                            "Designed lightweight neural network logic for larva detection and condition classification under constrained imaging hardware.",
+                            "Integrated hardware movement, AI inference, and data recording into one operator-facing execution flow."
+                        ],
+                        tags: ["Computer Vision", "Microscope Automation", "96-well Plate", "Lightweight ML", "Toxicology"],
+                        evidenceNote: "Public assets and detailed metrics are omitted because the production system is proprietary."
+                    },
+                    ko: {
+                        statusLabel: "완료 / 대외비",
+                        title: "독성 평가 자동화",
+                        fullTitle: "제브라피쉬 치어 독성 평가 자동화 플랫폼",
+                        category: "평가 자동화",
+                        summary: "96웰 독성 평가를 위해 플레이트 순회, 오토포커스, 치어 감지, 상태 분류, 결과 기록을 하나의 현미경 자동화 워크플로로 연결했습니다.",
+                        stack: ["컴퓨터 비전", "현미경 자동화", "XY/Z 스테이지", "96웰 플레이트", "경량 ML"],
+                        outcome: "수동 독성 평가 과정을 이미지 획득, AI 분류, 구조화된 결과 기록이 가능한 반복 실행 루프로 전환했습니다.",
+                        workflow: [
+                            "XY 스테이지로 96웰 플레이트를 순회합니다.",
+                            "각 웰에서 Z 스테이지 기반 오토포커스를 수행합니다.",
+                            "1x 영상에서 경량 신경망으로 제브라피쉬 치어를 감지합니다.",
+                            "감지 지점으로 이동해 4x 세부 영상을 획득하고, 상태를 분류한 뒤 원본 이미지와 평가 결과를 기록합니다."
+                        ],
+                        engineeringRole: [
+                            "스테이지 이동, 오토포커스, 감지, 확대 촬영, 평가 기록을 포함한 현미경 제어 워크플로를 구성했습니다.",
+                            "제한된 이미징 환경에서 동작하는 치어 감지 및 상태 분류용 경량 신경망 로직을 설계했습니다.",
+                            "하드웨어 이동, AI 추론, 데이터 기록을 하나의 실험 실행 흐름으로 통합했습니다."
+                        ],
+                        tags: ["컴퓨터 비전", "현미경 자동화", "96웰 플레이트", "경량 ML", "독성 평가"],
+                        evidenceNote: "운영 시스템은 대외비이므로 공개 자료와 세부 수치는 생략했습니다."
+                    }
+                }
+            },
+            {
+                id: "microinjection-platform",
+                runId: "run_002_microinject",
+                command: "agent run inject.microinjection --sample egg+larva --target vision-guided",
+                status: "published",
+                href: "https://doi.org/10.1371/journal.pone.0333369",
+                artifactImage: "images/microinjection-preview.png",
+                i18n: {
+                    en: {
+                        statusLabel: "published / proprietary",
+                        title: "Microinjection Platform",
+                        fullTitle: "Vision-Guided Zebrafish Egg and Larva Microinjection Platform",
+                        category: "Robotic Microinjection",
+                        summary: "A family of automated injection workflows for zebrafish egg and larval assays, connecting visual targeting, stage motion, needle actuation, reagent delivery, and post-run analysis.",
+                        stack: ["Computer Vision", "Motion Control", "Microinjection", "Actuator Control", "Fluorescence Analysis"],
+                        outcome: "Systemized delicate egg and larva injection workflows into calibrated targeting, needle insertion, reagent delivery, and downstream fluorescence analysis.",
+                        workflow: [
+                            "Calibrate microscope camera, stage coordinate system, and needle preset positions.",
+                            "Traverse agarose plates, detect eggs or larvae, and calculate injection targets.",
+                            "Move to target, insert needle with actuator control, inject reagent with micro-pump, and retract needle.",
+                            "Record assay outputs and compute fluorescence-derived indicators when post-run imaging is available."
+                        ],
+                        engineeringRole: [
+                            "Built calibration and targeting flows for microscope-camera alignment, preset needle positions, and XY/XYZ stage movement.",
+                            "Implemented lightweight detection models for egg or larva localization before actuator-driven needle insertion.",
+                            "Connected injection execution with downstream fluorescence quantification software for xenograft-style assay readouts."
+                        ],
+                        tags: ["Computer Vision", "Motion Control", "Microinjection", "Actuator Control", "Fluorescence Analysis"],
+                        hrefLabel: "Related Publication",
+                        evidenceNote: "A selected publication is public; additional platform details are proprietary.",
+                        artifactLabel: "artifact: microinjection-preview.png"
+                    },
+                    ko: {
+                        statusLabel: "공개 논문 / 대외비",
+                        title: "미세주사 자동화 플랫폼",
+                        fullTitle: "비전 기반 제브라피쉬 에그·치어 미세주사 자동화 플랫폼",
+                        category: "로보틱 미세주사",
+                        summary: "제브라피쉬 에그와 치어 실험을 위해 시각 타겟팅, 스테이지 이동, 니들 구동, 시약 주입, 후속 분석을 연결한 미세주사 자동화 워크플로입니다.",
+                        stack: ["컴퓨터 비전", "모션 제어", "미세주사", "액추에이터 제어", "형광 분석"],
+                        outcome: "정밀한 에그·치어 주사 과정을 캘리브레이션, 타겟 계산, 니들 삽입, 시약 주입, 형광 지표 분석까지 포함한 시스템으로 정리했습니다.",
+                        workflow: [
+                            "현미경 카메라, 스테이지 좌표계, 니들 프리셋 위치를 캘리브레이션합니다.",
+                            "아가로스 플레이트를 순회하며 에그 또는 치어를 감지하고 주사 지점을 계산합니다.",
+                            "타겟으로 이동한 뒤 액추에이터로 니들을 삽입하고, 마이크로펌프로 시약을 주입한 뒤 니들을 후퇴시킵니다.",
+                            "실험 출력을 기록하고, 후속 이미징이 있는 경우 형광 기반 지표를 계산합니다."
+                        ],
+                        engineeringRole: [
+                            "현미경-카메라 정렬, 니들 프리셋, XY/XYZ 스테이지 이동을 포함한 캘리브레이션 및 타겟팅 흐름을 구축했습니다.",
+                            "니들 삽입 전 에그 또는 치어 위치를 찾기 위한 경량 감지 모델을 구현했습니다.",
+                            "주사 실행과 후속 형광 정량 소프트웨어를 연결해 xenograft 계열 실험 판독을 지원했습니다."
+                        ],
+                        tags: ["컴퓨터 비전", "모션 제어", "미세주사", "액추에이터 제어", "형광 분석"],
+                        hrefLabel: "관련 논문",
+                        evidenceNote: "선별된 논문은 공개되어 있으며, 추가 플랫폼 세부 사항은 대외비입니다.",
+                        artifactLabel: "artifact: microinjection-preview.png"
+                    }
+                }
+            },
+            {
+                id: "behavior-feeding-analytics",
+                runId: "run_003_behavior_flir",
+                command: "agent run video.analytics --source wellplate --track yolo --metrics behavior+feeding",
+                status: "published",
+                i18n: {
+                    en: {
+                        statusLabel: "completed / proprietary",
+                        title: "Behavior & Feeding Analytics",
+                        fullTitle: "Zebrafish Larva Behavior Tracking and FL/IR Feeding Analytics",
+                        category: "Video Analytics",
+                        summary: "An analysis system that turns recorded well-plate experiments into trajectories, behavior metrics, and fluorescence-based feeding and digestion readouts.",
+                        stack: ["YOLO", "Multi-object Tracking", "Behavior Metrics", "FL/IR Imaging", "Well Plate"],
+                        outcome: "Transformed recorded experiments into linked trajectories, avoidance and anxiety indicators, speed-derived events, and fluorescence ingestion signals.",
+                        workflow: [
+                            "Run YOLO-based inference over recorded well-plate videos.",
+                            "Link detections frame-to-frame into well-aware tracks.",
+                            "Extract region metrics such as red-ball avoidance and edge preference.",
+                            "Extract speed-based behavior events such as bout and burst movement, then extend analysis to fluorescence feeding and digestion signals."
+                        ],
+                        engineeringRole: [
+                            "Designed object-detection-driven tracking logic around well-plate constraints and frame-to-frame association.",
+                            "Implemented metric extraction from coordinates, regions, and velocity signals.",
+                            "Expanded fluorescence microscopy principles into macro-scale ingestion and digestion tracking."
+                        ],
+                        tags: ["YOLO", "Multi-object Tracking", "Behavior Metrics", "FL/IR Imaging", "Well Plate"],
+                        evidenceNote: "Public assets and detailed metrics are omitted because the production system is proprietary."
+                    },
+                    ko: {
+                        statusLabel: "완료 / 대외비",
+                        title: "행동·섭식 분석",
+                        fullTitle: "제브라피쉬 치어 행동 추적 및 FL/IR 섭식 분석 시스템",
+                        category: "영상 분석",
+                        summary: "웰플레이트 기반 실험 영상을 궤적, 행동 지표, 형광 기반 섭식·소화 지표로 변환하는 분석 시스템입니다.",
+                        stack: ["YOLO", "다중 객체 추적", "행동 지표", "FL/IR 이미징", "웰플레이트"],
+                        outcome: "녹화 실험을 연결된 궤적, 회피·불안 관련 지표, 속도 기반 행동 이벤트, 형광 섭식 신호로 변환했습니다.",
+                        workflow: [
+                            "녹화된 웰플레이트 영상에 YOLO 기반 추론을 수행합니다.",
+                            "프레임 간 감지 지점을 연결해 웰 단위 추적을 완성합니다.",
+                            "좌표 기반으로 레드볼 회피, 가장자리 배회 등 영역 지표를 추출합니다.",
+                            "속도 기반 bout, burst 같은 행동 이벤트를 추출하고, 형광 신호를 이용한 섭식·소화 분석으로 확장합니다."
+                        ],
+                        engineeringRole: [
+                            "웰플레이트 제약과 프레임 간 연결을 고려한 객체 감지 기반 추적 로직을 설계했습니다.",
+                            "좌표, 영역, 속도 신호에서 실험 지표를 추출하는 분석 로직을 구현했습니다.",
+                            "형광 현미경 원리를 매크로 이미징 영역으로 확장해 장 내 섭식·소화 추적에 적용했습니다."
+                        ],
+                        tags: ["YOLO", "다중 객체 추적", "행동 지표", "FL/IR 이미징", "웰플레이트"],
+                        evidenceNote: "운영 시스템은 대외비이므로 공개 자료와 세부 수치는 생략했습니다."
+                    }
+                }
+            },
+            {
+                id: "robotic-3d-imaging",
+                runId: "run_004_robotic_3d",
+                command: "agent run imaging.3d --robot-arm --microfluidics --capture brightfield+fluorescence",
+                status: "in-progress",
+                i18n: {
+                    en: {
+                        statusLabel: "in-progress / proprietary",
+                        title: "Robotic 3D Imaging",
+                        fullTitle: "Robot-Arm Microfluidic Zebrafish 3D Imaging Platform",
+                        category: "Robotic Imaging",
+                        summary: "A scale-up automation concept that combines robot-arm handling, visual alignment, microfluidic transfer, rotational capillary imaging, and volumetric fluorescence analysis.",
+                        stack: ["Robot Arm", "Microfluidics", "3D Imaging", "Syringe Pump", "Fluorescence Volume"],
+                        outcome: "Combined robot-arm sample handling, microfluidic transport, capillary rotation, and image-derived 3D fluorescence volume indicators.",
+                        workflow: [
+                            "Scan well plates from a high Z position using a camera-equipped robot-arm EoAT.",
+                            "Approach wells, detect larvae with YOLO-style inference, and align larvae with the pipetting path.",
+                            "Aspirate larvae with syringe-pump control and transport samples through a pipette tube into a capillary.",
+                            "Rotate the capillary for bright-field and fluorescence capture, compute 3D fluorescence volume indicators, and release the larva before moving to the next well."
+                        ],
+                        engineeringRole: [
+                            "Designed the robot-arm EoAT workflow for scan, approach, detection, alignment, aspiration, imaging, and release.",
+                            "Integrated syringe-pump aspiration, capillary transfer, rotational imaging, and reverse-flow sample handling.",
+                            "Built analysis software to reconstruct fluorescence volume indicators from captured image sequences."
+                        ],
+                        tags: ["Robot Arm", "Microfluidics", "3D Imaging", "Syringe Pump", "Fluorescence Volume"],
+                        evidenceNote: "Public assets and detailed metrics are omitted because the scale-up system is proprietary."
+                    },
+                    ko: {
+                        statusLabel: "진행 중 / 대외비",
+                        title: "로보틱 3D 이미징",
+                        fullTitle: "로봇암·미세유체 기반 제브라피쉬 3D 이미징 플랫폼",
+                        category: "로보틱 이미징",
+                        summary: "로봇암 핸들링, 시각 정렬, 미세유체 샘플 이송, 회전 캐피러리 이미징, 3D 형광 볼륨 분석을 결합한 스케일업 자동화 플랫폼입니다.",
+                        stack: ["로봇암", "미세유체", "3D 이미징", "시린지펌프", "형광 볼륨"],
+                        outcome: "로봇암 샘플 핸들링, 미세유체 이송, 캐피러리 회전 촬영, 이미지 기반 3D 형광 볼륨 지표를 하나의 흐름으로 연결했습니다.",
+                        workflow: [
+                            "카메라와 피펫팅이 결합된 로봇암 EoAT로 높은 Z축 위치에서 웰플레이트를 스캔합니다.",
+                            "웰에 접근한 뒤 YOLO 계열 추론으로 치어를 감지하고 피펫 경로와 정렬합니다.",
+                            "시린지펌프 제어로 치어를 흡입하고 피펫 튜브를 통해 캐피러리로 샘플을 이송합니다.",
+                            "캐피러리를 회전시키며 명시야·형광 영상을 촬영하고 3D 형광 볼륨 지표를 계산한 뒤 다음 웰로 이동합니다."
+                        ],
+                        engineeringRole: [
+                            "스캔, 접근, 감지, 정렬, 흡입, 이미징, 배출까지 이어지는 로봇암 EoAT 워크플로를 설계했습니다.",
+                            "시린지펌프 흡입, 캐피러리 이송, 회전 이미징, 역방향 배출을 통합했습니다.",
+                            "촬영 시퀀스에서 형광 볼륨 지표를 재구성하는 분석 소프트웨어를 개발했습니다."
+                        ],
+                        tags: ["로봇암", "미세유체", "3D 이미징", "시린지펌프", "형광 볼륨"],
+                        evidenceNote: "스케일업 시스템은 대외비이므로 공개 자료와 세부 수치는 생략했습니다."
+                    }
+                }
+            }
+        ];
+
+        const galleryGrid = document.getElementById("galleryGrid");
+        const modal = document.getElementById("projectModal");
+        const modalContent = document.getElementById("modalContent");
+        const modalClose = document.getElementById("modalClose");
+        const languageToggles = [
+            document.getElementById("languageToggle"),
+            document.getElementById("modalLanguageToggle")
+        ].filter(Boolean);
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function getCopy() {
+            return copy[currentLang] || copy.en;
+        }
+
+        function getProjectText(project) {
+            return project.i18n[currentLang] || project.i18n.en;
+        }
+
+        function setText(id, value) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value;
+            }
+        }
+
+        function statusClass(project) {
+            return project.status === "in-progress" ? "status-badge is-progress" : "status-badge";
+        }
+
+        function updateLanguageToggle(button) {
+            const ui = getCopy();
+            button.setAttribute("aria-pressed", currentLang === "ko" ? "true" : "false");
+            button.setAttribute("aria-label", ui.languageToggleAria);
+            button.querySelectorAll("[data-lang-option]").forEach((option) => {
+                option.classList.toggle("is-active", option.dataset.langOption === currentLang);
+            });
+        }
+
+        function renderStaticCopy() {
+            const ui = getCopy();
+            document.documentElement.lang = currentLang;
+            document.title = ui.documentTitle;
+            document.getElementById("socialLinks")?.setAttribute("aria-label", ui.socialAria);
+            document.getElementById("promptLine")?.setAttribute("aria-label", ui.promptAria);
+            document.getElementById("profileOutput")?.setAttribute("aria-label", ui.profileOutputAria);
+            document.getElementById("portfolioStatus")?.setAttribute("aria-label", ui.portfolioStatusAria);
+            modalClose.setAttribute("aria-label", ui.modalCloseAria);
+
+            const profileRoleLine = document.getElementById("profileRoleLine");
+            if (profileRoleLine) {
+                profileRoleLine.innerHTML = `${escapeHtml(ui.profileRole)}<br>${escapeHtml(ui.location)}`;
+            }
+
+            setText("profileKeyName", ui.profileKeys.name);
+            setText("profileKeyRole", ui.profileKeys.role);
+            setText("profileKeyDomain", ui.profileKeys.domain);
+            setText("profileKeyPrinciple", ui.profileKeys.principle);
+            setText("profileValueName", ui.profileValues.name);
+            setText("profileValueRole", ui.profileValues.role);
+            setText("profileValueDomain", ui.profileValues.domain);
+            setText("profileValuePrinciple", ui.profileValues.principle);
+            setText("statusPanelLabel", ui.status.panel);
+            setText("statusPortfolioLabel", ui.status.portfolio);
+            setText("statusPortfolioValue", ui.status.ready);
+            setText("statusSelectedLabel", ui.status.selectedRuns);
+            setText("statusStackLabel", ui.status.primaryStack);
+            setText("statusStackValue", ui.status.stackValue);
+            setText("statusModeLabel", ui.status.publicMode);
+            setText("statusModeValue", ui.status.publicModeValue);
+            setText("experienceLabel", ui.experience.label);
+            setText("experienceNote", ui.experience.note);
+            setText("selected-work-title", ui.selectedWorkTitle);
+            setText("selectedWorkDescription", ui.selectedWorkDescription);
+            languageToggles.forEach(updateLanguageToggle);
+        }
+
+        function createArtifact(project, context) {
+            if (!project.artifactImage) {
+                return "";
+            }
+
+            const ui = getCopy();
+            const text = getProjectText(project);
+            const className = context === "report" ? "report-artifact" : "artifact-preview";
+
+            return `
+                <div class="${className}">
+                    <div class="artifact-label">
+                        <span>${escapeHtml(text.artifactLabel || "artifact")}</span>
+                        <span>${escapeHtml(ui.artifactPreview)}</span>
+                    </div>
+                    <img src="${escapeHtml(project.artifactImage)}" alt="${escapeHtml(`${text.title} ${ui.artifactAltSuffix}`)}">
+                </div>
+            `;
+        }
+
+        function createProjectCard(project, index) {
+            const ui = getCopy();
+            const text = getProjectText(project);
+            const card = document.createElement("article");
+            card.className = "run-card";
+            card.tabIndex = 0;
+            card.setAttribute("role", "button");
+            card.style.animationDelay = `${index * 80}ms`;
+            card.setAttribute("data-project-id", project.id);
+            card.setAttribute("aria-label", `${text.title} ${ui.cardAriaSuffix}`);
+
+            card.innerHTML = `
+                <span class="run-card-header">
+                    <span class="run-id">${escapeHtml(project.runId)}</span>
+                    <span class="${statusClass(project)}">${escapeHtml(text.statusLabel)}</span>
+                </span>
+                <span class="run-card-body">
+                    <span class="run-command"><span class="prompt">&gt;</span> ${escapeHtml(project.command)}</span>
+                    <h3>${escapeHtml(text.title)}</h3>
+                    ${createArtifact(project, "card")}
+                    <span class="run-summary">
+                        <span class="summary-row">
+                            <span>${escapeHtml(ui.summaryLabels.system)}</span>
+                            <strong>${escapeHtml(text.category)}</strong>
+                        </span>
+                        <span class="summary-row">
+                            <span>${escapeHtml(ui.summaryLabels.stack)}</span>
+                            <strong>${escapeHtml(text.stack.slice(0, 3).join(" / "))}</strong>
+                        </span>
+                        <span class="summary-row">
+                            <span>${escapeHtml(ui.summaryLabels.outcome)}</span>
+                            <strong>${escapeHtml(text.outcome)}</strong>
+                        </span>
+                    </span>
+                    <ul class="log-preview">
+                        ${text.workflow.slice(0, 3).map((item, itemIndex) => `
+                            <li>
+                                <span class="log-prefix">log_${String(itemIndex + 1).padStart(2, "0")}</span>
+                                <span>${escapeHtml(item)}</span>
+                            </li>
+                        `).join("")}
+                    </ul>
+                    <span class="open-report">${escapeHtml(ui.openReport)}</span>
+                </span>
+            `;
+
+            card.addEventListener("click", () => openModal(project.id));
+            card.addEventListener("keydown", (event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    openModal(project.id);
+                }
+            });
+            return card;
+        }
+
+        function renderGallery() {
+            galleryGrid.innerHTML = "";
+            projectData.forEach((project, index) => {
+                galleryGrid.appendChild(createProjectCard(project, index));
+            });
+        }
+
+        function createReportList(items, prefix) {
+            return items.map((item, index) => `
+                <li>
+                    <span>${prefix}_${String(index + 1).padStart(2, "0")}</span>
+                    <p>${escapeHtml(item)}</p>
+                </li>
+            `).join("");
+        }
+
+        function createEvidence(project) {
+            const text = getProjectText(project);
+            const evidenceItems = [
+                {
+                    type: "text",
+                    value: text.evidenceNote
+                }
+            ];
+
+            if (project.href) {
+                evidenceItems.unshift({
+                    type: "link",
+                    href: project.href,
+                    label: text.hrefLabel || "Open Link"
+                });
+            }
+
+            return evidenceItems.map((item, index) => `
+                <li>
+                    <span>ev_${String(index + 1).padStart(2, "0")}</span>
+                    <p>${item.type === "link"
+                        ? `<a class="report-link" href="${escapeHtml(item.href)}" target="_blank" rel="noreferrer">${escapeHtml(item.label)} -&gt;</a>`
+                        : escapeHtml(item.value)
+                    }</p>
+                </li>
+            `).join("");
+        }
+
+        function renderModal(projectId) {
+            const ui = getCopy();
+            const project = projectData.find((entry) => entry.id === projectId);
+            if (!project) {
+                return;
+            }
+
+            const text = getProjectText(project);
+            modalContent.innerHTML = `
+                <span class="report-kicker"><span class="report-kicker-label">${escapeHtml(ui.reportKicker)}</span><span>${escapeHtml(project.runId)}</span></span>
+                <h3 id="modalTitle">${escapeHtml(text.fullTitle)}</h3>
+                <p class="modal-summary">${escapeHtml(text.summary)}</p>
+                <div class="report-grid">
+                    <div class="report-stack">
+                        <div class="report-panel">
+                            <h4>${escapeHtml(ui.modalLabels.command)}</h4>
+                            <pre class="command-block"><span class="prompt">&gt;</span> ${escapeHtml(project.command)}
+${escapeHtml(ui.statusLineLabel)}: ${escapeHtml(text.statusLabel)}
+${escapeHtml(ui.outcomeLineLabel)}: ${escapeHtml(text.outcome)}</pre>
+                        </div>
+                        <div class="report-panel">
+                            <h4>${escapeHtml(ui.modalLabels.workflow)}</h4>
+                            <ul class="workflow-list">
+                                ${createReportList(text.workflow, "step")}
+                            </ul>
+                        </div>
+                        <div class="report-panel">
+                            <h4>${escapeHtml(ui.modalLabels.engineeringRole)}</h4>
+                            <ul class="role-list">
+                                ${createReportList(text.engineeringRole, "role")}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="report-stack">
+                        <div class="report-panel">
+                            <h4>${escapeHtml(ui.modalLabels.stack)}</h4>
+                            <ul class="stack-list">
+                                ${text.stack.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+                            </ul>
+                        </div>
+                        <div class="report-panel">
+                            <h4>${escapeHtml(ui.modalLabels.evidence)}</h4>
+                            ${createArtifact(project, "report")}
+                            <ul class="evidence-list">
+                                ${createEvidence(project)}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openModal(projectId) {
+            const project = projectData.find((entry) => entry.id === projectId);
+            if (!project) {
+                return;
+            }
+
+            activeProjectId = projectId;
+            lastFocusedElement = document.activeElement;
+            renderModal(projectId);
+            modal.setAttribute("aria-hidden", "false");
+            document.body.classList.add("modal-open");
+            modalClose.focus();
+        }
+
+        function closeModal() {
+            const projectToRestore = activeProjectId;
+            modal.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("modal-open");
+            modalContent.innerHTML = "";
+            activeProjectId = null;
+
+            const fallbackFocus = projectToRestore
+                ? document.querySelector(`[data-project-id="${projectToRestore}"]`)
+                : null;
+            const focusTarget = lastFocusedElement && document.contains(lastFocusedElement)
+                ? lastFocusedElement
+                : fallbackFocus;
+
+            if (focusTarget instanceof HTMLElement) {
+                focusTarget.focus();
+            }
+        }
+
+        function renderAll() {
+            const modalWasOpen = modal.getAttribute("aria-hidden") === "false";
+            renderStaticCopy();
+            renderGallery();
+            if (modalWasOpen && activeProjectId) {
+                renderModal(activeProjectId);
+            }
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === "en" ? "ko" : "en";
+            renderAll();
+        }
+
+        languageToggles.forEach((button) => {
+            button.addEventListener("click", toggleLanguage);
+        });
+
+        modalClose.addEventListener("click", closeModal);
+
+        modal.addEventListener("click", (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (modal.getAttribute("aria-hidden") !== "false") {
+                return;
+            }
+
+            if (event.key === "Escape") {
+                closeModal();
+                return;
+            }
+
+            if (event.key === "Tab") {
+                const focusable = modal.querySelectorAll(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+
+                if (!first || !last) {
+                    return;
+                }
+
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            }
+        });
+
+        renderAll();
+    </script>
 </body>
 </html>
