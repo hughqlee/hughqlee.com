@@ -29,10 +29,51 @@
             --accent-warn: #f0c674;
             --danger: #ff8c8c;
             --shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+            --grid-line: rgba(105, 210, 255, 0.025);
+            --grid-line-strong: rgba(105, 210, 255, 0.02);
+            --page-glow: rgba(105, 210, 255, 0.08);
+            --scanline: rgba(255, 255, 255, 0.018);
+            --terminal-bg: rgba(9, 13, 16, 0.94);
+            --bar-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+            --inset-line: rgba(255, 255, 255, 0.02);
+            --control-bg: rgba(255, 255, 255, 0.02);
+            --control-hover: rgba(105, 210, 255, 0.08);
+            --subtle-bg: rgba(255, 255, 255, 0.015);
+            --artifact-bg: #050607;
+            --modal-backdrop: rgba(2, 3, 4, 0.78);
             --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
             --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             --radius: 8px;
             --container: 1120px;
+        }
+
+        body[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #7a8791;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --danger: #b42323;
+            --shadow: 0 24px 70px rgba(18, 31, 43, 0.14);
+            --grid-line: rgba(9, 105, 168, 0.055);
+            --grid-line-strong: rgba(9, 105, 168, 0.04);
+            --page-glow: rgba(9, 105, 168, 0.11);
+            --scanline: rgba(9, 16, 24, 0.02);
+            --terminal-bg: rgba(255, 255, 255, 0.92);
+            --bar-bg: linear-gradient(180deg, rgba(9, 16, 24, 0.04), transparent);
+            --inset-line: rgba(9, 16, 24, 0.04);
+            --control-bg: rgba(9, 16, 24, 0.025);
+            --control-hover: rgba(9, 105, 168, 0.08);
+            --subtle-bg: rgba(9, 16, 24, 0.018);
+            --artifact-bg: #eef3f7;
+            --modal-backdrop: rgba(230, 237, 244, 0.78);
         }
 
         * {
@@ -49,9 +90,9 @@
             color: var(--text);
             font-family: var(--mono);
             background:
-                linear-gradient(rgba(105, 210, 255, 0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(105, 210, 255, 0.02) 1px, transparent 1px),
-                radial-gradient(circle at 50% 0%, rgba(105, 210, 255, 0.08), transparent 38%),
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line-strong) 1px, transparent 1px),
+                radial-gradient(circle at 50% 0%, var(--page-glow), transparent 38%),
                 var(--bg);
             background-size: 28px 28px, 28px 28px, auto, auto;
         }
@@ -63,8 +104,8 @@
             pointer-events: none;
             background: repeating-linear-gradient(
                 180deg,
-                rgba(255, 255, 255, 0.018) 0,
-                rgba(255, 255, 255, 0.018) 1px,
+                var(--scanline) 0,
+                var(--scanline) 1px,
                 transparent 1px,
                 transparent 4px
             );
@@ -94,7 +135,7 @@
             position: relative;
             border: 1px solid var(--line);
             border-radius: var(--radius);
-            background: rgba(9, 13, 16, 0.94);
+            background: var(--terminal-bg);
             box-shadow: var(--shadow);
             overflow: hidden;
         }
@@ -105,7 +146,7 @@
             inset: 0;
             pointer-events: none;
             border-radius: inherit;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+            box-shadow: inset 0 0 0 1px var(--inset-line);
         }
 
         .terminal-bar {
@@ -116,7 +157,7 @@
             gap: 16px;
             padding: 10px 14px;
             border-bottom: 1px solid var(--line);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+            background: var(--bar-bg);
         }
 
         .window-controls {
@@ -130,7 +171,7 @@
             height: 10px;
             border-radius: 50%;
             background: var(--faint);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--inset-line);
         }
 
         .window-controls span:nth-child(1) {
@@ -172,21 +213,24 @@
             color: var(--muted);
             text-decoration: none;
             font-size: 0.74rem;
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--control-bg);
             transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
         }
 
         .toolbar-links a:hover,
         .toolbar-links a:focus-visible,
         .language-toggle:hover,
-        .language-toggle:focus-visible {
+        .language-toggle:focus-visible,
+        .theme-toggle:hover,
+        .theme-toggle:focus-visible {
             color: var(--text);
             border-color: var(--line-strong);
-            background: rgba(105, 210, 255, 0.08);
+            background: var(--control-hover);
             outline: none;
         }
 
-        .language-toggle {
+        .language-toggle,
+        .theme-toggle {
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -195,21 +239,24 @@
             border: 1px solid var(--line);
             border-radius: 6px;
             color: var(--muted);
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--control-bg);
             cursor: pointer;
             font-size: 0.74rem;
             transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
         }
 
-        .lang-option {
+        .lang-option,
+        .theme-option {
             color: var(--faint);
         }
 
-        .lang-option.is-active {
+        .lang-option.is-active,
+        .theme-option.is-active {
             color: var(--accent-green);
         }
 
-        .lang-divider {
+        .lang-divider,
+        .theme-divider {
             color: var(--line-strong);
         }
 
@@ -500,7 +547,7 @@
             padding: 12px;
             border: 1px solid var(--line);
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.015);
+            background: var(--subtle-bg);
         }
 
         .summary-row {
@@ -546,7 +593,7 @@
             border: 1px solid var(--line);
             border-radius: 6px;
             overflow: hidden;
-            background: #050607;
+            background: var(--artifact-bg);
         }
 
         .artifact-label {
@@ -563,7 +610,8 @@
         .artifact-preview img {
             display: block;
             width: 100%;
-            height: 150px;
+            aspect-ratio: 3 / 2;
+            height: auto;
             object-fit: cover;
             object-position: center 36%;
             filter: contrast(0.98) brightness(0.82) saturate(0.86);
@@ -590,7 +638,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background: rgba(2, 3, 4, 0.78);
+            background: var(--modal-backdrop);
             backdrop-filter: blur(10px);
             z-index: 100;
         }
@@ -690,7 +738,7 @@
         .report-panel {
             border: 1px solid var(--line);
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.015);
+            background: var(--subtle-bg);
             overflow: hidden;
         }
 
@@ -760,7 +808,7 @@
             border: 1px solid var(--line);
             border-radius: 6px;
             color: var(--muted);
-            background: rgba(255, 255, 255, 0.015);
+            background: var(--subtle-bg);
             font-size: 0.78rem;
         }
 
@@ -769,13 +817,13 @@
             border: 1px solid var(--line);
             border-radius: 6px;
             overflow: hidden;
-            background: #050607;
+            background: var(--artifact-bg);
         }
 
         .report-artifact img {
             display: block;
             width: 100%;
-            max-height: 260px;
+            max-height: 420px;
             object-fit: cover;
             object-position: center 36%;
             filter: contrast(0.98) brightness(0.86) saturate(0.88);
@@ -891,9 +939,6 @@
                 padding: 0 14px 18px;
             }
 
-            .artifact-preview img {
-                height: 130px;
-            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -930,6 +975,11 @@
                         <span class="lang-option" data-lang-option="en">EN</span>
                         <span class="lang-divider">/</span>
                         <span class="lang-option" data-lang-option="ko">KO</span>
+                    </button>
+                    <button class="theme-toggle" type="button" id="themeToggle" aria-pressed="false" aria-label="Switch to light theme">
+                        <span class="theme-option" data-theme-option="dark">DARK</span>
+                        <span class="theme-divider">/</span>
+                        <span class="theme-option" data-theme-option="light">LIGHT</span>
                     </button>
                 </div>
             </div>
@@ -998,6 +1048,11 @@
                     <span class="lang-divider">/</span>
                     <span class="lang-option" data-lang-option="ko">KO</span>
                 </button>
+                <button class="theme-toggle" type="button" id="modalThemeToggle" aria-pressed="false" aria-label="Switch to light theme">
+                    <span class="theme-option" data-theme-option="dark">DARK</span>
+                    <span class="theme-divider">/</span>
+                    <span class="theme-option" data-theme-option="light">LIGHT</span>
+                </button>
                 <button class="modal-close" type="button" id="modalClose" aria-label="Close">
                     <span aria-hidden="true">x</span>
                 </button>
@@ -1009,6 +1064,7 @@
     <script>
         const browserLanguage = (navigator.language || "en").toLowerCase();
         let currentLang = browserLanguage.startsWith("ko") ? "ko" : "en";
+        let currentTheme = "dark";
         let lastFocusedElement = null;
         let activeProjectId = null;
 
@@ -1020,6 +1076,14 @@
                 profileOutputAria: "Profile output",
                 portfolioStatusAria: "Portfolio status",
                 languageToggleAria: "Switch language to Korean",
+                themeToggleAria: {
+                    toLight: "Switch to light theme",
+                    toDark: "Switch to dark theme"
+                },
+                themeLabels: {
+                    dark: "DARK",
+                    light: "LIGHT"
+                },
                 modalCloseAria: "Close",
                 profileRole: "Vision AI Product Engineer",
                 location: "Daegu, KR",
@@ -1078,6 +1142,14 @@
                 profileOutputAria: "프로필 출력",
                 portfolioStatusAria: "포트폴리오 상태",
                 languageToggleAria: "언어를 영어로 전환",
+                themeToggleAria: {
+                    toLight: "라이트 테마로 전환",
+                    toDark: "다크 테마로 전환"
+                },
+                themeLabels: {
+                    dark: "다크",
+                    light: "라이트"
+                },
                 modalCloseAria: "닫기",
                 profileRole: "비전 AI 프로덕트 엔지니어",
                 location: "Daegu, KR",
@@ -1137,6 +1209,7 @@
                 runId: "run_001_toxicity_eval",
                 command: "agent run assay.toxicity --plate 96well --mode autofocus+classify",
                 status: "published",
+                artifactImage: "images/zeFET.png",
                 i18n: {
                     en: {
                         statusLabel: "completed / proprietary",
@@ -1158,7 +1231,8 @@
                             "Integrated hardware movement, AI inference, and data recording into one operator-facing execution flow."
                         ],
                         tags: ["Computer Vision", "Microscope Automation", "96-well Plate", "Lightweight ML", "Toxicology"],
-                        evidenceNote: "Public assets and detailed metrics are omitted because the production system is proprietary."
+                        evidenceNote: "Public assets and detailed metrics are omitted because the production system is proprietary.",
+                        artifactLabel: "artifact: zeFET.png"
                     },
                     ko: {
                         statusLabel: "완료 / 대외비",
@@ -1180,7 +1254,8 @@
                             "하드웨어 이동, AI 추론, 데이터 기록을 하나의 실험 실행 흐름으로 통합했습니다."
                         ],
                         tags: ["컴퓨터 비전", "현미경 자동화", "96웰 플레이트", "경량 ML", "독성 평가"],
-                        evidenceNote: "운영 시스템은 대외비이므로 공개 자료와 세부 수치는 생략했습니다."
+                        evidenceNote: "운영 시스템은 대외비이므로 공개 자료와 세부 수치는 생략했습니다.",
+                        artifactLabel: "artifact: zeFET.png"
                     }
                 }
             },
@@ -1299,6 +1374,7 @@
                 runId: "run_004_robotic_3d",
                 command: "agent run imaging.3d --robot-arm --microfluidics --capture brightfield+fluorescence",
                 status: "in-progress",
+                artifactImage: "images/robotic_3d_imaging.png",
                 i18n: {
                     en: {
                         statusLabel: "in-progress / proprietary",
@@ -1320,7 +1396,8 @@
                             "Built analysis software to reconstruct fluorescence volume indicators from captured image sequences."
                         ],
                         tags: ["Robot Arm", "Microfluidics", "3D Imaging", "Syringe Pump", "Fluorescence Volume"],
-                        evidenceNote: "Public assets and detailed metrics are omitted because the scale-up system is proprietary."
+                        evidenceNote: "Public assets and detailed metrics are omitted because the scale-up system is proprietary.",
+                        artifactLabel: "artifact: robotic_3d_imaging.png"
                     },
                     ko: {
                         statusLabel: "진행 중 / 대외비",
@@ -1342,7 +1419,8 @@
                             "촬영 시퀀스에서 형광 볼륨 지표를 재구성하는 분석 소프트웨어를 개발했습니다."
                         ],
                         tags: ["로봇암", "미세유체", "3D 이미징", "시린지펌프", "형광 볼륨"],
-                        evidenceNote: "스케일업 시스템은 대외비이므로 공개 자료와 세부 수치는 생략했습니다."
+                        evidenceNote: "스케일업 시스템은 대외비이므로 공개 자료와 세부 수치는 생략했습니다.",
+                        artifactLabel: "artifact: robotic_3d_imaging.png"
                     }
                 }
             }
@@ -1355,6 +1433,10 @@
         const languageToggles = [
             document.getElementById("languageToggle"),
             document.getElementById("modalLanguageToggle")
+        ].filter(Boolean);
+        const themeToggles = [
+            document.getElementById("themeToggle"),
+            document.getElementById("modalThemeToggle")
         ].filter(Boolean);
 
         function escapeHtml(value) {
@@ -1394,9 +1476,24 @@
             });
         }
 
+        function updateThemeToggle(button) {
+            const ui = getCopy();
+            button.setAttribute("aria-pressed", currentTheme === "light" ? "true" : "false");
+            button.setAttribute(
+                "aria-label",
+                currentTheme === "dark" ? ui.themeToggleAria.toLight : ui.themeToggleAria.toDark
+            );
+            button.querySelectorAll("[data-theme-option]").forEach((option) => {
+                const optionTheme = option.dataset.themeOption;
+                option.classList.toggle("is-active", optionTheme === currentTheme);
+                option.textContent = ui.themeLabels[optionTheme] || optionTheme;
+            });
+        }
+
         function renderStaticCopy() {
             const ui = getCopy();
             document.documentElement.lang = currentLang;
+            document.body.dataset.theme = currentTheme;
             document.title = ui.documentTitle;
             document.getElementById("socialLinks")?.setAttribute("aria-label", ui.socialAria);
             document.getElementById("promptLine")?.setAttribute("aria-label", ui.promptAria);
@@ -1430,6 +1527,7 @@
             setText("selected-work-title", ui.selectedWorkTitle);
             setText("selectedWorkDescription", ui.selectedWorkDescription);
             languageToggles.forEach(updateLanguageToggle);
+            themeToggles.forEach(updateThemeToggle);
         }
 
         function createArtifact(project, context) {
@@ -1651,8 +1749,18 @@ ${escapeHtml(ui.outcomeLineLabel)}: ${escapeHtml(text.outcome)}</pre>
             renderAll();
         }
 
+        function toggleTheme() {
+            currentTheme = currentTheme === "dark" ? "light" : "dark";
+            document.body.dataset.theme = currentTheme;
+            themeToggles.forEach(updateThemeToggle);
+        }
+
         languageToggles.forEach((button) => {
             button.addEventListener("click", toggleLanguage);
+        });
+
+        themeToggles.forEach((button) => {
+            button.addEventListener("click", toggleTheme);
         });
 
         modalClose.addEventListener("click", closeModal);
