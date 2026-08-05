@@ -1,11 +1,7 @@
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://hughqlee.com/sitemap.xml
+# folio.html stays crawlable on purpose - it is kept out of the index by its
+# noindex meta tag, and a Disallow here would stop crawlers from ever reading it.
 
-# Block access to sensitive files
-Disallow: /.git/
-Disallow: /.DS_Store
-Disallow: /node_modules/
-Disallow: /*.log
+Sitemap: https://hughqlee.com/sitemap.xml

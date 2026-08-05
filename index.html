@@ -11,8 +11,37 @@
     <meta property="og:description" content="Selected work in vision AI, robotics, microscopy automation, and zebrafish assay systems.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://hughqlee.com">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:image" content="https://hughqlee.com/images/og-cover.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Terminal-style portfolio of Hugh Q Lee, Vision AI Product Engineer.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Hugh Q Lee | Vision AI Product Engineer">
+    <meta name="twitter:description" content="Selected work in vision AI, robotics, microscopy automation, and zebrafish assay systems.">
+    <meta name="twitter:image" content="https://hughqlee.com/images/og-cover.jpg">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://hughqlee.com">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // Resolve the theme before first paint so a stored/system light theme never flashes dark.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
     <style>
         :root {
             --bg: #050607;
@@ -23,16 +52,18 @@
             --line-strong: #3a5666;
             --text: #e7edf2;
             --muted: #8b9aa6;
-            --faint: #5d6b75;
+            --faint: #7b8b96;
             --accent: #69d2ff;
             --accent-green: #9ce37d;
             --accent-warn: #f0c674;
             --danger: #ff8c8c;
             --shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
             --grid-line: rgba(105, 210, 255, 0.025);
-            --grid-line-strong: rgba(105, 210, 255, 0.02);
+            --grid-line-alt: rgba(105, 210, 255, 0.02);
             --page-glow: rgba(105, 210, 255, 0.08);
             --scanline: rgba(255, 255, 255, 0.018);
+            --scanline-blend: screen;
+            --artifact-filter: contrast(0.98) brightness(0.82) saturate(0.86);
             --terminal-bg: rgba(9, 13, 16, 0.94);
             --bar-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
             --inset-line: rgba(255, 255, 255, 0.02);
@@ -47,7 +78,7 @@
             --container: 1120px;
         }
 
-        body[data-theme="light"] {
+        :root[data-theme="light"] {
             --bg: #f6f8fb;
             --panel: #ffffff;
             --panel-soft: #f1f5f8;
@@ -56,16 +87,18 @@
             --line-strong: #8fa9bd;
             --text: #18212a;
             --muted: #53616d;
-            --faint: #7a8791;
+            --faint: #5f6d78;
             --accent: #0969a8;
             --accent-green: #25723f;
             --accent-warn: #966a10;
             --danger: #b42323;
             --shadow: 0 24px 70px rgba(18, 31, 43, 0.14);
             --grid-line: rgba(9, 105, 168, 0.055);
-            --grid-line-strong: rgba(9, 105, 168, 0.04);
+            --grid-line-alt: rgba(9, 105, 168, 0.04);
             --page-glow: rgba(9, 105, 168, 0.11);
             --scanline: rgba(9, 16, 24, 0.02);
+            --scanline-blend: multiply;
+            --artifact-filter: contrast(1.02) saturate(0.95);
             --terminal-bg: rgba(255, 255, 255, 0.92);
             --bar-bg: linear-gradient(180deg, rgba(9, 16, 24, 0.04), transparent);
             --inset-line: rgba(9, 16, 24, 0.04);
@@ -91,7 +124,7 @@
             font-family: var(--mono);
             background:
                 linear-gradient(var(--grid-line) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-line-strong) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line-alt) 1px, transparent 1px),
                 radial-gradient(circle at 50% 0%, var(--page-glow), transparent 38%),
                 var(--bg);
             background-size: 28px 28px, 28px 28px, auto, auto;
@@ -110,7 +143,7 @@
                 transparent 4px
             );
             opacity: 0.24;
-            mix-blend-mode: screen;
+            mix-blend-mode: var(--scanline-blend);
         }
 
         body.modal-open {
@@ -467,11 +500,17 @@
         }
 
         .run-card:hover,
-        .run-card:focus-visible {
+        .run-card:focus-within {
             border-color: var(--line-strong);
             background: var(--panel-soft);
             transform: translateY(-2px);
-            outline: none;
+        }
+
+        /* Re-renders (language toggle) must not replay the entry animation. */
+        .run-card.is-static {
+            opacity: 1;
+            transform: none;
+            animation: none;
         }
 
         .run-card-header {
@@ -481,7 +520,7 @@
             gap: 12px;
             padding: 14px 16px;
             border-bottom: 1px solid var(--line);
-            background: rgba(255, 255, 255, 0.018);
+            background: var(--subtle-bg);
         }
 
         .run-id {
@@ -497,7 +536,7 @@
             border-radius: 999px;
             padding: 5px 9px;
             color: var(--muted);
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--control-bg);
             font-size: 0.72rem;
             white-space: nowrap;
         }
@@ -614,7 +653,7 @@
             height: auto;
             object-fit: cover;
             object-position: center 36%;
-            filter: contrast(0.98) brightness(0.82) saturate(0.86);
+            filter: var(--artifact-filter);
         }
 
         .open-report {
@@ -622,13 +661,28 @@
             align-items: center;
             gap: 8px;
             width: fit-content;
+            margin: 0;
+            padding: 4px 8px 4px 6px;
+            border: 1px solid transparent;
+            border-radius: 6px;
             color: var(--accent);
+            background: none;
+            cursor: pointer;
             font-size: 0.82rem;
+            text-align: left;
         }
 
         .open-report::before {
             content: "$";
             color: var(--accent-green);
+        }
+
+        .run-card:hover .open-report,
+        .open-report:hover,
+        .open-report:focus-visible {
+            border-color: var(--line-strong);
+            background: var(--control-hover);
+            outline: none;
         }
 
         .modal {
@@ -639,6 +693,7 @@
             justify-content: center;
             padding: 20px;
             background: var(--modal-backdrop);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             z-index: 100;
         }
@@ -823,10 +878,11 @@
         .report-artifact img {
             display: block;
             width: 100%;
+            height: auto;
             max-height: 420px;
             object-fit: cover;
             object-position: center 36%;
-            filter: contrast(0.98) brightness(0.86) saturate(0.88);
+            filter: var(--artifact-filter);
         }
 
         .report-link {
@@ -952,6 +1008,13 @@
                 animation: none !important;
                 transition: none !important;
             }
+
+            /* .run-card is revealed by its animation, so it must be shown explicitly
+               once animations are suppressed - otherwise every card stays invisible. */
+            .run-card {
+                opacity: 1;
+                transform: none;
+            }
         }
     </style>
 </head>
@@ -1018,7 +1081,7 @@
                         <p class="panel-label" id="statusPanelLabel">current process</p>
                         <ul class="status-list">
                             <li><span class="status-dot" id="statusPortfolioLabel">portfolio</span><strong id="statusPortfolioValue">ready</strong></li>
-                            <li><span id="statusSelectedLabel">selected_runs</span><strong>4</strong></li>
+                            <li><span id="statusSelectedLabel">selected_runs</span><strong id="statusSelectedValue">4</strong></li>
                             <li><span id="statusStackLabel">primary_stack</span><strong id="statusStackValue">vision + robotics</strong></li>
                             <li><span id="statusModeLabel">public_mode</span><strong id="statusModeValue">proprietary-safe</strong></li>
                         </ul>
@@ -1062,9 +1125,31 @@
     </div>
 
     <script>
+        function readStored(key) {
+            try {
+                return localStorage.getItem(key);
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function writeStored(key, value) {
+            try {
+                localStorage.setItem(key, value);
+            } catch (error) {
+                // Blocked storage (private mode, embedded contexts): the toggle still
+                // works for this session, it just will not be remembered.
+            }
+        }
+
         const browserLanguage = (navigator.language || "en").toLowerCase();
-        let currentLang = browserLanguage.startsWith("ko") ? "ko" : "en";
-        let currentTheme = "dark";
+        const storedLang = readStored("lang");
+        let currentLang = storedLang === "ko" || storedLang === "en"
+            ? storedLang
+            : (browserLanguage.startsWith("ko") ? "ko" : "en");
+        // The inline head script already resolved this from storage / prefers-color-scheme.
+        let currentTheme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+        let hasRevealed = false;
         let lastFocusedElement = null;
         let activeProjectId = null;
 
@@ -1114,7 +1199,7 @@
                     note: "AI Engineer for Lab Automation at Zefit, 2021-Present."
                 },
                 selectedWorkTitle: "> list selected_runs",
-                selectedWorkDescription: "Four applied AI systems for zebrafish assay automation, imaging, and analysis.",
+                selectedWorkDescription: "{count} applied AI systems for zebrafish assay automation, imaging, and analysis.",
                 summaryLabels: {
                     system: "system",
                     stack: "stack",
@@ -1180,7 +1265,7 @@
                     note: "Zefit 랩 자동화 AI 엔지니어, 2021-현재."
                 },
                 selectedWorkTitle: "> 선택된 실행 목록",
-                selectedWorkDescription: "제브라피쉬 평가 자동화, 이미징, 분석을 위한 4개의 응용 AI 시스템.",
+                selectedWorkDescription: "제브라피쉬 평가 자동화, 이미징, 분석을 위한 {count}개의 응용 AI 시스템.",
                 summaryLabels: {
                     system: "시스템",
                     stack: "스택",
@@ -1209,7 +1294,9 @@
                 runId: "run_001_toxicity_eval",
                 command: "agent run assay.toxicity --plate 96well --mode autofocus+classify",
                 status: "published",
-                artifactImage: "images/zeFET.png",
+                artifactImage: "images/zeFET.webp",
+                artifactWidth: 1100,
+                artifactHeight: 734,
                 i18n: {
                     en: {
                         statusLabel: "completed / proprietary",
@@ -1232,7 +1319,7 @@
                         ],
                         tags: ["Computer Vision", "Microscope Automation", "96-well Plate", "Lightweight ML", "Toxicology"],
                         evidenceNote: "Public assets and detailed metrics are omitted because the production system is proprietary.",
-                        artifactLabel: "artifact: zeFET.png"
+                        artifactLabel: "artifact: zeFET.webp"
                     },
                     ko: {
                         statusLabel: "완료 / 대외비",
@@ -1255,7 +1342,7 @@
                         ],
                         tags: ["컴퓨터 비전", "현미경 자동화", "96웰 플레이트", "경량 ML", "독성 평가"],
                         evidenceNote: "운영 시스템은 대외비이므로 공개 자료와 세부 수치는 생략했습니다.",
-                        artifactLabel: "artifact: zeFET.png"
+                        artifactLabel: "artifact: zeFET.webp"
                     }
                 }
             },
@@ -1265,7 +1352,9 @@
                 command: "agent run inject.microinjection --sample egg+larva --target vision-guided",
                 status: "published",
                 href: "https://doi.org/10.1371/journal.pone.0333369",
-                artifactImage: "images/microinjection-preview.png",
+                artifactImage: "images/microinjection-preview.webp",
+                artifactWidth: 1100,
+                artifactHeight: 617,
                 i18n: {
                     en: {
                         statusLabel: "published / proprietary",
@@ -1289,7 +1378,7 @@
                         tags: ["Computer Vision", "Motion Control", "Microinjection", "Actuator Control", "Fluorescence Analysis"],
                         hrefLabel: "Related Publication",
                         evidenceNote: "A selected publication is public; additional platform details are proprietary.",
-                        artifactLabel: "artifact: microinjection-preview.png"
+                        artifactLabel: "artifact: microinjection-preview.webp"
                     },
                     ko: {
                         statusLabel: "공개 논문 / 대외비",
@@ -1313,7 +1402,7 @@
                         tags: ["컴퓨터 비전", "모션 제어", "미세주사", "액추에이터 제어", "형광 분석"],
                         hrefLabel: "관련 논문",
                         evidenceNote: "선별된 논문은 공개되어 있으며, 추가 플랫폼 세부 사항은 대외비입니다.",
-                        artifactLabel: "artifact: microinjection-preview.png"
+                        artifactLabel: "artifact: microinjection-preview.webp"
                     }
                 }
             },
@@ -1374,7 +1463,9 @@
                 runId: "run_004_robotic_3d",
                 command: "agent run imaging.3d --robot-arm --microfluidics --capture brightfield+fluorescence",
                 status: "in-progress",
-                artifactImage: "images/robotic_3d_imaging.png",
+                artifactImage: "images/robotic_3d_imaging.webp",
+                artifactWidth: 1100,
+                artifactHeight: 734,
                 i18n: {
                     en: {
                         statusLabel: "in-progress / proprietary",
@@ -1397,7 +1488,7 @@
                         ],
                         tags: ["Robot Arm", "Microfluidics", "3D Imaging", "Syringe Pump", "Fluorescence Volume"],
                         evidenceNote: "Public assets and detailed metrics are omitted because the scale-up system is proprietary.",
-                        artifactLabel: "artifact: robotic_3d_imaging.png"
+                        artifactLabel: "artifact: robotic_3d_imaging.webp"
                     },
                     ko: {
                         statusLabel: "진행 중 / 대외비",
@@ -1420,13 +1511,14 @@
                         ],
                         tags: ["로봇암", "미세유체", "3D 이미징", "시린지펌프", "형광 볼륨"],
                         evidenceNote: "스케일업 시스템은 대외비이므로 공개 자료와 세부 수치는 생략했습니다.",
-                        artifactLabel: "artifact: robotic_3d_imaging.png"
+                        artifactLabel: "artifact: robotic_3d_imaging.webp"
                     }
                 }
             }
         ];
 
         const galleryGrid = document.getElementById("galleryGrid");
+        const pageMain = document.querySelector("main.page");
         const modal = document.getElementById("projectModal");
         const modalContent = document.getElementById("modalContent");
         const modalClose = document.getElementById("modalClose");
@@ -1493,7 +1585,7 @@
         function renderStaticCopy() {
             const ui = getCopy();
             document.documentElement.lang = currentLang;
-            document.body.dataset.theme = currentTheme;
+            document.documentElement.dataset.theme = currentTheme;
             document.title = ui.documentTitle;
             document.getElementById("socialLinks")?.setAttribute("aria-label", ui.socialAria);
             document.getElementById("promptLine")?.setAttribute("aria-label", ui.promptAria);
@@ -1525,7 +1617,8 @@
             setText("experienceLabel", ui.experience.label);
             setText("experienceNote", ui.experience.note);
             setText("selected-work-title", ui.selectedWorkTitle);
-            setText("selectedWorkDescription", ui.selectedWorkDescription);
+            setText("statusSelectedValue", String(projectData.length));
+            setText("selectedWorkDescription", ui.selectedWorkDescription.replace("{count}", String(projectData.length)));
             languageToggles.forEach(updateLanguageToggle);
             themeToggles.forEach(updateThemeToggle);
         }
@@ -1545,7 +1638,13 @@
                         <span>${escapeHtml(text.artifactLabel || "artifact")}</span>
                         <span>${escapeHtml(ui.artifactPreview)}</span>
                     </div>
-                    <img src="${escapeHtml(project.artifactImage)}" alt="${escapeHtml(`${text.title} ${ui.artifactAltSuffix}`)}">
+                    <img
+                        src="${escapeHtml(project.artifactImage)}"
+                        alt="${escapeHtml(`${text.title} ${ui.artifactAltSuffix}`)}"
+                        width="${project.artifactWidth}"
+                        height="${project.artifactHeight}"
+                        loading="lazy"
+                        decoding="async">
                 </div>
             `;
         }
@@ -1554,21 +1653,27 @@
             const ui = getCopy();
             const text = getProjectText(project);
             const card = document.createElement("article");
-            card.className = "run-card";
-            card.tabIndex = 0;
-            card.setAttribute("role", "button");
-            card.style.animationDelay = `${index * 80}ms`;
+            const titleId = `run-title-${project.id}`;
+
+            // No role="button" here: ARIA makes a button's children presentational, which
+            // would hide the whole card body from assistive tech. The card stays a plain
+            // article and the real <button> below carries the action.
+            card.className = hasRevealed ? "run-card is-static" : "run-card";
             card.setAttribute("data-project-id", project.id);
-            card.setAttribute("aria-label", `${text.title} ${ui.cardAriaSuffix}`);
+            card.setAttribute("aria-labelledby", titleId);
+
+            if (!hasRevealed) {
+                card.style.animationDelay = `${index * 80}ms`;
+            }
 
             card.innerHTML = `
-                <span class="run-card-header">
+                <div class="run-card-header">
                     <span class="run-id">${escapeHtml(project.runId)}</span>
                     <span class="${statusClass(project)}">${escapeHtml(text.statusLabel)}</span>
-                </span>
-                <span class="run-card-body">
+                </div>
+                <div class="run-card-body">
                     <span class="run-command"><span class="prompt">&gt;</span> ${escapeHtml(project.command)}</span>
-                    <h3>${escapeHtml(text.title)}</h3>
+                    <h3 id="${escapeHtml(titleId)}">${escapeHtml(text.title)}</h3>
                     ${createArtifact(project, "card")}
                     <span class="run-summary">
                         <span class="summary-row">
@@ -1592,17 +1697,13 @@
                             </li>
                         `).join("")}
                     </ul>
-                    <span class="open-report">${escapeHtml(ui.openReport)}</span>
-                </span>
+                    <button class="open-report" type="button" aria-label="${escapeHtml(`${text.title} ${ui.cardAriaSuffix}`)}">${escapeHtml(ui.openReport)}</button>
+                </div>
             `;
 
+            // One handler covers both paths: pointer clicks anywhere on the card, and
+            // keyboard activation of the inner button (which dispatches a bubbling click).
             card.addEventListener("click", () => openModal(project.id));
-            card.addEventListener("keydown", (event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    openModal(project.id);
-                }
-            });
             return card;
         }
 
@@ -1611,6 +1712,7 @@
             projectData.forEach((project, index) => {
                 galleryGrid.appendChild(createProjectCard(project, index));
             });
+            hasRevealed = true;
         }
 
         function createReportList(items, prefix) {
@@ -1709,10 +1811,24 @@ ${escapeHtml(ui.outcomeLineLabel)}: ${escapeHtml(text.outcome)}</pre>
             }
 
             activeProjectId = projectId;
-            lastFocusedElement = document.activeElement;
+
+            // Only remember the trigger when it lives inside the card being opened.
+            // A stale focus elsewhere on the page would otherwise send focus to the
+            // wrong card on close; closeModal falls back to this card's own button.
+            const trigger = document.activeElement;
+            const triggerCard = document.querySelector(`[data-project-id="${projectId}"]`);
+            lastFocusedElement = trigger instanceof HTMLElement && triggerCard && triggerCard.contains(trigger)
+                ? trigger
+                : null;
+
             renderModal(projectId);
             modal.setAttribute("aria-hidden", "false");
             document.body.classList.add("modal-open");
+            // The Tab trap only holds keyboard focus; inert also keeps a screen reader's
+            // virtual cursor from wandering into the page behind the dialog.
+            if (pageMain) {
+                pageMain.setAttribute("inert", "");
+            }
             modalClose.focus();
         }
 
@@ -1720,15 +1836,21 @@ ${escapeHtml(ui.outcomeLineLabel)}: ${escapeHtml(text.outcome)}</pre>
             const projectToRestore = activeProjectId;
             modal.setAttribute("aria-hidden", "true");
             document.body.classList.remove("modal-open");
+            // Must come before focus(): an element inside an inert subtree cannot take focus.
+            if (pageMain) {
+                pageMain.removeAttribute("inert");
+            }
             modalContent.innerHTML = "";
             activeProjectId = null;
 
             const fallbackFocus = projectToRestore
-                ? document.querySelector(`[data-project-id="${projectToRestore}"]`)
+                ? document.querySelector(`[data-project-id="${projectToRestore}"] .open-report`)
                 : null;
-            const focusTarget = lastFocusedElement && document.contains(lastFocusedElement)
-                ? lastFocusedElement
-                : fallbackFocus;
+            // A pointer click on the card body records no trigger, so fall back to that
+            // card's own button rather than leaving focus stranded on <body>.
+            const restorable = lastFocusedElement instanceof HTMLElement
+                && document.contains(lastFocusedElement);
+            const focusTarget = restorable ? lastFocusedElement : fallbackFocus;
 
             if (focusTarget instanceof HTMLElement) {
                 focusTarget.focus();
@@ -1746,12 +1868,14 @@ ${escapeHtml(ui.outcomeLineLabel)}: ${escapeHtml(text.outcome)}</pre>
 
         function toggleLanguage() {
             currentLang = currentLang === "en" ? "ko" : "en";
+            writeStored("lang", currentLang);
             renderAll();
         }
 
         function toggleTheme() {
             currentTheme = currentTheme === "dark" ? "light" : "dark";
-            document.body.dataset.theme = currentTheme;
+            writeStored("theme", currentTheme);
+            document.documentElement.dataset.theme = currentTheme;
             themeToggles.forEach(updateThemeToggle);
         }
 

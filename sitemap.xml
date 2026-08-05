@@ -3,23 +3,15 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-    
+
     <!-- Main Page -->
     <url>
         <loc>https://hughqlee.com/</loc>
-        <lastmod>2025-08-05</lastmod>
+        <lastmod>2026-08-05</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
     </url>
-    
-    <!-- Portfolio Page -->
-    <url>
-        <loc>https://hughqlee.com/folio</loc>
-        <lastmod>2025-01-24</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <!-- Projects Pages -->
+
+    <!-- folio.html is intentionally omitted: it is marked noindex. -->
 
 </urlset>

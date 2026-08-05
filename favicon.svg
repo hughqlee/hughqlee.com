@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Hugh Q Lee">
+    <rect width="32" height="32" rx="7" fill="#090d10"/>
+    <rect x="0.9" y="0.9" width="30.2" height="30.2" rx="6.1" fill="none" stroke="#3a5666" stroke-width="1.8"/>
+    <path d="M8.5 10.5 L14.5 16 L8.5 21.5" fill="none" stroke="#9ce37d" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="17.5" y="19" width="7.5" height="2.9" rx="1.45" fill="#69d2ff"/>
+</svg>
