@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 not_found | Hugh Q Lee</title>
+    <meta name="description" content="The requested path is not part of this portfolio.">
+    <meta name="robots" content="noindex, follow">
+    <!-- Every path below is root-absolute on purpose: GitHub Pages serves this file
+         for any missing URL while the address bar keeps the original deep path, so
+         relative references would resolve against that path and 404 in turn. -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // Resolve the theme before first paint so a stored/system light theme never flashes dark.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel-soft: #0d1216;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --danger: #ff8c8c;
+            --shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+            --grid-line: rgba(105, 210, 255, 0.025);
+            --grid-line-alt: rgba(105, 210, 255, 0.02);
+            --page-glow: rgba(105, 210, 255, 0.08);
+            --scanline: rgba(255, 255, 255, 0.018);
+            --scanline-blend: screen;
+            --terminal-bg: rgba(9, 13, 16, 0.94);
+            --bar-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+            --inset-line: rgba(255, 255, 255, 0.02);
+            --control-bg: rgba(255, 255, 255, 0.02);
+            --control-hover: rgba(105, 210, 255, 0.08);
+            --subtle-bg: rgba(255, 255, 255, 0.015);
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --radius: 8px;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel-soft: #f1f5f8;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --danger: #b42323;
+            --shadow: 0 24px 70px rgba(18, 31, 43, 0.14);
+            --grid-line: rgba(9, 105, 168, 0.055);
+            --grid-line-alt: rgba(9, 105, 168, 0.04);
+            --page-glow: rgba(9, 105, 168, 0.11);
+            --scanline: rgba(9, 16, 24, 0.02);
+            --scanline-blend: multiply;
+            --terminal-bg: rgba(255, 255, 255, 0.92);
+            --bar-bg: linear-gradient(180deg, rgba(9, 16, 24, 0.04), transparent);
+            --inset-line: rgba(9, 16, 24, 0.04);
+            --control-bg: rgba(9, 16, 24, 0.025);
+            --control-hover: rgba(9, 105, 168, 0.08);
+            --subtle-bg: rgba(9, 16, 24, 0.018);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            align-content: center;
+            color: var(--text);
+            font-family: var(--mono);
+            background:
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line-alt) 1px, transparent 1px),
+                radial-gradient(circle at 50% 0%, var(--page-glow), transparent 38%),
+                var(--bg);
+            background-size: 28px 28px, 28px 28px, auto, auto;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                180deg,
+                var(--scanline) 0,
+                var(--scanline) 1px,
+                transparent 1px,
+                transparent 4px
+            );
+            opacity: 0.24;
+            mix-blend-mode: var(--scanline-blend);
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .page {
+            width: min(calc(100% - 32px), 720px);
+            margin: 0 auto;
+            padding: 32px 0;
+        }
+
+        .terminal-window {
+            position: relative;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--terminal-bg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .terminal-window::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            border-radius: inherit;
+            box-shadow: inset 0 0 0 1px var(--inset-line);
+        }
+
+        .terminal-bar {
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--line);
+            background: var(--bar-bg);
+        }
+
+        .window-controls {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .window-controls span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 1px solid var(--inset-line);
+        }
+
+        .window-controls span:nth-child(1) {
+            background: #ff6b6b;
+        }
+
+        .window-controls span:nth-child(2) {
+            background: #f0c674;
+        }
+
+        .window-controls span:nth-child(3) {
+            background: #9ce37d;
+        }
+
+        .terminal-title {
+            margin-right: auto;
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .language-toggle,
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 28px;
+            padding: 0 9px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            color: var(--muted);
+            background: var(--control-bg);
+            cursor: pointer;
+            font-size: 0.74rem;
+            transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+        }
+
+        .language-toggle:hover,
+        .language-toggle:focus-visible,
+        .theme-toggle:hover,
+        .theme-toggle:focus-visible {
+            color: var(--text);
+            border-color: var(--line-strong);
+            background: var(--control-hover);
+            outline: none;
+        }
+
+        .lang-option,
+        .theme-option {
+            color: var(--faint);
+        }
+
+        .lang-option.is-active,
+        .theme-option.is-active {
+            color: var(--accent-green);
+        }
+
+        .lang-divider,
+        .theme-divider {
+            color: var(--line-strong);
+        }
+
+        .terminal-body {
+            padding: 24px;
+        }
+
+        .prompt-line {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            font-size: clamp(0.82rem, 1.8vw, 0.95rem);
+            line-height: 1.5;
+            word-break: break-all;
+        }
+
+        .prompt {
+            color: var(--accent-green);
+            flex: none;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 9px;
+            height: 1.05em;
+            flex: none;
+            background: var(--accent);
+            vertical-align: -0.18em;
+            animation: cursor-blink 1.2s steps(2, start) infinite;
+        }
+
+        h1 {
+            margin: 22px 0 0;
+            font-family: var(--sans);
+            font-size: clamp(3.2rem, 14vw, 6rem);
+            line-height: 0.9;
+            letter-spacing: -0.06em;
+        }
+
+        .status-line {
+            margin: 10px 0 0;
+            color: var(--danger);
+            font-size: 0.86rem;
+        }
+
+        .output-panel {
+            margin-top: 22px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+            padding: 18px;
+        }
+
+        .kv-list {
+            display: grid;
+            gap: 12px;
+            margin: 0;
+        }
+
+        .kv-row {
+            display: grid;
+            grid-template-columns: 132px minmax(0, 1fr);
+            gap: 14px;
+            align-items: start;
+            min-width: 0;
+        }
+
+        .kv-key {
+            color: var(--faint);
+            font-size: 0.78rem;
+        }
+
+        .kv-value {
+            color: var(--text);
+            line-height: 1.5;
+            font-size: 0.88rem;
+            min-width: 0;
+            word-break: break-all;
+        }
+
+        .home-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 22px;
+            padding: 8px 12px 8px 10px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            color: var(--accent);
+            background: var(--control-bg);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+        }
+
+        .home-link::before {
+            content: "$";
+            color: var(--accent-green);
+        }
+
+        .home-link:hover,
+        .home-link:focus-visible {
+            border-color: var(--line-strong);
+            background: var(--control-hover);
+            outline: none;
+        }
+
+        @keyframes cursor-blink {
+            0%, 45% {
+                opacity: 1;
+            }
+            46%, 100% {
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .terminal-bar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .toolbar-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .terminal-body {
+                padding: 18px;
+            }
+
+            .kv-row {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <section class="terminal-window">
+            <div class="terminal-bar">
+                <div class="window-controls" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span class="terminal-title">portfolio.agent</span>
+                <div class="toolbar-actions">
+                    <button class="language-toggle" type="button" id="languageToggle" aria-pressed="false" aria-label="Switch language to Korean">
+                        <span class="lang-option" data-lang-option="en">EN</span>
+                        <span class="lang-divider">/</span>
+                        <span class="lang-option" data-lang-option="ko">KO</span>
+                    </button>
+                    <button class="theme-toggle" type="button" id="themeToggle" aria-pressed="false" aria-label="Switch to light theme">
+                        <span class="theme-option" data-theme-option="dark">DARK</span>
+                        <span class="theme-divider">/</span>
+                        <span class="theme-option" data-theme-option="light">LIGHT</span>
+                    </button>
+                </div>
+            </div>
+            <div class="terminal-body">
+                <p class="prompt-line">
+                    <span class="prompt">&gt;</span>
+                    <span id="commandLine">agent run resolve --path /</span>
+                    <span class="cursor" aria-hidden="true"></span>
+                </p>
+                <h1>404</h1>
+                <p class="status-line" id="statusLine">exit status: not_found</p>
+                <div class="output-panel">
+                    <div class="kv-list">
+                        <div class="kv-row">
+                            <span class="kv-key" id="keyPath">requested_path</span>
+                            <span class="kv-value" id="valuePath">/</span>
+                        </div>
+                        <div class="kv-row">
+                            <span class="kv-key" id="keyReason">reason</span>
+                            <span class="kv-value" id="valueReason">No run is registered at this path. It may have moved, or it never existed.</span>
+                        </div>
+                    </div>
+                </div>
+                <a class="home-link" href="/" id="homeLink">return to portfolio</a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function readStored(key) {
+            try {
+                return localStorage.getItem(key);
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function writeStored(key, value) {
+            try {
+                localStorage.setItem(key, value);
+            } catch (error) {
+                // Blocked storage: the toggle still works for this session.
+            }
+        }
+
+        const copy = {
+            en: {
+                documentTitle: "404 not_found | Hugh Q Lee",
+                languageToggleAria: "Switch language to Korean",
+                themeToggleAria: {
+                    toLight: "Switch to light theme",
+                    toDark: "Switch to dark theme"
+                },
+                themeLabels: { dark: "DARK", light: "LIGHT" },
+                command: (path) => `agent run resolve --path ${path}`,
+                status: "exit status: not_found",
+                keys: { path: "requested_path", reason: "reason" },
+                reason: "No run is registered at this path. It may have moved, or it never existed.",
+                home: "return to portfolio"
+            },
+            ko: {
+                documentTitle: "404 not_found | Hugh Q Lee",
+                languageToggleAria: "언어를 영어로 전환",
+                themeToggleAria: {
+                    toLight: "라이트 테마로 전환",
+                    toDark: "다크 테마로 전환"
+                },
+                themeLabels: { dark: "다크", light: "라이트" },
+                command: (path) => `agent run resolve --path ${path}`,
+                status: "종료 상태: not_found",
+                keys: { path: "요청 경로", reason: "원인" },
+                reason: "이 경로에 등록된 실행이 없습니다. 이동되었거나, 처음부터 존재하지 않은 주소입니다.",
+                home: "포트폴리오로 돌아가기"
+            }
+        };
+
+        const browserLanguage = (navigator.language || "en").toLowerCase();
+        const storedLang = readStored("lang");
+        let currentLang = storedLang === "ko" || storedLang === "en"
+            ? storedLang
+            : (browserLanguage.startsWith("ko") ? "ko" : "en");
+        let currentTheme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+
+        // GitHub Pages keeps the original URL in the address bar while serving this file,
+        // so the path is worth showing back to the visitor. It is attacker-controllable,
+        // so it is only ever written with textContent and capped to a sane length.
+        const rawPath = `${location.pathname}${location.search}`;
+        const requestedPath = rawPath.length > 120 ? `${rawPath.slice(0, 120)}...` : rawPath;
+
+        const languageToggle = document.getElementById("languageToggle");
+        const themeToggle = document.getElementById("themeToggle");
+
+        function setText(id, value) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value;
+            }
+        }
+
+        function render() {
+            const ui = copy[currentLang] || copy.en;
+            document.documentElement.lang = currentLang;
+            document.documentElement.dataset.theme = currentTheme;
+            document.title = ui.documentTitle;
+
+            setText("commandLine", ui.command(requestedPath));
+            setText("statusLine", ui.status);
+            setText("keyPath", ui.keys.path);
+            setText("valuePath", requestedPath);
+            setText("keyReason", ui.keys.reason);
+            setText("valueReason", ui.reason);
+            setText("homeLink", ui.home);
+
+            languageToggle.setAttribute("aria-pressed", currentLang === "ko" ? "true" : "false");
+            languageToggle.setAttribute("aria-label", ui.languageToggleAria);
+            languageToggle.querySelectorAll("[data-lang-option]").forEach((option) => {
+                option.classList.toggle("is-active", option.dataset.langOption === currentLang);
+            });
+
+            themeToggle.setAttribute("aria-pressed", currentTheme === "light" ? "true" : "false");
+            themeToggle.setAttribute(
+                "aria-label",
+                currentTheme === "dark" ? ui.themeToggleAria.toLight : ui.themeToggleAria.toDark
+            );
+            themeToggle.querySelectorAll("[data-theme-option]").forEach((option) => {
+                const optionTheme = option.dataset.themeOption;
+                option.classList.toggle("is-active", optionTheme === currentTheme);
+                option.textContent = ui.themeLabels[optionTheme] || optionTheme;
+            });
+        }
+
+        languageToggle.addEventListener("click", () => {
+            currentLang = currentLang === "en" ? "ko" : "en";
+            writeStored("lang", currentLang);
+            render();
+        });
+
+        themeToggle.addEventListener("click", () => {
+            currentTheme = currentTheme === "dark" ? "light" : "dark";
+            writeStored("theme", currentTheme);
+            render();
+        });
+
+        render();
+    </script>
+</body>
+</html>
