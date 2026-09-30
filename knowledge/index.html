@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge | Hugh Q Lee</title>
+    <meta name="description" content="Hugh Q Lee가 공부한 개념을 직접 조작해 보며 이해하도록 만든 인터랙티브 지식 페이지 모음.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:title" content="Knowledge | Hugh Q Lee">
+    <meta property="og:description" content="공부한 개념을 직접 조작해 보며 이해하도록 만든 인터랙티브 지식 페이지 모음.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/">
+    <meta property="og:image" content="https://hughqlee.com/images/og-cover.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Terminal-style portfolio of Hugh Q Lee, Vision AI Product Engineer.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Knowledge | Hugh Q Lee">
+    <meta name="twitter:description" content="공부한 개념을 직접 조작해 보며 이해하도록 만든 인터랙티브 지식 페이지 모음.">
+    <meta name="twitter:image" content="https://hughqlee.com/images/og-cover.jpg">
+    <!-- 페이지를 발행할 때마다 아래 목록(HTML)과 ItemList에 같은 순서로 추가한다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "CollectionPage",
+          "@id": "https://hughqlee.com/knowledge/#collection",
+          "url": "https://hughqlee.com/knowledge/",
+          "name": "Knowledge",
+          "description": "Hugh Q Lee가 공부한 개념을 직접 조작해 보며 이해하도록 만든 인터랙티브 지식 페이지 모음.",
+          "inLanguage": "ko",
+          "author": { "@id": "https://hughqlee.com/#person" },
+          "mainEntity": {
+            "@type": "ItemList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "url": "https://hughqlee.com/knowledge/yolo-v1/",
+                "name": "YOLOv1, 한 번 보고 모두 찾기"
+              }
+            ]
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Hugh Q Lee", "item": "https://hughqlee.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Knowledge", "item": "https://hughqlee.com/knowledge/" }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+        p { margin: 0 0 12px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-family: var(--mono);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 28px; }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 16px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .lead { color: var(--muted); }
+
+        .pages { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+        .pages article {
+            position: relative;
+            padding: 18px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .pages article:hover { border-color: var(--line-strong); }
+        .pages h2 { margin: 0 0 6px; font-size: 20px; line-height: 1.4; }
+        .pages h2 a { color: var(--text); text-decoration: none; }
+        .pages h2 a::after { content: ""; position: absolute; inset: 0; }  /* the whole card is the link */
+        .pages p { margin: 0; color: var(--muted); }
+        .pages .meta { margin: 0 0 6px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+
+        footer {
+            margin-top: 48px;
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="위치">
+            <a href="/">hughqlee.com</a> / <span aria-current="page">knowledge</span>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+    </header>
+
+    <main id="main" class="wrap">
+        <section class="hero" aria-labelledby="page-title">
+            <p class="eyebrow">KNOWLEDGE</p>
+            <h1 id="page-title">Knowledge</h1>
+            <p class="lead">공부한 개념을 직접 조작해 보며 이해하도록 만든 페이지 모음이다.</p>
+        </section>
+
+        <ol class="pages" aria-label="지식 페이지">
+            <li>
+                <article>
+                    <p class="meta"><time datetime="2026-09-30">2026-09-30</time> · 물체 탐지</p>
+                    <h2><a href="/knowledge/yolo-v1/">YOLOv1, 한 번 보고 모두 찾기</a></h2>
+                    <p>사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을, 직접 구현한 모델의 구조와 출력으로 만져 보며 이해한다.</p>
+                </article>
+            </li>
+        </ol>
+    </main>
+
+    <footer class="wrap">
+        <a href="/">Hugh Q Lee</a>
+    </footer>
+
+    <script>
+        // Theme toggle (shared with the homepage through localStorage "theme").
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function label() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                label();
+            });
+            label();
+        })();
+    </script>
+</body>
+</html>

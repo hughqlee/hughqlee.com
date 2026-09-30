@@ -1,0 +1,2135 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLOv1, 한 번 보고 모두 찾기 | Hugh Q Lee</title>
+    <meta name="description" content="사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을, 직접 구현한 모델의 구조와 출력으로 만져 보며 이해한다.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="YOLO, YOLOv1, You Only Look Once, 물체 탐지, 객체 탐지, object detection, 딥러닝, 컴퓨터 비전, NMS, IOU">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/yolo-v1/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:title" content="YOLOv1, 한 번 보고 모두 찾기">
+    <meta property="og:description" content="사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을 직접 만져 보며 이해한다.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/yolo-v1/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/yolo-v1/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="YOLOv1, 한 번 보고 모두 찾기: 7×7 격자 위 두 물체의 중심과 박스">
+    <meta property="article:published_time" content="2026-09-30">
+    <meta property="article:modified_time" content="2026-09-30">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta property="article:tag" content="YOLO">
+    <meta property="article:tag" content="물체 탐지">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="YOLOv1, 한 번 보고 모두 찾기">
+    <meta name="twitter:description" content="사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을 직접 만져 보며 이해한다.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/yolo-v1/og.png">
+    <meta name="twitter:image:alt" content="YOLOv1, 한 번 보고 모두 찾기: 7×7 격자 위 두 물체의 중심과 박스">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. 아래 "자주 묻는 질문"과 문장이 같아야 한다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/yolo-v1/#article",
+          "headline": "YOLOv1, 한 번 보고 모두 찾기",
+          "alternativeHeadline": "사진 한 장에서 물체를 모두 찾으려면, 몇 번 봐야 할까?",
+          "description": "사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을, 직접 구현한 모델의 구조와 출력으로 만져 보며 이해한다.",
+          "abstract": "YOLOv1은 사진을 7×7 칸으로 나누고, 신경망을 한 번만 통과시켜 모든 물체의 위치와 종류를 한꺼번에 맞힌다.",
+          "inLanguage": "ko",
+          "datePublished": "2026-09-30",
+          "dateModified": "2026-09-30",
+          "url": "https://hughqlee.com/knowledge/yolo-v1/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/yolo-v1/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/yolo-v1/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/#collection"
+          },
+          "about": [
+            {
+              "@type": "Thing",
+              "name": "YOLO (You Only Look Once)"
+            },
+            {
+              "@type": "Thing",
+              "name": "물체 탐지 (object detection)"
+            }
+          ],
+          "keywords": [
+            "YOLO",
+            "YOLOv1",
+            "You Only Look Once",
+            "물체 탐지",
+            "객체 탐지",
+            "object detection",
+            "NMS",
+            "IOU"
+          ],
+          "proficiencyLevel": "Beginner",
+          "isAccessibleForFree": true,
+          "citation": {
+            "@type": "ScholarlyArticle",
+            "name": "You Only Look Once: Unified, Real-Time Object Detection",
+            "author": [
+              {
+                "@type": "Person",
+                "name": "Joseph Redmon"
+              },
+              {
+                "@type": "Person",
+                "name": "Santosh Divvala"
+              },
+              {
+                "@type": "Person",
+                "name": "Ross Girshick"
+              },
+              {
+                "@type": "Person",
+                "name": "Ali Farhadi"
+              }
+            ],
+            "datePublished": "2016",
+            "url": "https://arxiv.org/abs/1506.02640"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "YOLOv1, 한 번 보고 모두 찾기",
+              "item": "https://hughqlee.com/knowledge/yolo-v1/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/yolo-v1/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "YOLO는 무슨 뜻인가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You Only Look Once의 줄임말이다. 사진 속 물체의 위치와 종류를 찾는 물체 탐지(객체 탐지, object detection) 방법으로, 후보 영역을 하나씩 검사하지 않고 사진 전체를 신경망에 한 번만 통과시켜 모든 물체를 한꺼번에 예측한다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "YOLOv1은 어떤 구조인가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "합성곱 24층과 완전연결 2층으로 이루어진다. 448 × 448 사진을 받아 7 × 7 × 30을 낸다. 논문 구조대로 구현해 세면 파라미터는 약 2억 7천만 개이고, 그중 약 76%가 첫 완전연결 층에 있다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "출력은 왜 7 × 7 × 30인가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "사진을 7 × 7 칸으로 나누고, 칸마다 박스 2개와 클래스 확률 20개를 내기 때문이다. 박스 하나는 x, y, w, h, 신뢰도의 5개 숫자라서 2 × 5 + 20 = 30이다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "한 장에서 박스는 몇 개 나오고, 어떻게 줄이나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "7 × 7 칸 × 2개 = 98개가 나온다. 박스마다 클래스 확률 × 신뢰도로 점수를 매겨 낮은 것을 버리고, 같은 물체를 겹쳐 잡은 박스는 NMS(겹침 제거)로 점수가 가장 높은 하나만 남긴다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "왜 너비 대신 √너비를 예측하나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "같은 크기의 오차라도 작은 박스에서는 겹침(IOU)이 크게 떨어지고, 큰 박스에서는 거의 그대로이기 때문이다. √w의 차이로 벌점을 매기면, 너비를 똑같이 0.05 틀렸을 때 작은 박스(w = 0.1)의 벌점이 큰 박스(w = 0.8)의 약 6.7배가 된다. 논문도 이 방법이 문제를 일부만 해결한다고 쓴다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "손실의 λcoord와 λnoobj는 무엇인가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "손실(식 3)에 곱하는 가중치다. 박스 좌표 오차에는 λcoord = 5를 곱해 키우고, 물체가 없는 박스의 신뢰도 오차에는 λnoobj = 0.5를 곱해 줄인다. 대부분의 칸에는 물체가 없어서, 그대로 두면 신뢰도를 0으로 끌어내리는 신호가 물체가 있는 칸의 신호를 압도해 학습이 불안정해지기 때문이다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "YOLOv1은 얼마나 빠른가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "논문 기준으로 Titan X GPU에서 초당 45장을 처리하고, 더 작은 Fast YOLO는 초당 155장을 처리한다. 스트리밍 영상을 25밀리초 이내의 지연으로 실시간 처리할 수 있는 속도다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "YOLOv1의 한계는 무엇인가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "칸마다 박스 2개와 클래스 1개만 예측해서, 새 떼처럼 붙어 있는 작은 물체는 놓치기 쉽다. 학습에서 보지 못한 비율이나 배치의 물체에 약하고, 가장 흔한 오류는 부정확한 위치다."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --danger: #ff8c8c;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --green-soft: rgba(156, 227, 125, 0.14);
+            --warn-soft: rgba(240, 198, 116, 0.16);
+            --danger-soft: rgba(255, 140, 140, 0.18);
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            --wide: 980px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --danger: #b42323;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --green-soft: rgba(37, 114, 63, 0.12);
+            --warn-soft: rgba(150, 106, 16, 0.14);
+            --danger-soft: rgba(180, 35, 35, 0.12);
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+        p { margin: 0 0 12px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+        .wide { width: min(var(--wide), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle, .btn {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-family: var(--mono);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover, .btn:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 28px; }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0 0 20px; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+        .muted { color: var(--muted); }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
+            margin: 24px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+        .toc a {
+            display: block;
+            height: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+            text-decoration: none;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+        .toc a:hover { border-color: var(--line-strong); }
+        .toc span { display: block; color: var(--accent); font-family: var(--mono); font-size: 12px; }
+
+        .step { padding: 48px 0 8px; border-top: 1px solid var(--line); margin-top: 32px; }
+        .step-no { margin: 0 0 6px; color: var(--accent); font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; }
+        h2 { margin: 0 0 14px; font-size: clamp(22px, 4vw, 30px); line-height: 1.35; letter-spacing: -0.01em; }
+        h3 { margin: 0 0 8px; font-size: 18px; line-height: 1.45; }
+        .hint { color: var(--muted); font-size: 15px; }
+        .source { margin-top: 12px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+
+        .panel {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .split {
+            display: grid;
+            grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+        canvas.stage {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 6px;
+            background: var(--panel-soft);
+            touch-action: none;
+            cursor: grab;
+        }
+        canvas.stage.view { cursor: default; touch-action: auto; }
+        canvas.stage3d {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            margin-top: 12px;
+            border-radius: 6px;
+            background: var(--panel-soft);
+            touch-action: none;
+            cursor: grab;
+        }
+        canvas.stage3d:active { cursor: grabbing; }
+
+        .kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0 0 12px; font-size: 15px; }
+        .kv dt { color: var(--muted); }
+        .kv dd { margin: 0; font-family: var(--mono); }
+        .big { font-family: var(--mono); font-size: 20px; }
+
+        .slots { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 3px; margin: 8px 0 6px; }
+        .slot {
+            display: grid;
+            place-items: center;
+            min-height: 34px;
+            padding: 2px 0;
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            color: var(--faint);
+            font-family: var(--mono);
+            font-size: clamp(8.5px, 2.5vw, 11px);
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .slot small { display: block; font-size: clamp(7.5px, 2vw, 9px); color: var(--faint); }
+        .slot.coord { background: var(--accent-soft); border-color: var(--accent); color: var(--text); }
+        .slot.zero { background: var(--panel-soft); }
+        .slot.cls { background: var(--warn-soft); border-color: var(--accent-warn); color: var(--text); }
+        .slot-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--muted); }
+
+        .chip {
+            display: inline-block;
+            margin: 8px 0 0;
+            padding: 8px 12px;
+            border: 1px solid var(--danger);
+            border-radius: var(--radius);
+            background: var(--danger-soft);
+            font-size: 15px;
+        }
+        [hidden] { display: none !important; }
+
+        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 18px; margin-top: 12px; }
+        .control { display: grid; gap: 2px; }
+        .control label, .control .label { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 14px; }
+        .control output { color: var(--text); font-family: var(--mono); }
+        input[type="range"] { width: 100%; min-height: 32px; margin: 0; accent-color: var(--accent); }
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); vertical-align: -3px; }
+        .check { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; color: var(--muted); font-size: 14px; cursor: pointer; }
+
+        .seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+        .seg button {
+            min-height: 36px;
+            padding: 4px 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .seg button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
+
+        .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+        .strip-wrap { margin-top: 12px; overflow-x: auto; overscroll-behavior-x: contain; }
+        svg.strip { display: block; }
+        svg.strip rect.block { cursor: pointer; transition: height 0.45s ease, y 0.45s ease; }
+        .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 8px; font-size: 13px; color: var(--muted); }
+        .legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; border-radius: 3px; vertical-align: -1px; }
+        .stepper { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; margin-top: 12px; }
+        .detail { margin-top: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .detail h3 { font-family: var(--mono); font-size: 15px; }
+        .callout { margin: 14px 0 0; padding-left: 12px; border-left: 3px solid var(--accent); }
+        .numbers { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 8px 0 0; font-family: var(--mono); font-size: 14px; color: var(--muted); }
+        .numbers b { color: var(--text); font-weight: 600; }
+
+        .funnel { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+        .funnel div { padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .funnel span { display: block; color: var(--muted); font-size: 13px; }
+        .funnel b { font-family: var(--mono); font-size: 22px; }
+
+        .twin { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+        .mini { display: block; width: 100%; max-width: 200px; aspect-ratio: 1; margin: 8px 0; border-radius: 6px; background: var(--panel-soft); }
+        .chart { display: block; width: 100%; height: auto; margin-top: 8px; }
+        .bars { display: grid; gap: 6px; margin-top: 8px; font-size: 14px; }
+        .bar { display: grid; grid-template-columns: 110px 1fr 64px; align-items: center; gap: 8px; }
+        .bar .track { height: 12px; overflow: hidden; border-radius: 999px; background: var(--panel-strong); }
+        .bar .fill { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--accent); transition: width 0.25s ease; }
+        .bar .fill.plain { background: var(--line-strong); }
+        .bar output { font-family: var(--mono); text-align: right; }
+        .stack { display: flex; height: 16px; overflow: hidden; border-radius: 999px; background: var(--panel-strong); }
+        .stack .empty { background: var(--line-strong); transition: width 0.25s ease; }
+        .stack .full { background: var(--accent); transition: width 0.25s ease; }
+        .formula { margin: 0; color: var(--faint); font-family: var(--mono); font-size: 13px; overflow-wrap: anywhere; }
+        .formula span { display: inline-block; }
+        canvas.stage3d.square { aspect-ratio: 1; }
+
+        .limits { margin: 0; padding-left: 1.2em; }
+        .limits li { margin: 8px 0; }
+        .note {
+            margin-top: 16px;
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+        .links { margin: 0; padding-left: 1.2em; }
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+        .links li { margin: 6px 0; }
+
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+        footer {
+            margin-top: 48px;
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (max-width: 760px) {
+            canvas.stage3d { aspect-ratio: 4 / 3; }
+            .split, .twin { grid-template-columns: 1fr; }
+            .toc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 420px) {
+            .funnel b { font-size: 18px; }
+            .bar { grid-template-columns: 84px 1fr 56px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+    <header class="wide topbar">
+        <nav class="crumbs" aria-label="위치">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+    </header>
+
+    <main id="main">
+        <section class="wrap hero" aria-labelledby="page-title">
+            <p class="eyebrow">KNOWLEDGE · 물체 탐지</p>
+            <h1 id="page-title">사진 한 장에서 물체를 모두 찾으려면, 몇 번 봐야 할까?</h1>
+            <p class="answer">YOLOv1은 사진을 7×7 칸으로 나누고, 신경망을 한 번만 통과시켜 모든 물체의 위치와 종류를 한꺼번에 맞힌다.</p>
+            <p>YOLO 이전의 탐지기는 물체가 있을 법한 후보 영역을 약 2,000개 뽑아 하나씩 검사했다. YOLO는 이 과정을 한 번의 예측으로 바꿨다. 이름도 그래서 You Only Look Once다. 네 장면을 직접 만져 보며 어떻게 가능한지 따라가 보자.</p>
+            <ol class="toc">
+                <li><a href="#grid"><span>01 격자</span>누가 찾나</a></li>
+                <li><a href="#structure"><span>02 구조</span>무엇으로 계산하나</a></li>
+                <li><a href="#inference"><span>03 추론</span>98개에서 몇 개로</a></li>
+                <li><a href="#loss"><span>04 학습</span>무엇을 벌점으로 주나</a></li>
+            </ol>
+        </section>
+
+        <section id="grid" class="wide step" aria-labelledby="grid-title">
+            <div class="wrap" style="width: 100%; max-width: var(--measure); margin: 0;">
+                <p class="step-no">01 격자</p>
+                <h2 id="grid-title">물체의 중심이 떨어진 칸이 맡는다</h2>
+                <p>사진을 가로세로 7칸, 모두 49칸으로 나눈다. 물체의 중심이 들어간 칸 하나가 그 물체를 맡는다. 칸마다 박스 2개와 클래스 확률 20개, 모두 30개의 숫자를 내놓는다.</p>
+                <p class="hint" id="grid-hint">개나 자전거를 끌어 보자. 키보드로는 그림을 선택한 뒤 화살표로 움직이고(Shift는 한 칸씩), 스페이스로 물체를 바꾼다.</p>
+            </div>
+            <div class="panel split">
+                <canvas id="grid-canvas" class="stage" tabindex="0" role="img"
+                        aria-label="7×7 격자 위의 개와 자전거. 화살표 키로 선택한 물체를 움직인다."
+                        aria-describedby="grid-hint"></canvas>
+                <div>
+                    <p class="muted" style="margin: 0;">선택한 물체</p>
+                    <p class="big" style="margin: 0 0 8px;"><span id="grid-name">개</span> → <span id="grid-cell">5행 3열</span> 칸</p>
+                    <dl class="kv">
+                        <dt>x, y (칸 안에서)</dt><dd id="grid-xy">0.10, 0.48</dd>
+                        <dt>w, h (사진 대비)</dt><dd id="grid-wh">0.36, 0.30</dd>
+                        <dt>√w, √h (예측하는 값)</dt><dd id="grid-sqrt">0.60, 0.55</dd>
+                    </dl>
+                    <p class="muted" style="margin: 0; font-size: 14px;">이 칸이 내놓는 숫자 30개 중 채워지는 곳</p>
+                    <div class="slots" id="grid-slots" aria-hidden="true"></div>
+                    <div class="slot-legend">
+                        <span>1–5: 박스 1</span><span>6–10: 박스 2</span><span>11–30: 클래스 20개</span>
+                    </div>
+                    <p class="hint" style="margin-top: 8px;">박스 두 개 중 정답과 더 많이 겹치는 쪽이 물체를 맡고, 신뢰도는 그 겹침(IOU)을 배운다. 나머지 박스와 48칸은 신뢰도 0을 배운다.</p>
+                    <p class="chip" id="grid-collision" hidden>두 중심이 같은 칸에 있다. 칸마다 클래스가 하나뿐이라 한 물체만 배울 수 있다. 붙어 있는 작은 물체 무리에 약한 이유다.</p>
+                    <p class="sr-only" aria-live="polite" id="grid-live"></p>
+                </div>
+            </div>
+            <p class="source">출처: 논문 §2, 그림 2, §2.4</p>
+        </section>
+
+        <section id="structure" class="wide step" aria-labelledby="structure-title">
+            <div style="max-width: var(--measure);">
+                <p class="step-no">02 구조</p>
+                <h2 id="structure-title">448 × 448 사진이 7 × 7 × 30이 되기까지</h2>
+                <p>합성곱 24층이 가로세로를 64분의 1로 줄이며 특징을 뽑고, 완전연결 2층이 7 × 7 × 30개의 숫자를 만든다. 앞 20층은 ImageNet 사진 분류로 미리 배우고, 나머지 4층과 완전연결 층은 탐지를 위해 붙였다.</p>
+                <p class="hint">블록 하나가 한 층의 출력이다. 정사각형 면은 가로세로 크기, 두께는 채널 수다(둘 다 로그 척도).</p>
+            </div>
+            <div class="panel">
+                <div class="row">
+                    <div class="seg" role="group" aria-label="보기 방식" id="view-seg">
+                        <button type="button" data-view="3d" aria-pressed="true">3D 구조</button>
+                        <button type="button" data-view="2d" aria-pressed="false">2D 막대</button>
+                    </div>
+                    <div class="seg" role="group" aria-label="함께 볼 값" id="mode-seg">
+                        <button type="button" data-mode="shape" aria-pressed="true">모양</button>
+                        <button type="button" data-mode="params" aria-pressed="false">파라미터</button>
+                        <button type="button" data-mode="macs" aria-pressed="false">계산량</button>
+                    </div>
+                </div>
+                <p class="numbers" id="structure-totals">합성곱 <b>24</b> · 완전연결 <b>2</b> · 파라미터 <b>271,703,550</b> · 한 장에 곱셈-덧셈 약 <b>203억</b> 번</p>
+                <p class="callout" id="structure-callout" aria-live="polite">가로세로는 448에서 7로 64분의 1이 되고, 채널은 3에서 1024로 늘어난다. 층을 고르면, 입력의 어느 창이 모든 채널을 거쳐 출력 한 칸이 되는지 선으로 보인다.</p>
+                <div id="view3d">
+                    <canvas id="net3d" class="stage3d" tabindex="0" role="img"
+                            aria-label="YOLOv1의 층을 입체 블록으로 나타낸 그림. 선택한 층은 아래 설명에 나온다."
+                            aria-describedby="net3d-hint"></canvas>
+                    <div class="row" style="margin-top: 8px;">
+                        <p class="hint" id="net3d-hint" style="margin: 0; flex: 1 1 280px;">끌어서 돌리고, 휠이나 두 손가락으로 확대한다. 블록을 누르면 그 층으로 간다. 키보드: 화살표로 회전, +/−로 확대, [ ]로 층 이동.</p>
+                        <div class="seg">
+                            <button type="button" id="net3d-fit">전체 보기</button>
+                            <button type="button" id="net3d-reset">처음 각도</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="strip-wrap" id="view2d" hidden>
+                    <svg class="strip" id="strip" role="img" aria-label="층별 텐서 크기 막대"></svg>
+                </div>
+                <div class="legend">
+                    <span><i style="background: var(--accent);"></i>사전 학습한 앞 20층</span>
+                    <span><i style="background: var(--accent-green);"></i>탐지용으로 붙인 합성곱 4층</span>
+                    <span><i style="background: var(--accent-warn);"></i>완전연결</span>
+                    <span><i style="border: 1px solid var(--line-strong);"></i>풀링·입출력</span>
+                </div>
+                <div class="stepper">
+                    <button class="btn" type="button" id="layer-prev" aria-label="이전 층">←</button>
+                    <input type="range" id="layer-range" min="0" max="1" value="0" aria-label="층 선택">
+                    <button class="btn" type="button" id="layer-next" aria-label="다음 층">→</button>
+                </div>
+                <div class="detail" aria-live="polite">
+                    <h3 id="layer-title">0 / 31 · 입력</h3>
+                    <p id="layer-text" style="margin: 0;">448 × 448 크기의 사진, RGB 3채널. 원본 사진을 이 크기로 바꿔 넣는다.</p>
+                    <p class="numbers" id="layer-numbers"></p>
+                </div>
+            </div>
+            <p class="source">출처: 논문 §2.1, §2.2, 그림 3 · 수치는 이 구조를 PyTorch로 구현해 센 값</p>
+        </section>
+
+        <section id="inference" class="wide step" aria-labelledby="inference-title">
+            <div style="max-width: var(--measure);">
+                <p class="step-no">03 추론</p>
+                <h2 id="inference-title">98개의 박스가 몇 개로 줄어드나</h2>
+                <p>신경망을 한 번 통과시키면 칸마다 박스 2개, 모두 98개가 나온다. 박스의 점수는 클래스 확률 × 신뢰도다. 점수가 낮은 박스를 버리고, 같은 물체를 겹쳐 잡은 박스는 NMS(겹침 제거)로 점수가 가장 높은 하나만 남긴다.</p>
+                <p class="hint">점수 기준을 올려 보고, NMS를 켜 보자.</p>
+            </div>
+            <div class="panel split">
+                <canvas id="infer-canvas" class="stage view" role="img" aria-label="합성 장면 위의 예측 박스"></canvas>
+                <div>
+                    <div class="seg" role="group" aria-label="장면" id="scene-buttons"></div>
+                    <div class="controls">
+                        <div class="control">
+                            <label for="score-range">점수 기준 <output id="score-out" for="score-range">0.00</output></label>
+                            <input type="range" id="score-range" min="0" max="0.6" step="0.01" value="0">
+                        </div>
+                        <div class="control">
+                            <label for="nms-range">NMS 겹침 기준(IOU) <output id="nms-out" for="nms-range">0.50</output></label>
+                            <input type="range" id="nms-range" min="0.3" max="0.8" step="0.05" value="0.5">
+                        </div>
+                    </div>
+                    <div class="row" style="justify-content: flex-start; gap: 18px;">
+                        <label class="check"><input type="checkbox" id="nms-check"> NMS 켜기</label>
+                        <label class="check"><input type="checkbox" id="gt-check"> 정답 박스 보기</label>
+                    </div>
+                    <div class="funnel" aria-live="polite">
+                        <div><span>신경망 출력</span><b id="count-all">98</b></div>
+                        <div><span>점수 기준 통과</span><b id="count-pass">98</b></div>
+                        <div><span>최종</span><b id="count-final">98</b></div>
+                    </div>
+                    <p class="hint" style="margin-top: 12px;">이 박스들은 논문대로 직접 구현한 YOLO(합성곱 8층의 작은 구성)를 사각형·원·삼각형 그림으로 학습시킨 뒤, 처음 보는 장면에서 낸 실제 출력이다.</p>
+                </div>
+            </div>
+            <p class="source">출처: 논문 §2, 식 1, §2.3</p>
+        </section>
+
+        <section id="loss" class="wide step" aria-labelledby="loss-title">
+            <div style="max-width: var(--measure);">
+                <p class="step-no">04 학습</p>
+                <h2 id="loss-title">무엇을 틀리면 벌점이 큰가</h2>
+                <p>학습은 다섯 가지 오차의 제곱합을 줄인다. 박스 중심, 박스 크기, 물체가 있는 박스의 신뢰도, 물체가 없는 박스의 신뢰도, 클래스다. 그런데 제곱합을 그대로 쓰면 두 군데서 어긋난다.</p>
+            </div>
+            <div class="twin">
+                <div class="panel">
+                    <h3>크기 오차: 같은 오차도 작은 박스에 더 치명적이다</h3>
+                    <p class="hint">Δw는 예측 너비와 정답 너비 w의 차이다. √w의 차이가 아니라, 사진 너비를 1로 둔 w 자체를 얼마나 틀렸는지다. 같은 Δw라도 작은 박스는 겹침(IOU)이 크게 떨어지고 큰 박스는 거의 그대로다. 그래서 YOLO는 w 대신 √w를 예측하고, 벌점도 √w끼리의 차이로 매긴다.</p>
+                    <div class="controls">
+                        <div class="control">
+                            <label for="w-range">정답 너비 w <output id="w-out" for="w-range">0.10</output></label>
+                            <input type="range" id="w-range" min="0.05" max="0.8" step="0.01" value="0.1">
+                        </div>
+                        <div class="control">
+                            <label for="d-range">너비 오차 Δw <output id="d-out" for="d-range">0.05</output></label>
+                            <input type="range" id="d-range" min="0.01" max="0.2" step="0.01" value="0.05">
+                        </div>
+                    </div>
+                    <svg class="mini" id="size-mini" viewBox="0 0 200 200" role="img" aria-label="너비 w인 정답 박스와 너비 w + Δw인 예측 박스"></svg>
+                    <div class="legend" style="margin-top: 0;">
+                        <span><i style="border: 2px dashed var(--muted);"></i>정답 박스 · 너비 w</span>
+                        <span><i style="background: var(--accent-soft); border: 2px solid var(--accent);"></i>예측 박스 · 너비 w + Δw</span>
+                    </div>
+                    <p class="numbers"><span>예측 너비 w + Δw <b id="pred-out">0.15</b></span><span>겹침 IOU <b id="iou-out">0.667</b></span></p>
+                    <div class="bars">
+                        <p class="formula">벌점 = λcoord × (예측 − 정답)², λcoord = 5</p>
+                        <div class="bar"><span>w 그대로</span><span class="track"><span class="fill plain" id="plain-bar"></span></span><output id="plain-out">0.0125</output></div>
+                        <p class="formula" id="plain-formula">5 × (0.15 − 0.10)²</p>
+                        <div class="bar"><span>√w (YOLO)</span><span class="track"><span class="fill" id="sqrt-bar"></span></span><output id="sqrt-out">0.0253</output></div>
+                        <p class="formula" id="sqrt-formula">5 × (√0.15 − √0.10)² = 5 × (0.387 − 0.316)²</p>
+                    </div>
+                    <p class="formula" id="chart-caption" style="margin-top: 14px;">Δw를 0.05에 고정하고 정답 너비 w만 바꾼 벌점</p>
+                    <svg class="chart" id="sqrt-chart" viewBox="0 0 320 170" role="img" aria-label="정답 너비 w에 따른 두 벌점 곡선"></svg>
+                    <p class="callout" id="sqrt-callout">같은 Δw(0.05)에서 √w의 차이는 작은 박스(w = 0.1)가 0.071, 큰 박스(w = 0.8)가 0.028이다. 벌점은 이 차이의 제곱이라 작은 박스 쪽이 6.7배 크다. w를 그대로 쓰면 두 벌점이 같다(0.0125).</p>
+                </div>
+                <div class="panel">
+                    <h3>빈 박스: 98개 중 대부분은 물체가 없다</h3>
+                    <p class="hint">7 × 7 칸마다 박스가 2개씩, 모두 98개다. 물체의 중심이 있는 칸에서 박스 하나만 그 물체를 맡고, 나머지 박스는 모두 신뢰도 0을 배운다. 빈 박스가 압도적으로 많아 그대로 두면 물체를 맡은 박스의 신호를 덮는다. 논문은 빈 박스의 벌점에 λnoobj = 0.5를 곱한다.</p>
+                    <div class="controls">
+                        <div class="control">
+                            <label for="k-range">사진 속 물체 수 <output id="k-out" for="k-range">2</output></label>
+                            <input type="range" id="k-range" min="0" max="10" step="1" value="2">
+                        </div>
+                        <div class="control">
+                            <label for="l-range">λnoobj <output id="l-out" for="l-range">0.50</output></label>
+                            <input type="range" id="l-range" min="0.1" max="1" step="0.05" value="0.5">
+                        </div>
+                    </div>
+                    <canvas id="noobj3d" class="stage3d square" tabindex="0" role="img"
+                            aria-label="7 × 7 칸에 박스가 2개씩 선 막대 98개. 물체를 맡은 박스는 색 막대, 빈 박스는 회색 막대이고, 높이가 신뢰도 벌점의 무게다."
+                            aria-describedby="noobj3d-hint"></canvas>
+                    <div class="row" style="margin-top: 8px;">
+                        <p class="hint" id="noobj3d-hint" style="margin: 0; flex: 1 1 240px;">막대 높이가 신뢰도 벌점의 무게다. 끌어서 돌리고, 칸을 누르면 물체를 놓거나 뺀다(누른 박스가 맡는다). 키보드: 화살표로 회전.</p>
+                        <div class="seg">
+                            <button type="button" id="noobj3d-top">위에서 보기</button>
+                            <button type="button" id="noobj3d-reset">처음 각도</button>
+                        </div>
+                    </div>
+                    <div class="legend">
+                        <span><i style="background: var(--accent);"></i>물체를 맡은 박스 · 무게 1</span>
+                        <span><i style="background: var(--line-strong);"></i>빈 박스 · 무게 λnoobj</span>
+                        <span><i style="background: var(--accent-soft); border: 1px solid var(--accent);"></i>물체 중심이 있는 칸</span>
+                    </div>
+                    <p class="numbers">물체를 맡은 박스 <b id="resp-count">2</b> · 빈 박스 <b id="empty-count">96</b></p>
+                    <p class="hint" id="noobj-pick" aria-live="polite" style="margin: 8px 0 0; font-size: 14px;">칸을 눌러 물체를 놓으면, 그 칸의 두 박스가 각각 무엇을 배우는지 여기에 나온다.</p>
+                    <p class="muted" style="margin: 10px 0 4px; font-size: 14px;">신뢰도 벌점의 무게</p>
+                    <div class="stack" aria-hidden="true"><span class="empty" id="empty-share-bar"></span><span class="full" id="resp-share-bar"></span></div>
+                    <p class="callout" id="noobj-callout" aria-live="polite">빈 박스 하나의 무게(λnoobj = 0.50)는 작아도 96개를 모두 합하면 신뢰도 벌점 무게의 96.0%를 차지한다(λnoobj = 1이면 98.0%). 논문은 λnoobj = 0.5로 빈 박스의 벌점을 줄이는 동시에, 좌표 벌점에는 λcoord = 5를 곱해 키운다.</p>
+                </div>
+            </div>
+            <p class="source">출처: 논문 §2.2, 식 3</p>
+        </section>
+
+        <section id="limits" class="wrap step" aria-labelledby="limits-title">
+            <p class="step-no">한계</p>
+            <h2 id="limits-title">한 번에 보는 대가</h2>
+            <ul class="limits">
+                <li>칸마다 박스 2개와 클래스 1개만 예측한다. 새 떼처럼 붙어 있는 작은 물체는 놓치기 쉽다.</li>
+                <li>박스 모양을 데이터에서 배우므로 처음 보는 비율이나 배치의 물체에 약하다.</li>
+                <li>여러 번 줄어든 거친 특징으로 박스를 맞히므로, 가장 흔한 오류는 부정확한 위치다.</li>
+            </ul>
+            <div class="note">
+                <p><strong>오해</strong>한 번만 본다는 건 대충 본다는 뜻이다.</p>
+                <p class="fact"><strong>실제로는</strong>사진 전체를 한 번에 보기 때문에 주변 맥락을 쓴다. 논문에서 배경을 물체로 착각하는 실수는 Fast R-CNN의 절반 이하였다.</p>
+            </div>
+            <p class="source">출처: 논문 §1, §2.4, §4.2</p>
+        </section>
+
+        <section id="faq" class="wrap step" aria-labelledby="faq-title">
+            <p class="step-no">질문</p>
+            <h2 id="faq-title">자주 묻는 질문</h2>
+            <div class="faq">
+                <details>
+                    <summary>YOLO는 무슨 뜻인가?</summary>
+                    <p>You Only Look Once의 줄임말이다. 사진 속 물체의 위치와 종류를 찾는 물체 탐지(객체 탐지, object detection) 방법으로, 후보 영역을 하나씩 검사하지 않고 사진 전체를 신경망에 한 번만 통과시켜 모든 물체를 한꺼번에 예측한다.</p>
+                </details>
+                <details>
+                    <summary>YOLOv1은 어떤 구조인가?</summary>
+                    <p>합성곱 24층과 완전연결 2층으로 이루어진다. 448 × 448 사진을 받아 7 × 7 × 30을 낸다. 논문 구조대로 구현해 세면 파라미터는 약 2억 7천만 개이고, 그중 약 76%가 첫 완전연결 층에 있다.</p>
+                </details>
+                <details>
+                    <summary>출력은 왜 7 × 7 × 30인가?</summary>
+                    <p>사진을 7 × 7 칸으로 나누고, 칸마다 박스 2개와 클래스 확률 20개를 내기 때문이다. 박스 하나는 x, y, w, h, 신뢰도의 5개 숫자라서 2 × 5 + 20 = 30이다.</p>
+                </details>
+                <details>
+                    <summary>한 장에서 박스는 몇 개 나오고, 어떻게 줄이나?</summary>
+                    <p>7 × 7 칸 × 2개 = 98개가 나온다. 박스마다 클래스 확률 × 신뢰도로 점수를 매겨 낮은 것을 버리고, 같은 물체를 겹쳐 잡은 박스는 NMS(겹침 제거)로 점수가 가장 높은 하나만 남긴다.</p>
+                </details>
+                <details>
+                    <summary>왜 너비 대신 √너비를 예측하나?</summary>
+                    <p>같은 크기의 오차라도 작은 박스에서는 겹침(IOU)이 크게 떨어지고, 큰 박스에서는 거의 그대로이기 때문이다. √w의 차이로 벌점을 매기면, 너비를 똑같이 0.05 틀렸을 때 작은 박스(w = 0.1)의 벌점이 큰 박스(w = 0.8)의 약 6.7배가 된다. 논문도 이 방법이 문제를 일부만 해결한다고 쓴다.</p>
+                </details>
+                <details>
+                    <summary>손실의 λcoord와 λnoobj는 무엇인가?</summary>
+                    <p>손실(식 3)에 곱하는 가중치다. 박스 좌표 오차에는 λcoord = 5를 곱해 키우고, 물체가 없는 박스의 신뢰도 오차에는 λnoobj = 0.5를 곱해 줄인다. 대부분의 칸에는 물체가 없어서, 그대로 두면 신뢰도를 0으로 끌어내리는 신호가 물체가 있는 칸의 신호를 압도해 학습이 불안정해지기 때문이다.</p>
+                </details>
+                <details>
+                    <summary>YOLOv1은 얼마나 빠른가?</summary>
+                    <p>논문 기준으로 Titan X GPU에서 초당 45장을 처리하고, 더 작은 Fast YOLO는 초당 155장을 처리한다. 스트리밍 영상을 25밀리초 이내의 지연으로 실시간 처리할 수 있는 속도다.</p>
+                </details>
+                <details>
+                    <summary>YOLOv1의 한계는 무엇인가?</summary>
+                    <p>칸마다 박스 2개와 클래스 1개만 예측해서, 새 떼처럼 붙어 있는 작은 물체는 놓치기 쉽다. 학습에서 보지 못한 비율이나 배치의 물체에 약하고, 가장 흔한 오류는 부정확한 위치다.</p>
+                </details>
+            </div>
+            <p class="source">출처: 논문 초록, §1, §2, §2.2, §2.3, §2.4, 표 1 · 파라미터 수와 벌점 배율은 이 페이지의 구현과 계산</p>
+        </section>
+
+        <section class="wrap step" aria-labelledby="more-title">
+            <h2 id="more-title">더 보기</h2>
+            <ul class="links">
+                <li><a href="https://arxiv.org/abs/1506.02640">Redmon et al., You Only Look Once: Unified, Real-Time Object Detection (CVPR 2016)</a></li>
+                <!-- 영상이 나오면 추가: <li><a href="https://www.youtube.com/watch?v=...">영상으로 보기</a></li> -->
+            </ul>
+            <p class="hint" style="margin-top: 12px;">이 페이지의 층 구조와 계산량, 예측 박스는 논문대로 직접 구현한 PyTorch 코드에서 뽑았다.</p>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        마지막 업데이트 <time datetime="2026-09-30">2026-09-30</time> · <a href="/">Hugh Q Lee</a>
+    </footer>
+
+    <script type="application/json" id="yolo-data">{"structure":{"layers":[["conv",7,64,2,64,224,224,9472,472055808,"pretrained"],["maxpool",2,0,2,64,112,112,0,0,null],["conv",3,192,1,192,112,112,110784,1387266048,"pretrained"],["maxpool",2,0,2,192,56,56,0,0,null],["conv",1,128,1,128,56,56,24704,77070336,"pretrained"],["conv",3,256,1,256,56,56,295168,924844032,"pretrained"],["conv",1,256,1,256,56,56,65792,205520896,"pretrained"],["conv",3,512,1,512,56,56,1180160,3699376128,"pretrained"],["maxpool",2,0,2,512,28,28,0,0,null],["conv",1,256,1,256,28,28,131328,102760448,"pretrained"],["conv",3,512,1,512,28,28,1180160,924844032,"pretrained"],["conv",1,256,1,256,28,28,131328,102760448,"pretrained"],["conv",3,512,1,512,28,28,1180160,924844032,"pretrained"],["conv",1,256,1,256,28,28,131328,102760448,"pretrained"],["conv",3,512,1,512,28,28,1180160,924844032,"pretrained"],["conv",1,256,1,256,28,28,131328,102760448,"pretrained"],["conv",3,512,1,512,28,28,1180160,924844032,"pretrained"],["conv",1,512,1,512,28,28,262656,205520896,"pretrained"],["conv",3,1024,1,1024,28,28,4719616,3699376128,"pretrained"],["maxpool",2,0,2,1024,14,14,0,0,null],["conv",1,512,1,512,14,14,524800,102760448,"pretrained"],["conv",3,1024,1,1024,14,14,4719616,924844032,"pretrained"],["conv",1,512,1,512,14,14,524800,102760448,"pretrained"],["conv",3,1024,1,1024,14,14,4719616,924844032,"pretrained"],["conv",3,1024,1,1024,14,14,9438208,1849688064,"added"],["conv",3,1024,2,1024,7,7,9438208,462422016,"added"],["conv",3,1024,1,1024,7,7,9438208,462422016,"added"],["conv",3,1024,1,1024,7,7,9438208,462422016,"added"],["fc",0,4096,1,4096,1,1,205524992,205520896,"added"],["fc",0,1470,1,1470,1,1,6022590,6021120,"added"]],"grid":7,"cell":30,"totals":{"params":271703550,"macs":20285153280,"conv":24,"fc":2}},"synthetic":{"S":7,"B":2,"C":3,"classes_ko":["사각형","원","삼각형"],"colors":[[230,80,70],[80,200,110],[80,140,240]],"map50_test":0.9482518138583438,"scenes":[{"background":[40,41,41],"objects":[{"label":0,"box":[0.546,0.5786,0.3825,0.3301]},{"label":1,"box":[0.8709,0.7268,0.1318,0.2029]}],"prediction":[[[0.452,0.766,0.307,0.399,0.016,-0.022,-0.039,-0.023,-0.013,0.008,0.321,0.384,0.32],[0.437,0.584,0.42,0.433,0.023,-0.016,-0.05,-0.073,-0.003,-0.002,0.675,0.229,0.131],[0.441,0.585,0.419,0.441,-0.009,0.056,-0.034,0.05,0.028,-0.014,0.624,0.184,0.235],[-0.022,-0.02,0.006,0.005,-0.011,0.424,0.643,0.395,0.408,-0.006,0.515,0.393,0.09],[0.018,0.017,-0.026,-0.023,-0.009,0.413,0.71,0.308,0.301,-0.018,0.421,0.371,0.232],[0.028,-0.006,-0.036,-0.016,0.007,0.483,0.616,0.443,0.341,-0.022,0.583,0.318,0.099],[0.014,-0.02,0.066,-0.035,0.001,0.216,0.732,0.462,0.422,-0.011,0.471,0.168,0.43]],[[-0.025,-0.04,0.011,-0.022,0.002,0.52,0.379,0.415,0.414,0.002,0.54,0.221,0.273],[-0.024,-0.002,-0.017,-0.062,-0.009,0.389,0.377,0.346,0.387,-0.009,0.575,0.233,0.144],[-0.07,-0.029,0.014,0.015,-0.003,0.394,0.43,0.355,0.412,-0.017,0.612,0.229,0.097],[0.126,0.07,0.054,0.07,0.011,0.427,0.517,0.372,0.428,-0.014,0.604,0.206,0.158],[0.048,-0.024,0.005,-0.027,-0.002,0.403,0.466,0.402,0.408,-0.026,0.617,0.237,0.073],[0.114,0.097,0.129,0.083,-0.007,0.44,0.44,0.375,0.417,0.019,0.534,0.209,0.131],[-0.008,0.017,-0.025,-0.005,-0.0,0.147,0.441,0.32,0.375,0.016,0.471,0.216,0.222]],[[0.666,0.451,0.354,0.417,-0.004,-0.046,0.035,0.03,-0.02,0.002,0.565,0.336,0.189],[0.022,-0.01,0.054,-0.048,0.004,0.412,0.408,0.379,0.423,0.003,0.622,0.235,0.09],[0.476,0.443,0.382,0.385,-0.055,0.087,0.074,0.034,-0.047,-0.002,0.712,0.162,0.032],[0.53,0.41,0.442,0.359,0.076,-0.001,0.025,-0.042,0.036,-0.005,0.703,0.152,0.061],[-0.018,0.003,0.034,0.035,-0.004,0.35,0.474,0.387,0.389,0.034,0.705,0.111,0.122],[0.384,0.361,0.403,0.461,-0.03,0.442,0.423,0.168,0.265,0.012,0.633,0.163,0.113],[0.257,0.362,0.354,0.413,0.01,0.023,-0.015,-0.074,0.011,0.005,0.59,0.124,0.235]],[[0.57,0.485,0.337,0.341,0.027,-0.02,-0.016,0.068,0.003,0.001,0.447,0.31,0.298],[0.008,-0.029,-0.003,-0.088,0.006,0.38,0.461,0.371,0.441,-0.029,0.635,0.155,0.183],[0.454,0.483,0.1,0.458,0.003,0.513,0.664,0.423,0.414,-0.01,0.827,0.072,0.038],[0.005,-0.033,-0.029,-0.003,-0.009,0.828,1.033,0.597,0.522,0.238,0.982,-0.0,0.005],[-0.015,0.023,0.056,0.026,-0.008,0.12,0.822,0.486,0.496,0.01,0.952,0.035,-0.043],[0.376,0.561,0.331,0.436,0.032,0.11,0.151,0.109,0.055,0.003,0.642,0.212,0.046],[0.254,0.37,0.343,0.445,0.027,-0.004,-0.003,-0.02,0.02,-0.009,0.313,0.439,0.2]],[[0.602,0.41,0.368,0.365,0.003,0.023,0.005,0.042,-0.053,-0.005,0.581,0.156,0.306],[0.012,-0.02,0.052,-0.006,-0.016,0.42,0.424,0.369,0.408,0.004,0.636,0.133,0.134],[0.644,0.411,0.417,0.452,-0.011,0.135,0.142,0.097,0.113,0.004,0.715,0.177,0.083],[0.835,0.16,0.589,0.504,0.426,0.815,0.11,0.655,0.541,0.406,0.966,0.048,-0.052],[0.166,0.135,0.07,0.082,-0.016,0.002,0.155,0.493,0.525,0.211,0.769,0.228,0.006],[0.777,0.791,0.381,0.473,0.065,0.045,0.013,0.036,0.056,0.005,0.271,0.802,-0.068],[0.139,1.12,0.371,0.487,0.082,0.122,0.143,0.024,0.048,-0.002,0.043,0.95,-0.086]],[[0.004,0.01,0.015,-0.006,-0.011,0.695,0.461,0.205,0.377,0.042,0.539,0.257,0.22],[0.408,0.337,0.402,0.383,0.006,0.354,0.421,0.4,0.475,0.005,0.612,0.174,0.189],[0.0,-0.05,0.057,-0.024,0.013,0.389,0.398,0.405,0.462,-0.025,0.691,0.156,0.058],[-0.067,-0.006,0.008,-0.015,-0.001,0.607,0.311,0.461,0.427,-0.031,0.715,0.145,0.13],[0.4,0.554,0.547,0.35,0.031,0.218,0.329,0.446,0.409,0.016,0.586,0.225,0.124],[0.952,0.074,0.446,0.384,-0.014,0.016,-0.001,0.007,-0.002,0.011,0.15,0.932,-0.077],[0.099,0.005,0.399,0.458,0.643,-0.035,0.032,-0.071,0.034,0.002,-0.069,1.109,-0.043]],[[-0.016,0.008,-0.021,-0.029,-0.01,0.881,0.331,0.391,0.273,0.002,0.466,0.154,0.511],[0.374,0.349,0.363,0.313,-0.009,0.069,0.017,0.003,-0.029,0.005,0.452,0.384,0.19],[0.034,-0.014,0.024,-0.016,0.001,0.423,0.26,0.333,0.281,0.036,0.539,0.234,0.239],[0.389,0.296,0.35,0.401,0.036,0.066,-0.053,0.02,0.008,-0.008,0.517,0.26,0.223],[0.028,0.013,0.028,-0.053,0.0,0.244,0.129,0.384,0.306,0.012,0.437,0.195,0.251],[0.532,0.156,0.277,0.396,0.023,-0.015,0.032,-0.02,-0.015,-0.0,0.14,0.76,0.009],[0.009,-0.01,0.028,-0.079,-0.002,0.222,0.113,0.284,0.299,-0.019,-0.031,0.772,0.151]]]},{"background":[28,31,22],"objects":[{"label":0,"box":[0.701,0.6041,0.2522,0.3581]},{"label":2,"box":[0.3222,0.7108,0.3572,0.3046]},{"label":1,"box":[0.6531,0.2304,0.1347,0.2723]}],"prediction":[[[0.794,0.433,0.453,0.3,-0.012,0.04,-0.031,0.036,-0.017,-0.004,0.347,0.037,0.494],[0.498,0.598,0.417,0.357,-0.042,-0.01,0.014,-0.079,0.004,-0.0,0.603,0.312,0.146],[0.505,0.733,0.478,0.406,0.014,0.027,-0.022,0.01,0.065,-0.001,0.526,0.243,0.304],[0.004,0.016,0.001,0.0,0.008,0.476,0.596,0.421,0.391,0.039,0.274,0.567,0.115],[0.026,0.053,-0.011,-0.039,0.01,0.577,0.825,0.21,0.443,-0.023,0.096,0.745,0.148],[0.018,0.041,0.005,-0.056,0.01,0.482,0.695,0.459,0.421,-0.008,0.443,0.589,-0.008],[0.005,-0.061,0.041,0.0,0.002,0.225,0.463,0.562,0.325,-0.0,0.458,0.307,0.207]],[[-0.016,0.034,0.056,0.004,-0.006,0.632,0.488,0.465,0.478,0.025,0.482,0.305,0.273],[0.001,0.006,0.013,0.023,-0.006,0.483,0.524,0.366,0.457,0.043,0.548,0.31,0.123],[-0.023,-0.031,0.052,-0.032,0.009,0.368,0.457,0.372,0.457,0.005,0.491,0.312,0.153],[0.194,0.079,0.115,0.117,-0.02,0.628,0.55,0.459,0.47,-0.042,0.41,0.611,-0.028],[-0.023,0.039,0.031,0.036,0.004,0.569,0.655,0.426,0.456,0.792,-0.01,1.043,-0.039],[0.148,0.134,0.055,0.061,0.021,0.182,0.475,0.428,0.439,-0.021,0.336,0.681,-0.083],[0.04,0.021,0.005,-0.08,-0.006,0.283,0.556,0.474,0.4,0.048,0.383,0.511,0.041]],[[0.59,0.469,0.268,0.422,-0.009,0.001,-0.034,-0.005,-0.018,0.002,0.548,0.297,0.196],[-0.043,-0.015,-0.009,-0.03,-0.014,0.411,0.458,0.395,0.415,0.007,0.552,0.295,0.172],[0.33,0.407,0.387,0.369,-0.043,-0.013,0.021,-0.049,-0.042,0.015,0.517,0.212,0.205],[0.438,0.467,0.461,0.433,0.006,-0.067,-0.012,0.004,0.032,-0.005,0.548,0.389,0.05],[-0.007,0.018,-0.017,0.069,-0.001,0.547,0.162,0.321,0.449,-0.003,0.25,0.657,0.048],[0.348,0.317,0.371,0.316,0.008,0.407,0.256,0.414,0.3,-0.005,0.578,0.396,0.054],[0.219,0.384,0.36,0.401,-0.037,0.008,0.027,0.048,-0.072,0.011,0.532,0.261,0.207]],[[0.637,0.448,0.323,0.414,0.018,0.051,-0.031,0.019,0.032,-0.008,0.559,0.18,0.27],[0.054,-0.007,-0.015,0.025,0.02,0.402,0.449,0.348,0.428,0.028,0.505,0.17,0.32],[0.284,0.44,0.394,0.405,-0.0,0.428,0.473,0.369,0.468,0.001,0.445,0.06,0.478],[0.018,-0.018,-0.009,-0.047,0.003,0.469,0.518,0.403,0.441,0.087,0.606,0.172,0.214],[0.004,0.004,0.032,0.001,0.0,0.736,0.887,0.454,0.52,0.012,0.859,0.068,0.07],[0.084,0.799,0.437,0.484,-0.024,0.147,0.229,0.164,-0.02,0.012,0.909,0.041,0.016],[0.3,0.396,0.36,0.429,-0.047,-0.101,0.031,0.06,-0.041,0.001,0.633,0.16,0.22]],[[0.691,0.542,0.468,0.465,-0.009,-0.022,0.005,0.032,-0.032,-0.002,0.522,0.143,0.319],[0.025,0.009,0.01,0.01,0.008,0.879,0.737,0.559,0.458,-0.016,0.261,0.104,0.602],[0.266,1.026,0.531,0.542,0.498,0.192,0.113,0.175,0.055,0.006,0.087,-0.039,0.985],[0.368,0.56,0.482,0.534,0.034,0.45,0.558,0.553,0.646,-0.033,0.55,0.103,0.265],[0.159,0.104,0.086,0.126,-0.0,0.837,0.194,0.551,0.628,0.842,1.021,-0.038,0.061],[0.004,0.295,0.503,0.554,0.132,0.038,-0.031,0.005,0.031,-0.014,0.958,0.028,0.026],[0.279,0.443,0.356,0.448,0.022,0.077,0.055,0.066,0.062,0.009,0.653,0.041,0.208]],[[0.003,0.09,0.019,0.031,-0.005,0.658,0.361,0.285,0.497,-0.006,0.383,0.078,0.47],[0.714,0.293,0.368,0.333,0.003,0.866,0.102,0.566,0.55,-0.004,0.176,0.111,0.668],[-0.021,0.053,-0.013,0.032,0.023,0.231,0.02,0.629,0.58,0.437,0.021,0.058,0.924],[-0.024,0.003,0.023,0.029,0.016,0.342,0.384,0.403,0.427,-0.101,0.454,0.081,0.448],[0.242,0.641,0.265,0.355,-0.015,0.52,0.281,0.396,0.386,-0.049,0.787,0.079,0.123],[0.22,0.348,0.423,0.395,-0.034,0.02,-0.012,0.038,-0.0,0.004,0.789,0.091,0.078],[0.185,0.463,0.258,0.504,-0.029,-0.053,-0.017,0.007,0.04,0.0,0.5,0.295,0.213]],[[-0.011,0.016,0.001,-0.006,-0.005,0.624,0.231,0.453,0.415,-0.012,0.181,0.167,0.495],[0.544,0.202,0.368,0.225,0.013,-0.0,0.067,0.013,-0.009,0.003,0.192,0.267,0.504],[-0.024,-0.037,0.001,0.008,0.013,0.35,0.22,0.484,0.353,0.033,0.095,0.182,0.64],[0.312,0.284,0.382,0.318,-0.015,-0.011,0.026,0.007,-0.033,-0.004,0.59,0.08,0.327],[0.012,-0.014,0.021,-0.02,-0.009,0.444,0.293,0.386,0.395,0.064,0.527,0.193,0.168],[0.391,0.366,0.415,0.418,-0.014,0.011,-0.073,0.04,-0.04,-0.008,0.502,0.219,0.25],[0.014,-0.038,-0.006,-0.051,-0.009,0.376,0.139,0.382,0.512,0.009,0.403,0.444,0.067]]]},{"background":[22,36,36],"objects":[{"label":1,"box":[0.398,0.5898,0.3046,0.3811]},{"label":2,"box":[0.5964,0.2895,0.1813,0.3832]},{"label":0,"box":[0.3578,0.3474,0.3254,0.1365]}],"prediction":[[[0.719,0.722,0.27,0.326,0.013,0.027,0.085,0.017,-0.007,0.0,0.223,0.116,0.491],[0.458,0.572,0.42,0.363,0.042,0.001,-0.042,-0.008,0.032,-0.007,0.681,0.246,0.08],[0.369,0.658,0.448,0.429,-0.007,0.022,0.006,-0.022,-0.023,-0.02,0.631,0.142,0.172],[-0.038,0.015,-0.006,0.017,-0.001,0.523,0.643,0.349,0.366,0.022,0.492,0.165,0.272],[-0.016,0.013,0.004,0.004,-0.016,0.264,0.742,0.224,0.418,0.001,0.108,0.198,0.674],[-0.015,0.025,0.02,0.005,0.002,0.448,0.628,0.429,0.503,0.018,0.547,0.188,0.231],[-0.018,0.003,-0.039,-0.04,0.017,0.632,0.44,0.383,0.416,-0.016,0.419,0.452,-0.033]],[[-0.027,0.02,-0.011,-0.003,0.002,0.66,0.533,0.361,0.481,-0.006,0.527,0.112,0.253],[-0.035,0.015,0.028,-0.058,-0.01,0.627,0.662,0.386,0.446,-0.074,0.819,0.054,0.029],[-0.097,-0.074,0.012,0.03,0.003,0.357,0.701,0.44,0.418,0.019,0.864,0.047,0.034],[0.168,0.062,0.074,0.1,-0.004,0.601,0.726,0.497,0.458,-0.081,0.478,-0.011,0.482],[0.01,0.041,0.054,0.061,0.0,0.211,0.984,0.392,0.557,0.321,0.066,0.006,0.907],[0.134,0.22,0.06,0.093,-0.004,0.378,0.593,0.343,0.437,-0.052,0.4,0.25,0.275],[-0.005,0.038,0.026,-0.07,-0.008,0.329,0.397,0.318,0.437,0.004,0.381,0.193,0.31]],[[0.634,0.499,0.418,0.424,0.004,-0.069,0.01,0.063,-0.054,-0.001,0.66,0.092,0.212],[-0.094,0.023,0.003,0.011,-0.012,0.825,0.375,0.412,0.337,0.034,0.959,0.016,-0.033],[0.565,0.399,0.571,0.386,0.674,-0.011,0.022,0.069,0.032,0.009,0.962,0.108,-0.012],[0.59,0.364,0.503,0.496,0.03,-0.008,-0.022,-0.037,-0.029,0.009,0.393,0.168,0.446],[0.008,-0.038,-0.01,0.025,0.001,0.198,0.118,0.422,0.633,0.864,0.006,-0.032,1.089],[0.39,0.398,0.308,0.415,-0.05,0.311,0.286,0.399,0.339,-0.022,0.45,0.177,0.344],[0.18,0.449,0.321,0.341,-0.003,-0.047,-0.055,-0.011,0.003,0.017,0.502,0.217,0.244]],[[0.632,0.456,0.372,0.327,-0.02,-0.01,-0.092,-0.015,0.047,-0.005,0.462,0.227,0.285],[-0.015,0.008,0.049,-0.005,-0.013,0.65,0.588,0.367,0.444,0.041,0.5,0.362,0.11],[0.633,0.327,0.066,0.474,0.008,0.733,0.638,0.58,0.61,0.157,0.384,0.664,-0.005],[-0.0,0.002,0.062,-0.058,-0.015,0.119,0.544,0.411,0.476,-0.008,0.18,0.656,0.137],[-0.002,-0.029,0.004,-0.0,-0.005,0.271,0.319,0.398,0.478,-0.007,0.256,0.263,0.464],[0.335,0.435,0.395,0.422,0.002,0.14,0.06,0.134,-0.048,0.008,0.529,0.282,0.151],[0.249,0.341,0.34,0.459,0.01,0.002,-0.016,0.054,0.035,0.002,0.502,0.26,0.2]],[[0.716,0.491,0.41,0.421,-0.002,-0.023,-0.051,0.047,-0.053,0.002,0.395,0.448,0.205],[0.003,-0.044,-0.015,0.017,-0.007,0.722,0.354,0.499,0.463,0.0,0.28,0.643,0.005],[0.763,0.174,0.556,0.629,0.869,0.208,0.144,0.085,0.044,0.0,0.049,1.014,-0.014],[0.003,0.217,0.487,0.523,-0.054,-0.002,0.328,0.454,0.647,0.018,0.108,0.868,-0.002],[0.107,0.118,0.091,0.073,0.003,0.447,0.386,0.353,0.422,0.008,0.485,0.303,0.147],[0.444,0.451,0.397,0.406,0.041,0.006,0.037,-0.03,-0.014,-0.0,0.516,0.3,0.152],[0.131,0.507,0.324,0.378,-0.036,0.078,0.11,0.097,0.065,0.001,0.554,0.286,0.11]],[[-0.025,-0.002,-0.034,0.081,-0.001,0.667,0.394,0.3,0.382,0.026,0.505,0.233,0.295],[0.442,0.368,0.398,0.433,0.006,0.379,0.426,0.4,0.453,-0.041,0.556,0.326,0.145],[0.039,0.02,0.025,-0.017,-0.002,0.54,0.321,0.42,0.462,-0.074,0.268,0.557,0.123],[0.05,-0.005,-0.051,-0.042,-0.011,0.359,0.392,0.417,0.4,-0.016,0.334,0.5,0.092],[0.291,0.528,0.273,0.141,0.011,0.365,0.421,0.368,0.366,0.018,0.449,0.297,0.219],[0.392,0.423,0.393,0.393,-0.008,0.021,-0.032,0.064,0.034,-0.002,0.496,0.287,0.11],[0.171,0.339,0.332,0.384,-0.032,0.011,0.017,-0.035,-0.015,0.023,0.4,0.258,0.225]],[[-0.027,0.031,-0.072,0.013,0.011,0.476,0.208,0.184,0.184,0.016,0.3,0.316,0.329],[0.471,0.27,0.3,0.406,-0.033,0.032,-0.021,0.014,-0.044,0.0,0.484,0.474,0.098],[-0.005,-0.078,-0.026,0.016,0.001,0.544,0.288,0.431,0.476,0.028,0.495,0.256,0.175],[0.41,0.291,0.362,0.37,0.02,-0.03,-0.03,0.044,0.033,0.003,0.446,0.35,0.16],[-0.022,-0.074,-0.025,0.05,-0.007,0.421,0.235,0.365,0.159,0.015,0.538,0.16,0.19],[0.379,0.264,0.444,0.346,-0.028,-0.009,-0.027,0.067,-0.012,-0.003,0.489,0.244,0.261],[-0.008,-0.049,0.063,-0.015,0.003,0.267,0.028,0.385,0.409,-0.016,0.203,0.339,0.351]]]}]}}</script>
+    <script>
+        (function () {
+            "use strict";
+
+            var DATA = JSON.parse(document.getElementById("yolo-data").textContent);
+            var root = document.documentElement;
+            var redraws = [];
+
+            function css(name) {
+                return getComputedStyle(root).getPropertyValue(name).trim();
+            }
+            function alpha(hex, a) {
+                var n = parseInt(hex.replace("#", ""), 16);
+                return "rgba(" + (n >> 16 & 255) + "," + (n >> 8 & 255) + "," + (n & 255) + "," + a + ")";
+            }
+            function clamp(v, lo, hi) {
+                return Math.min(hi, Math.max(lo, v));
+            }
+            function fixed(v, d) {
+                return Number(v).toFixed(d);
+            }
+            function grouped(n) {
+                return Math.round(n).toLocaleString("ko-KR");
+            }
+            // Large counts in Korean units: 20,290,000,000 -> "203억", 77,070,000 -> "7,707만".
+            function korean(n) {
+                if (n >= 1e8) return (n / 1e8).toFixed(n >= 1e10 ? 0 : 1).replace(/\.0$/, "") + "억";
+                if (n >= 1e4) return Math.round(n / 1e4).toLocaleString("ko-KR") + "만";
+                return grouped(n);
+            }
+            function percent(v) {
+                if (v > 0 && v < 0.0001) return "<0.01%";
+                return (v * 100).toFixed(v < 0.01 ? 2 : 1) + "%";
+            }
+            function svgEl(tag, attrs, parent) {
+                var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+                Object.keys(attrs || {}).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(el);
+                return el;
+            }
+            function rgb(hex) {
+                var v = parseInt(hex.replace("#", ""), 16);
+                return [v >> 16 & 255, v >> 8 & 255, v & 255];
+            }
+            var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            // Shared by the two 3D views (02 structure, 04 empty boxes): a unit cube's faces and the light that shades them.
+            var FACES = [
+                { n: [1, 0, 0], v: [[1, -1, -1], [1, 1, -1], [1, 1, 1], [1, -1, 1]] },
+                { n: [-1, 0, 0], v: [[-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1]] },
+                { n: [0, 1, 0], v: [[-1, 1, -1], [-1, 1, 1], [1, 1, 1], [1, 1, -1]] },
+                { n: [0, -1, 0], v: [[-1, -1, -1], [1, -1, -1], [1, -1, 1], [-1, -1, 1]] },
+                { n: [0, 0, 1], v: [[-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]] },
+                { n: [0, 0, -1], v: [[-1, -1, -1], [-1, 1, -1], [1, 1, -1], [1, -1, -1]] }
+            ];
+            var LIGHT = [-0.35, 0.8, 0.5].map(function (v, i, a) { return v / Math.hypot(a[0], a[1], a[2]); });
+            // Visible faces of the box with center c and half sizes h; turn rotates a vector into view space, project maps a point to the canvas.
+            function cuboid(turn, project, c, h) {
+                var out = [];
+                FACES.forEach(function (f) {
+                    if (turn(f.n)[2] <= 1e-6) return;  // facing away from the viewer
+                    out.push({
+                        pts: f.v.map(function (s) { return project([c[0] + s[0] * h[0], c[1] + s[1] * h[1], c[2] + s[2] * h[2]]); }),
+                        lit: 0.62 + 0.38 * Math.max(0, f.n[0] * LIGHT[0] + f.n[1] * LIGHT[1] + f.n[2] * LIGHT[2])
+                    });
+                });
+                return out;
+            }
+            function paintFaces(ctx, faces, color, fillAlpha, stroke, lineWidth) {
+                faces.forEach(function (f) {
+                    ctx.beginPath();
+                    f.pts.forEach(function (p, i) { if (i) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
+                    ctx.closePath();
+                    if (fillAlpha > 0) {
+                        ctx.fillStyle = "rgba(" + Math.round(color[0] * f.lit) + "," + Math.round(color[1] * f.lit) + "," +
+                            Math.round(color[2] * f.lit) + "," + fillAlpha + ")";
+                        ctx.fill();
+                    }
+                    ctx.strokeStyle = stroke;
+                    ctx.lineWidth = lineWidth;
+                    ctx.stroke();
+                });
+            }
+            // Point in a convex polygon, for picking what was drawn under the pointer.
+            function inside(pt, poly) {
+                var sign = 0;
+                for (var i = 0; i < poly.length; i++) {
+                    var a = poly[i], b = poly[(i + 1) % poly.length];
+                    var cross = (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]);
+                    if (cross !== 0) {
+                        if (!sign) sign = cross > 0 ? 1 : -1;
+                        else if ((cross > 0 ? 1 : -1) !== sign) return false;
+                    }
+                }
+                return true;
+            }
+            function iou(a, b) {
+                var ix = Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0]));
+                var iy = Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+                var inter = ix * iy;
+                var union = (a[2] - a[0]) * (a[3] - a[1]) + (b[2] - b[0]) * (b[3] - b[1]) - inter;
+                return union > 0 ? inter / union : 0;
+            }
+            // Canvas drawn in the network's 448 x 448 coordinates, scaled to device pixels.
+            function stage(canvas, draw) {
+                var ctx = canvas.getContext("2d");
+                function render() {
+                    var rect = canvas.getBoundingClientRect();
+                    var size = Math.max(1, Math.round(rect.width * (window.devicePixelRatio || 1)));
+                    if (canvas.width !== size) {
+                        canvas.width = size;
+                        canvas.height = size;
+                    }
+                    ctx.setTransform(size / 448, 0, 0, size / 448, 0, 0);
+                    draw(ctx);
+                }
+                if ("ResizeObserver" in window) new ResizeObserver(render).observe(canvas);
+                else window.addEventListener("resize", render);
+                redraws.push(render);
+                return render;
+            }
+
+            // Theme toggle (shared with the homepage through localStorage "theme").
+            (function () {
+                var toggle = document.getElementById("theme-toggle");
+                function label() {
+                    var dark = root.dataset.theme !== "light";
+                    toggle.textContent = dark ? "light" : "dark";
+                    toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+                }
+                toggle.addEventListener("click", function () {
+                    var next = root.dataset.theme === "light" ? "dark" : "light";
+                    root.dataset.theme = next;
+                    try {
+                        localStorage.setItem("theme", next);
+                    } catch (error) {
+                        // 저장할 수 없어도 이번 방문에서는 전환된다.
+                    }
+                    label();
+                    redraws.forEach(function (fn) { fn(); });
+                });
+                label();
+            })();
+
+            // 01 Grid and responsibility.
+            (function () {
+                var VOC = ["비행기", "자전거", "새", "보트", "병", "버스", "자동차", "고양이", "의자", "소",
+                           "식탁", "개", "말", "오토바이", "사람", "화분", "양", "소파", "기차", "모니터"];
+                var objects = [
+                    { name: "개", emoji: "🐕", cls: 11, color: "--accent-warn", cx: 0.30, cy: 0.64, w: 0.36, h: 0.30 },
+                    { name: "자전거", emoji: "🚲", cls: 1, color: "--accent", cx: 0.70, cy: 0.38, w: 0.36, h: 0.26 }
+                ];
+                var selected = 0;
+                var drag = null;
+                var canvas = document.getElementById("grid-canvas");
+                var live = document.getElementById("grid-live");
+                var liveTimer = null;
+
+                function cellOf(o) {
+                    return [Math.min(6, Math.floor(o.cy * 7)), Math.min(6, Math.floor(o.cx * 7))];
+                }
+                function sameCell() {
+                    var a = cellOf(objects[0]), b = cellOf(objects[1]);
+                    return a[0] === b[0] && a[1] === b[1];
+                }
+                var render = stage(canvas, function (ctx) {
+                    ctx.clearRect(0, 0, 448, 448);
+                    ctx.fillStyle = css("--panel-soft");
+                    ctx.fillRect(0, 0, 448, 448);
+                    var clash = sameCell();
+                    objects.forEach(function (o) {
+                        var cell = cellOf(o);
+                        ctx.fillStyle = clash ? css("--danger-soft") : alpha(css(o.color), 0.22);
+                        ctx.fillRect(cell[1] * 64, cell[0] * 64, 64, 64);
+                    });
+                    ctx.strokeStyle = css("--line-strong");
+                    ctx.lineWidth = 1;
+                    for (var i = 1; i < 7; i++) {
+                        ctx.beginPath(); ctx.moveTo(i * 64, 0); ctx.lineTo(i * 64, 448); ctx.stroke();
+                        ctx.beginPath(); ctx.moveTo(0, i * 64); ctx.lineTo(448, i * 64); ctx.stroke();
+                    }
+                    objects.forEach(function (o, index) {
+                        var x = (o.cx - o.w / 2) * 448, y = (o.cy - o.h / 2) * 448, w = o.w * 448, h = o.h * 448;
+                        var color = css(o.color);
+                        ctx.font = Math.round(Math.min(w, h) * 0.5) + 'px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.globalAlpha = 0.9;
+                        ctx.fillText(o.emoji, o.cx * 448, o.cy * 448 - h * 0.12);
+                        ctx.globalAlpha = 1;
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = index === selected ? 3.5 : 2;
+                        ctx.setLineDash(index === selected ? [] : [6, 4]);
+                        ctx.strokeRect(x, y, w, h);
+                        ctx.setLineDash([]);
+                        ctx.font = "600 14px " + css("--sans");
+                        ctx.textAlign = "left";
+                        ctx.textBaseline = "top";
+                        var label = o.name;
+                        var tw = ctx.measureText(label).width + 10;
+                        ctx.fillStyle = color;
+                        ctx.fillRect(x, Math.max(0, y - 22), tw, 20);
+                        ctx.fillStyle = css("--bg");
+                        ctx.fillText(label, x + 5, Math.max(0, y - 22) + 3);
+                        ctx.beginPath();
+                        ctx.arc(o.cx * 448, o.cy * 448, 7, 0, Math.PI * 2);
+                        ctx.fillStyle = color;
+                        ctx.fill();
+                        ctx.lineWidth = 2.5;
+                        ctx.strokeStyle = css("--bg");
+                        ctx.stroke();
+                    });
+                    if (document.activeElement === canvas) {
+                        ctx.strokeStyle = css("--accent");
+                        ctx.lineWidth = 3;
+                        ctx.strokeRect(1.5, 1.5, 445, 445);
+                    }
+                });
+
+                var slots = document.getElementById("grid-slots");
+                var slotEls = [];
+                var names = ["x", "y", "√w", "√h", "C", "x", "y", "√w", "√h", "C"];
+                for (var s = 0; s < 30; s++) {
+                    var el = document.createElement("span");
+                    el.className = "slot";
+                    el.title = s < 10 ? "박스 " + (s < 5 ? 1 : 2) + " · " + names[s] : VOC[s - 10];
+                    slots.appendChild(el);
+                    slotEls.push(el);
+                }
+
+                function update(announce) {
+                    render();
+                    var o = objects[selected];
+                    var cell = cellOf(o);
+                    var x = o.cx * 7 - cell[1], y = o.cy * 7 - cell[0];
+                    document.getElementById("grid-name").textContent = o.name;
+                    document.getElementById("grid-cell").textContent = (cell[0] + 1) + "행 " + (cell[1] + 1) + "열";
+                    document.getElementById("grid-xy").textContent = fixed(x, 2) + ", " + fixed(y, 2);
+                    document.getElementById("grid-wh").textContent = fixed(o.w, 2) + ", " + fixed(o.h, 2);
+                    document.getElementById("grid-sqrt").textContent = fixed(Math.sqrt(o.w), 2) + ", " + fixed(Math.sqrt(o.h), 2);
+                    var values = [fixed(x, 2), fixed(y, 2), fixed(Math.sqrt(o.w), 2), fixed(Math.sqrt(o.h), 2), "IOU"];
+                    slotEls.forEach(function (el, i) {
+                        if (i < 5) {
+                            el.className = "slot coord";
+                            el.innerHTML = values[i] + "<small>" + names[i] + "</small>";
+                        } else if (i < 10) {
+                            el.className = "slot zero";
+                            el.innerHTML = (i === 9 ? "0" : "·") + "<small>" + names[i] + "</small>";
+                        } else if (i - 10 === o.cls) {
+                            el.className = "slot cls";
+                            el.innerHTML = "1<small>" + VOC[o.cls] + "</small>";
+                        } else {
+                            el.className = "slot zero";
+                            el.textContent = "0";
+                        }
+                    });
+                    document.getElementById("grid-collision").hidden = !sameCell();
+                    if (announce) {
+                        clearTimeout(liveTimer);
+                        liveTimer = setTimeout(function () {
+                            live.textContent = o.name + "는 " + (cell[0] + 1) + "행 " + (cell[1] + 1) + "열 칸이 맡는다." +
+                                (sameCell() ? " 두 물체가 같은 칸이다." : "");
+                        }, 250);
+                    }
+                }
+                function point(e) {
+                    var rect = canvas.getBoundingClientRect();
+                    return { x: (e.clientX - rect.left) / rect.width, y: (e.clientY - rect.top) / rect.height };
+                }
+                function inside(p, o) {
+                    return Math.abs(p.x - o.cx) <= o.w / 2 && Math.abs(p.y - o.cy) <= o.h / 2;
+                }
+                function place(o, cx, cy) {
+                    o.cx = clamp(cx, o.w / 2, 1 - o.w / 2);
+                    o.cy = clamp(cy, o.h / 2, 1 - o.h / 2);
+                }
+                canvas.addEventListener("pointerdown", function (e) {
+                    var p = point(e);
+                    var hit = [selected, 1 - selected].filter(function (i) { return inside(p, objects[i]); })[0];
+                    if (hit === undefined) return;
+                    selected = hit;
+                    drag = { id: e.pointerId, dx: p.x - objects[hit].cx, dy: p.y - objects[hit].cy };
+                    try { canvas.setPointerCapture(e.pointerId); } catch (error) { /* pointer already gone */ }
+                    canvas.style.cursor = "grabbing";
+                    update(true);
+                    e.preventDefault();
+                });
+                canvas.addEventListener("pointermove", function (e) {
+                    if (!drag || e.pointerId !== drag.id) return;
+                    var p = point(e);
+                    place(objects[selected], p.x - drag.dx, p.y - drag.dy);
+                    update(true);
+                });
+                function stop() {
+                    drag = null;
+                    canvas.style.cursor = "";
+                }
+                canvas.addEventListener("pointerup", stop);
+                canvas.addEventListener("pointercancel", stop);
+                canvas.addEventListener("keydown", function (e) {
+                    var o = objects[selected];
+                    var step = e.shiftKey ? 1 / 7 : 1 / 56;
+                    if (e.key === "ArrowLeft") place(o, o.cx - step, o.cy);
+                    else if (e.key === "ArrowRight") place(o, o.cx + step, o.cy);
+                    else if (e.key === "ArrowUp") place(o, o.cx, o.cy - step);
+                    else if (e.key === "ArrowDown") place(o, o.cx, o.cy + step);
+                    else if (e.key === " " || e.key === "Enter") selected = 1 - selected;
+                    else return;
+                    e.preventDefault();
+                    update(true);
+                });
+                canvas.addEventListener("focus", render);
+                canvas.addEventListener("blur", render);
+                update(false);
+            })();
+
+            // 02 Structure explorer: a 3D view (orthographic projection drawn on canvas) and a 2D bar view.
+            (function () {
+                var S = DATA.structure;
+                if (!S) return;
+                var nodes = [{ type: "input", C: 3, H: 448, params: 0, macs: 0 }];
+                S.layers.forEach(function (l) {
+                    nodes.push({ type: l[0], k: l[1], filters: l[2], stride: l[3], C: l[4], H: l[5], params: l[7], macs: l[8], stage: l[9] });
+                });
+                nodes.push({ type: "output", C: S.cell, H: S.grid, params: 0, macs: 0 });
+                var totalParams = S.totals.params, totalMacs = S.totals.macs;
+                var maxParams = Math.max.apply(null, nodes.map(function (n) { return n.params; }));
+                var maxMacs = Math.max.apply(null, nodes.map(function (n) { return n.macs; }));
+                var fc1 = nodes.filter(function (n) { return n.type === "fc"; })[0];
+                var convMacs = nodes.filter(function (n) { return n.type === "conv"; }).reduce(function (a, n) { return a + n.macs; }, 0);
+                var LOG7 = Math.log2(7), LOG448 = Math.log2(448);
+                var view = "3d", mode = "shape", current = 0;
+
+                document.getElementById("structure-totals").innerHTML =
+                    "합성곱 <b>" + S.totals.conv + "</b> · 완전연결 <b>" + S.totals.fc + "</b> · 파라미터 <b>" + grouped(totalParams) +
+                    "</b> · 한 장에 곱셈-덧셈 약 <b>" + korean(totalMacs) + "</b> 번";
+
+                function tone(n) {
+                    if (n.type === "conv") return n.stage === "pretrained" ? "--accent" : "--accent-green";
+                    return n.type === "fc" ? "--accent-warn" : "--line-strong";
+                }
+                function share(n) {
+                    return mode === "params" ? n.params / maxParams : mode === "macs" ? n.macs / maxMacs : 0;
+                }
+                function shapeText(n) {
+                    return n.type === "fc" ? String(n.C) : n.H + "×" + n.H + "×" + n.C;
+                }
+                function describe(n, i) {
+                    var prev = i > 0 ? nodes[i - 1] : null;
+                    var title, text;
+                    if (n.type === "input") {
+                        title = "입력";
+                        text = "448 × 448 크기의 사진, RGB 3채널. 원본 사진을 이 크기로 바꿔 넣는다.";
+                    } else if (n.type === "output") {
+                        title = "출력 7 × 7 × " + n.C;
+                        text = "마지막 완전연결 층의 숫자 " + (S.grid * S.grid * n.C) + "개를 7 × 7 칸 × " + n.C + "개로 다시 묶는다. 칸마다 박스 2개 × 5와 클래스 20개다.";
+                    } else if (n.type === "maxpool") {
+                        title = "최대 풀링 2×2";
+                        text = "2×2 구역에서 가장 큰 값만 남겨 가로세로를 절반으로 줄인다. 파라미터는 없다. " + shapeText(prev) + " → " + shapeText(n);
+                    } else if (n.type === "fc") {
+                        var isFirst = n === fc1;
+                        title = "완전연결 " + (isFirst ? "1" : "2") + " · " + shapeText(prev) + " → " + n.C;
+                        text = isFirst
+                            ? "7×7×1024개의 값을 모두 이어 4096개로 만든다. 모든 입력이 모든 출력과 연결되어 파라미터가 가장 많다. 뒤에 dropout 0.5가 붙는다."
+                            : "4096개를 1470 = 7×7×30개로 만든다. 활성화 함수가 없는 선형 층이다.";
+                    } else {
+                        title = "합성곱 " + n.k + "×" + n.k + " · 필터 " + n.filters + (n.stride > 1 ? " · 보폭 2" : "");
+                        text = (n.k === 1 ? "1×1 축소 층: 채널 수를 줄여 다음 3×3 합성곱의 계산을 아낀다. " : "") +
+                            (n.stride > 1 ? "보폭 2로 가로세로를 절반으로 줄인다. " : "") +
+                            shapeText(prev) + " → " + shapeText(n) + ". " +
+                            (n.stage === "pretrained" ? "ImageNet으로 미리 배운 앞 20층 중 하나다." : "탐지를 위해 새로 붙인 4층 중 하나다.");
+                    }
+                    return { title: i + " / " + (nodes.length - 1) + " · " + title, text: text };
+                }
+                function callout() {
+                    var text = {
+                        shape: "가로세로는 448에서 7로 64분의 1이 되고, 채널은 3에서 1024로 늘어난다. " +
+                            (view === "3d" ? "층을 고르면, 입력의 어느 창이 모든 채널을 거쳐 출력 한 칸이 되는지 선으로 보인다." : "막대 높이는 가로세로 크기다."),
+                        params: "파라미터 " + grouped(totalParams) + "개 중 " + percent(fc1.params / totalParams) + "가 첫 완전연결 층 하나에 있다." +
+                            (view === "3d" ? " 블록 위 막대가 층별 몫이다." : ""),
+                        macs: "사진 한 장에 드는 곱셈-덧셈 약 " + korean(totalMacs) + " 번 중 " + percent(convMacs / totalMacs) + "가 합성곱에서 나온다. 첫 완전연결 층의 몫은 " + percent(fc1.macs / totalMacs) + "뿐이다."
+                    }[mode];
+                    document.getElementById("structure-callout").textContent = text;
+                }
+
+                // ---- 2D bars ----
+                var PLOT = 160, TOP = 26, GAP2 = 5, x2 = 6;
+                nodes.forEach(function (n) {
+                    n.w2 = n.type === "maxpool" ? 7 : n.type === "fc" ? 16 : 5 + 2.3 * Math.log2(n.C);
+                    n.x2 = x2;
+                    x2 += n.w2 + GAP2;
+                });
+                var width2 = Math.ceil(x2 + 4), base2 = TOP + PLOT;
+                var svg = document.getElementById("strip");
+                svg.setAttribute("viewBox", "0 0 " + width2 + " " + (base2 + 30));
+                svg.setAttribute("width", width2);
+                svg.setAttribute("height", base2 + 30);
+                svgEl("line", { x1: 0, x2: width2, y1: base2 + 0.5, y2: base2 + 0.5, stroke: "var(--line)" }, svg);
+                var labels2 = svgEl("g", {}, svg);
+                var marker2 = svgEl("path", { fill: "var(--text)" }, svg);
+                var bars2 = nodes.map(function (n, i) {
+                    var fill = n.type === "conv" || n.type === "fc" ? "var(" + tone(n) + ")" : "none";
+                    var rect = svgEl("rect", {
+                        class: "block", x: n.x2, width: n.w2, rx: 2, fill: fill, "fill-opacity": fill === "none" ? 0 : 0.55,
+                        stroke: fill === "none" ? "var(--line-strong)" : fill, "stroke-width": 1
+                    }, svg);
+                    rect.addEventListener("click", function () { select(i, true); });
+                    return rect;
+                });
+                function height2(n) {
+                    if (mode !== "shape") return Math.max(2, PLOT * share(n));
+                    if (n.type === "fc") return PLOT * 0.42;
+                    return 14 + (PLOT - 14) * (Math.log2(n.H) - LOG7) / (LOG448 - LOG7);
+                }
+                function layout2d() {
+                    while (labels2.firstChild) labels2.removeChild(labels2.firstChild);
+                    var lastH = null;
+                    nodes.forEach(function (n, i) {
+                        var h = height2(n);
+                        bars2[i].setAttribute("height", h);
+                        bars2[i].setAttribute("y", base2 - h);
+                        bars2[i].style.height = h + "px";
+                        bars2[i].style.y = (base2 - h) + "px";
+                        if (mode === "shape" && n.type !== "fc" && n.H !== lastH) {
+                            svgEl("text", { x: n.x2, y: base2 - h - 6, "font-size": 11, fill: "var(--muted)", "font-family": "var(--mono)" }, labels2).textContent = n.H;
+                            lastH = n.H;
+                        }
+                    });
+                    if (mode === "params") {
+                        svgEl("text", { x: Math.max(4, fc1.x2 - 120), y: TOP - 8, "font-size": 12, fill: "var(--text)", "font-family": "var(--mono)" }, labels2)
+                            .textContent = "첫 완전연결 층 " + percent(fc1.params / totalParams);
+                    }
+                }
+                function highlight2d(scroll) {
+                    bars2.forEach(function (b, j) {
+                        b.setAttribute("stroke-width", j === current ? 2.5 : 1);
+                        b.setAttribute("stroke", j === current ? "var(--text)" : (b.getAttribute("fill") === "none" ? "var(--line-strong)" : b.getAttribute("fill")));
+                    });
+                    var n = nodes[current], cx = n.x2 + n.w2 / 2;
+                    marker2.setAttribute("d", "M" + (cx - 6) + " " + (base2 + 18) + " L" + (cx + 6) + " " + (base2 + 18) + " L" + cx + " " + (base2 + 8) + " Z");
+                    if (scroll && view === "2d") {
+                        var wrap = svg.parentNode;
+                        var scale = svg.getBoundingClientRect().width / width2;
+                        wrap.scrollLeft = clamp(cx * scale - wrap.clientWidth / 2, 0, wrap.scrollWidth);
+                    }
+                }
+
+                // ---- 3D ----
+                // World axes: x runs along the network, y is up, z is the other spatial side.
+                // A block's y and z extents encode the feature map's height and width, its x extent the channels.
+                var canvas = document.getElementById("net3d");
+                var ctx = canvas.getContext("2d");
+                var GAP3 = 5, cursor = 0;
+                nodes.forEach(function (n) {
+                    if (n.type === "fc") {
+                        n.hx = 2.5; n.hy = 20 + 2.5 * Math.log2(n.C); n.hz = 2.5;
+                    } else {
+                        n.hx = 1 + Math.log2(n.C);
+                        n.hy = n.hz = 12 + 48 * (Math.log2(n.H) - LOG7) / (LOG448 - LOG7);
+                    }
+                    n.px = cursor + n.hx;
+                    cursor += 2 * n.hx + GAP3;
+                });
+                var span = cursor - GAP3;
+                nodes.forEach(function (n) { n.px -= span / 2; });
+
+                var HOME = { yaw: 0.5, pitch: 0.3 };
+                var cam = { yaw: HOME.yaw, pitch: HOME.pitch, zoom: 1, target: 0 };
+                var W = 1, H = 1, dpr = 1, fitZoom = 1, overview = true, anim = null, hits = [];
+
+                function turn(p) {
+                    var cy = Math.cos(cam.yaw), sy = Math.sin(cam.yaw), cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+                    var x = cy * p[0] + sy * p[2], z = -sy * p[0] + cy * p[2];
+                    return [x, cp * p[1] - sp * z, sp * p[1] + cp * z];
+                }
+                function project(p) {
+                    var q = turn([p[0] - cam.target, p[1], p[2]]);
+                    return [W / 2 + q[0] * cam.zoom, H / 2 - q[1] * cam.zoom, q[2]];
+                }
+                function boxFaces(c, h) {
+                    return cuboid(turn, project, c, h);
+                }
+                function paint(faces, color, fillAlpha, stroke, lineWidth) {
+                    paintFaces(ctx, faces, color, fillAlpha, stroke, lineWidth);
+                }
+                function line3(a, b, color, width, dash) {
+                    var p = project(a), q = project(b);
+                    ctx.beginPath();
+                    ctx.moveTo(p[0], p[1]);
+                    ctx.lineTo(q[0], q[1]);
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = width;
+                    ctx.setLineDash(dash || []);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+                function barOf(n) {
+                    var s = share(n);
+                    if (!s) return null;
+                    var h = Math.max(0.8, 60 * s);
+                    return { c: [n.px, n.hy + 5 + h, 0], h: [Math.min(3.5, n.hx), h, Math.min(3.5, n.hz)] };
+                }
+                function outputGrid(n) {
+                    // the 7 x 7 grid of section 01 on the output block's square face
+                    var side = turn([-1, 0, 0])[2] > 0 ? -1 : 1;
+                    var x = n.px + side * n.hx;
+                    ctx.strokeStyle = alpha(css("--text"), 0.55);
+                    ctx.lineWidth = 0.8;
+                    for (var g = 1; g < 7; g++) {
+                        var t = -n.hy + 2 * n.hy * g / 7;
+                        [[[x, t, -n.hz], [x, t, n.hz]], [[x, -n.hy, t], [x, n.hy, t]]].forEach(function (seg) {
+                            var p = project(seg[0]), q = project(seg[1]);
+                            ctx.beginPath();
+                            ctx.moveTo(p[0], p[1]);
+                            ctx.lineTo(q[0], q[1]);
+                            ctx.stroke();
+                        });
+                    }
+                }
+                function drawOperation() {
+                    if (current === 0) return;
+                    var cur = nodes[current], prev = nodes[current - 1];
+                    var warn = css("--accent-warn"), col = rgb(warn);
+                    var fromX = prev.px + prev.hx, toX = cur.px - cur.hx;
+                    var corners = [[1, 1], [1, -1], [-1, 1], [-1, -1]];
+                    if (cur.type === "conv" || cur.type === "maxpool") {
+                        var k = cur.type === "conv" ? cur.k : 2;
+                        var ph = Math.max(1.6, prev.hy * k / prev.H);  // half side of the k x k window on the input map
+                        var oh = Math.max(1.0, cur.hy / cur.H);        // half side of one output position
+                        paint(boxFaces([prev.px, 0, 0], [prev.hx + 0.4, ph, ph]), col, 0.45, warn, 1.2);  // the window spans every input channel
+                        paint(boxFaces([toX + 0.6, 0, 0], [0.6, oh, oh]), col, 0.9, warn, 1.2);
+                        corners.forEach(function (s) { line3([fromX, s[0] * ph, s[1] * ph], [toX, s[0] * oh, s[1] * oh], alpha(warn, 0.95), 1.3); });
+                    } else if (cur.type === "fc") {
+                        corners.forEach(function (s) {
+                            line3([fromX, s[0] * prev.hy, s[1] * prev.hz], [toX, cur.hy * 0.9, 0], alpha(warn, 0.6), 1);
+                            line3([fromX, s[0] * prev.hy, s[1] * prev.hz], [toX, -cur.hy * 0.9, 0], alpha(warn, 0.6), 1);
+                        });
+                    } else if (cur.type === "output") {
+                        line3([fromX, 0, 0], [toX, 0, 0], warn, 1.8, [5, 4]);
+                    }
+                }
+                function drawLabels() {
+                    ctx.textAlign = "center";
+                    ctx.font = "11px " + css("--mono");
+                    ctx.textBaseline = "top";
+                    ctx.fillStyle = css("--faint");
+                    var lastH = null, lastX = -1e9;
+                    nodes.forEach(function (n) {
+                        if (n.type === "fc" || n.H === lastH) return;
+                        lastH = n.H;
+                        var p = project([n.px, -n.hy - 3, n.hz]);
+                        if (Math.abs(p[0] - lastX) < 30) return;  // skip labels that would overlap on screen
+                        lastX = p[0];
+                        ctx.fillText(String(n.H), p[0], p[1] + 2);
+                    });
+                    var n = nodes[current], bar = barOf(n);
+                    var p = project([n.px, (bar ? bar.c[1] + bar.h[1] : n.hy) + 3, 0]);
+                    var text = shapeText(n) + (bar ? " · " + percent(mode === "params" ? n.params / totalParams : n.macs / totalMacs) : "");
+                    ctx.font = "600 12px " + css("--mono");
+                    var w = ctx.measureText(text).width + 12;
+                    var x = clamp(p[0], w / 2 + 2, W - w / 2 - 2), y = clamp(p[1] - 24, 2, H - 22);
+                    ctx.fillStyle = alpha(css("--panel"), 0.92);
+                    ctx.fillRect(x - w / 2, y, w, 20);
+                    ctx.strokeStyle = css("--text");
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(x - w / 2 + 0.5, y + 0.5, w - 1, 19);
+                    ctx.fillStyle = css("--text");
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(text, x, y + 10.5);
+                }
+                function draw() {
+                    if (view !== "3d") return;
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                    ctx.clearRect(0, 0, W, H);
+                    var textColor = rgb(css("--text"));
+                    hits = [];
+                    nodes.map(function (n, i) { return { n: n, i: i, depth: project([n.px, 0, 0])[2] }; })
+                        .sort(function (a, b) { return a.depth - b.depth; })  // far to near (all centers lie on the x axis)
+                        .forEach(function (u) {
+                            var n = u.n, solid = n.type === "conv" || n.type === "fc", selected = u.i === current;
+                            var faces = boxFaces([n.px, 0, 0], [n.hx, n.hy, n.hz]);
+                            var bar = barOf(n), barFaces = bar ? boxFaces(bar.c, bar.h) : [];
+                            var block = function () {
+                                paint(faces, rgb(css(tone(n))), solid ? 0.88 : 0.14, selected ? css("--text") : alpha(css(tone(n)), 0.9), selected ? 2.2 : 1);
+                                if (n.type === "output") outputGrid(n);
+                            };
+                            var column = function () { paint(barFaces, textColor, 0.78, alpha(css("--text"), 0.9), 1); };
+                            if (cam.pitch < 0) { column(); block(); } else { block(); column(); }
+                            hits.push({ i: u.i, polys: faces.concat(barFaces) });
+                        });
+                    drawOperation();
+                    drawLabels();
+                }
+                function fit() {
+                    // zoom that fits every block (and bar) at the current angle
+                    var keep = { t: cam.target, z: cam.zoom };
+                    cam.target = 0;
+                    cam.zoom = 1;
+                    var xs = [], ys = [];
+                    nodes.forEach(function (n) {
+                        var bar = barOf(n), top = bar ? bar.c[1] + bar.h[1] : n.hy;
+                        [[-1, -1, -1], [-1, -1, 1], [-1, 1, -1], [-1, 1, 1], [1, -1, -1], [1, -1, 1], [1, 1, -1], [1, 1, 1]].forEach(function (s) {
+                            var p = project([n.px + s[0] * n.hx, s[1] > 0 ? top : -n.hy, s[2] * n.hz]);
+                            xs.push(p[0]);
+                            ys.push(p[1]);
+                        });
+                    });
+                    cam.target = keep.t;
+                    cam.zoom = keep.z;
+                    var wx = Math.max.apply(null, xs) - Math.min.apply(null, xs);
+                    var hy = Math.max.apply(null, ys) - Math.min.apply(null, ys) + 40;
+                    fitZoom = Math.min(0.94 * W / wx, 0.86 * H / hy);
+                }
+                function measure() {
+                    var rect = canvas.getBoundingClientRect();
+                    if (!rect.width) return;
+                    dpr = window.devicePixelRatio || 1;
+                    W = rect.width;
+                    H = rect.height;
+                    canvas.width = Math.round(W * dpr);
+                    canvas.height = Math.round(H * dpr);
+                    fit();
+                    if (overview) cam.zoom = fitZoom;
+                }
+                function flyTo(target, zoom) {
+                    if (anim) cancelAnimationFrame(anim);
+                    anim = null;
+                    if (reduceMotion) {
+                        cam.target = target;
+                        cam.zoom = zoom;
+                        draw();
+                        return;
+                    }
+                    var from = { t: cam.target, z: cam.zoom }, start = performance.now();
+                    (function step(now) {
+                        var k = Math.min(1, (now - start) / 420), e = 1 - Math.pow(1 - k, 3);
+                        cam.target = from.t + (target - from.t) * e;
+                        cam.zoom = from.z + (zoom - from.z) * e;
+                        draw();
+                        anim = k < 1 ? requestAnimationFrame(step) : null;
+                    })(start);
+                }
+                function pick(x, y) {
+                    for (var i = hits.length - 1; i >= 0; i--) {
+                        if (hits[i].polys.some(function (f) { return inside([x, y], f.pts); })) return hits[i].i;
+                    }
+                    return -1;
+                }
+                function zoomBy(factor) {
+                    overview = false;
+                    cam.zoom = clamp(cam.zoom * factor, fitZoom * 0.6, fitZoom * 14);
+                    draw();
+                }
+
+                var pointers = {}, drag = null, pinch = null;
+                function count() { return Object.keys(pointers).length; }
+                function spread() {
+                    var p = Object.keys(pointers).map(function (k) { return pointers[k]; });
+                    return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y);
+                }
+                canvas.addEventListener("pointerdown", function (e) {
+                    canvas.focus({ preventScroll: true });  // so a plain wheel can zoom afterwards
+                    try { canvas.setPointerCapture(e.pointerId); } catch (error) { /* pointer already gone */ }
+                    pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+                    if (count() === 1) drag = { x: e.clientX, y: e.clientY, yaw: cam.yaw, pitch: cam.pitch, moved: false };
+                    if (count() === 2) { pinch = { d: spread(), zoom: cam.zoom }; drag = null; }
+                    e.preventDefault();
+                });
+                canvas.addEventListener("pointermove", function (e) {
+                    if (!pointers[e.pointerId]) return;
+                    pointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+                    if (pinch && count() === 2) {
+                        overview = false;
+                        cam.zoom = clamp(pinch.zoom * spread() / Math.max(1, pinch.d), fitZoom * 0.6, fitZoom * 14);
+                        draw();
+                        return;
+                    }
+                    if (!drag) return;
+                    var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+                    if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
+                    if (!drag.moved) return;
+                    cam.yaw = drag.yaw + dx * 0.008;
+                    cam.pitch = clamp(drag.pitch + dy * 0.008, -1.3, 1.3);
+                    draw();
+                });
+                function release(e) {
+                    if (!pointers[e.pointerId]) return;
+                    if (drag && !drag.moved && count() === 1) {
+                        var rect = canvas.getBoundingClientRect();
+                        var hit = pick(e.clientX - rect.left, e.clientY - rect.top);
+                        if (hit >= 0) select(hit, true);
+                    }
+                    delete pointers[e.pointerId];
+                    if (count() < 2) pinch = null;
+                    if (!count()) drag = null;
+                }
+                canvas.addEventListener("pointerup", release);
+                canvas.addEventListener("pointercancel", release);
+                canvas.addEventListener("wheel", function (e) {
+                    // pinch on a trackpad arrives as ctrl + wheel; a plain wheel zooms only while the canvas has focus
+                    if (!e.ctrlKey && document.activeElement !== canvas) return;
+                    e.preventDefault();
+                    zoomBy(Math.exp(-e.deltaY * 0.0015));
+                }, { passive: false });
+                canvas.addEventListener("keydown", function (e) {
+                    var k = e.key;
+                    if (k === "ArrowLeft") cam.yaw -= 0.1;
+                    else if (k === "ArrowRight") cam.yaw += 0.1;
+                    else if (k === "ArrowUp") cam.pitch = clamp(cam.pitch - 0.1, -1.3, 1.3);
+                    else if (k === "ArrowDown") cam.pitch = clamp(cam.pitch + 0.1, -1.3, 1.3);
+                    else if (k === "+" || k === "=") { zoomBy(1.2); e.preventDefault(); return; }
+                    else if (k === "-" || k === "_") { zoomBy(1 / 1.2); e.preventDefault(); return; }
+                    else if (k === "[") { select(Math.max(0, current - 1), true); e.preventDefault(); return; }
+                    else if (k === "]") { select(Math.min(nodes.length - 1, current + 1), true); e.preventDefault(); return; }
+                    else return;
+                    e.preventDefault();
+                    draw();
+                });
+                document.getElementById("net3d-fit").addEventListener("click", function () {
+                    overview = true;
+                    fit();
+                    flyTo(0, fitZoom);
+                });
+                document.getElementById("net3d-reset").addEventListener("click", function () {
+                    cam.yaw = HOME.yaw;
+                    cam.pitch = HOME.pitch;
+                    fit();
+                    if (overview) cam.zoom = fitZoom;
+                    draw();
+                });
+                if ("ResizeObserver" in window) new ResizeObserver(function () { measure(); draw(); }).observe(canvas);
+                else window.addEventListener("resize", function () { measure(); draw(); });
+                redraws.push(draw);
+
+                // ---- shared controls ----
+                var range = document.getElementById("layer-range");
+                range.max = nodes.length - 1;
+                function select(i, move) {
+                    current = i;
+                    range.value = i;
+                    var n = nodes[i], d = describe(n, i);
+                    document.getElementById("layer-title").textContent = d.title;
+                    document.getElementById("layer-text").textContent = d.text;
+                    document.getElementById("layer-numbers").innerHTML = n.type === "input" || n.type === "output" ? "" :
+                        "파라미터 <b>" + grouped(n.params) + "</b> (" + percent(n.params / totalParams) + ") · 곱셈-덧셈 <b>" +
+                        korean(n.macs) + "</b> 번 (" + percent(n.macs / totalMacs) + ")";
+                    highlight2d(move);
+                    if (view !== "3d") return;
+                    if (move) {
+                        var zoom = overview ? Math.max(cam.zoom, fitZoom * 3) : cam.zoom;
+                        overview = false;
+                        flyTo(n.px, zoom);
+                    } else {
+                        draw();
+                    }
+                }
+                function pressed(group, attr, value) {
+                    Array.prototype.forEach.call(document.querySelectorAll(group + " button"), function (b) {
+                        b.setAttribute("aria-pressed", String(b.dataset[attr] === value));
+                    });
+                }
+                range.addEventListener("input", function () { select(Number(range.value), true); });
+                document.getElementById("layer-prev").addEventListener("click", function () { select(Math.max(0, current - 1), true); });
+                document.getElementById("layer-next").addEventListener("click", function () { select(Math.min(nodes.length - 1, current + 1), true); });
+                Array.prototype.forEach.call(document.querySelectorAll("#mode-seg button"), function (b) {
+                    b.addEventListener("click", function () {
+                        mode = b.dataset.mode;
+                        pressed("#mode-seg", "mode", mode);
+                        callout();
+                        layout2d();
+                        fit();
+                        if (overview) cam.zoom = fitZoom;
+                        draw();
+                    });
+                });
+                Array.prototype.forEach.call(document.querySelectorAll("#view-seg button"), function (b) {
+                    b.addEventListener("click", function () {
+                        view = b.dataset.view;
+                        pressed("#view-seg", "view", view);
+                        document.getElementById("view3d").hidden = view !== "3d";
+                        document.getElementById("view2d").hidden = view !== "2d";
+                        callout();
+                        if (view === "3d") {
+                            measure();
+                            draw();
+                        } else {
+                            layout2d();
+                            highlight2d(true);
+                        }
+                    });
+                });
+                callout();
+                layout2d();
+                measure();
+                select(0, false);
+            })();
+
+            // 03 From 98 boxes to a few.
+            (function () {
+                var D = DATA.synthetic;
+                if (!D) return;
+                var scene = 0;
+                var canvas = document.getElementById("infer-canvas");
+                var scoreRange = document.getElementById("score-range");
+                var nmsRange = document.getElementById("nms-range");
+                var nmsCheck = document.getElementById("nms-check");
+                var gtCheck = document.getElementById("gt-check");
+                var buttons = document.getElementById("scene-buttons");
+                var NAMES = D.classes_ko;
+
+                function candidates(pred) {
+                    var list = [];
+                    for (var r = 0; r < D.S; r++) {
+                        for (var c = 0; c < D.S; c++) {
+                            var cell = pred[r][c];
+                            var probs = cell.slice(D.B * 5);
+                            var best = probs.indexOf(Math.max.apply(null, probs));
+                            for (var b = 0; b < D.B; b++) {
+                                var x = cell[b * 5], y = cell[b * 5 + 1], sw = cell[b * 5 + 2], sh = cell[b * 5 + 3], conf = cell[b * 5 + 4];
+                                var cx = (c + x) / D.S, cy = (r + y) / D.S, w = sw * sw, h = sh * sh;
+                                list.push({
+                                    box: [clamp(cx - w / 2, 0, 1), clamp(cy - h / 2, 0, 1), clamp(cx + w / 2, 0, 1), clamp(cy + h / 2, 0, 1)],
+                                    score: probs[best] * conf,  // Eq. 1: class probability x confidence
+                                    cls: best
+                                });
+                            }
+                        }
+                    }
+                    return list;
+                }
+                function suppress(list, threshold) {
+                    var kept = [];
+                    list.slice().sort(function (a, b) { return b.score - a.score; }).forEach(function (d) {
+                        var clash = kept.some(function (k) { return k.cls === d.cls && iou(k.box, d.box) > threshold; });
+                        if (!clash) kept.push(d);
+                    });
+                    return kept;
+                }
+                function shape(ctx, o) {
+                    var b = o.box, x0 = (b[0] - b[2] / 2) * 448, y0 = (b[1] - b[3] / 2) * 448, x1 = (b[0] + b[2] / 2) * 448, y1 = (b[1] + b[3] / 2) * 448;
+                    var col = D.colors[o.label];
+                    ctx.fillStyle = "rgb(" + col[0] + "," + col[1] + "," + col[2] + ")";
+                    ctx.beginPath();
+                    if (o.label === 0) ctx.rect(x0, y0, x1 - x0, y1 - y0);
+                    else if (o.label === 1) ctx.ellipse((x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0) / 2, (y1 - y0) / 2, 0, 0, Math.PI * 2);
+                    else { ctx.moveTo(x0, y1); ctx.lineTo((x0 + x1) / 2, y0); ctx.lineTo(x1, y1); ctx.closePath(); }
+                    ctx.fill();
+                }
+                function label(ctx, d, color) {
+                    var text = NAMES[d.cls] + " " + fixed(d.score, 2);
+                    ctx.font = "600 13px " + css("--sans");
+                    var tw = ctx.measureText(text).width + 8;
+                    var x = d.box[0] * 448, y = Math.max(0, d.box[1] * 448 - 19);
+                    ctx.fillStyle = color;
+                    ctx.fillRect(x, y, tw, 18);
+                    ctx.fillStyle = "#111";
+                    ctx.textAlign = "left";
+                    ctx.textBaseline = "top";
+                    ctx.fillText(text, x + 4, y + 2);
+                }
+                var state = {};
+                var render = stage(canvas, function (ctx) {
+                    var sc = D.scenes[scene];
+                    var bg = sc.background;
+                    ctx.fillStyle = "rgb(" + bg[0] + "," + bg[1] + "," + bg[2] + ")";
+                    ctx.fillRect(0, 0, 448, 448);
+                    sc.objects.forEach(function (o) { shape(ctx, o); });
+                    ctx.strokeStyle = "rgba(255,255,255,0.08)";
+                    ctx.lineWidth = 1;
+                    for (var i = 1; i < 7; i++) {
+                        ctx.beginPath(); ctx.moveTo(i * 64, 0); ctx.lineTo(i * 64, 448); ctx.stroke();
+                        ctx.beginPath(); ctx.moveTo(0, i * 64); ctx.lineTo(448, i * 64); ctx.stroke();
+                    }
+                    var boxOf = function (d) { return [d.box[0] * 448, d.box[1] * 448, (d.box[2] - d.box[0]) * 448, (d.box[3] - d.box[1]) * 448]; };
+                    var finals = state.final || [];
+                    state.passed.forEach(function (d) {
+                        if (finals.indexOf(d) >= 0) return;
+                        var r = boxOf(d);
+                        ctx.strokeStyle = "rgba(255,255,255," + clamp(d.score, 0.12, 0.85) + ")";
+                        ctx.lineWidth = 1.2;
+                        ctx.setLineDash(state.nms ? [4, 4] : []);
+                        ctx.strokeRect(r[0], r[1], r[2], r[3]);
+                    });
+                    ctx.setLineDash([]);
+                    if (state.nms) {
+                        finals.forEach(function (d) {
+                            var r = boxOf(d);
+                            ctx.strokeStyle = "#ffd65a";
+                            ctx.lineWidth = 3;
+                            ctx.strokeRect(r[0], r[1], r[2], r[3]);
+                            label(ctx, d, "#ffd65a");
+                        });
+                    }
+                    if (gtCheck.checked) {
+                        ctx.strokeStyle = "rgba(255,255,255,0.95)";
+                        ctx.lineWidth = 2;
+                        ctx.setLineDash([2, 5]);
+                        sc.objects.forEach(function (o) {
+                            var b = o.box;
+                            ctx.strokeRect((b[0] - b[2] / 2) * 448, (b[1] - b[3] / 2) * 448, b[2] * 448, b[3] * 448);
+                        });
+                        ctx.setLineDash([]);
+                    }
+                });
+                function update() {
+                    var threshold = Number(scoreRange.value);
+                    var all = candidates(D.scenes[scene].prediction);
+                    var passed = threshold > 0 ? all.filter(function (d) { return d.score > threshold; }) : all;
+                    state = { passed: passed, nms: nmsCheck.checked, final: nmsCheck.checked ? suppress(passed, Number(nmsRange.value)) : null };
+                    document.getElementById("score-out").textContent = fixed(threshold, 2);
+                    document.getElementById("nms-out").textContent = fixed(nmsRange.value, 2);
+                    document.getElementById("count-all").textContent = all.length;
+                    document.getElementById("count-pass").textContent = passed.length;
+                    document.getElementById("count-final").textContent = state.final ? state.final.length : passed.length;
+                    nmsRange.disabled = !nmsCheck.checked;
+                    render();
+                }
+                D.scenes.forEach(function (sc, i) {
+                    var b = document.createElement("button");
+                    b.type = "button";
+                    b.textContent = "장면 " + (i + 1);
+                    b.setAttribute("aria-pressed", String(i === 0));
+                    b.addEventListener("click", function () {
+                        scene = i;
+                        Array.prototype.forEach.call(buttons.children, function (x, j) { x.setAttribute("aria-pressed", String(j === i)); });
+                        update();
+                    });
+                    buttons.appendChild(b);
+                });
+                [scoreRange, nmsRange].forEach(function (el) { el.addEventListener("input", update); });
+                [nmsCheck, gtCheck].forEach(function (el) { el.addEventListener("change", update); });
+                update();
+            })();
+
+            // 04 Loss: sqrt(w) and lambda_noobj, with the same formulas as Eq. 3.
+            (function () {
+                var LAMBDA_COORD = 5;
+                var wRange = document.getElementById("w-range");
+                var dRange = document.getElementById("d-range");
+                var mini = document.getElementById("size-mini");
+                var chart = document.getElementById("sqrt-chart");
+                // d is an error of the width itself (w + d against w); YOLO's penalty compares their square roots.
+                function sqrtPenalty(w, d) { return LAMBDA_COORD * Math.pow(Math.sqrt(w + d) - Math.sqrt(w), 2); }
+                function plainPenalty(d) { return LAMBDA_COORD * d * d; }
+                // A width marker in the mini view: a line from x1 to x2 with end ticks, labelled at y + dy.
+                function mark(x1, x2, y, label, color, dy) {
+                    svgEl("path", { d: "M" + x1 + " " + (y - 4) + "V" + (y + 4) + "M" + x1 + " " + y + "H" + x2 + "M" + x2 + " " + (y - 4) + "V" + (y + 4),
+                        fill: "none", stroke: color, "stroke-width": 1.5 }, mini);
+                    svgEl("text", { x: (x1 + x2) / 2, y: y + dy, "font-size": 12, "text-anchor": "middle", fill: color, "font-family": "var(--mono)" }, mini).textContent = label;
+                }
+
+                function drawSize() {
+                    var w = Number(wRange.value), d = Number(dRange.value), p = w + d;
+                    while (mini.firstChild) mini.removeChild(mini.firstChild);
+                    // 180 px is the photo's width; the prediction keeps the left edge and is d wider
+                    var unit = 180, side = unit * w, x0 = 100 - unit * p / 2, y0 = 100 - side / 2;
+                    svgEl("rect", { x: x0, y: y0, width: unit * p, height: side, fill: "var(--accent-soft)", stroke: "var(--accent)", "stroke-width": 2 }, mini);
+                    svgEl("rect", { x: x0, y: y0, width: side, height: side, fill: "none", stroke: "var(--muted)", "stroke-width": 2, "stroke-dasharray": "5 4" }, mini);
+                    mark(x0, x0 + side, y0 + side + 9, "w", "var(--muted)", 15);
+                    mark(x0 + side, x0 + unit * p, y0 - 9, "Δw", "var(--accent)", -8);
+
+                    var sp = sqrtPenalty(w, d), pp = plainPenalty(d);
+                    var top = Math.max(sqrtPenalty(0.05, d), pp);
+                    document.getElementById("w-out").textContent = fixed(w, 2);
+                    document.getElementById("d-out").textContent = fixed(d, 2);
+                    document.getElementById("pred-out").textContent = fixed(p, 2);
+                    document.getElementById("iou-out").textContent = fixed(w / p, 3);
+                    document.getElementById("sqrt-bar").style.width = (100 * sp / top) + "%";
+                    document.getElementById("plain-bar").style.width = (100 * pp / top) + "%";
+                    document.getElementById("sqrt-out").textContent = fixed(sp, 4);
+                    document.getElementById("plain-out").textContent = fixed(pp, 4);
+                    document.getElementById("plain-formula").textContent = LAMBDA_COORD + " × (" + fixed(p, 2) + " − " + fixed(w, 2) + ")²";
+                    var formula = document.getElementById("sqrt-formula");  // two unbreakable halves, so a narrow screen wraps at "="
+                    formula.textContent = "";
+                    [LAMBDA_COORD + " × (√" + fixed(p, 2) + " − √" + fixed(w, 2) + ")²",
+                        "= " + LAMBDA_COORD + " × (" + fixed(Math.sqrt(p), 3) + " − " + fixed(Math.sqrt(w), 3) + ")²"].forEach(function (s, i) {
+                        if (i) formula.appendChild(document.createTextNode(" "));
+                        formula.appendChild(document.createElement("span")).textContent = s;
+                    });
+                    document.getElementById("chart-caption").textContent = "Δw를 " + fixed(d, 2) + "에 고정하고 정답 너비 w만 바꾼 벌점";
+                    var small = Math.sqrt(0.1 + d) - Math.sqrt(0.1), large = Math.sqrt(0.8 + d) - Math.sqrt(0.8);
+                    document.getElementById("sqrt-callout").textContent = "같은 Δw(" + fixed(d, 2) + ")에서 √w의 차이는 작은 박스(w = 0.1)가 " + fixed(small, 3) +
+                        ", 큰 박스(w = 0.8)가 " + fixed(large, 3) + "이다. 벌점은 이 차이의 제곱이라 작은 박스 쪽이 " + fixed(small * small / (large * large), 1) +
+                        "배 크다. w를 그대로 쓰면 두 벌점이 같다(" + fixed(pp, 4) + ").";
+
+                    while (chart.firstChild) chart.removeChild(chart.firstChild);
+                    var L = 34, R = 312, T = 12, B = 140, LO = 0.05, HI = 0.8;
+                    var ymax = top * 1.1;
+                    var sx = function (v) { return L + (R - L) * (v - LO) / (HI - LO); };
+                    var sy = function (v) { return B - (B - T) * v / ymax; };
+                    svgEl("line", { x1: L, x2: R, y1: B, y2: B, stroke: "var(--line-strong)" }, chart);
+                    svgEl("line", { x1: L, x2: L, y1: T, y2: B, stroke: "var(--line-strong)" }, chart);
+                    var path = "";
+                    for (var v = LO; v <= HI + 1e-4; v += 0.01) path += (path ? "L" : "M") + sx(v).toFixed(1) + " " + sy(sqrtPenalty(v, d)).toFixed(1);
+                    svgEl("path", { d: path, fill: "none", stroke: "var(--accent)", "stroke-width": 2.5 }, chart);
+                    svgEl("line", { x1: L, x2: R, y1: sy(pp), y2: sy(pp), stroke: "var(--muted)", "stroke-width": 1.5, "stroke-dasharray": "5 4" }, chart);
+                    svgEl("line", { x1: sx(w), x2: sx(w), y1: T, y2: B, stroke: "var(--line-strong)", "stroke-dasharray": "2 3" }, chart);
+                    svgEl("circle", { cx: sx(w), cy: sy(pp), r: 4, fill: "var(--bg)", stroke: "var(--muted)", "stroke-width": 2 }, chart);
+                    svgEl("circle", { cx: sx(w), cy: sy(sp), r: 5, fill: "var(--accent)", stroke: "var(--bg)", "stroke-width": 2 }, chart);
+                    var t = function (x, y, s, anchor, color) {
+                        svgEl("text", { x: x, y: y, "font-size": 11, "text-anchor": anchor || "start", fill: color || "var(--muted)", "font-family": "var(--mono)" }, chart).textContent = s;
+                    };
+                    t(L, B + 16, "0.05");
+                    t(R, B + 16, "0.8", "end");
+                    t((L + R) / 2, B + 16, "정답 너비 w", "middle");
+                    t(L - 5, T + 8, "벌점", "end");
+                    t(R, sy(pp) - 6, "w 그대로", "end");
+                    t(L + 6, T + 10, "√w (YOLO)", "start", "var(--accent)");
+                }
+                [wRange, dRange].forEach(function (el) { el.addEventListener("input", drawSize); });
+                redraws.push(drawSize);
+                drawSize();
+
+                // Empty boxes in 3D: 7 x 7 cells x 2 boxes as bars on the grid of section 01. A bar's height is the weight
+                // of that box's confidence error in Eq. 3: 1 for the box responsible for an object, lambda_noobj for every
+                // other box, the other box in an object's cell included.
+                (function () {
+                    var kRange = document.getElementById("k-range");
+                    var lRange = document.getElementById("l-range");
+                    var canvas = document.getElementById("noobj3d");
+                    var ctx = canvas.getContext("2d");
+                    var pickOut = document.getElementById("noobj-pick"), PROMPT = pickOut.textContent;
+                    var S = 7, B = 2, TOTAL = S * S * B, MAX = Number(kRange.max);
+                    // where the slider puts objects, in order: [row, column, responsible box]
+                    var PRESET = [[3, 2, 0], [1, 5, 1], [5, 4, 0], [1, 1, 1], [4, 6, 0], [6, 2, 1], [0, 3, 0], [3, 4, 1], [5, 0, 0], [6, 6, 1]];
+                    var HALF_X = 0.17, HALF_Z = 0.36, OFFSET = 0.21, UNIT = 1.3;  // bar footprint, a box's offset in its cell, height of weight 1
+                    var PITCH = [0.12, 1.52], HOME = { yaw: 0.62, pitch: 0.7 }, TOP = { yaw: 0, pitch: 1.52 };
+                    var SUBJECT = ["박스 1이", "박스 2가"], TOPIC = ["박스 1은", "박스 2는"];
+                    var cam = { yaw: HOME.yaw, pitch: HOME.pitch };
+                    var W = 1, H = 1, dpr = 1, zoom = 1, hits = [], anim = null, tween = null, drag = null, selected = null;
+                    var objects = [], heights = [], bars = [];
+                    for (var i = 0; i < TOTAL; i++) {
+                        var b = i % B, cell = (i - b) / B, r = Math.floor(cell / S), c = cell % S;
+                        bars.push({ i: i, r: r, c: c, b: b, x: c - (S - 1) / 2 + (b ? OFFSET : -OFFSET), z: r - (S - 1) / 2 });
+                    }
+
+                    function owner(r, c) {
+                        for (var j = 0; j < objects.length; j++) if (objects[j][0] === r && objects[j][1] === c) return j;
+                        return -1;
+                    }
+                    function responsible(u) {
+                        var j = owner(u.r, u.c);
+                        return j >= 0 && objects[j][2] === u.b;
+                    }
+                    function weight(u) {
+                        return responsible(u) ? 1 : Number(lRange.value);
+                    }
+                    function turn(p) {
+                        var cy = Math.cos(cam.yaw), sy = Math.sin(cam.yaw), cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+                        var x = cy * p[0] + sy * p[2], z = -sy * p[0] + cy * p[2];
+                        return [x, cp * p[1] - sp * z, sp * p[1] + cp * z];
+                    }
+                    function project(p) {
+                        var q = turn([p[0], p[1] - UNIT / 2, p[2]]);  // turn about the middle of a full-height bar
+                        return [W / 2 + q[0] * zoom, H / 2 - q[1] * zoom, q[2]];
+                    }
+                    function measure() {
+                        var rect = canvas.getBoundingClientRect();
+                        if (!rect.width) return;
+                        dpr = window.devicePixelRatio || 1;
+                        W = rect.width;
+                        H = rect.height;
+                        canvas.width = Math.round(W * dpr);
+                        canvas.height = Math.round(H * dpr);
+                        zoom = 0.98 * Math.min(W, H) / (2 * Math.hypot(S / 2, S / 2, UNIT / 2));  // the whole grid fits at every angle
+                    }
+                    function draw() {
+                        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                        ctx.clearRect(0, 0, W, H);
+                        hits = [];
+                        var accent = css("--accent"), text = css("--text"), floor = css("--panel-strong"), line = css("--line");
+                        var edge = alpha(css("--panel"), 0.6), full = rgb(accent), empty = rgb(css("--line-strong"));
+                        // floor: the 7 x 7 grid, tinted where an object's center falls
+                        for (var r = 0; r < S; r++) {
+                            for (var c = 0; c < S; c++) {
+                                var x = c - (S - 1) / 2, z = r - (S - 1) / 2, busy = owner(r, c) >= 0;
+                                var mine = selected && selected.r === r && selected.c === c;
+                                var tile = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(function (s) { return project([x + 0.48 * s[0], 0, z + 0.48 * s[1]]); });
+                                ctx.beginPath();
+                                tile.forEach(function (p, j) { if (j) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
+                                ctx.closePath();
+                                ctx.fillStyle = busy ? alpha(accent, 0.22) : floor;
+                                ctx.fill();
+                                ctx.strokeStyle = mine ? text : busy ? alpha(accent, 0.75) : line;
+                                ctx.lineWidth = mine ? 2 : 1;
+                                ctx.stroke();
+                                hits.push({ r: r, c: c, b: -1, polys: [tile] });
+                            }
+                        }
+                        // bars far to near: with equal footprints on a grid, the order of their centers along the view is a valid painter's order
+                        bars.map(function (u) { return { u: u, depth: turn([u.x, 0, u.z])[2] }; })
+                            .sort(function (m, n) { return m.depth - n.depth; })
+                            .forEach(function (v) {
+                                var u = v.u, h = Math.max(0.015, heights[u.i]) * UNIT / 2;
+                                var faces = cuboid(turn, project, [u.x, h, u.z], [HALF_X, h, HALF_Z]);
+                                var mine = selected && selected.r === u.r && selected.c === u.c;
+                                paintFaces(ctx, faces, responsible(u) ? full : empty, 0.95, mine ? text : edge, mine ? 1.6 : 0.8);
+                                hits.push({ r: u.r, c: u.c, b: u.b, polys: faces.map(function (f) { return f.pts; }) });
+                            });
+                        ctx.font = "12px " + css("--mono");
+                        ctx.fillStyle = css("--faint");
+                        ctx.textAlign = "left";
+                        ctx.textBaseline = "top";
+                        ctx.fillText("7×7×2 = 98", 10, 9);
+                    }
+                    function pick(x, y) {
+                        for (var j = hits.length - 1; j >= 0; j--) {
+                            if (hits[j].polys.some(function (poly) { return inside([x, y], poly); })) return hits[j];
+                        }
+                        return null;
+                    }
+                    function step() {
+                        var moving = false;
+                        bars.forEach(function (u) {
+                            var goal = weight(u), gap = goal - heights[u.i];
+                            if (Math.abs(gap) > 0.004) {
+                                heights[u.i] += gap * 0.3;
+                                moving = true;
+                            } else {
+                                heights[u.i] = goal;
+                            }
+                        });
+                        draw();
+                        anim = moving ? requestAnimationFrame(step) : null;
+                    }
+                    function grow() {
+                        if (reduceMotion) {
+                            bars.forEach(function (u) { heights[u.i] = weight(u); });
+                            draw();
+                        } else if (!anim) {
+                            anim = requestAnimationFrame(step);
+                        }
+                    }
+                    function turnTo(view) {
+                        if (tween) cancelAnimationFrame(tween);
+                        tween = null;
+                        var from = { yaw: cam.yaw, pitch: cam.pitch }, start = performance.now();
+                        var spin = Math.atan2(Math.sin(view.yaw - cam.yaw), Math.cos(view.yaw - cam.yaw));  // the short way round
+                        if (reduceMotion) {
+                            cam.yaw = from.yaw + spin;
+                            cam.pitch = view.pitch;
+                            draw();
+                            return;
+                        }
+                        (function frame(now) {
+                            var k = Math.min(1, (now - start) / 420), e = 1 - Math.pow(1 - k, 3);
+                            cam.yaw = from.yaw + spin * e;
+                            cam.pitch = from.pitch + (view.pitch - from.pitch) * e;
+                            draw();
+                            tween = k < 1 ? requestAnimationFrame(frame) : null;
+                        })(start);
+                    }
+                    function stopTween() {
+                        if (tween) cancelAnimationFrame(tween);
+                        tween = null;
+                    }
+
+                    function update() {
+                        var k = objects.length, lambda = Number(lRange.value), empty = TOTAL - k;
+                        var share = lambda * empty / (lambda * empty + k), plainShare = empty / TOTAL;
+                        document.getElementById("k-out").textContent = k;
+                        document.getElementById("l-out").textContent = fixed(lambda, 2);
+                        document.getElementById("resp-count").textContent = k;
+                        document.getElementById("empty-count").textContent = empty;
+                        document.getElementById("empty-share-bar").style.width = (100 * share) + "%";
+                        document.getElementById("resp-share-bar").style.width = (100 * (1 - share)) + "%";
+                        var sum = lambda < 1 ?
+                            "빈 박스 하나의 무게(λnoobj = " + fixed(lambda, 2) + ")는 작아도 " + empty + "개를 모두 합하면 신뢰도 벌점 무게의 " + percent(share) +
+                            "를 차지한다(λnoobj = 1이면 " + percent(plainShare) + ")." :
+                            "λnoobj = 1이면 빈 박스 " + empty + "개가 신뢰도 벌점 무게의 " + percent(share) + "를 차지한다.";
+                        document.getElementById("noobj-callout").textContent = k === 0 ?
+                            "물체가 없는 사진에서는 98개 모두 빈 박스라, 신뢰도 벌점이 전부 빈 박스에서 나온다." :
+                            sum + " 논문은 λnoobj = 0.5로 빈 박스의 벌점을 줄이는 동시에, 좌표 벌점에는 λcoord = 5를 곱해 키운다.";
+                        grow();
+                    }
+                    // the selected cell as it is now, after a slider moved
+                    function describe() {
+                        if (!selected) {
+                            pickOut.textContent = PROMPT;
+                            return;
+                        }
+                        var j = owner(selected.r, selected.c), lambda = fixed(Number(lRange.value), 2);
+                        var where = "칸 (" + (selected.r + 1) + "행, " + (selected.c + 1) + "열)";
+                        pickOut.textContent = j < 0 ?
+                            where + "에는 물체가 없다. 두 박스 모두 빈 박스로 신뢰도 0을 배운다(무게 " + lambda + ")." :
+                            where + "에는 물체가 있다. " + SUBJECT[objects[j][2]] + " 맡고(무게 1), " + TOPIC[1 - objects[j][2]] +
+                            " 빈 박스로 신뢰도 0을 배운다(무게 " + lambda + ").";
+                    }
+                    // the slider keeps objects placed by hand: it removes the newest first and adds from PRESET
+                    function setCount(k) {
+                        while (objects.length > k) objects.pop();
+                        for (var p = 0; objects.length < k && p < PRESET.length; p++) {
+                            if (owner(PRESET[p][0], PRESET[p][1]) < 0) objects.push(PRESET[p].slice());
+                        }
+                    }
+                    function toggle(r, c, b) {
+                        var j = owner(r, c), lambda = fixed(Number(lRange.value), 2), where = "칸 (" + (r + 1) + "행, " + (c + 1) + "열)";
+                        if (j < 0 && objects.length >= MAX) {
+                            pickOut.textContent = "물체는 " + MAX + "개까지 놓을 수 있다(위 슬라이더의 범위). 먼저 하나를 빼야 한다.";
+                            return;
+                        }
+                        selected = { r: r, c: c };
+                        if (j >= 0) {
+                            objects.splice(j, 1);
+                            pickOut.textContent = where + "의 물체를 뺐다. 두 박스 모두 빈 박스가 되어 신뢰도 0을 배운다(무게 " + lambda + ").";
+                        } else {
+                            if (b < 0) b = (r + c) % 2;  // the floor was hit: either box may be the one with the higher IOU
+                            objects.push([r, c, b]);
+                            pickOut.textContent = where + "에 물체를 놓았다. " + SUBJECT[b] + " 이 물체를 맡고(무게 1), 같은 칸의 " + TOPIC[1 - b] +
+                                " 빈 박스로 남아 신뢰도 0을 배운다(무게 " + lambda + ").";
+                        }
+                        kRange.value = objects.length;
+                        update();
+                    }
+
+                    canvas.addEventListener("pointerdown", function (e) {
+                        if (drag) return;  // one pointer turns the grid; a second one is ignored
+                        stopTween();
+                        canvas.focus({ preventScroll: true });
+                        try { canvas.setPointerCapture(e.pointerId); } catch (error) { /* pointer already gone */ }
+                        drag = { id: e.pointerId, x: e.clientX, y: e.clientY, yaw: cam.yaw, pitch: cam.pitch, moved: false };
+                        e.preventDefault();
+                    });
+                    canvas.addEventListener("pointermove", function (e) {
+                        if (!drag || e.pointerId !== drag.id) return;
+                        var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+                        if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
+                        if (!drag.moved) return;
+                        cam.yaw = drag.yaw + dx * 0.008;
+                        cam.pitch = clamp(drag.pitch + dy * 0.008, PITCH[0], PITCH[1]);
+                        draw();
+                    });
+                    function release(e) {
+                        if (!drag || e.pointerId !== drag.id) return;
+                        if (!drag.moved && e.type === "pointerup") {
+                            var rect = canvas.getBoundingClientRect();
+                            var hit = pick(e.clientX - rect.left, e.clientY - rect.top);
+                            if (hit) toggle(hit.r, hit.c, hit.b);
+                        }
+                        drag = null;
+                    }
+                    canvas.addEventListener("pointerup", release);
+                    canvas.addEventListener("pointercancel", release);
+                    canvas.addEventListener("lostpointercapture", release);
+                    canvas.addEventListener("keydown", function (e) {
+                        var k = e.key;
+                        if (k === "ArrowLeft") cam.yaw -= 0.1;
+                        else if (k === "ArrowRight") cam.yaw += 0.1;
+                        else if (k === "ArrowUp") cam.pitch = clamp(cam.pitch - 0.1, PITCH[0], PITCH[1]);
+                        else if (k === "ArrowDown") cam.pitch = clamp(cam.pitch + 0.1, PITCH[0], PITCH[1]);
+                        else return;
+                        e.preventDefault();
+                        stopTween();
+                        draw();
+                    });
+                    document.getElementById("noobj3d-top").addEventListener("click", function () { turnTo(TOP); });
+                    document.getElementById("noobj3d-reset").addEventListener("click", function () { turnTo(HOME); });
+                    kRange.addEventListener("input", function () {
+                        setCount(Number(kRange.value));
+                        update();
+                        describe();
+                    });
+                    lRange.addEventListener("input", function () {
+                        update();
+                        describe();
+                    });
+
+                    setCount(Number(kRange.value));
+                    bars.forEach(function (u) { heights[u.i] = weight(u); });
+                    measure();
+                    update();
+                    if ("ResizeObserver" in window) new ResizeObserver(function () { measure(); draw(); }).observe(canvas);
+                    else window.addEventListener("resize", function () { measure(); draw(); });
+                    redraws.push(draw);
+                })();
+            })();
+        })();
+    </script>
+</body>
+</html>

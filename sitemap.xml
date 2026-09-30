@@ -14,4 +14,18 @@
 
     <!-- folio.html is intentionally omitted: it is marked noindex. -->
 
+    <!-- Knowledge: add each page when it is published, and update lastmod when it changes. -->
+    <url>
+        <loc>https://hughqlee.com/knowledge/</loc>
+        <lastmod>2026-09-30</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://hughqlee.com/knowledge/yolo-v1/</loc>
+        <lastmod>2026-09-30</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
 </urlset>

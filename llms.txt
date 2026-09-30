@@ -1,0 +1,11 @@
+# Hugh Q Lee
+
+> Portfolio of Hugh Q Lee, a Vision AI Product Engineer building computer vision and robotic automation systems for zebrafish lab workflows. The Knowledge section holds interactive explanations, in Korean, of concepts Hugh Q Lee has studied, each checked against its original source.
+
+## Knowledge (Korean)
+
+- [YOLOv1, 한 번 보고 모두 찾기](https://hughqlee.com/knowledge/yolo-v1/): 사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을, 직접 구현한 모델의 구조와 출력으로 만져 보며 이해한다. Source: Redmon et al., "You Only Look Once: Unified, Real-Time Object Detection" (CVPR 2016).
+
+## Portfolio
+
+- [Home](https://hughqlee.com/): Selected work in vision AI, robotics, microscopy automation, and zebrafish assay systems.
