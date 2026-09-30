@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOU와 NMS, 박스 하나만 남기기 | Hugh Q Lee</title>
+    <meta name="description" content="두 박스가 얼마나 겹치는지는 IOU(겹친 넓이 ÷ 합친 넓이)로 잰다. 신뢰도가 낮은 박스를 먼저 버리고, 남은 박스 중 신뢰도 1위와 IOU가 기준을 넘게 겹친 박스를 지우면(NMS) 물체마다 박스가 하나 남는다.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="IOU, IoU, Intersection over Union, NMS, Non-Maximum Suppression, 겹침 제거, 신뢰도, confidence threshold, 물체 탐지, 객체 탐지, object detection, YOLO, PASCAL VOC">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/iou-nms/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:title" content="IOU와 NMS, 박스 하나만 남기기">
+    <meta property="og:description" content="두 박스가 얼마나 겹치는지는 IOU(겹친 넓이 ÷ 합친 넓이)로 잰다. 신뢰도가 낮은 박스를 먼저 버리고, 남은 박스 중 신뢰도 1위와 IOU가 기준을 넘게 겹친 박스를 지우면(NMS) 물체마다 박스가 하나 남는다.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/iou-nms/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/iou-nms/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="IOU와 NMS, 박스 하나만 남기기: 겹친 두 박스와 IOU 값">
+    <meta property="article:published_time" content="2026-10-01">
+    <meta property="article:modified_time" content="2026-10-01">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="IOU와 NMS, 박스 하나만 남기기">
+    <meta name="twitter:description" content="두 박스가 얼마나 겹치는지는 IOU(겹친 넓이 ÷ 합친 넓이)로 잰다. 신뢰도가 낮은 박스를 먼저 버리고, 남은 박스 중 신뢰도 1위와 IOU가 기준을 넘게 겹친 박스를 지우면(NMS) 물체마다 박스가 하나 남는다.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/iou-nms/og.png">
+    <meta name="twitter:image:alt" content="IOU와 NMS, 박스 하나만 남기기: 겹친 두 박스와 IOU 값">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage의 문장은 본문 "자주 묻는 질문"과 같아야 한다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/iou-nms/#article",
+          "headline": "IOU와 NMS, 박스 하나만 남기기",
+          "alternativeHeadline": "한 물체에 박스가 여러 개면, 무엇을 남길까?",
+          "description": "두 박스가 얼마나 겹치는지는 IOU(겹친 넓이 ÷ 합친 넓이)로 잰다. 신뢰도가 낮은 박스를 먼저 버리고, 남은 박스 중 신뢰도 1위와 IOU가 기준을 넘게 겹친 박스를 지우면(NMS) 물체마다 박스가 하나 남는다.",
+          "abstract": "두 박스가 얼마나 겹치는지는 IOU(겹친 넓이 ÷ 합친 넓이)로 잰다. 신뢰도가 낮은 박스를 먼저 버리고, 남은 박스 중 신뢰도 1위와 IOU가 기준을 넘게 겹친 박스를 지우면(NMS) 물체마다 박스가 하나 남는다.",
+          "inLanguage": "ko",
+          "datePublished": "2026-10-01",
+          "dateModified": "2026-10-01",
+          "url": "https://hughqlee.com/knowledge/iou-nms/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/iou-nms/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/iou-nms/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/#collection"
+          },
+          "isAccessibleForFree": true,
+          "proficiencyLevel": "Beginner",
+          "keywords": [
+            "IOU",
+            "IoU",
+            "Intersection over Union",
+            "NMS",
+            "Non-Maximum Suppression",
+            "겹침 제거",
+            "신뢰도",
+            "물체 탐지",
+            "객체 탐지",
+            "YOLO",
+            "PASCAL VOC"
+          ],
+          "about": [
+            {
+              "@type": "Thing",
+              "name": "Intersection over Union"
+            },
+            {
+              "@type": "Thing",
+              "name": "Non-maximum suppression"
+            }
+          ],
+          "citation": [
+            {
+              "@type": "ScholarlyArticle",
+              "name": "The PASCAL Visual Object Classes (VOC) Challenge",
+              "url": "https://doi.org/10.1007/s11263-009-0275-4"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "The PASCAL VOC2007 Development Kit",
+              "url": "https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2007/htmldoc/index.html"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "You Only Look Once: Unified, Real-Time Object Detection",
+              "url": "https://arxiv.org/abs/1506.02640"
+            },
+            {
+              "@type": "SoftwareSourceCode",
+              "name": "Darknet examples/yolo.c",
+              "url": "https://github.com/pjreddie/darknet/blob/master/examples/yolo.c"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Rich feature hierarchies for accurate object detection and semantic segmentation",
+              "url": "https://arxiv.org/abs/1311.2524"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Soft-NMS: Improving Object Detection With One Line of Code",
+              "url": "https://arxiv.org/abs/1704.04503"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Generalized Intersection over Union",
+              "url": "https://arxiv.org/abs/1902.09630"
+            }
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "IOU와 NMS, 박스 하나만 남기기",
+              "item": "https://hughqlee.com/knowledge/iou-nms/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/iou-nms/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "IOU(IoU)란 무엇인가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "두 박스가 겹친 넓이를 두 박스를 합친 넓이로 나눈 값이다(Intersection over Union). 0에서 1 사이이고, 완전히 겹치면 1, 닿지 않으면 0이다. Jaccard 지수라고도 부르며, 물체 탐지에서는 예측 박스가 정답 박스와 얼마나 맞는지 잴 때 쓴다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "IOU 0.5는 어느 정도로 맞은 것인가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "같은 크기의 박스를 폭의 3분의 1만큼 옆으로 밀거나, 중심은 그대로 두고 넓이만 2배로 키워도 IOU는 0.5다. PASCAL VOC는 정답 박스 자체가 부정확할 수 있어 기준을 일부러 0.5로 낮게 잡았고, 0.5를 넘어야 맞은 탐지로 센다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "NMS(Non-Maximum Suppression)란 무엇인가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "한 물체를 여러 박스가 겹쳐 잡았을 때 하나만 남기는 후처리다. 남은 박스 중 신뢰도가 가장 높은 박스를 남기고, 그 박스와 IOU가 기준을 넘는 같은 클래스의 박스를 지운다. 이것을 남은 박스가 없을 때까지 되풀이하고, 클래스마다 따로 한다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "신뢰도 기준과 NMS는 어떤 순서로 하나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "YOLOv1 저자의 Darknet 코드는 신뢰도가 0.2보다 낮은 박스를 먼저 버리고, 남은 박스로 IOU 0.4 기준의 NMS를 한다. 신뢰도로 먼저 거르지 않으면, 물체의 일부만 잡은 낮은 신뢰도 박스가 NMS를 빠져나가 결과에 남을 수 있다. 이 페이지의 02에서 신뢰도 기준을 0.1로 내리면 볼 수 있다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "NMS 겹침 기준은 얼마로 정하나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "모든 경우에 맞는 값은 없다. 기준을 낮추면 붙어 있는 다른 물체의 박스까지 지워 그 물체를 놓치고, 높이면 중복 박스가 남는다. YOLOv1 저자의 Darknet 코드는 0.4를 쓰고, Soft-NMS 논문에 따르면 Faster R-CNN과 R-FCN은 0.3을 기본값으로 쓴다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "YOLOv1에서 IOU는 어디에 쓰이나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "박스마다 내는 신뢰도가 정답 박스와의 IOU를 배우고, 한 칸의 박스 2개 중 정답과 IOU가 큰 쪽이 그 물체를 맡는다. 추론에서는 NMS가 IOU로 한 물체에 겹친 박스를 지운다. 논문의 성적(mAP)도 정답과 IOU가 0.5를 넘는 박스를 맞음으로 센다."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --danger: #ff8c8c;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --green-soft: rgba(156, 227, 125, 0.14);
+            --warn-soft: rgba(240, 198, 116, 0.16);
+            --danger-soft: rgba(255, 140, 140, 0.18);
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            --wide: 980px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --danger: #b42323;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --green-soft: rgba(37, 114, 63, 0.12);
+            --warn-soft: rgba(150, 106, 16, 0.14);
+            --danger-soft: rgba(180, 35, 35, 0.12);
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+        p { margin: 0 0 12px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+        .wide { width: min(var(--wide), 100% - 32px); margin-inline: auto; }
+        .lead { max-width: var(--measure); }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle, .btn {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-family: var(--mono);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover, .btn:hover { border-color: var(--line-strong); color: var(--text); }
+        .btn:disabled { opacity: 0.45; cursor: default; }
+        .btn.primary { border-color: var(--accent); color: var(--text); background: var(--accent-soft); }
+
+        .hero { padding: 40px 0 28px; }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0 0 20px; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+        .muted { color: var(--muted); }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin: 24px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+        .toc a {
+            display: block;
+            height: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+            text-decoration: none;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+        .toc a:hover { border-color: var(--line-strong); }
+        .toc span { display: block; color: var(--accent); font-family: var(--mono); font-size: 12px; }
+
+        .step { padding: 48px 0 8px; border-top: 1px solid var(--line); margin-top: 32px; }
+        .step-no { margin: 0 0 6px; color: var(--accent); font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; }
+        h2 { margin: 0 0 14px; font-size: clamp(22px, 4vw, 30px); line-height: 1.35; letter-spacing: -0.01em; }
+        h3 { margin: 0 0 8px; font-size: 18px; line-height: 1.45; }
+        .hint { color: var(--muted); font-size: 15px; }
+        .source { margin-top: 12px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+
+        .panel {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .split {
+            display: grid;
+            grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+        canvas.stage {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 6px;
+            background: var(--panel-soft);
+            touch-action: none;
+            cursor: grab;
+        }
+        canvas.stage.view { cursor: default; touch-action: auto; }
+
+        .big { margin: 0; font-family: var(--mono); font-size: 40px; line-height: 1.1; }
+        .big small { margin-left: 8px; color: var(--muted); font-size: 15px; }
+        .meter { position: relative; height: 12px; margin: 10px 0 4px; border-radius: 999px; background: var(--panel-strong); }
+        .meter span { display: block; width: 0; height: 100%; border-radius: 999px; background: var(--accent-warn); transition: width 0.2s ease; }
+        .meter i { position: absolute; top: -4px; bottom: -4px; left: 50%; width: 2px; background: var(--text); }
+        .meter-scale { display: flex; justify-content: space-between; color: var(--faint); font-family: var(--mono); font-size: 12px; }
+        .verdict { margin: 10px 0 6px; font-weight: 600; }
+        .verdict.ok { color: var(--accent-green); }
+        .verdict.no { color: var(--danger); }
+        .formula { margin: 0 0 8px; color: var(--muted); font-family: var(--mono); font-size: 14px; }
+
+        .seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+        .seg button {
+            min-height: 36px;
+            padding: 4px 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .seg button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
+        .seg button:hover { color: var(--text); }
+
+        .callout { margin: 14px 0 0; padding-left: 12px; border-left: 3px solid var(--accent); }
+        .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+        .buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+
+        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 18px; margin-top: 12px; }
+        .control { display: grid; gap: 2px; }
+        .control label, .control .label { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 14px; }
+        .control output { color: var(--text); font-family: var(--mono); }
+        input[type="range"] { width: 100%; min-height: 32px; margin: 0; accent-color: var(--accent); }
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); vertical-align: -3px; }
+        .check { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; color: var(--muted); font-size: 14px; cursor: pointer; }
+
+        .chart { display: block; width: 100%; height: auto; margin-top: 8px; overflow: visible; }
+        .chart text { font-family: var(--mono); font-size: 11px; }
+        .chart-title { margin: 16px 0 0; color: var(--muted); font-size: 14px; }
+
+        .boxlist { margin: 12px 0 0; padding: 0; list-style: none; font-family: var(--mono); font-size: 14px; }
+        .boxlist li { margin-top: 4px; border: 1px solid var(--line); border-radius: 6px; }
+        .boxlist li button { display: grid; grid-template-columns: 26px 1fr; gap: 2px 8px; width: 100%; padding: 6px 8px; border: 0; border-radius: 6px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+        .boxlist li b { font-weight: 700; }
+        .boxlist li span { grid-column: 2; color: var(--muted); font-family: var(--sans); font-size: 13px; }
+        .boxlist li.kept { border-color: var(--accent-warn); background: var(--warn-soft); }
+        .boxlist li.removed { border-color: var(--danger); background: var(--danger-soft); }
+        .boxlist li.dropped { opacity: 0.62; }
+        .boxlist li.current { outline: 2px solid var(--accent); outline-offset: 1px; }
+        .boxlist li.selected { box-shadow: 0 0 0 2px var(--accent) inset; }
+        .funnel { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+        .funnel div { padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .funnel span { display: block; color: var(--muted); font-size: 13px; }
+        .funnel b { font-family: var(--mono); font-size: 22px; }
+
+        .uses { margin: 8px 0 0; padding-left: 1.2em; }
+        .uses li { margin: 6px 0; }
+
+        .steps { margin: 0; padding-left: 1.4em; }
+        .steps li { margin: 8px 0; }
+        .steps li::marker { color: var(--accent); font-family: var(--mono); }
+        .note {
+            margin-top: 16px;
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+        .phase-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0 0 6px; color: var(--muted); font-size: 13px; }
+        .phase-legend .sw { display: inline-block; width: 12px; height: 12px; margin-right: 6px; border-radius: 3px; vertical-align: -1px; }
+        .sw.score { background: var(--accent-warn); }
+        .sw.nms { background: var(--accent); }
+        .tabs { position: relative; display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 10px; overscroll-behavior-x: contain; }
+        .tab { position: relative; flex: 0 0 auto; display: grid; justify-items: start; min-height: 44px; padding: 6px 12px 6px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--muted); font: inherit; font-size: 14px; line-height: 1.3; text-align: left; cursor: pointer; }
+        .tab b { color: var(--faint); font-family: var(--mono); font-size: 11px; }
+        .tab small { color: var(--faint); font-size: 11.5px; }
+        .tab + .tab::before { content: ""; position: absolute; left: -11px; top: 50%; width: 10px; border-top: 1px solid var(--line-strong); }
+        .tab.score { border-left: 3px solid var(--accent-warn); }
+        .tab.nms { border-left: 3px solid var(--accent); }
+        .tab.done { background: var(--panel-soft); color: var(--text); }
+        .tab.current { border-color: var(--accent); background: var(--accent-soft); color: var(--text); box-shadow: 0 0 0 1px var(--accent) inset; }
+        .tab.current.score { border-color: var(--accent-warn); background: var(--warn-soft); box-shadow: 0 0 0 1px var(--accent-warn) inset; }
+        .tab.current b { color: var(--text); }
+        .pager { display: flex; align-items: center; gap: 10px; margin: 2px 0 14px; }
+        .step-text { min-height: 3.4em; margin: 0; }
+        .pager .pos { min-width: 64px; color: var(--muted); font-family: var(--mono); font-size: 14px; text-align: center; }
+
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+        [hidden] { display: none !important; }
+
+        footer {
+            margin-top: 48px;
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (max-width: 760px) {
+            .split { grid-template-columns: 1fr; }
+            .toc { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 420px) {
+            .funnel b { font-size: 18px; }
+            .big { font-size: 34px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+    <header class="wide topbar">
+        <nav class="crumbs" aria-label="위치">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+    </header>
+
+    <main id="main">
+        <section class="wrap hero" aria-labelledby="page-title">
+            <nav class="kmap" aria-label="지식 지도" data-current="iou-nms">
+                <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">컴퓨터 비전 › 물체 탐지</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">먼저 읽을 글은 없다 · 이어서 읽을 글: <a href="../yolo-v1/">YOLOv1</a>, mAP(준비 중)</p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE · 물체 탐지</p>
+            <h1 id="page-title">한 물체에 박스가 여러 개면, 무엇을 남길까?</h1>
+            <p class="answer">두 박스가 얼마나 겹치는지는 IOU(겹친 넓이 ÷ 합친 넓이)로 잰다. 신뢰도가 낮은 박스를 먼저 버리고, 남은 박스 중 신뢰도 1위와 IOU가 기준을 넘게 겹친 박스를 지우면(NMS) 물체마다 박스가 하나 남는다.</p>
+            <p><a href="../yolo-v1/">YOLOv1 페이지</a>에는 IOU와 NMS가 설명 없이 나온다. 둘은 이어져 있다. IOU로 두 박스가 얼마나 겹치는지 재고, NMS는 그 값으로 한 물체에 겹친 박스를 하나만 남긴다. 두 장면을 직접 만져 보자.</p>
+            <ol class="toc">
+                <li><a href="#iou"><span>01 IOU</span>두 박스의 겹침 재기</a></li>
+                <li><a href="#nms"><span>02 NMS</span>박스 하나만 남기기</a></li>
+            </ol>
+        </section>
+
+        <section id="iou" class="wide step" aria-labelledby="iou-title">
+            <div class="lead">
+                <p class="step-no">01 IOU</p>
+                <h2 id="iou-title">겹친 넓이 ÷ 합친 넓이</h2>
+                <p>IOU(Intersection over Union)는 두 박스가 겹친 넓이를 두 박스를 합친 넓이로 나눈 값이다. 완전히 겹치면 1, 닿지 않으면 0이다. 물체 탐지 대회 PASCAL VOC는 정답 박스와 IOU가 0.5를 넘어야 맞은 탐지로 센다.</p>
+                <p class="hint" id="iou-hint">예측 박스를 끌어 옮기고, 오른쪽 아래 모서리를 끌어 크기를 바꿔 보자. 키보드로는 그림을 선택한 뒤 화살표로 옮기고, Shift와 화살표로 크기를 바꾼다.</p>
+            </div>
+            <div class="panel split">
+                <canvas id="iou-canvas" class="stage" tabindex="0" role="img"
+                        aria-label="정답 박스와 예측 박스. 겹친 부분이 칠해져 있다. 화살표 키로 예측 박스를 옮긴다."
+                        aria-describedby="iou-hint"></canvas>
+                <div>
+                    <p class="muted" style="margin: 0;">IOU</p>
+                    <p class="big" id="iou-value">0.46</p>
+                    <div class="meter" aria-hidden="true"><span id="iou-bar" style="width: 46%;"></span><i></i></div>
+                    <div class="meter-scale" aria-hidden="true"><span>0</span><span>0.5</span><span>1</span></div>
+                    <p class="verdict no" id="iou-verdict">VOC 기준 틀림 · 0.5를 넘지 못했다</p>
+                    <p class="formula" id="iou-formula">겹친 넓이 8.4 ÷ 합친 넓이 18.2 = 0.46 (사진 넓이 = 100)</p>
+                    <div class="seg" role="group" aria-label="예시로 옮기기" id="iou-presets">
+                        <button type="button" data-preset="third" aria-pressed="false">폭의 ⅓ 밀기</button>
+                        <button type="button" data-preset="double" aria-pressed="false">넓이 2배</button>
+                        <button type="button" data-preset="apart" aria-pressed="false">떼어 놓기</button>
+                        <button type="button" data-preset="small" aria-pressed="false">작은 박스 5% 밀기</button>
+                        <button type="button" data-preset="large" aria-pressed="false">큰 박스 5% 밀기</button>
+                    </div>
+                    <p class="callout" id="iou-callout" aria-live="polite">꽤 겹쳐 보여도 IOU는 0.46이다. VOC 기준에서는 틀린 박스다.</p>
+                    <p class="chart-title">사진 폭의 5%만큼 옆으로 밀었을 때, 박스 폭에 따른 IOU</p>
+                    <svg class="chart" id="shift-chart" viewBox="0 0 320 170" role="img"
+                         aria-label="박스 폭이 0.1이면 IOU 0.33, 0.8이면 0.88. 폭이 0.15보다 좁으면 0.5 이하로 떨어진다."></svg>
+                </div>
+            </div>
+            <div class="lead">
+                <h3 style="margin-top: 24px;">YOLOv1에서 IOU가 쓰이는 곳</h3>
+                <ul class="uses">
+                    <li><b>신뢰도</b>: 박스마다 내는 신뢰도는 정답 박스와의 IOU를 배운다. <a href="../yolo-v1/#grid">YOLOv1 01 격자</a></li>
+                    <li><b>책임</b>: 한 칸의 박스 2개 중 정답과 IOU가 큰 쪽이 그 물체를 맡는다.</li>
+                    <li><b>벌점</b>: 같은 크기 오차도 작은 박스의 IOU를 더 떨어뜨려서, w 대신 √w를 배운다. <a href="../yolo-v1/#loss">YOLOv1 04 학습</a></li>
+                    <li><b>추론</b>: 한 물체에 겹친 박스를 IOU로 가려 지운다. <a href="#nms">아래 02 NMS</a></li>
+                    <li><b>채점</b>: 논문의 성적(mAP)은 정답과 IOU가 0.5를 넘는 박스를 맞음으로 센다.</li>
+                </ul>
+            </div>
+            <p class="source">출처: PASCAL VOC 논문 §4.2 식 3, VOC2007 개발 키트 §4.4, YOLOv1 논문 §2, §2.2, §2.4, GIoU 논문 §3 · 5% 이동의 IOU는 이 페이지의 계산</p>
+        </section>
+
+        <section id="nms" class="wide step" aria-labelledby="nms-title">
+            <div class="lead">
+                <p class="step-no">02 NMS</p>
+                <h2 id="nms-title">개 한 마리에 박스는 하나만</h2>
+                <p>신경망은 물체 하나를 두고도 박스를 여러 개 낸다. YOLOv1에서는 큰 물체나 칸 경계에 걸친 물체를 여러 칸이 함께 잡는다. 그래서 박스를 두 번 걸러 하나만 남긴다. ① 신뢰도가 기준보다 낮은 박스를 버린다. ② 남은 박스 중 신뢰도가 가장 높은 박스를 남기고, 그 박스와 IOU가 기준을 넘는 박스를 지운다. 남은 박스가 없을 때까지 ②를 되풀이한다. 이 ②가 NMS(Non-Maximum Suppression, 겹침 제거)다.</p>
+                <p class="hint" id="nms-hint">단계 탭을 차례로 눌러 박스 6개가 1개가 되는 과정을 따라가 보자. 그다음 두 기준을 바꾸거나 박스를 끌어 옮겨 보자. 키보드로는 탭에서 ← →로 단계를 옮기고, 그림을 선택한 뒤 [ ]로 박스를 고르고 화살표로 옮긴다.</p>
+            </div>
+            <div class="panel">
+                <p class="phase-legend" aria-hidden="true"><span><i class="sw score"></i>① 신뢰도로 거르기</span><span><i class="sw nms"></i>② NMS</span></p>
+                <div class="tabs" role="tablist" aria-label="NMS 단계" id="nms-tabs">
+                    <button type="button" role="tab" class="tab done start" aria-selected="false" tabindex="-1"><b>1</b>후보 6개</button>
+                    <button type="button" role="tab" class="tab done score" aria-selected="false" tabindex="-1"><b>2</b>신뢰도 거르기<small>E·F 버림</small></button>
+                    <button type="button" role="tab" class="tab done nms" aria-selected="false" tabindex="-1"><b>3</b>A 남김</button>
+                    <button type="button" role="tab" class="tab done nms" aria-selected="false" tabindex="-1"><b>4</b>B 지움<small>겹침 0.69</small></button>
+                    <button type="button" role="tab" class="tab done nms" aria-selected="false" tabindex="-1"><b>5</b>C 지움<small>겹침 0.62</small></button>
+                    <button type="button" role="tab" class="tab done nms" aria-selected="false" tabindex="-1"><b>6</b>D 지움<small>겹침 0.52</small></button>
+                    <button type="button" role="tab" class="tab current end" aria-selected="true" tabindex="0"><b>7</b>최종 1개</button>
+                </div>
+                <div class="pager">
+                    <button class="btn" type="button" id="nms-prev">← 이전</button>
+                    <span class="pos" id="nms-pos" aria-live="polite">7 / 7</span>
+                    <button class="btn" type="button" id="nms-next">다음 →</button>
+                </div>
+                <p class="callout step-text" id="nms-callout" aria-live="polite">끝. 후보 6개 중 신뢰도로 2개, NMS로 3개가 걸러져 A 박스 하나가 남았다. 개 한 마리에 박스 하나.</p>
+                <div class="split" role="tabpanel" id="nms-panel" aria-label="지금 단계" style="margin-top: 12px;">
+                    <canvas id="nms-canvas" class="stage" tabindex="0" role="img"
+                            aria-label="개 한 마리와 그 둘레의 후보 박스 6개. 목록에서 각 박스의 상태를 읽을 수 있다."
+                            aria-describedby="nms-hint"></canvas>
+                    <div>
+                        <div class="funnel" style="margin-top: 0;">
+                            <div><span>후보</span><b id="nms-count-all">6</b></div>
+                            <div><span>① 신뢰도 통과</span><b id="nms-count-pass">4</b></div>
+                            <div><span>② NMS 뒤 최종</span><b id="nms-count-final">1</b></div>
+                        </div>
+                        <div class="controls">
+                            <div class="control">
+                                <label for="nms-score">① 신뢰도 기준 <output id="nms-score-out" for="nms-score">0.20</output></label>
+                                <input type="range" id="nms-score" min="0.05" max="0.95" step="0.05" value="0.2">
+                            </div>
+                            <div class="control">
+                                <label for="nms-iou">② NMS 겹침 기준(IOU) <output id="nms-iou-out" for="nms-iou">0.40</output></label>
+                                <input type="range" id="nms-iou" min="0.1" max="0.9" step="0.05" value="0.4">
+                            </div>
+                        </div>
+                        <button class="btn" type="button" id="nms-home" hidden style="margin-top: 8px;">박스 제자리</button>
+                        <ol class="boxlist" id="nms-list" aria-label="신뢰도 순 후보 박스">
+                            <li class="kept"><button type="button"><b>A</b>0.92 · 거의 딱 맞는 박스<span>② 남김 · 남은 것 중 신뢰도 1위</span></button></li>
+                            <li class="removed"><button type="button"><b>B</b>0.81 · 오른쪽으로 밀린 박스<span>② 지움 · A 박스와 겹침 0.69 &gt; 기준 0.40</span></button></li>
+                            <li class="removed"><button type="button"><b>C</b>0.64 · 조금 큰 박스<span>② 지움 · A 박스와 겹침 0.62 &gt; 기준 0.40</span></button></li>
+                            <li class="removed"><button type="button"><b>D</b>0.43 · 왼쪽 위로 밀린 박스<span>② 지움 · A 박스와 겹침 0.52 &gt; 기준 0.40</span></button></li>
+                            <li class="dropped"><button type="button"><b>E</b>0.16 · 일부만 잡은 작은 박스<span>① 버림 · 신뢰도 0.16 &lt; 기준 0.20</span></button></li>
+                            <li class="dropped"><button type="button"><b>F</b>0.08 · 너무 큰 박스<span>① 버림 · 신뢰도 0.08 &lt; 기준 0.20</span></button></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="lead">
+                <p style="margin-top: 20px;">기본값 0.2와 0.4는 YOLOv1 저자의 Darknet 코드가 쓰는 값이다. 신뢰도 기준을 0.1로 내리면 일부만 잡은 E 박스가 끝까지 남는다. A 박스와 겹침이 0.23뿐이라 NMS가 다른 물체의 박스로 보기 때문이다. 겹침 기준을 0.7로 올리면 B, C, D 박스도 남아 개 한 마리에 박스가 넷이 된다. 반대로 겹침 기준을 너무 낮추면, 붙어 있는 다른 개의 박스까지 지워서 그 개를 놓친다.</p>
+            </div>
+            <p class="source">출처: YOLOv1 논문 그림 1, §2.3, Darknet examples/yolo.c(test_yolo의 기본값), R-CNN 논문 §2.2, Soft-NMS 논문 초록 · 박스는 설명을 위해 만든 예시</p>
+        </section>
+
+        <section id="summary" class="wrap step" aria-labelledby="summary-title">
+            <p class="step-no">정리</p>
+            <h2 id="summary-title">박스 하나만 남기기까지</h2>
+            <ol class="steps">
+                <li><b>IOU</b>로 두 박스가 얼마나 겹치는지 0에서 1 사이로 잰다. 정답과 IOU가 0.5를 넘으면 흔히 맞은 박스로 친다.</li>
+                <li><b>신뢰도</b>가 기준보다 낮은 박스를 먼저 버린다. YOLOv1 저자의 코드는 0.2를 쓴다.</li>
+                <li><b>NMS</b>는 남은 박스 중 신뢰도가 가장 높은 박스를 남기고, 그 박스와 IOU가 기준을 넘는 박스를 지운다. 남은 박스가 없을 때까지 되풀이하면 물체마다 박스가 하나 남는다.</li>
+            </ol>
+            <div class="note">
+                <p><strong>오해</strong>IOU 0.5면 박스가 반쯤 맞은 것이다.</p>
+                <p class="fact"><strong>실제로는</strong>같은 크기 박스를 폭의 ⅓만 밀어도, 넓이만 2배로 키워도 IOU는 0.5다. PASCAL VOC는 정답 박스 자체가 부정확할 수 있어 기준을 일부러 0.5로 낮게 잡았다.</p>
+            </div>
+            <div class="note">
+                <p><strong>오해</strong>NMS 겹침 기준은 낮을수록 깔끔하다.</p>
+                <p class="fact"><strong>실제로는</strong>기준을 너무 낮추면 붙어 있는 다른 물체의 박스까지 지워서 그 물체를 놓친다. 반대로 너무 높이면 한 물체에 박스가 여럿 남는다.</p>
+            </div>
+            <p class="source">출처: PASCAL VOC 논문 §4.2, Darknet examples/yolo.c, R-CNN 논문 §2.2, Soft-NMS 논문 초록·§4 · IOU 0.5 예시는 이 페이지의 계산</p>
+        </section>
+
+        <section id="faq" class="wrap step" aria-labelledby="faq-title">
+            <p class="step-no">질문</p>
+            <h2 id="faq-title">자주 묻는 질문</h2>
+            <!-- 검색·AI 답변용. head의 FAQPage는 빌드 스크립트가 이 목록에서 옮긴다. 문장을 바꾸면 빌드를 다시 돌린다. -->
+            <div class="faq" id="faq-list">
+                <details>
+                    <summary>IOU(IoU)란 무엇인가?</summary>
+                    <p>두 박스가 겹친 넓이를 두 박스를 합친 넓이로 나눈 값이다(Intersection over Union). 0에서 1 사이이고, 완전히 겹치면 1, 닿지 않으면 0이다. Jaccard 지수라고도 부르며, 물체 탐지에서는 예측 박스가 정답 박스와 얼마나 맞는지 잴 때 쓴다.</p>
+                </details>
+                <details>
+                    <summary>IOU 0.5는 어느 정도로 맞은 것인가?</summary>
+                    <p>같은 크기의 박스를 폭의 3분의 1만큼 옆으로 밀거나, 중심은 그대로 두고 넓이만 2배로 키워도 IOU는 0.5다. PASCAL VOC는 정답 박스 자체가 부정확할 수 있어 기준을 일부러 0.5로 낮게 잡았고, 0.5를 넘어야 맞은 탐지로 센다.</p>
+                </details>
+                <details>
+                    <summary>NMS(Non-Maximum Suppression)란 무엇인가?</summary>
+                    <p>한 물체를 여러 박스가 겹쳐 잡았을 때 하나만 남기는 후처리다. 남은 박스 중 신뢰도가 가장 높은 박스를 남기고, 그 박스와 IOU가 기준을 넘는 같은 클래스의 박스를 지운다. 이것을 남은 박스가 없을 때까지 되풀이하고, 클래스마다 따로 한다.</p>
+                </details>
+                <details>
+                    <summary>신뢰도 기준과 NMS는 어떤 순서로 하나?</summary>
+                    <p>YOLOv1 저자의 Darknet 코드는 신뢰도가 0.2보다 낮은 박스를 먼저 버리고, 남은 박스로 IOU 0.4 기준의 NMS를 한다. 신뢰도로 먼저 거르지 않으면, 물체의 일부만 잡은 낮은 신뢰도 박스가 NMS를 빠져나가 결과에 남을 수 있다. 이 페이지의 02에서 신뢰도 기준을 0.1로 내리면 볼 수 있다.</p>
+                </details>
+                <details>
+                    <summary>NMS 겹침 기준은 얼마로 정하나?</summary>
+                    <p>모든 경우에 맞는 값은 없다. 기준을 낮추면 붙어 있는 다른 물체의 박스까지 지워 그 물체를 놓치고, 높이면 중복 박스가 남는다. YOLOv1 저자의 Darknet 코드는 0.4를 쓰고, Soft-NMS 논문에 따르면 Faster R-CNN과 R-FCN은 0.3을 기본값으로 쓴다.</p>
+                </details>
+                <details>
+                    <summary>YOLOv1에서 IOU는 어디에 쓰이나?</summary>
+                    <p>박스마다 내는 신뢰도가 정답 박스와의 IOU를 배우고, 한 칸의 박스 2개 중 정답과 IOU가 큰 쪽이 그 물체를 맡는다. 추론에서는 NMS가 IOU로 한 물체에 겹친 박스를 지운다. 논문의 성적(mAP)도 정답과 IOU가 0.5를 넘는 박스를 맞음으로 센다.</p>
+                </details>
+            </div>
+            <p class="source">출처: PASCAL VOC 논문 §4.2, VOC2007 개발 키트 §4.4, GIoU 논문 §3, YOLOv1 논문 §2, §2.2, §2.3, Darknet examples/yolo.c, R-CNN 논문 §2.2, Soft-NMS 논문 §4 · IOU 0.5 예시와 02의 결과는 이 페이지의 계산</p>
+        </section>
+
+        <section class="wrap step" aria-labelledby="more-title">
+            <h2 id="more-title">더 보기</h2>
+            <ul class="links">
+                <li><a href="../yolo-v1/">YOLOv1, 한 번 보고 모두 찾기</a> — IOU와 NMS가 쓰이는 곳</li>
+                <li><a href="https://doi.org/10.1007/s11263-009-0275-4">Everingham et al., The PASCAL Visual Object Classes (VOC) Challenge (IJCV 2010)</a></li>
+                <li><a href="https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2007/htmldoc/index.html">PASCAL VOC2007 개발 키트 문서</a></li>
+                <li><a href="https://arxiv.org/abs/1506.02640">Redmon et al., You Only Look Once (CVPR 2016)</a> · <a href="https://github.com/pjreddie/darknet/blob/master/examples/yolo.c">Darknet examples/yolo.c</a></li>
+                <li><a href="https://arxiv.org/abs/1311.2524">Girshick et al., Rich feature hierarchies for accurate object detection (R-CNN, CVPR 2014)</a></li>
+                <li><a href="https://arxiv.org/abs/1704.04503">Bodla et al., Soft-NMS (ICCV 2017)</a></li>
+                <li><a href="https://arxiv.org/abs/1902.09630">Rezatofighi et al., Generalized Intersection over Union (CVPR 2019)</a></li>
+                <!-- 영상이 나오면 추가: <li><a href="https://www.youtube.com/watch?v=...">영상으로 보기</a></li> -->
+            </ul>
+            <p class="hint" style="margin-top: 12px;">02의 장면과 박스는 설명을 위해 만든 예시다. 예시의 IOU와 NMS 결과는 파이썬으로 따로 계산해 이 페이지의 계산과 같은지 확인했다.</p>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        마지막 업데이트 <time datetime="2026-10-01">2026-10-01</time> · <a href="/">Hugh Q Lee</a>
+    </footer>
+
+    <script type="application/json" id="page-data">{"nms":{"object":{"label":0,"box":[0.22,0.3,0.78,0.74]},"threshold_defaults":[0.2,0.4],"candidates":[{"name":"A","box":[0.2312,0.2868,0.8024,0.7356],"score":0.92,"what":"거의 딱 맞는 박스"},{"name":"B","box":[0.304,0.322,0.864,0.762],"score":0.81,"what":"오른쪽으로 밀린 박스"},{"name":"C","box":[0.136,0.2604,0.864,0.8324],"score":0.64,"what":"조금 큰 박스"},{"name":"D","box":[0.108,0.2384,0.668,0.6784],"score":0.43,"what":"왼쪽 위로 밀린 박스"},{"name":"E","box":[0.2256,0.3572,0.5056,0.5772],"score":0.16,"what":"일부만 잡은 작은 박스"},{"name":"F","box":[0.024,0.1548,0.976,0.9028],"score":0.08,"what":"너무 큰 박스"}]}}</script>
+    <!-- 계산 함수: IOU와 NMS. 따로 만든 파이썬 구현의 테스트가 이 블록을 Node에서 돌려 결과가 같은지 확인한다. -->
+    <script id="metrics">
+        var Metrics = (function () {
+            "use strict";
+            // x1, y1, x2, y2 boxes, the same arithmetic as the VOC evaluation in Python.
+            function iou(a, b) {
+                var ix = Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0]));
+                var iy = Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]));
+                var inter = ix * iy;
+                var union = (a[2] - a[0]) * (a[3] - a[1]) + (b[2] - b[0]) * (b[3] - b[1]) - inter;
+                return union > 0 ? inter / union : 0;
+            }
+            // Greedy NMS, one step per kept box. Boxes go in score order (a stable sort keeps ties in list order);
+            // each step keeps the best remaining box and compares it with every remaining box of the same class,
+            // removing those whose IOU is above the threshold. dets: [{box, score, label}].
+            // Returns [{keep: i, removed: [[j, iou]], compared: [[j, iou, removed?]]}] with indices into dets.
+            function nmsSteps(dets, threshold) {
+                var order = dets.map(function (d, i) { return i; }).sort(function (i, j) { return dets[j].score - dets[i].score; });
+                var alive = dets.map(function () { return true; });
+                var steps = [];
+                order.forEach(function (i) {
+                    if (!alive[i]) return;
+                    alive[i] = false;
+                    var removed = [], compared = [];
+                    order.forEach(function (j) {
+                        if (!alive[j] || dets[j].label !== dets[i].label) return;
+                        var v = iou(dets[i].box, dets[j].box), gone = v > threshold;
+                        compared.push([j, v, gone]);
+                        if (gone) {
+                            removed.push([j, v]);
+                            alive[j] = false;
+                        }
+                    });
+                    steps.push({ keep: i, removed: removed, compared: compared });
+                });
+                return steps;
+            }
+            function nms(dets, threshold) {
+                return nmsSteps(dets, threshold).map(function (s) { return dets[s.keep]; });
+            }
+            return { iou: iou, nmsSteps: nmsSteps, nms: nms };
+        })();
+    </script>
+    <script>
+        (function () {
+            "use strict";
+
+            var DATA = JSON.parse(document.getElementById("page-data").textContent);
+            var root = document.documentElement;
+            var redraws = [];
+
+            function css(name) {
+                return getComputedStyle(root).getPropertyValue(name).trim();
+            }
+            function alpha(hex, a) {
+                var n = parseInt(hex.replace("#", ""), 16);
+                return "rgba(" + (n >> 16 & 255) + "," + (n >> 8 & 255) + "," + (n & 255) + "," + a + ")";
+            }
+            function clamp(v, lo, hi) {
+                return Math.min(hi, Math.max(lo, v));
+            }
+            function fixed(v, d) {
+                return Number(v).toFixed(d);
+            }
+            function svgEl(tag, attrs, parent) {
+                var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+                Object.keys(attrs || {}).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(el);
+                return el;
+            }
+            function clear(el) {
+                while (el.firstChild) el.removeChild(el.firstChild);
+            }
+            // Canvas drawn in 448 x 448 coordinates (the detector's input size), scaled to device pixels.
+            function stage(canvas, draw) {
+                var ctx = canvas.getContext("2d");
+                function render() {
+                    var rect = canvas.getBoundingClientRect();
+                    var size = Math.max(1, Math.round(rect.width * (window.devicePixelRatio || 1)));
+                    if (canvas.width !== size) {
+                        canvas.width = size;
+                        canvas.height = size;
+                    }
+                    ctx.setTransform(size / 448, 0, 0, size / 448, 0, 0);
+                    draw(ctx);
+                }
+                if ("ResizeObserver" in window) new ResizeObserver(render).observe(canvas);
+                else window.addEventListener("resize", render);
+                redraws.push(render);
+                return render;
+            }
+            // Scene of 02: a lawn and an emoji dog, the same in both themes, like a photo.
+            var EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+            var INK = { box: "#2b3640", faint: "rgba(43,54,64,0.4)", kept: "#a87400", keptFill: "#f2c14e", removed: "#c0392b",
+                compare: "#1f6fd1" };
+            function drawLawn(ctx) {
+                var g = ctx.createLinearGradient(0, 0, 0, 448);
+                g.addColorStop(0, "#e6f4da");
+                g.addColorStop(1, "#b3dc9b");
+                ctx.fillStyle = g;
+                ctx.fillRect(0, 0, 448, 448);
+            }
+            // An emoji fitted inside a box (x1, y1, x2, y2 in 0-1) and centered, so the true box is the same on every
+            // platform even though emoji fonts differ.
+            function drawEmoji(ctx, ch, box) {
+                var bw = (box[2] - box[0]) * 448, bh = (box[3] - box[1]) * 448;
+                var cx = (box[0] + box[2]) / 2 * 448, cy = (box[1] + box[3]) / 2 * 448;
+                ctx.save();
+                ctx.textAlign = "left";
+                ctx.textBaseline = "alphabetic";
+                ctx.font = "100px " + EMOJI_FONT;
+                var m = ctx.measureText(ch);
+                var gw = (m.actualBoundingBoxLeft || 0) + (m.actualBoundingBoxRight || 0);
+                var gh = (m.actualBoundingBoxAscent || 0) + (m.actualBoundingBoxDescent || 0);
+                if (gw > 0 && gh > 0) {
+                    ctx.font = (100 * Math.min(bw / gw, bh / gh) * 0.96) + "px " + EMOJI_FONT;
+                    m = ctx.measureText(ch);
+                    var w = m.actualBoundingBoxLeft + m.actualBoundingBoxRight, h = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
+                    ctx.fillText(ch, cx - w / 2 + m.actualBoundingBoxLeft, cy - h / 2 + m.actualBoundingBoxAscent);
+                } else {
+                    ctx.font = Math.round(Math.min(bw, bh) * 0.9) + "px " + EMOJI_FONT;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(ch, cx, cy);
+                }
+                ctx.restore();
+            }
+            // Label tags for boxes, placed in order so they do not cover each other: above or below the box,
+            // left or right aligned, then inside it. tags: [{box, text, color, fg, small}], most important first.
+            function placeTags(ctx, tags) {
+                var placed = [];
+                tags.forEach(function (t) {
+                    ctx.font = (t.small ? "600 11px " : "600 13px ") + css("--sans");
+                    var tw = ctx.measureText(t.text).width + 8, H = t.small ? 15 : 18;
+                    var x0 = t.box[0] * 448, y0 = t.box[1] * 448, x1 = t.box[2] * 448, y1 = t.box[3] * 448;
+                    var spots = [[x0, y0 - H - 1], [x1 - tw, y0 - H - 1], [x0, y1 + 1], [x1 - tw, y1 + 1], [x0 + 2, y0 + 2], [x1 - tw - 2, y1 - H - 2]]
+                        .map(function (p) { return [clamp(p[0], 0, 448 - tw), clamp(p[1], 0, 448 - H)]; });
+                    var free = spots.filter(function (p) {
+                        return placed.every(function (q) { return p[0] + tw <= q[0] || q[0] + q[2] <= p[0] || p[1] + H <= q[1] || q[1] + q[3] <= p[1]; });
+                    });
+                    var at = free.length ? free[0] : spots[0];
+                    placed.push([at[0], at[1], tw, H]);
+                    ctx.fillStyle = t.color;
+                    ctx.fillRect(at[0], at[1], tw, H);
+                    ctx.fillStyle = t.fg || "#111";
+                    ctx.textAlign = "left";
+                    ctx.textBaseline = "top";
+                    ctx.fillText(t.text, at[0] + 4, at[1] + (t.small ? 1.5 : 2));
+                });
+            }
+            function strokeBox(ctx, box, color, width, dash) {
+                ctx.strokeStyle = color;
+                ctx.lineWidth = width;
+                ctx.setLineDash(dash || []);
+                ctx.strokeRect(box[0] * 448, box[1] * 448, (box[2] - box[0]) * 448, (box[3] - box[1]) * 448);
+                ctx.setLineDash([]);
+            }
+
+            // Theme toggle (shared with the homepage through localStorage "theme").
+            (function () {
+                var toggle = document.getElementById("theme-toggle");
+                function label() {
+                    var dark = root.dataset.theme !== "light";
+                    toggle.textContent = dark ? "light" : "dark";
+                    toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+                }
+                toggle.addEventListener("click", function () {
+                    var next = root.dataset.theme === "light" ? "dark" : "light";
+                    root.dataset.theme = next;
+                    try {
+                        localStorage.setItem("theme", next);
+                    } catch (error) {
+                        // 저장할 수 없어도 이번 방문에서는 전환된다.
+                    }
+                    label();
+                    redraws.forEach(function (fn) { fn(); });
+                });
+                label();
+            })();
+
+            // 01 IOU: drag the predicted box against a fixed true box.
+            (function () {
+                var canvas = document.getElementById("iou-canvas");
+                var START = { gt: [0.28, 0.30, 0.64, 0.66], pred: [0.36, 0.36, 0.72, 0.74] };
+                var gt = START.gt.slice(), pred = START.pred.slice();
+                var preset = null, drag = null;
+                var MIN = 0.03;
+                var CALLOUTS = {
+                    third: "같은 크기 박스를 폭의 ⅓만큼 옆으로 밀면 IOU는 딱 0.50이다. VOC는 0.5를 넘어야 맞음이라, 이것도 틀림이다.",
+                    double: "중심은 그대로 두고 넓이만 2배로 키워도 IOU는 0.50이다. 정답을 다 덮어도 군더더기가 크면 점수가 깎인다.",
+                    apart: "닿지 않으면 가까이 있든 멀리 있든 IOU는 0이다. IOU만으로는 얼마나 빗나갔는지 알 수 없다.",
+                    small: "폭 0.1짜리 박스를 사진 폭의 5%만큼 밀면 IOU는 0.33이다. VOC 기준 틀림이다.",
+                    large: "폭 0.8짜리 박스를 똑같이 5% 밀면 IOU는 0.88이다. 같은 실수가 작은 박스에 훨씬 치명적이다. YOLOv1이 w 대신 √w를 배우는 까닭이다."
+                };
+                function square(cx, cy, s) { return [cx - s / 2, cy - s / 2, cx + s / 2, cy + s / 2]; }
+                var PRESETS = {
+                    third: function () { gt = square(0.44, 0.5, 0.36); pred = square(0.44 + 0.12, 0.5, 0.36); },
+                    double: function () { gt = square(0.5, 0.5, 0.36); pred = square(0.5, 0.5, 0.36 * Math.SQRT2); },
+                    apart: function () { gt = square(0.3, 0.5, 0.3); pred = square(0.3 + 0.36, 0.5, 0.3); },
+                    small: function () { gt = square(0.475, 0.5, 0.1); pred = square(0.525, 0.5, 0.1); },
+                    large: function () { gt = square(0.475, 0.5, 0.8); pred = square(0.525, 0.5, 0.8); }
+                };
+                function areas() {
+                    var ix = Math.max(0, Math.min(gt[2], pred[2]) - Math.max(gt[0], pred[0]));
+                    var iy = Math.max(0, Math.min(gt[3], pred[3]) - Math.max(gt[1], pred[1]));
+                    var inter = ix * iy;
+                    var union = (gt[2] - gt[0]) * (gt[3] - gt[1]) + (pred[2] - pred[0]) * (pred[3] - pred[1]) - inter;
+                    return { inter: inter, union: union, iou: Metrics.iou(gt, pred) };
+                }
+                var render = stage(canvas, function (ctx) {
+                    var text = css("--text"), warn = css("--accent-warn"), line = css("--line");
+                    ctx.fillStyle = css("--panel-soft");
+                    ctx.fillRect(0, 0, 448, 448);
+                    ctx.strokeStyle = line;
+                    ctx.lineWidth = 1;
+                    for (var i = 1; i < 10; i++) {
+                        ctx.beginPath(); ctx.moveTo(i * 44.8, 0); ctx.lineTo(i * 44.8, 448); ctx.stroke();
+                        ctx.beginPath(); ctx.moveTo(0, i * 44.8); ctx.lineTo(448, i * 44.8); ctx.stroke();
+                    }
+                    function rect(b) { return [b[0] * 448, b[1] * 448, (b[2] - b[0]) * 448, (b[3] - b[1]) * 448]; }
+                    var g = rect(gt), p = rect(pred);
+                    ctx.fillStyle = alpha(text, 0.07);
+                    ctx.fillRect(g[0], g[1], g[2], g[3]);
+                    ctx.fillStyle = alpha(warn, 0.12);
+                    ctx.fillRect(p[0], p[1], p[2], p[3]);
+                    var ix0 = Math.max(gt[0], pred[0]), iy0 = Math.max(gt[1], pred[1]), ix1 = Math.min(gt[2], pred[2]), iy1 = Math.min(gt[3], pred[3]);
+                    if (ix1 > ix0 && iy1 > iy0) {
+                        ctx.fillStyle = alpha(warn, 0.5);
+                        ctx.fillRect(ix0 * 448, iy0 * 448, (ix1 - ix0) * 448, (iy1 - iy0) * 448);
+                    }
+                    ctx.lineWidth = 2.5;
+                    ctx.strokeStyle = text;
+                    ctx.setLineDash([7, 5]);
+                    ctx.strokeRect(g[0], g[1], g[2], g[3]);
+                    ctx.setLineDash([]);
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = warn;
+                    ctx.strokeRect(p[0], p[1], p[2], p[3]);
+                    // resize handle
+                    ctx.fillStyle = warn;
+                    ctx.fillRect(p[0] + p[2] - 7, p[1] + p[3] - 7, 14, 14);
+                    ctx.font = "600 14px " + css("--sans");
+                    ctx.textBaseline = "bottom";
+                    ctx.textAlign = "left";
+                    ctx.fillStyle = text;
+                    ctx.fillText("정답", g[0] + 2, Math.max(16, g[1] - 4));
+                    ctx.fillStyle = warn;
+                    ctx.textBaseline = "top";
+                    ctx.fillText("예측", p[0] + 4, Math.min(448 - 18, p[1] + p[3] + 4));
+                });
+                var shiftChart = document.getElementById("shift-chart");
+                function drawShiftChart() {
+                    clear(shiftChart);
+                    var box = { x: 36, y: 8, w: 272, h: 118 };
+                    var accent = css("--accent"), warn = css("--accent-warn"), faint = css("--faint"), text = css("--text"), line = css("--line");
+                    var xs = function (w) { return box.x + (w - 0.05) / 0.75 * box.w; };
+                    var ys = function (v) { return box.y + box.h - v * box.h; };
+                    [0, 0.5, 1].forEach(function (t) {
+                        svgEl("line", { x1: box.x, y1: ys(t), x2: box.x + box.w, y2: ys(t), stroke: line }, shiftChart);
+                        svgEl("text", { x: box.x - 6, y: ys(t) + 4, "text-anchor": "end", fill: faint }, shiftChart).textContent = fixed(t, 1);
+                    });
+                    [0.1, 0.2, 0.4, 0.6, 0.8].forEach(function (w) {
+                        svgEl("text", { x: xs(w), y: box.y + box.h + 14, "text-anchor": "middle", fill: faint }, shiftChart).textContent = fixed(w, 1);
+                    });
+                    svgEl("text", { x: box.x + box.w / 2, y: box.y + box.h + 30, "text-anchor": "middle", fill: faint }, shiftChart).textContent = "박스 폭 (사진 폭 = 1)";
+                    svgEl("line", { x1: box.x, y1: ys(0.5), x2: box.x + box.w, y2: ys(0.5), stroke: warn, "stroke-dasharray": "4 4" }, shiftChart);
+                    svgEl("text", { x: box.x + box.w, y: ys(0.5) - 5, "text-anchor": "end", fill: warn }, shiftChart).textContent = "VOC 기준 0.5";
+                    var pts = [];
+                    for (var w = 0.05; w <= 0.8001; w += 0.005) pts.push(xs(w) + "," + ys((w - 0.05) / (w + 0.05)));
+                    svgEl("polyline", { points: pts.join(" "), fill: "none", stroke: accent, "stroke-width": 2 }, shiftChart);
+                    svgEl("circle", { cx: xs(0.15), cy: ys(0.5), r: 3.5, fill: "none", stroke: warn, "stroke-width": 1.5 }, shiftChart);
+                    svgEl("text", { x: xs(0.15) + 8, y: ys(0.5) + 15, fill: warn }, shiftChart).textContent = "폭 0.15에서 0.5";
+                    [[0.1, "small"], [0.8, "large"]].forEach(function (m) {
+                        var v = (m[0] - 0.05) / (m[0] + 0.05), on = preset === m[1];
+                        svgEl("circle", { cx: xs(m[0]), cy: ys(v), r: on ? 6 : 4, fill: on ? warn : accent, stroke: text, "stroke-width": on ? 1.5 : 0 }, shiftChart);
+                        svgEl("text", { x: xs(m[0]) + (m[0] < 0.5 ? 10 : -8), y: ys(v) + (m[0] < 0.5 ? 18 : 16), "text-anchor": m[0] < 0.5 ? "start" : "end", fill: text }, shiftChart)
+                            .textContent = "폭 " + fixed(m[0], 1) + " → " + fixed(v, 2);
+                    });
+                }
+                redraws.push(drawShiftChart);
+                function update() {
+                    var a = areas();
+                    var v = a.iou;
+                    var edge = Math.abs(v - 0.5) < 1e-9;
+                    document.getElementById("iou-value").textContent = fixed(v, 2);
+                    document.getElementById("iou-bar").style.width = (v * 100) + "%";
+                    var verdict = document.getElementById("iou-verdict");
+                    verdict.className = "verdict " + (v > 0.5 && !edge ? "ok" : "no");
+                    verdict.textContent = edge ? "VOC 기준 틀림 · 딱 0.5는 넘은 것이 아니다"
+                        : v > 0.5 ? "VOC 기준 맞음 · 0.5를 넘는다" : "VOC 기준 틀림 · 0.5를 넘지 못했다";
+                    document.getElementById("iou-formula").textContent = "겹친 넓이 " + fixed(a.inter * 100, 1) + " ÷ 합친 넓이 " +
+                        fixed(a.union * 100, 1) + " = " + fixed(v, 2) + " (사진 넓이 = 100)";
+                    var callout = document.getElementById("iou-callout");
+                    if (preset) callout.textContent = CALLOUTS[preset];
+                    else if (v >= 0.95) callout.textContent = "거의 완벽하게 겹쳤다. IOU가 1에 가깝다.";
+                    else callout.textContent = (v > 0.5 ? "IOU " + fixed(v, 2) + ": VOC 기준을 넘는다." :
+                        "IOU " + fixed(v, 2) + ": 꽤 겹쳐 보여도 VOC 기준에서는 틀린 박스다.");
+                    Array.prototype.forEach.call(document.querySelectorAll("#iou-presets button"), function (b) {
+                        b.setAttribute("aria-pressed", String(b.dataset.preset === preset));
+                    });
+                    render();
+                    drawShiftChart();
+                }
+                function point(e) {
+                    var rect = canvas.getBoundingClientRect();
+                    return [(e.clientX - rect.left) / rect.width, (e.clientY - rect.top) / rect.height];
+                }
+                canvas.addEventListener("pointerdown", function (e) {
+                    var p = point(e), hx = pred[2], hy = pred[3];
+                    var near = 18 / canvas.getBoundingClientRect().width;
+                    if (Math.abs(p[0] - hx) < near && Math.abs(p[1] - hy) < near) drag = { mode: "size", p: p, box: pred.slice() };
+                    else if (p[0] >= pred[0] && p[0] <= pred[2] && p[1] >= pred[1] && p[1] <= pred[3]) drag = { mode: "move", p: p, box: pred.slice() };
+                    else return;
+                    canvas.setPointerCapture(e.pointerId);
+                    canvas.style.cursor = "grabbing";
+                    e.preventDefault();
+                });
+                canvas.addEventListener("pointermove", function (e) {
+                    if (!drag) {
+                        var p0 = point(e), near0 = 18 / canvas.getBoundingClientRect().width;
+                        var onHandle = Math.abs(p0[0] - pred[2]) < near0 && Math.abs(p0[1] - pred[3]) < near0;
+                        var onBox = p0[0] >= pred[0] && p0[0] <= pred[2] && p0[1] >= pred[1] && p0[1] <= pred[3];
+                        canvas.style.cursor = onHandle ? "nwse-resize" : onBox ? "grab" : "default";
+                        return;
+                    }
+                    var p = point(e), dx = p[0] - drag.p[0], dy = p[1] - drag.p[1], b = drag.box;
+                    if (drag.mode === "move") {
+                        dx = clamp(dx, -b[0], 1 - b[2]);
+                        dy = clamp(dy, -b[1], 1 - b[3]);
+                        pred = [b[0] + dx, b[1] + dy, b[2] + dx, b[3] + dy];
+                    } else {
+                        pred = [b[0], b[1], clamp(b[2] + dx, b[0] + MIN, 1), clamp(b[3] + dy, b[1] + MIN, 1)];
+                    }
+                    preset = null;
+                    update();
+                });
+                function stop() {
+                    drag = null;
+                    canvas.style.cursor = "";
+                }
+                canvas.addEventListener("pointerup", stop);
+                canvas.addEventListener("pointercancel", stop);
+                canvas.addEventListener("keydown", function (e) {
+                    var step = 0.01, dx = 0, dy = 0;
+                    if (e.key === "ArrowLeft") dx = -step;
+                    else if (e.key === "ArrowRight") dx = step;
+                    else if (e.key === "ArrowUp") dy = -step;
+                    else if (e.key === "ArrowDown") dy = step;
+                    else return;
+                    e.preventDefault();
+                    if (e.shiftKey) {
+                        pred = [pred[0], pred[1], clamp(pred[2] + dx, pred[0] + MIN, 1), clamp(pred[3] + dy, pred[1] + MIN, 1)];
+                    } else {
+                        dx = clamp(dx, -pred[0], 1 - pred[2]);
+                        dy = clamp(dy, -pred[1], 1 - pred[3]);
+                        pred = [pred[0] + dx, pred[1] + dy, pred[2] + dx, pred[3] + dy];
+                    }
+                    preset = null;
+                    update();
+                });
+                Array.prototype.forEach.call(document.querySelectorAll("#iou-presets button"), function (b) {
+                    b.addEventListener("click", function () {
+                        preset = b.dataset.preset;
+                        PRESETS[preset]();
+                        update();
+                    });
+                });
+                update();
+            })();
+
+            // 02 NMS: one dog and six candidate boxes. (1) drop low confidence, (2) NMS, one box left.
+            // Every step of the run is a tab, so the whole sequence is in view and any step is one click away.
+            (function () {
+                var N = DATA.nms;
+                if (!N) return;
+                var canvas = document.getElementById("nms-canvas");
+                var scoreRange = document.getElementById("nms-score");
+                var iouRange = document.getElementById("nms-iou");
+                var list = document.getElementById("nms-list");
+                var home = document.getElementById("nms-home");
+                var tabs = document.getElementById("nms-tabs");
+                var panel = document.getElementById("nms-panel");
+                var cands = N.candidates.map(function (c, i) {
+                    return { i: i, name: c.name, what: c.what, score: c.score, label: 0, box: c.box.slice(), start: c.box.slice() };
+                });
+                var steps = [], at = 0, sel = -1, drag = null, focusRow = -1;
+
+                function limits() {
+                    return { s: Number(scoreRange.value), n: Number(iouRange.value) };
+                }
+                function passes(c, t) {
+                    return c.score >= t.s - 1e-9;
+                }
+                // The whole run as steps: start, (1) the score cut, then for each kept box the keep and one step per comparison.
+                function build() {
+                    var t = limits();
+                    var passed = cands.filter(function (c) { return passes(c, t); });
+                    var out = [{ kind: "start" }, { kind: "score" }];
+                    Metrics.nmsSteps(passed, t.n).forEach(function (s, k) {
+                        out.push({ kind: "keep", i: passed[s.keep].i, first: k === 0 });
+                        s.compared.forEach(function (c) {
+                            out.push({ kind: "compare", i: passed[s.keep].i, j: passed[c[0]].i, v: c[1], gone: c[2] });
+                        });
+                    });
+                    out.push({ kind: "done" });
+                    steps = out;
+                }
+                // What has happened to each box up to the current step.
+                function status() {
+                    var t = limits();
+                    var st = cands.map(function () { return { state: "wait" }; });
+                    for (var k = 0; k <= at && k < steps.length; k++) {
+                        var s = steps[k];
+                        if (s.kind === "score") {
+                            cands.forEach(function (c) { st[c.i] = { state: passes(c, t) ? "pass" : "dropped" }; });
+                        } else if (s.kind === "keep") {
+                            st[s.i] = { state: "kept", spared: st[s.i].spared, first: s.first };
+                        } else if (s.kind === "compare") {
+                            st[s.j] = s.gone ? { state: "removed", by: s.i, v: s.v } : { state: "pass", spared: { by: s.i, v: s.v } };
+                        }
+                    }
+                    return st;
+                }
+                function current() {
+                    return steps[at] || { kind: "start" };
+                }
+                var render = stage(canvas, function (ctx) {
+                    drawLawn(ctx);
+                    drawEmoji(ctx, "🐕", N.object.box);
+                    var st = status(), cur = current();
+                    var layer = { dropped: 0, removed: 1, wait: 2, pass: 2, kept: 3 };
+                    cands.slice().sort(function (a, b) { return layer[st[a.i].state] - layer[st[b.i].state]; }).forEach(function (c) {
+                        var s = st[c.i].state;
+                        if (s === "dropped") strokeBox(ctx, c.box, INK.faint, 1.5, [4, 4]);
+                        else if (s === "removed") strokeBox(ctx, c.box, INK.removed, 2, [7, 5]);
+                        else if (s === "kept") strokeBox(ctx, c.box, INK.kept, cur.kind === "keep" && cur.i === c.i ? 5 : 4);
+                        else strokeBox(ctx, c.box, INK.box, 2);
+                    });
+                    if (cur.kind === "compare") {
+                        var a = cands[cur.i].box, b = cands[cur.j].box;
+                        var x0 = Math.max(a[0], b[0]), y0 = Math.max(a[1], b[1]), x1 = Math.min(a[2], b[2]), y1 = Math.min(a[3], b[3]);
+                        if (x1 > x0 && y1 > y0) {
+                            ctx.fillStyle = "rgba(31,111,209,0.24)";
+                            ctx.fillRect(x0 * 448, y0 * 448, (x1 - x0) * 448, (y1 - y0) * 448);
+                        }
+                        strokeBox(ctx, a, INK.kept, 4);
+                        strokeBox(ctx, b, INK.compare, 3.5);
+                    }
+                    if (sel >= 0) {
+                        var sb = cands[sel].box;
+                        strokeBox(ctx, [sb[0] - 0.01, sb[1] - 0.01, sb[2] + 0.01, sb[3] + 0.01], INK.compare, 1.5, [3, 3]);
+                    }
+                    function tagOf(c) {
+                        var s = st[c.i].state;
+                        if (cur.kind === "compare" && c.i === cur.j) return { box: c.box, text: c.name + " 겹침 " + fixed(cur.v, 2), color: INK.compare, fg: "#fff" };
+                        if (s === "dropped") return { box: c.box, text: c.name + " " + fixed(c.score, 2) + " ✕", color: "#8a969f", fg: "#fff" };
+                        if (s === "removed") return { box: c.box, text: c.name + " ✕", color: INK.removed, fg: "#fff" };
+                        if (s === "kept") return { box: c.box, text: c.name + " " + fixed(c.score, 2) + " ✓", color: INK.keptFill, fg: "#111" };
+                        return { box: c.box, text: c.name + " " + fixed(c.score, 2), color: INK.box, fg: "#fff" };
+                    }
+                    var first = cur.kind === "compare" ? [cur.i, cur.j] : cur.kind === "keep" ? [cur.i] : [];
+                    var tags = first.map(function (i) { return tagOf(cands[i]); });
+                    cands.forEach(function (c) { if (first.indexOf(c.i) < 0 && st[c.i].state !== "dropped") tags.push(tagOf(c)); });
+                    cands.forEach(function (c) { if (first.indexOf(c.i) < 0 && st[c.i].state === "dropped") tags.push(tagOf(c)); });
+                    placeTags(ctx, tags);
+                    if (document.activeElement === canvas) {
+                        ctx.strokeStyle = css("--accent");
+                        ctx.lineWidth = 3;
+                        ctx.strokeRect(1.5, 1.5, 445, 445);
+                    }
+                });
+                function rowText(c, s, t) {
+                    var spared = s.spared ? cands[s.spared.by].name + " 박스와 겹침 " + fixed(s.spared.v, 2) + " ≤ 기준 " + fixed(t.n, 2) : "";
+                    if (s.state === "wait") return "대기";
+                    if (s.state === "dropped") return "① 버림 · 신뢰도 " + fixed(c.score, 2) + " < 기준 " + fixed(t.s, 2);
+                    if (s.state === "removed") return "② 지움 · " + cands[s.by].name + " 박스와 겹침 " + fixed(s.v, 2) + " > 기준 " + fixed(t.n, 2);
+                    if (s.state === "kept") return "② 남김 · " + (spared || "남은 것 중 신뢰도 1위");
+                    return "① 통과" + (spared ? " · " + spared : "");
+                }
+                function describe(cur, t) {
+                    var passed = cands.filter(function (c) { return passes(c, t); });
+                    var dropped = cands.filter(function (c) { return !passes(c, t); });
+                    if (cur.kind === "start") return "신경망이 개 한 마리를 두고 박스 " + cands.length + "개를 냈다. 박스마다 신뢰도가 붙어 있다. 다음 단계로 넘어가 보자.";
+                    if (cur.kind === "score") {
+                        return dropped.length
+                            ? "① 신뢰도 기준 " + fixed(t.s, 2) + "보다 낮은 박스를 버린다: " + dropped.map(function (c) { return c.name + " 박스(" + fixed(c.score, 2) + ")"; }).join(", ") + ". 남은 박스는 " + passed.length + "개."
+                            : "① 신뢰도 기준 " + fixed(t.s, 2) + "보다 낮은 박스가 없어 " + passed.length + "개가 모두 남는다.";
+                    }
+                    if (cur.kind === "keep") {
+                        var c = cands[cur.i];
+                        return cur.first
+                            ? "② 남은 박스 중 신뢰도가 가장 높은 " + c.name + " 박스(" + fixed(c.score, 2) + ")를 결과로 남긴다. 이제 이 박스와 나머지 박스를 하나씩 겹쳐 본다."
+                            : "② 아직 남은 박스 중 신뢰도가 가장 높은 " + c.name + " 박스(" + fixed(c.score, 2) + ")를 남긴다. 앞서 남긴 박스와 덜 겹쳐 다른 물체로 본 박스다.";
+                    }
+                    if (cur.kind === "compare") {
+                        var a = cands[cur.i], b = cands[cur.j];
+                        return cur.gone
+                            ? a.name + " 박스와 " + b.name + " 박스의 겹침(IOU) " + fixed(cur.v, 2) + " > 기준 " + fixed(t.n, 2) + ". 같은 개를 잡은 박스로 보고 " + b.name + " 박스를 지운다."
+                            : a.name + " 박스와 " + b.name + " 박스의 겹침(IOU) " + fixed(cur.v, 2) + " ≤ 기준 " + fixed(t.n, 2) + ". 다른 물체일 수 있어 " + b.name + " 박스는 지우지 않는다.";
+                    }
+                    var kept = steps.filter(function (s) { return s.kind === "keep"; }).map(function (s) { return cands[s.i]; });
+                    var removed = steps.filter(function (s) { return s.kind === "compare" && s.gone; }).length;
+                    if (kept.length === 1) {
+                        return "끝. 후보 " + cands.length + "개 중 신뢰도로 " + dropped.length + "개, NMS로 " + removed + "개가 걸러져 " + kept[0].name + " 박스 하나가 남았다. 개 한 마리에 박스 하나.";
+                    }
+                    var top = kept[0];
+                    return "끝. 박스 " + kept.length + "개가 남았다: " + kept.map(function (c) { return c.name; }).join(", ") + ". 개는 한 마리인데 박스가 여럿이다. " +
+                        kept.slice(1).map(function (c) {
+                            return c.name + " 박스는 " + top.name + " 박스와의 겹침(" + fixed(Metrics.iou(top.box, c.box), 2) + ")이 기준 " + fixed(t.n, 2) + " 이하라 남았다";
+                        }).join(". ") + ".";
+                }
+                // A tab's short name, and which part of the run it belongs to (its color).
+                function tabInfo(s, t) {
+                    if (s.kind === "start") return { phase: "start", label: "후보 " + cands.length + "개" };
+                    if (s.kind === "score") {
+                        var gone = cands.filter(function (c) { return !passes(c, t); });
+                        return { phase: "score", label: "신뢰도 거르기", sub: gone.length ? gone.map(function (c) { return c.name; }).join("·") + " 버림" : "버릴 것 없음" };
+                    }
+                    if (s.kind === "keep") return { phase: "nms", label: cands[s.i].name + " 남김" };
+                    if (s.kind === "compare") return { phase: "nms", label: cands[s.j].name + (s.gone ? " 지움" : " 통과"), sub: "겹침 " + fixed(s.v, 2) };
+                    return { phase: "end", label: "최종 " + steps.filter(function (x) { return x.kind === "keep"; }).length + "개" };
+                }
+                function drawTabs(t) {
+                    clear(tabs);
+                    steps.forEach(function (s, k) {
+                        var info = tabInfo(s, t);
+                        var b = document.createElement("button");
+                        b.type = "button";
+                        b.id = "nms-tab-" + k;
+                        b.setAttribute("role", "tab");
+                        b.setAttribute("aria-controls", "nms-panel");
+                        b.setAttribute("aria-selected", String(k === at));
+                        b.tabIndex = k === at ? 0 : -1;
+                        b.className = "tab " + info.phase + (k < at ? " done" : k === at ? " current" : "");
+                        b.innerHTML = "<b>" + (k + 1) + "</b>";
+                        b.appendChild(document.createTextNode(info.label));
+                        if (info.sub) {
+                            var small = document.createElement("small");
+                            small.textContent = info.sub;
+                            b.appendChild(small);
+                        }
+                        b.addEventListener("click", function () { go(k, false); });
+                        tabs.appendChild(b);
+                    });
+                    panel.setAttribute("aria-labelledby", "nms-tab-" + at);
+                    // keep the current tab in view inside the strip, without scrolling the page
+                    var cur = tabs.children[at];
+                    if (cur) {
+                        var left = cur.offsetLeft, right = left + cur.offsetWidth;
+                        if (left < tabs.scrollLeft + 8) tabs.scrollLeft = Math.max(0, left - 24);
+                        else if (right > tabs.scrollLeft + tabs.clientWidth - 8) tabs.scrollLeft = right - tabs.clientWidth + 24;
+                    }
+                }
+                function update() {
+                    var t = limits(), st = status(), cur = current();
+                    document.getElementById("nms-score-out").textContent = fixed(t.s, 2);
+                    document.getElementById("nms-iou-out").textContent = fixed(t.n, 2);
+                    document.getElementById("nms-count-all").textContent = cands.length;
+                    document.getElementById("nms-count-pass").textContent = at >= 1 ? cands.filter(function (c) { return passes(c, t); }).length : "…";
+                    document.getElementById("nms-count-final").textContent = cur.kind === "done" ? steps.filter(function (s) { return s.kind === "keep"; }).length : "…";
+                    drawTabs(t);
+                    document.getElementById("nms-pos").textContent = (at + 1) + " / " + steps.length;
+                    document.getElementById("nms-prev").disabled = at === 0;
+                    document.getElementById("nms-next").disabled = at >= steps.length - 1;
+                    clear(list);
+                    cands.forEach(function (c) {
+                        var s = st[c.i];
+                        var li = document.createElement("li");
+                        var now = (cur.kind === "keep" && cur.i === c.i) || (cur.kind === "compare" && (cur.i === c.i || cur.j === c.i));
+                        li.className = s.state + (now ? " current" : "") + (sel === c.i ? " selected" : "");
+                        var b = document.createElement("button");
+                        b.type = "button";
+                        b.setAttribute("aria-pressed", String(sel === c.i));
+                        b.innerHTML = "<b>" + c.name + "</b>" + fixed(c.score, 2) + " · " + c.what + "<span></span>";
+                        b.querySelector("span").textContent = rowText(c, s, t);
+                        b.addEventListener("click", function () { sel = sel === c.i ? -1 : c.i; focusRow = c.i; update(); });
+                        li.appendChild(b);
+                        list.appendChild(li);
+                    });
+                    if (focusRow >= 0) {
+                        list.children[focusRow].querySelector("button").focus();
+                        focusRow = -1;
+                    }
+                    home.hidden = cands.every(function (c) { return c.box.every(function (v, k) { return v === c.start[k]; }); });
+                    document.getElementById("nms-callout").textContent = describe(cur, t);
+                    render();
+                }
+                function go(k, focus) {
+                    at = clamp(k, 0, steps.length - 1);
+                    update();
+                    if (focus) tabs.children[at].focus();
+                }
+                function rerun() {
+                    build();
+                    at = steps.length - 1;
+                    update();
+                }
+                tabs.addEventListener("keydown", function (e) {
+                    var to = { ArrowRight: at + 1, ArrowLeft: at - 1, Home: 0, End: steps.length - 1 }[e.key];
+                    if (to == null) return;
+                    e.preventDefault();
+                    go(to, true);
+                });
+                document.getElementById("nms-prev").addEventListener("click", function () { go(at - 1, false); });
+                document.getElementById("nms-next").addEventListener("click", function () { go(at + 1, false); });
+                home.addEventListener("click", function () {
+                    cands.forEach(function (c) { c.box = c.start.slice(); });
+                    rerun();
+                });
+                scoreRange.addEventListener("input", rerun);
+                iouRange.addEventListener("input", rerun);
+
+                // Move a box: grab it by its edge (or anywhere inside the smallest box under the pointer).
+                function point(e) {
+                    var r = canvas.getBoundingClientRect();
+                    return [(e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height];
+                }
+                function edgeDistance(p, b) {
+                    var dx = Math.max(b[0] - p[0], 0, p[0] - b[2]), dy = Math.max(b[1] - p[1], 0, p[1] - b[3]);
+                    if (dx > 0 || dy > 0) return Math.hypot(dx, dy);
+                    return Math.min(p[0] - b[0], b[2] - p[0], p[1] - b[1], b[3] - p[1]);
+                }
+                function pick(p) {
+                    var near = cands.map(function (c) { return { i: c.i, d: edgeDistance(p, c.box) }; }).sort(function (a, b) { return a.d - b.d; });
+                    if (near[0].d < 0.03) return near[0].i;
+                    var inside = cands.filter(function (c) { return p[0] >= c.box[0] && p[0] <= c.box[2] && p[1] >= c.box[1] && p[1] <= c.box[3]; });
+                    inside.sort(function (a, b) { return (a.box[2] - a.box[0]) * (a.box[3] - a.box[1]) - (b.box[2] - b.box[0]) * (b.box[3] - b.box[1]); });
+                    return inside.length ? inside[0].i : -1;
+                }
+                function moveTo(i, dx, dy, from) {
+                    var b = from || cands[i].box;
+                    dx = clamp(dx, -b[0], 1 - b[2]);
+                    dy = clamp(dy, -b[1], 1 - b[3]);
+                    cands[i].box = [b[0] + dx, b[1] + dy, b[2] + dx, b[3] + dy];
+                }
+                canvas.addEventListener("pointerdown", function (e) {
+                    var p = point(e), i = pick(p);
+                    if (i < 0) return;
+                    sel = i;
+                    drag = { i: i, p: p, box: cands[i].box.slice() };
+                    canvas.setPointerCapture(e.pointerId);
+                    canvas.style.cursor = "grabbing";
+                    update();
+                    e.preventDefault();
+                });
+                canvas.addEventListener("pointermove", function (e) {
+                    if (!drag) {
+                        canvas.style.cursor = pick(point(e)) >= 0 ? "grab" : "default";
+                        return;
+                    }
+                    var p = point(e);
+                    moveTo(drag.i, p[0] - drag.p[0], p[1] - drag.p[1], drag.box);
+                    rerun();
+                });
+                function stop() {
+                    drag = null;
+                    canvas.style.cursor = "";
+                }
+                canvas.addEventListener("pointerup", stop);
+                canvas.addEventListener("pointercancel", stop);
+                canvas.addEventListener("keydown", function (e) {
+                    var step = e.shiftKey ? 0.05 : 0.01;
+                    if (e.key === "[" || e.key === "]") {
+                        sel = sel < 0 ? 0 : (sel + (e.key === "]" ? 1 : cands.length - 1)) % cands.length;
+                        e.preventDefault();
+                        update();
+                        return;
+                    }
+                    var d = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key];
+                    if (!d) return;
+                    e.preventDefault();
+                    if (sel < 0) sel = 0;
+                    moveTo(sel, d[0], d[1]);
+                    rerun();
+                });
+                canvas.addEventListener("focus", render);
+                canvas.addEventListener("blur", render);
+                build();
+                at = 0;
+                update();
+            })();
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-10-01","domains":[{"id":"cv","name":"컴퓨터 비전"},{"id":"det","name":"물체 탐지","parent":"cv"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기"},{"id":"yolo-v1","title":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기"},{"id":"map","title":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 64 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (준비 중)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "준비 중";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "지금 이 글";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
