@@ -4,10 +4,11 @@
 
 ## Knowledge (Korean)
 
-Each page starts with a small knowledge map of the pages it builds on and leads to.
+Each page starts with a small knowledge map of the pages it builds on and leads to. Suggested reading order: IOU와 NMS → YOLOv1 → YOLOv2.
 
+- [YOLOv2, 앵커 박스와 패스스루 레이어](https://hughqlee.com/knowledge/yolo-v2/): 칸마다 데이터에서 고른 앵커 박스 5개로 한 칸에서도 여러 물체를 나눠 맡고, 패스스루 레이어로 26 × 26의 세밀한 특징을 13 × 13 칸에 접어 붙이는 YOLOv2를, 물체를 끌고 k-평균으로 앵커를 고르고 특징 지도를 접어 보며 이해한다. 먼저 읽으면 좋은 글: YOLOv1. Sources: Redmon & Farhadi, "YOLO9000: Better, Faster, Stronger" (CVPR 2017) and the authors' Darknet configuration.
 - [IOU와 NMS, 박스 하나만 남기기](https://hughqlee.com/knowledge/iou-nms/): 두 박스가 얼마나 겹치는지 재는 IOU(겹친 넓이 ÷ 합친 넓이)와, 한 물체에 겹친 박스를 하나만 남기는 NMS를, 박스를 직접 옮기고 단계를 따라가며 이해한다. YOLOv1의 선행 지식이다. Sources: Everingham et al., "The PASCAL Visual Object Classes (VOC) Challenge" (IJCV 2010); Redmon et al., "You Only Look Once" (CVPR 2016) and the author's Darknet code; Bodla et al., "Soft-NMS" (ICCV 2017).
-- [YOLOv1, 한 번 보고 모두 찾기](https://hughqlee.com/knowledge/yolo-v1/): 사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을, 직접 구현한 모델의 구조와 출력으로 만져 보며 이해한다. 먼저 읽으면 좋은 글: IOU와 NMS. Source: Redmon et al., "You Only Look Once: Unified, Real-Time Object Detection" (CVPR 2016).
+- [YOLOv1, 한 번 보고 모두 찾기](https://hughqlee.com/knowledge/yolo-v1/): 사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을, 직접 구현한 모델의 구조와 출력으로 만져 보며 이해한다. 먼저 읽으면 좋은 글: IOU와 NMS. 다음 글: YOLOv2. Source: Redmon et al., "You Only Look Once: Unified, Real-Time Object Detection" (CVPR 2016).
 
 ## Portfolio
 

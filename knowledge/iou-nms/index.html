@@ -20,7 +20,7 @@
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="IOU와 NMS, 박스 하나만 남기기: 겹친 두 박스와 IOU 값">
     <meta property="article:published_time" content="2026-10-01">
-    <meta property="article:modified_time" content="2026-10-01">
+    <meta property="article:modified_time" content="2026-10-02">
     <meta property="article:author" content="https://hughqlee.com/">
     <meta property="article:section" content="Knowledge">
     <meta name="twitter:card" content="summary_large_image">
@@ -42,7 +42,7 @@
           "abstract": "두 박스가 얼마나 겹치는지는 IOU(겹친 넓이 ÷ 합친 넓이)로 잰다. 신뢰도가 낮은 박스를 먼저 버리고, 남은 박스 중 신뢰도 1위와 IOU가 기준을 넘게 겹친 박스를 지우면(NMS) 물체마다 박스가 하나 남는다.",
           "inLanguage": "ko",
           "datePublished": "2026-10-01",
-          "dateModified": "2026-10-01",
+          "dateModified": "2026-10-02",
           "url": "https://hughqlee.com/knowledge/iou-nms/",
           "mainEntityOfPage": "https://hughqlee.com/knowledge/iou-nms/",
           "image": {
@@ -572,7 +572,7 @@
             <nav class="kmap" aria-label="지식 지도" data-current="iou-nms">
                 <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">컴퓨터 비전 › 물체 탐지</span></p>
                 <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
-                <p class="kmap-text">먼저 읽을 글은 없다 · 이어서 읽을 글: <a href="../yolo-v1/">YOLOv1</a>, mAP(준비 중)</p>
+                <p class="kmap-text">먼저 읽을 글은 없다 · 이어서 읽을 글: <a href="../yolo-v1/">YOLOv1</a>, mAP(준비 중) · 같은 분야: <a href="../yolo-v2/">YOLOv2</a></p>
             </nav>
             <p class="eyebrow">KNOWLEDGE · 물체 탐지</p>
             <h1 id="page-title">한 물체에 박스가 여러 개면, 무엇을 남길까?</h1>
@@ -759,7 +759,7 @@
     </main>
 
     <footer class="wrap">
-        마지막 업데이트 <time datetime="2026-10-01">2026-10-01</time> · <a href="/">Hugh Q Lee</a>
+        마지막 업데이트 <time datetime="2026-10-02">2026-10-02</time> · <a href="/">Hugh Q Lee</a>
     </footer>
 
     <script type="application/json" id="page-data">{"nms":{"object":{"label":0,"box":[0.22,0.3,0.78,0.74]},"threshold_defaults":[0.2,0.4],"candidates":[{"name":"A","box":[0.2312,0.2868,0.8024,0.7356],"score":0.92,"what":"거의 딱 맞는 박스"},{"name":"B","box":[0.304,0.322,0.864,0.762],"score":0.81,"what":"오른쪽으로 밀린 박스"},{"name":"C","box":[0.136,0.2604,0.864,0.8324],"score":0.64,"what":"조금 큰 박스"},{"name":"D","box":[0.108,0.2384,0.668,0.6784],"score":0.43,"what":"왼쪽 위로 밀린 박스"},{"name":"E","box":[0.2256,0.3572,0.5056,0.5772],"score":0.16,"what":"일부만 잡은 작은 박스"},{"name":"F","box":[0.024,0.1548,0.976,0.9028],"score":0.08,"what":"너무 큰 박스"}]}}</script>
@@ -1446,7 +1446,7 @@
             })();
         })();
     </script>
-    <script type="application/json" id="knowledge-map">{"updated":"2026-10-01","domains":[{"id":"cv","name":"컴퓨터 비전"},{"id":"det","name":"물체 탐지","parent":"cv"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기"},{"id":"yolo-v1","title":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기"},{"id":"map","title":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"}]}</script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-10-01","domains":[{"id":"cv","name":"컴퓨터 비전"},{"id":"det","name":"물체 탐지","parent":"cv"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기"},{"id":"yolo-v1","title":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기"},{"id":"yolo-v2","title":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기"},{"id":"map","title":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"}]}</script>
     <script>
         // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
         // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
