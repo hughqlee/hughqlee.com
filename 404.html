@@ -512,6 +512,8 @@
             setText("keyReason", ui.keys.reason);
             setText("valueReason", ui.reason);
             setText("homeLink", ui.home);
+            // The portfolio has a page per language: / (Korean, the original) and /en/ (English).
+            document.getElementById("homeLink").setAttribute("href", currentLang === "ko" ? "/" : "/en/");
 
             languageToggle.setAttribute("aria-pressed", currentLang === "ko" ? "true" : "false");
             languageToggle.setAttribute("aria-label", ui.languageToggleAria);

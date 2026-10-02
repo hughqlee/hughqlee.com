@@ -4,10 +4,16 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-    <!-- Main Page -->
+    <!-- Main page: Korean at / (the original), English at /en/ (generated from it by _scripts/build_en.py). -->
     <url>
         <loc>https://hughqlee.com/</loc>
-        <lastmod>2026-08-05</lastmod>
+        <lastmod>2026-10-02</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://hughqlee.com/en/</loc>
+        <lastmod>2026-10-02</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
     </url>

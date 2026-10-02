@@ -1,6 +1,6 @@
 # Hugh Q Lee
 
-> Portfolio of Hugh Q Lee, a Vision AI Product Engineer building computer vision and robotic automation systems for zebrafish lab workflows. The Knowledge section holds interactive explanations of concepts Hugh Q Lee has studied, each checked against its original source. The pages are written in Korean; each has an English version translated from the Korean original.
+> Portfolio of Hugh Q Lee, a Vision AI Product Engineer building computer vision and robotic automation systems for zebrafish lab workflows. The Knowledge section holds interactive explanations of concepts Hugh Q Lee has studied, each checked against its original source. The site is written in Korean, and every page has an English version translated from the Korean original: the home page at https://hughqlee.com/en/ and the knowledge pages under https://hughqlee.com/knowledge/en/.
 
 ## Knowledge (English)
 
@@ -18,4 +18,11 @@ Each page starts with a small knowledge map of the pages it builds on and leads 
 
 ## Portfolio
 
-- [Home](https://hughqlee.com/): Selected work in vision AI, robotics, microscopy automation, and zebrafish assay systems.
+- [Home](https://hughqlee.com/en/): Selected work in vision AI, robotics, microscopy automation, and zebrafish assay systems. Korean original: [홈](https://hughqlee.com/).
+
+Selected work (each is a run report on the home page; client and lab details are proprietary):
+
+- [Automated Zebrafish Larva Toxicity Evaluation Platform](https://hughqlee.com/en/#toxicity-evaluation-automation): A microscope automation workflow for 96-well toxicity evaluation, combining plate navigation, autofocus, larva detection, condition classification, and result logging. Completed.
+- [Vision-Guided Zebrafish Egg and Larva Microinjection Platform](https://hughqlee.com/en/#microinjection-platform): Automated injection workflows for zebrafish egg and larval assays, connecting visual targeting, stage motion, needle actuation, reagent delivery, and post-run analysis. Published; [related publication](https://doi.org/10.1371/journal.pone.0333369).
+- [Zebrafish Larva Behavior Tracking and FL/IR Feeding Analytics](https://hughqlee.com/en/#behavior-feeding-analytics): An analysis system that turns recorded well-plate experiments into trajectories, behavior metrics, and fluorescence-based feeding and digestion readouts. Completed.
+- [Robot-Arm Microfluidic Zebrafish 3D Imaging Platform](https://hughqlee.com/en/#robotic-3d-imaging): A scale-up automation concept combining robot-arm handling, visual alignment, microfluidic transfer, rotational capillary imaging, and volumetric fluorescence analysis. In progress.
