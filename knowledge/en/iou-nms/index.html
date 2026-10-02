@@ -1,37 +1,37 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IOU와 NMS, 박스 하나만 남기기 | Hugh Q Lee</title>
-    <meta name="description" content="두 박스가 얼마나 겹치는지는 IOU(겹친 넓이 ÷ 합친 넓이)로 잰다. 신뢰도가 낮은 박스를 먼저 버리고, 남은 박스 중 신뢰도 1위와 IOU가 기준을 넘게 겹친 박스를 지우면(NMS) 물체마다 박스가 하나 남는다.">
+    <title>IOU and NMS Explained: Keep One Box per Object | Hugh Q Lee</title>
+    <meta name="description" content="IOU (intersection area ÷ union area) measures how much two boxes overlap. Drop the low-confidence boxes first, then remove every box whose IOU with the most confident remaining box is above a threshold (NMS), and one box is left per object.">
     <meta name="author" content="Hugh Q Lee">
-    <meta name="keywords" content="IOU, IoU, Intersection over Union, NMS, Non-Maximum Suppression, 겹침 제거, 신뢰도, confidence threshold, 물체 탐지, 객체 탐지, object detection, YOLO, PASCAL VOC">
+    <meta name="keywords" content="IOU, IoU, Intersection over Union, NMS, Non-Maximum Suppression, confidence threshold, Jaccard index, object detection, YOLO, PASCAL VOC">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <link rel="canonical" href="https://hughqlee.com/knowledge/iou-nms/">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/en/iou-nms/">
     <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/iou-nms/">
     <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/iou-nms/">
     <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/iou-nms/">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Hugh Q Lee">
-    <meta property="og:locale" content="ko_KR">
-    <meta property="og:locale:alternate" content="en_US">
-    <meta property="og:title" content="IOU와 NMS, 박스 하나만 남기기">
-    <meta property="og:description" content="두 박스가 얼마나 겹치는지는 IOU(겹친 넓이 ÷ 합친 넓이)로 잰다. 신뢰도가 낮은 박스를 먼저 버리고, 남은 박스 중 신뢰도 1위와 IOU가 기준을 넘게 겹친 박스를 지우면(NMS) 물체마다 박스가 하나 남는다.">
-    <meta property="og:url" content="https://hughqlee.com/knowledge/iou-nms/">
-    <meta property="og:image" content="https://hughqlee.com/knowledge/iou-nms/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ko_KR">
+    <meta property="og:title" content="IOU and NMS Explained: Keep One Box per Object">
+    <meta property="og:description" content="IOU (intersection area ÷ union area) measures how much two boxes overlap. Drop the low-confidence boxes first, then remove every box whose IOU with the most confident remaining box is above a threshold (NMS), and one box is left per object.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/en/iou-nms/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/en/iou-nms/og.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="IOU와 NMS, 박스 하나만 남기기: 겹친 두 박스와 IOU 값">
+    <meta property="og:image:alt" content="IOU and NMS Explained: two overlapping boxes and their IOU">
     <meta property="article:published_time" content="2026-10-01">
     <meta property="article:modified_time" content="2026-10-02">
     <meta property="article:author" content="https://hughqlee.com/">
     <meta property="article:section" content="Knowledge">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="IOU와 NMS, 박스 하나만 남기기">
-    <meta name="twitter:description" content="두 박스가 얼마나 겹치는지는 IOU(겹친 넓이 ÷ 합친 넓이)로 잰다. 신뢰도가 낮은 박스를 먼저 버리고, 남은 박스 중 신뢰도 1위와 IOU가 기준을 넘게 겹친 박스를 지우면(NMS) 물체마다 박스가 하나 남는다.">
-    <meta name="twitter:image" content="https://hughqlee.com/knowledge/iou-nms/og.png">
-    <meta name="twitter:image:alt" content="IOU와 NMS, 박스 하나만 남기기: 겹친 두 박스와 IOU 값">
+    <meta name="twitter:title" content="IOU and NMS Explained: Keep One Box per Object">
+    <meta name="twitter:description" content="IOU (intersection area ÷ union area) measures how much two boxes overlap. Drop the low-confidence boxes first, then remove every box whose IOU with the most confident remaining box is above a threshold (NMS), and one box is left per object.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/en/iou-nms/og.png">
+    <meta name="twitter:image:alt" content="IOU and NMS Explained: two overlapping boxes and their IOU">
     <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage의 문장은 본문 "자주 묻는 질문"과 같아야 한다. -->
     <script type="application/ld+json">
     {
@@ -39,20 +39,19 @@
       "@graph": [
         {
           "@type": "TechArticle",
-          "@id": "https://hughqlee.com/knowledge/iou-nms/#article",
-          "workTranslation": { "@id": "https://hughqlee.com/knowledge/en/iou-nms/#article" },
-          "headline": "IOU와 NMS, 박스 하나만 남기기",
-          "alternativeHeadline": "한 물체에 박스가 여러 개면, 무엇을 남길까?",
-          "description": "두 박스가 얼마나 겹치는지는 IOU(겹친 넓이 ÷ 합친 넓이)로 잰다. 신뢰도가 낮은 박스를 먼저 버리고, 남은 박스 중 신뢰도 1위와 IOU가 기준을 넘게 겹친 박스를 지우면(NMS) 물체마다 박스가 하나 남는다.",
-          "abstract": "두 박스가 얼마나 겹치는지는 IOU(겹친 넓이 ÷ 합친 넓이)로 잰다. 신뢰도가 낮은 박스를 먼저 버리고, 남은 박스 중 신뢰도 1위와 IOU가 기준을 넘게 겹친 박스를 지우면(NMS) 물체마다 박스가 하나 남는다.",
-          "inLanguage": "ko",
+          "@id": "https://hughqlee.com/knowledge/en/iou-nms/#article",
+          "headline": "IOU and NMS Explained: Keep One Box per Object",
+          "alternativeHeadline": "When one object gets several boxes, which one do you keep?",
+          "description": "IOU (intersection area ÷ union area) measures how much two boxes overlap. Drop the low-confidence boxes first, then remove every box whose IOU with the most confident remaining box is above a threshold (NMS), and one box is left per object.",
+          "abstract": "IOU (intersection area ÷ union area) measures how much two boxes overlap. Drop the low-confidence boxes first, then remove every box whose IOU with the most confident remaining box is above a threshold (NMS), and one box is left per object.",
+          "inLanguage": "en",
           "datePublished": "2026-10-01",
           "dateModified": "2026-10-02",
-          "url": "https://hughqlee.com/knowledge/iou-nms/",
-          "mainEntityOfPage": "https://hughqlee.com/knowledge/iou-nms/",
+          "url": "https://hughqlee.com/knowledge/en/iou-nms/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/en/iou-nms/",
           "image": {
             "@type": "ImageObject",
-            "url": "https://hughqlee.com/knowledge/iou-nms/og.png",
+            "url": "https://hughqlee.com/knowledge/en/iou-nms/og.png",
             "width": 1200,
             "height": 630
           },
@@ -63,7 +62,7 @@
             "@id": "https://hughqlee.com/#person"
           },
           "isPartOf": {
-            "@id": "https://hughqlee.com/knowledge/#collection"
+            "@id": "https://hughqlee.com/knowledge/en/#collection"
           },
           "isAccessibleForFree": true,
           "proficiencyLevel": "Beginner",
@@ -73,10 +72,9 @@
             "Intersection over Union",
             "NMS",
             "Non-Maximum Suppression",
-            "겹침 제거",
-            "신뢰도",
-            "물체 탐지",
-            "객체 탐지",
+            "non-maximum suppression",
+            "confidence",
+            "object detection",
             "YOLO",
             "PASCAL VOC"
           ],
@@ -126,7 +124,10 @@
               "name": "Generalized Intersection over Union",
               "url": "https://arxiv.org/abs/1902.09630"
             }
-          ]
+          ],
+          "translationOfWork": {
+            "@id": "https://hughqlee.com/knowledge/iou-nms/#article"
+          }
         },
         {
           "@type": "Person",
@@ -153,66 +154,66 @@
               "@type": "ListItem",
               "position": 2,
               "name": "Knowledge",
-              "item": "https://hughqlee.com/knowledge/"
+              "item": "https://hughqlee.com/knowledge/en/"
             },
             {
               "@type": "ListItem",
               "position": 3,
-              "name": "IOU와 NMS, 박스 하나만 남기기",
-              "item": "https://hughqlee.com/knowledge/iou-nms/"
+              "name": "IOU and NMS Explained: Keep One Box per Object",
+              "item": "https://hughqlee.com/knowledge/en/iou-nms/"
             }
           ]
         },
         {
           "@type": "FAQPage",
-          "@id": "https://hughqlee.com/knowledge/iou-nms/#faq",
+          "@id": "https://hughqlee.com/knowledge/en/iou-nms/#faq",
           "mainEntity": [
             {
               "@type": "Question",
-              "name": "IOU(IoU)란 무엇인가?",
+              "name": "What is IOU (IoU)?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "두 박스가 겹친 넓이를 두 박스를 합친 넓이로 나눈 값이다(Intersection over Union). 0에서 1 사이이고, 완전히 겹치면 1, 닿지 않으면 0이다. Jaccard 지수라고도 부르며, 물체 탐지에서는 예측 박스가 정답 박스와 얼마나 맞는지 잴 때 쓴다."
+                "text": "It is the area where two boxes overlap divided by the area they cover together (Intersection over Union). It ranges from 0 to 1: 1 when the boxes overlap completely and 0 when they don't touch. Also called the Jaccard index, it is used in object detection to measure how well a predicted box matches the ground-truth box."
               }
             },
             {
               "@type": "Question",
-              "name": "IOU 0.5는 어느 정도로 맞은 것인가?",
+              "name": "How good is an IOU of 0.5?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "같은 크기의 박스를 폭의 3분의 1만큼 옆으로 밀거나, 중심은 그대로 두고 넓이만 2배로 키워도 IOU는 0.5다. PASCAL VOC는 정답 박스 자체가 부정확할 수 있어 기준을 일부러 0.5로 낮게 잡았고, 0.5를 넘어야 맞은 탐지로 센다."
+                "text": "Shifting a box of the same size sideways by one third of its width, or keeping its center and doubling its area, gives an IOU of 0.5. PASCAL VOC deliberately set the threshold as low as 0.5 because ground-truth boxes can themselves be inaccurate, and it counts a detection as correct only above 0.5."
               }
             },
             {
               "@type": "Question",
-              "name": "NMS(Non-Maximum Suppression)란 무엇인가?",
+              "name": "What is NMS (non-maximum suppression)?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "한 물체를 여러 박스가 겹쳐 잡았을 때 하나만 남기는 후처리다. 남은 박스 중 신뢰도가 가장 높은 박스를 남기고, 그 박스와 IOU가 기준을 넘는 같은 클래스의 박스를 지운다. 이것을 남은 박스가 없을 때까지 되풀이하고, 클래스마다 따로 한다."
+                "text": "It is a post-processing step that keeps only one box when several overlapping boxes cover the same object. It keeps the most confident of the remaining boxes and removes the boxes of the same class whose IOU with it is above a threshold, repeating until no boxes are left, separately for each class."
               }
             },
             {
               "@type": "Question",
-              "name": "신뢰도 기준과 NMS는 어떤 순서로 하나?",
+              "name": "Which comes first, the confidence threshold or NMS?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "YOLOv1 저자의 Darknet 코드는 신뢰도가 0.2보다 낮은 박스를 먼저 버리고, 남은 박스로 IOU 0.4 기준의 NMS를 한다. 신뢰도로 먼저 거르지 않으면, 물체의 일부만 잡은 낮은 신뢰도 박스가 NMS를 빠져나가 결과에 남을 수 있다. 이 페이지의 02에서 신뢰도 기준을 0.1로 내리면 볼 수 있다."
+                "text": "The YOLOv1 author's Darknet code first drops boxes with a confidence below 0.2, then runs NMS with an IOU threshold of 0.4 on the rest. Without the confidence filter first, a low-confidence box that covers only part of an object can slip through NMS and stay in the result. You can see this in 02 on this page by lowering the confidence threshold to 0.1."
               }
             },
             {
               "@type": "Question",
-              "name": "NMS 겹침 기준은 얼마로 정하나?",
+              "name": "How do you choose the NMS overlap threshold?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "모든 경우에 맞는 값은 없다. 기준을 낮추면 붙어 있는 다른 물체의 박스까지 지워 그 물체를 놓치고, 높이면 중복 박스가 남는다. YOLOv1 저자의 Darknet 코드는 0.4를 쓰고, Soft-NMS 논문에 따르면 Faster R-CNN과 R-FCN은 0.3을 기본값으로 쓴다."
+                "text": "No value fits every case. A lower threshold also removes the boxes of other objects close by, so those objects are missed; a higher one leaves duplicate boxes. The YOLOv1 author's Darknet code uses 0.4, and according to the Soft-NMS paper, Faster R-CNN and R-FCN use 0.3 by default."
               }
             },
             {
               "@type": "Question",
-              "name": "YOLOv1에서 IOU는 어디에 쓰이나?",
+              "name": "Where does YOLOv1 use IOU?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "박스마다 내는 신뢰도가 정답 박스와의 IOU를 배우고, 한 칸의 박스 2개 중 정답과 IOU가 큰 쪽이 그 물체를 맡는다. 추론에서는 NMS가 IOU로 한 물체에 겹친 박스를 지운다. 논문의 성적(mAP)도 정답과 IOU가 0.5를 넘는 박스를 맞음으로 센다."
+                "text": "The confidence each box outputs learns its IOU with the ground-truth box, and of a cell's two boxes, the one with the higher IOU takes the object. At inference, NMS uses IOU to remove overlapping boxes on the same object. The paper's score (mAP) also counts a box as correct when its IOU with the ground truth is above 0.5."
               }
             }
           ]
@@ -578,214 +579,214 @@
     </style>
 </head>
 <body>
-    <a class="skip" href="#main">본문으로 건너뛰기</a>
+    <a class="skip" href="#main">Skip to content</a>
 
     <header class="wide topbar">
-        <nav class="crumbs" aria-label="위치">
-            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/en/">knowledge</a>
         </nav>
         <div class="topbar-tools">
-            <a class="lang-switch" href="/knowledge/en/iou-nms/" hreflang="en" lang="en">English</a>
+            <a class="lang-switch" href="/knowledge/iou-nms/" hreflang="ko" lang="ko">한국어</a>
             <button id="theme-toggle" class="theme-toggle" type="button">light</button>
         </div>
     </header>
 
     <main id="main">
         <section class="wrap hero" aria-labelledby="page-title">
-            <nav class="kmap" aria-label="지식 지도" data-current="iou-nms">
-                <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">컴퓨터 비전 › 물체 탐지</span></p>
+            <nav class="kmap" aria-label="Knowledge map" data-current="iou-nms">
+                <p class="kmap-head"><span class="kmap-label">KNOWLEDGE MAP</span><span class="kmap-path">Computer vision › Object detection</span></p>
                 <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
-                <p class="kmap-text">먼저 읽을 글은 없다 · 이어서 읽을 글: <a href="../yolo-v1/">YOLOv1</a>, mAP(준비 중) · 같은 분야: <a href="../yolo-v2/">YOLOv2</a></p>
+                <p class="kmap-text">Nothing to read first · Read next: <a href="../yolo-v1/">YOLOv1</a>, mAP (coming soon) · Same field: <a href="../yolo-v2/">YOLOv2</a></p>
             </nav>
-            <p class="eyebrow">KNOWLEDGE · 물체 탐지</p>
-            <h1 id="page-title">한 물체에 박스가 여러 개면, 무엇을 남길까?</h1>
-            <p class="answer">두 박스가 얼마나 겹치는지는 IOU(겹친 넓이 ÷ 합친 넓이)로 잰다. 신뢰도가 낮은 박스를 먼저 버리고, 남은 박스 중 신뢰도 1위와 IOU가 기준을 넘게 겹친 박스를 지우면(NMS) 물체마다 박스가 하나 남는다.</p>
-            <p><a href="../yolo-v1/">YOLOv1 페이지</a>에는 IOU와 NMS가 설명 없이 나온다. 둘은 이어져 있다. IOU로 두 박스가 얼마나 겹치는지 재고, NMS는 그 값으로 한 물체에 겹친 박스를 하나만 남긴다. 두 장면을 직접 만져 보자.</p>
+            <p class="eyebrow">KNOWLEDGE · OBJECT DETECTION</p>
+            <h1 id="page-title">When one object gets several boxes, which one do you keep?</h1>
+            <p class="answer">IOU (intersection area ÷ union area) measures how much two boxes overlap. Drop the low-confidence boxes first, then remove every box whose IOU with the most confident remaining box is above a threshold (NMS), and one box is left per object.</p>
+            <p>The <a href="../yolo-v1/">YOLOv1 page</a> uses IOU and NMS without explaining them. The two go together: IOU measures how much two boxes overlap, and NMS uses that value to keep just one of the boxes that overlap on an object. Try both in the two scenes below.</p>
             <ol class="toc">
-                <li><a href="#iou"><span>01 IOU</span>두 박스의 겹침 재기</a></li>
-                <li><a href="#nms"><span>02 NMS</span>박스 하나만 남기기</a></li>
+                <li><a href="#iou"><span>01 IOU</span>Measure how two boxes overlap</a></li>
+                <li><a href="#nms"><span>02 NMS</span>Keep only one box</a></li>
             </ol>
         </section>
 
         <section id="iou" class="wide step" aria-labelledby="iou-title">
             <div class="lead">
                 <p class="step-no">01 IOU</p>
-                <h2 id="iou-title">겹친 넓이 ÷ 합친 넓이</h2>
-                <p>IOU(Intersection over Union)는 두 박스가 겹친 넓이를 두 박스를 합친 넓이로 나눈 값이다. 완전히 겹치면 1, 닿지 않으면 0이다. 물체 탐지 대회 PASCAL VOC는 정답 박스와 IOU가 0.5를 넘어야 맞은 탐지로 센다.</p>
-                <p class="hint" id="iou-hint">예측 박스를 끌어 옮기고, 오른쪽 아래 모서리를 끌어 크기를 바꿔 보자. 키보드로는 그림을 선택한 뒤 화살표로 옮기고, Shift와 화살표로 크기를 바꾼다.</p>
+                <h2 id="iou-title">Intersection area ÷ union area</h2>
+                <p>IOU (Intersection over Union) is the area where two boxes overlap divided by the area they cover together. It is 1 when they overlap completely and 0 when they don't touch. The PASCAL VOC object detection challenge counts a detection as correct only if its IOU with the ground-truth box is above 0.5.</p>
+                <p class="hint" id="iou-hint">Drag the predicted box to move it, and drag its bottom-right corner to resize it. With a keyboard, select the picture, move the box with the arrow keys, and resize it with Shift and the arrow keys.</p>
             </div>
             <div class="panel split">
                 <canvas id="iou-canvas" class="stage" tabindex="0" role="img"
-                        aria-label="정답 박스와 예측 박스. 겹친 부분이 칠해져 있다. 화살표 키로 예측 박스를 옮긴다."
+                        aria-label="A ground-truth box and a predicted box, with the overlap filled in. The arrow keys move the predicted box."
                         aria-describedby="iou-hint"></canvas>
                 <div>
                     <p class="muted" style="margin: 0;">IOU</p>
                     <p class="big" id="iou-value">0.46</p>
                     <div class="meter" aria-hidden="true"><span id="iou-bar" style="width: 46%;"></span><i></i></div>
                     <div class="meter-scale" aria-hidden="true"><span>0</span><span>0.5</span><span>1</span></div>
-                    <p class="verdict no" id="iou-verdict">VOC 기준 틀림 · 0.5를 넘지 못했다</p>
-                    <p class="formula" id="iou-formula">겹친 넓이 8.4 ÷ 합친 넓이 18.2 = 0.46 (사진 넓이 = 100)</p>
-                    <div class="seg" role="group" aria-label="예시로 옮기기" id="iou-presets">
-                        <button type="button" data-preset="third" aria-pressed="false">폭의 ⅓ 밀기</button>
-                        <button type="button" data-preset="double" aria-pressed="false">넓이 2배</button>
-                        <button type="button" data-preset="apart" aria-pressed="false">떼어 놓기</button>
-                        <button type="button" data-preset="small" aria-pressed="false">작은 박스 5% 밀기</button>
-                        <button type="button" data-preset="large" aria-pressed="false">큰 박스 5% 밀기</button>
+                    <p class="verdict no" id="iou-verdict">Wrong by the VOC rule · not above 0.5</p>
+                    <p class="formula" id="iou-formula">Intersection 8.4 ÷ union 18.2 = 0.46 (image area = 100)</p>
+                    <div class="seg" role="group" aria-label="Move to an example" id="iou-presets">
+                        <button type="button" data-preset="third" aria-pressed="false">Shift by ⅓ width</button>
+                        <button type="button" data-preset="double" aria-pressed="false">Double the area</button>
+                        <button type="button" data-preset="apart" aria-pressed="false">Pull apart</button>
+                        <button type="button" data-preset="small" aria-pressed="false">Shift a small box 5%</button>
+                        <button type="button" data-preset="large" aria-pressed="false">Shift a large box 5%</button>
                     </div>
-                    <p class="callout" id="iou-callout" aria-live="polite">꽤 겹쳐 보여도 IOU는 0.46이다. VOC 기준에서는 틀린 박스다.</p>
-                    <p class="chart-title">사진 폭의 5%만큼 옆으로 밀었을 때, 박스 폭에 따른 IOU</p>
+                    <p class="callout" id="iou-callout" aria-live="polite">It looks like a good overlap, but IOU is 0.46. By the VOC rule it is a wrong box.</p>
+                    <p class="chart-title">IOU by box width, when a box is shifted sideways by 5% of the image width</p>
                     <svg class="chart" id="shift-chart" viewBox="0 0 320 170" role="img"
-                         aria-label="박스 폭이 0.1이면 IOU 0.33, 0.8이면 0.88. 폭이 0.15보다 좁으면 0.5 이하로 떨어진다."></svg>
+                         aria-label="A box of width 0.1 gets IOU 0.33, and width 0.8 gets 0.88. Below width 0.15, IOU falls to 0.5 or less."></svg>
                 </div>
             </div>
             <div class="lead">
-                <h3 style="margin-top: 24px;">YOLOv1에서 IOU가 쓰이는 곳</h3>
+                <h3 style="margin-top: 24px;">Where YOLOv1 uses IOU</h3>
                 <ul class="uses">
-                    <li><b>신뢰도</b>: 박스마다 내는 신뢰도는 정답 박스와의 IOU를 배운다. <a href="../yolo-v1/#grid">YOLOv1 01 격자</a></li>
-                    <li><b>책임</b>: 한 칸의 박스 2개 중 정답과 IOU가 큰 쪽이 그 물체를 맡는다.</li>
-                    <li><b>벌점</b>: 같은 크기 오차도 작은 박스의 IOU를 더 떨어뜨려서, w 대신 √w를 배운다. <a href="../yolo-v1/#loss">YOLOv1 04 학습</a></li>
-                    <li><b>추론</b>: 한 물체에 겹친 박스를 IOU로 가려 지운다. <a href="#nms">아래 02 NMS</a></li>
-                    <li><b>채점</b>: 논문의 성적(mAP)은 정답과 IOU가 0.5를 넘는 박스를 맞음으로 센다.</li>
+                    <li><b>Confidence</b>: the confidence each box outputs learns its IOU with the ground-truth box. <a href="../yolo-v1/#grid">YOLOv1 01 Grid</a></li>
+                    <li><b>Responsibility</b>: of a cell's two boxes, the one with the higher IOU with the ground truth takes the object.</li>
+                    <li><b>Penalty</b>: the same size error lowers a small box's IOU more, so the network learns √w instead of w. <a href="../yolo-v1/#loss">YOLOv1 04 Training</a></li>
+                    <li><b>Inference</b>: overlapping boxes on the same object are found by IOU and removed. <a href="#nms">02 NMS below</a></li>
+                    <li><b>Scoring</b>: the paper's score (mAP) counts a box as correct when its IOU with the ground truth is above 0.5.</li>
                 </ul>
             </div>
-            <p class="source">출처: PASCAL VOC 논문 §4.2 식 3, VOC2007 개발 키트 §4.4, YOLOv1 논문 §2, §2.2, §2.4, GIoU 논문 §3 · 5% 이동의 IOU는 이 페이지의 계산</p>
+            <p class="source">Source: PASCAL VOC paper §4.2 Eq. 3, VOC2007 development kit §4.4, YOLOv1 paper §2, §2.2, §2.4, GIoU paper §3 · The IOU for a 5% shift is this page's calculation</p>
         </section>
 
         <section id="nms" class="wide step" aria-labelledby="nms-title">
             <div class="lead">
                 <p class="step-no">02 NMS</p>
-                <h2 id="nms-title">개 한 마리에 박스는 하나만</h2>
-                <p>신경망은 물체 하나를 두고도 박스를 여러 개 낸다. YOLOv1에서는 큰 물체나 칸 경계에 걸친 물체를 여러 칸이 함께 잡는다. 그래서 박스를 두 번 걸러 하나만 남긴다. ① 신뢰도가 기준보다 낮은 박스를 버린다. ② 남은 박스 중 신뢰도가 가장 높은 박스를 남기고, 그 박스와 IOU가 기준을 넘는 박스를 지운다. 남은 박스가 없을 때까지 ②를 되풀이한다. 이 ②가 NMS(Non-Maximum Suppression, 겹침 제거)다.</p>
-                <p class="hint" id="nms-hint">단계 탭을 차례로 눌러 박스 6개가 1개가 되는 과정을 따라가 보자. 그다음 두 기준을 바꾸거나 박스를 끌어 옮겨 보자. 키보드로는 탭에서 ← →로 단계를 옮기고, 그림을 선택한 뒤 [ ]로 박스를 고르고 화살표로 옮긴다.</p>
+                <h2 id="nms-title">One dog, one box</h2>
+                <p>A network often outputs several boxes for a single object. In YOLOv1, several cells can pick up a large object or one that straddles cell borders. So the boxes are filtered twice to keep just one. ① Drop the boxes whose confidence is below a threshold. ② Of the remaining boxes, keep the most confident one and remove every box whose IOU with it is above a threshold; repeat ② until no boxes are left. Step ② is NMS (non-maximum suppression).</p>
+                <p class="hint" id="nms-hint">Click the step tabs in order to watch 6 boxes become 1. Then change the two thresholds or drag the boxes around. With a keyboard, use ← → on the tabs to move between steps; select the picture, pick a box with [ ], and move it with the arrow keys.</p>
             </div>
             <div class="panel">
-                <p class="phase-legend" aria-hidden="true"><span><i class="sw score"></i>① 신뢰도로 거르기</span><span><i class="sw nms"></i>② NMS</span></p>
-                <div class="tabs" role="tablist" aria-label="NMS 단계" id="nms-tabs">
-                    <button type="button" role="tab" class="tab done start" aria-selected="false" tabindex="-1"><b>1</b>후보 6개</button>
-                    <button type="button" role="tab" class="tab done score" aria-selected="false" tabindex="-1"><b>2</b>신뢰도 거르기<small>E·F 버림</small></button>
-                    <button type="button" role="tab" class="tab done nms" aria-selected="false" tabindex="-1"><b>3</b>A 남김</button>
-                    <button type="button" role="tab" class="tab done nms" aria-selected="false" tabindex="-1"><b>4</b>B 지움<small>겹침 0.69</small></button>
-                    <button type="button" role="tab" class="tab done nms" aria-selected="false" tabindex="-1"><b>5</b>C 지움<small>겹침 0.62</small></button>
-                    <button type="button" role="tab" class="tab done nms" aria-selected="false" tabindex="-1"><b>6</b>D 지움<small>겹침 0.52</small></button>
-                    <button type="button" role="tab" class="tab current end" aria-selected="true" tabindex="0"><b>7</b>최종 1개</button>
+                <p class="phase-legend" aria-hidden="true"><span><i class="sw score"></i>① Filter by confidence</span><span><i class="sw nms"></i>② NMS</span></p>
+                <div class="tabs" role="tablist" aria-label="NMS steps" id="nms-tabs">
+                    <button type="button" role="tab" class="tab done start" aria-selected="false" tabindex="-1"><b>1</b>6 candidates</button>
+                    <button type="button" role="tab" class="tab done score" aria-selected="false" tabindex="-1"><b>2</b>Confidence filter<small>E·F dropped</small></button>
+                    <button type="button" role="tab" class="tab done nms" aria-selected="false" tabindex="-1"><b>3</b>A kept</button>
+                    <button type="button" role="tab" class="tab done nms" aria-selected="false" tabindex="-1"><b>4</b>B removed<small>overlap 0.69</small></button>
+                    <button type="button" role="tab" class="tab done nms" aria-selected="false" tabindex="-1"><b>5</b>C removed<small>overlap 0.62</small></button>
+                    <button type="button" role="tab" class="tab done nms" aria-selected="false" tabindex="-1"><b>6</b>D removed<small>overlap 0.52</small></button>
+                    <button type="button" role="tab" class="tab current end" aria-selected="true" tabindex="0"><b>7</b>1 left</button>
                 </div>
                 <div class="pager">
-                    <button class="btn" type="button" id="nms-prev">← 이전</button>
+                    <button class="btn" type="button" id="nms-prev">← Previous</button>
                     <span class="pos" id="nms-pos" aria-live="polite">7 / 7</span>
-                    <button class="btn" type="button" id="nms-next">다음 →</button>
+                    <button class="btn" type="button" id="nms-next">Next →</button>
                 </div>
-                <p class="callout step-text" id="nms-callout" aria-live="polite">끝. 후보 6개 중 신뢰도로 2개, NMS로 3개가 걸러져 A 박스 하나가 남았다. 개 한 마리에 박스 하나.</p>
-                <div class="split" role="tabpanel" id="nms-panel" aria-label="지금 단계" style="margin-top: 12px;">
+                <p class="callout step-text" id="nms-callout" aria-live="polite">Done. Of the 6 candidates, 2 were dropped by confidence and 3 removed by NMS, leaving box A. One dog, one box.</p>
+                <div class="split" role="tabpanel" id="nms-panel" aria-label="Current step" style="margin-top: 12px;">
                     <canvas id="nms-canvas" class="stage" tabindex="0" role="img"
-                            aria-label="개 한 마리와 그 둘레의 후보 박스 6개. 목록에서 각 박스의 상태를 읽을 수 있다."
+                            aria-label="A dog and 6 candidate boxes around it. The list gives the state of each box."
                             aria-describedby="nms-hint"></canvas>
                     <div>
                         <div class="funnel" style="margin-top: 0;">
-                            <div><span>후보</span><b id="nms-count-all">6</b></div>
-                            <div><span>① 신뢰도 통과</span><b id="nms-count-pass">4</b></div>
-                            <div><span>② NMS 뒤 최종</span><b id="nms-count-final">1</b></div>
+                            <div><span>Candidates</span><b id="nms-count-all">6</b></div>
+                            <div><span>① Passed confidence</span><b id="nms-count-pass">4</b></div>
+                            <div><span>② Final after NMS</span><b id="nms-count-final">1</b></div>
                         </div>
                         <div class="controls">
                             <div class="control">
-                                <label for="nms-score">① 신뢰도 기준 <output id="nms-score-out" for="nms-score">0.20</output></label>
+                                <label for="nms-score">① Confidence threshold <output id="nms-score-out" for="nms-score">0.20</output></label>
                                 <input type="range" id="nms-score" min="0.05" max="0.95" step="0.05" value="0.2">
                             </div>
                             <div class="control">
-                                <label for="nms-iou">② NMS 겹침 기준(IOU) <output id="nms-iou-out" for="nms-iou">0.40</output></label>
+                                <label for="nms-iou">② NMS overlap threshold (IOU) <output id="nms-iou-out" for="nms-iou">0.40</output></label>
                                 <input type="range" id="nms-iou" min="0.1" max="0.9" step="0.05" value="0.4">
                             </div>
                         </div>
-                        <button class="btn" type="button" id="nms-home" hidden style="margin-top: 8px;">박스 제자리</button>
-                        <ol class="boxlist" id="nms-list" aria-label="신뢰도 순 후보 박스">
-                            <li class="kept"><button type="button"><b>A</b>0.92 · 거의 딱 맞는 박스<span>② 남김 · 남은 것 중 신뢰도 1위</span></button></li>
-                            <li class="removed"><button type="button"><b>B</b>0.81 · 오른쪽으로 밀린 박스<span>② 지움 · A 박스와 겹침 0.69 &gt; 기준 0.40</span></button></li>
-                            <li class="removed"><button type="button"><b>C</b>0.64 · 조금 큰 박스<span>② 지움 · A 박스와 겹침 0.62 &gt; 기준 0.40</span></button></li>
-                            <li class="removed"><button type="button"><b>D</b>0.43 · 왼쪽 위로 밀린 박스<span>② 지움 · A 박스와 겹침 0.52 &gt; 기준 0.40</span></button></li>
-                            <li class="dropped"><button type="button"><b>E</b>0.16 · 일부만 잡은 작은 박스<span>① 버림 · 신뢰도 0.16 &lt; 기준 0.20</span></button></li>
-                            <li class="dropped"><button type="button"><b>F</b>0.08 · 너무 큰 박스<span>① 버림 · 신뢰도 0.08 &lt; 기준 0.20</span></button></li>
+                        <button class="btn" type="button" id="nms-home" hidden style="margin-top: 8px;">Reset boxes</button>
+                        <ol class="boxlist" id="nms-list" aria-label="Candidate boxes by confidence">
+                            <li class="kept"><button type="button"><b>A</b>0.92 · a box that fits almost exactly<span>② kept · most confident of the remaining boxes</span></button></li>
+                            <li class="removed"><button type="button"><b>B</b>0.81 · a box shifted to the right<span>② removed · overlap with box A 0.69 &gt; threshold 0.40</span></button></li>
+                            <li class="removed"><button type="button"><b>C</b>0.64 · a slightly larger box<span>② removed · overlap with box A 0.62 &gt; threshold 0.40</span></button></li>
+                            <li class="removed"><button type="button"><b>D</b>0.43 · a box shifted up and to the left<span>② removed · overlap with box A 0.52 &gt; threshold 0.40</span></button></li>
+                            <li class="dropped"><button type="button"><b>E</b>0.16 · a small box covering only part of the dog<span>① dropped · confidence 0.16 &lt; threshold 0.20</span></button></li>
+                            <li class="dropped"><button type="button"><b>F</b>0.08 · a box that is far too big<span>① dropped · confidence 0.08 &lt; threshold 0.20</span></button></li>
                         </ol>
                     </div>
                 </div>
             </div>
             <div class="lead">
-                <p style="margin-top: 20px;">기본값 0.2와 0.4는 YOLOv1 저자의 Darknet 코드가 쓰는 값이다. 신뢰도 기준을 0.1로 내리면 일부만 잡은 E 박스가 끝까지 남는다. A 박스와 겹침이 0.23뿐이라 NMS가 다른 물체의 박스로 보기 때문이다. 겹침 기준을 0.7로 올리면 B, C, D 박스도 남아 개 한 마리에 박스가 넷이 된다. 반대로 겹침 기준을 너무 낮추면, 붙어 있는 다른 개의 박스까지 지워서 그 개를 놓친다.</p>
+                <p style="margin-top: 20px;">The defaults, 0.2 and 0.4, are the values the YOLOv1 author's Darknet code uses. Lower the confidence threshold to 0.1 and box E, which covers only part of the dog, survives to the end: its overlap with box A is only 0.23, so NMS treats it as a box for a different object. Raise the overlap threshold to 0.7 and boxes B, C, and D stay too, so one dog ends up with four boxes. Set the overlap threshold too low, on the other hand, and NMS also removes the box of another dog standing close by, so that dog is missed.</p>
             </div>
-            <p class="source">출처: YOLOv1 논문 그림 1, §2.3, Darknet examples/yolo.c(test_yolo의 기본값), R-CNN 논문 §2.2, Soft-NMS 논문 초록 · 박스는 설명을 위해 만든 예시</p>
+            <p class="source">Source: YOLOv1 paper Figure 1, §2.3, Darknet examples/yolo.c (the defaults in test_yolo), R-CNN paper §2.2, Soft-NMS paper abstract · The boxes are an example made for this explanation</p>
         </section>
 
         <section id="summary" class="wrap step" aria-labelledby="summary-title">
-            <p class="step-no">정리</p>
-            <h2 id="summary-title">박스 하나만 남기기까지</h2>
+            <p class="step-no">Summary</p>
+            <h2 id="summary-title">From many boxes to one</h2>
             <ol class="steps">
-                <li><b>IOU</b>로 두 박스가 얼마나 겹치는지 0에서 1 사이로 잰다. 정답과 IOU가 0.5를 넘으면 흔히 맞은 박스로 친다.</li>
-                <li><b>신뢰도</b>가 기준보다 낮은 박스를 먼저 버린다. YOLOv1 저자의 코드는 0.2를 쓴다.</li>
-                <li><b>NMS</b>는 남은 박스 중 신뢰도가 가장 높은 박스를 남기고, 그 박스와 IOU가 기준을 넘는 박스를 지운다. 남은 박스가 없을 때까지 되풀이하면 물체마다 박스가 하나 남는다.</li>
+                <li><b>IOU</b> measures how much two boxes overlap, from 0 to 1. A box whose IOU with the ground truth is above 0.5 is commonly counted as correct.</li>
+                <li>Boxes whose <b>confidence</b> is below a threshold are dropped first. The YOLOv1 author's code uses 0.2.</li>
+                <li><b>NMS</b> keeps the most confident of the remaining boxes and removes every box whose IOU with it is above a threshold. Repeated until no boxes are left, it leaves one box per object.</li>
             </ol>
             <div class="note">
-                <p><strong>오해</strong>IOU 0.5면 박스가 반쯤 맞은 것이다.</p>
-                <p class="fact"><strong>실제로는</strong>같은 크기 박스를 폭의 ⅓만 밀어도, 넓이만 2배로 키워도 IOU는 0.5다. PASCAL VOC는 정답 박스 자체가 부정확할 수 있어 기준을 일부러 0.5로 낮게 잡았다.</p>
+                <p><strong>Myth</strong>An IOU of 0.5 means the box is half right.</p>
+                <p class="fact"><strong>Actually</strong>Shifting a same-size box by just ⅓ of its width, or only doubling its area, already brings IOU down to 0.5. PASCAL VOC set the bar deliberately low at 0.5 because the ground-truth boxes themselves can be inaccurate.</p>
             </div>
             <div class="note">
-                <p><strong>오해</strong>NMS 겹침 기준은 낮을수록 깔끔하다.</p>
-                <p class="fact"><strong>실제로는</strong>기준을 너무 낮추면 붙어 있는 다른 물체의 박스까지 지워서 그 물체를 놓친다. 반대로 너무 높이면 한 물체에 박스가 여럿 남는다.</p>
+                <p><strong>Myth</strong>The lower the NMS overlap threshold, the cleaner the result.</p>
+                <p class="fact"><strong>Actually</strong>Set it too low and it also removes the boxes of other objects close by, so those objects are missed. Set it too high and one object keeps several boxes.</p>
             </div>
-            <p class="source">출처: PASCAL VOC 논문 §4.2, Darknet examples/yolo.c, R-CNN 논문 §2.2, Soft-NMS 논문 초록·§4 · IOU 0.5 예시는 이 페이지의 계산</p>
+            <p class="source">Source: PASCAL VOC paper §4.2, Darknet examples/yolo.c, R-CNN paper §2.2, Soft-NMS paper abstract and §4 · The IOU 0.5 examples are this page's calculation</p>
         </section>
 
         <section id="faq" class="wrap step" aria-labelledby="faq-title">
-            <p class="step-no">질문</p>
-            <h2 id="faq-title">자주 묻는 질문</h2>
+            <p class="step-no">Questions</p>
+            <h2 id="faq-title">Frequently asked questions</h2>
             <!-- 검색·AI 답변용. head의 FAQPage는 빌드 스크립트가 이 목록에서 옮긴다. 문장을 바꾸면 빌드를 다시 돌린다. -->
             <div class="faq" id="faq-list">
                 <details>
-                    <summary>IOU(IoU)란 무엇인가?</summary>
-                    <p>두 박스가 겹친 넓이를 두 박스를 합친 넓이로 나눈 값이다(Intersection over Union). 0에서 1 사이이고, 완전히 겹치면 1, 닿지 않으면 0이다. Jaccard 지수라고도 부르며, 물체 탐지에서는 예측 박스가 정답 박스와 얼마나 맞는지 잴 때 쓴다.</p>
+                    <summary>What is IOU (IoU)?</summary>
+                    <p>It is the area where two boxes overlap divided by the area they cover together (Intersection over Union). It ranges from 0 to 1: 1 when the boxes overlap completely and 0 when they don't touch. Also called the Jaccard index, it is used in object detection to measure how well a predicted box matches the ground-truth box.</p>
                 </details>
                 <details>
-                    <summary>IOU 0.5는 어느 정도로 맞은 것인가?</summary>
-                    <p>같은 크기의 박스를 폭의 3분의 1만큼 옆으로 밀거나, 중심은 그대로 두고 넓이만 2배로 키워도 IOU는 0.5다. PASCAL VOC는 정답 박스 자체가 부정확할 수 있어 기준을 일부러 0.5로 낮게 잡았고, 0.5를 넘어야 맞은 탐지로 센다.</p>
+                    <summary>How good is an IOU of 0.5?</summary>
+                    <p>Shifting a box of the same size sideways by one third of its width, or keeping its center and doubling its area, gives an IOU of 0.5. PASCAL VOC deliberately set the threshold as low as 0.5 because ground-truth boxes can themselves be inaccurate, and it counts a detection as correct only above 0.5.</p>
                 </details>
                 <details>
-                    <summary>NMS(Non-Maximum Suppression)란 무엇인가?</summary>
-                    <p>한 물체를 여러 박스가 겹쳐 잡았을 때 하나만 남기는 후처리다. 남은 박스 중 신뢰도가 가장 높은 박스를 남기고, 그 박스와 IOU가 기준을 넘는 같은 클래스의 박스를 지운다. 이것을 남은 박스가 없을 때까지 되풀이하고, 클래스마다 따로 한다.</p>
+                    <summary>What is NMS (non-maximum suppression)?</summary>
+                    <p>It is a post-processing step that keeps only one box when several overlapping boxes cover the same object. It keeps the most confident of the remaining boxes and removes the boxes of the same class whose IOU with it is above a threshold, repeating until no boxes are left, separately for each class.</p>
                 </details>
                 <details>
-                    <summary>신뢰도 기준과 NMS는 어떤 순서로 하나?</summary>
-                    <p>YOLOv1 저자의 Darknet 코드는 신뢰도가 0.2보다 낮은 박스를 먼저 버리고, 남은 박스로 IOU 0.4 기준의 NMS를 한다. 신뢰도로 먼저 거르지 않으면, 물체의 일부만 잡은 낮은 신뢰도 박스가 NMS를 빠져나가 결과에 남을 수 있다. 이 페이지의 02에서 신뢰도 기준을 0.1로 내리면 볼 수 있다.</p>
+                    <summary>Which comes first, the confidence threshold or NMS?</summary>
+                    <p>The YOLOv1 author's Darknet code first drops boxes with a confidence below 0.2, then runs NMS with an IOU threshold of 0.4 on the rest. Without the confidence filter first, a low-confidence box that covers only part of an object can slip through NMS and stay in the result. You can see this in 02 on this page by lowering the confidence threshold to 0.1.</p>
                 </details>
                 <details>
-                    <summary>NMS 겹침 기준은 얼마로 정하나?</summary>
-                    <p>모든 경우에 맞는 값은 없다. 기준을 낮추면 붙어 있는 다른 물체의 박스까지 지워 그 물체를 놓치고, 높이면 중복 박스가 남는다. YOLOv1 저자의 Darknet 코드는 0.4를 쓰고, Soft-NMS 논문에 따르면 Faster R-CNN과 R-FCN은 0.3을 기본값으로 쓴다.</p>
+                    <summary>How do you choose the NMS overlap threshold?</summary>
+                    <p>No value fits every case. A lower threshold also removes the boxes of other objects close by, so those objects are missed; a higher one leaves duplicate boxes. The YOLOv1 author's Darknet code uses 0.4, and according to the Soft-NMS paper, Faster R-CNN and R-FCN use 0.3 by default.</p>
                 </details>
                 <details>
-                    <summary>YOLOv1에서 IOU는 어디에 쓰이나?</summary>
-                    <p>박스마다 내는 신뢰도가 정답 박스와의 IOU를 배우고, 한 칸의 박스 2개 중 정답과 IOU가 큰 쪽이 그 물체를 맡는다. 추론에서는 NMS가 IOU로 한 물체에 겹친 박스를 지운다. 논문의 성적(mAP)도 정답과 IOU가 0.5를 넘는 박스를 맞음으로 센다.</p>
+                    <summary>Where does YOLOv1 use IOU?</summary>
+                    <p>The confidence each box outputs learns its IOU with the ground-truth box, and of a cell's two boxes, the one with the higher IOU takes the object. At inference, NMS uses IOU to remove overlapping boxes on the same object. The paper's score (mAP) also counts a box as correct when its IOU with the ground truth is above 0.5.</p>
                 </details>
             </div>
-            <p class="source">출처: PASCAL VOC 논문 §4.2, VOC2007 개발 키트 §4.4, GIoU 논문 §3, YOLOv1 논문 §2, §2.2, §2.3, Darknet examples/yolo.c, R-CNN 논문 §2.2, Soft-NMS 논문 §4 · IOU 0.5 예시와 02의 결과는 이 페이지의 계산</p>
+            <p class="source">Source: PASCAL VOC paper §4.2, VOC2007 development kit §4.4, GIoU paper §3, YOLOv1 paper §2, §2.2, §2.3, Darknet examples/yolo.c, R-CNN paper §2.2, Soft-NMS paper §4 · The IOU 0.5 examples and the results in 02 are this page's calculation</p>
         </section>
 
         <section class="wrap step" aria-labelledby="more-title">
-            <h2 id="more-title">더 보기</h2>
+            <h2 id="more-title">Further reading</h2>
             <ul class="links">
-                <li><a href="../yolo-v1/">YOLOv1, 한 번 보고 모두 찾기</a> — IOU와 NMS가 쓰이는 곳</li>
+                <li><a href="../yolo-v1/">YOLOv1 Explained: Look Once, Find Every Object</a> — where IOU and NMS are used</li>
                 <li><a href="https://doi.org/10.1007/s11263-009-0275-4">Everingham et al., The PASCAL Visual Object Classes (VOC) Challenge (IJCV 2010)</a></li>
-                <li><a href="https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2007/htmldoc/index.html">PASCAL VOC2007 개발 키트 문서</a></li>
+                <li><a href="https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2007/htmldoc/index.html">PASCAL VOC2007 development kit documentation</a></li>
                 <li><a href="https://arxiv.org/abs/1506.02640">Redmon et al., You Only Look Once (CVPR 2016)</a> · <a href="https://github.com/pjreddie/darknet/blob/master/examples/yolo.c">Darknet examples/yolo.c</a></li>
                 <li><a href="https://arxiv.org/abs/1311.2524">Girshick et al., Rich feature hierarchies for accurate object detection (R-CNN, CVPR 2014)</a></li>
                 <li><a href="https://arxiv.org/abs/1704.04503">Bodla et al., Soft-NMS (ICCV 2017)</a></li>
                 <li><a href="https://arxiv.org/abs/1902.09630">Rezatofighi et al., Generalized Intersection over Union (CVPR 2019)</a></li>
                 <!-- 영상이 나오면 추가: <li><a href="https://www.youtube.com/watch?v=...">영상으로 보기</a></li> -->
             </ul>
-            <p class="hint" style="margin-top: 12px;">02의 장면과 박스는 설명을 위해 만든 예시다. 예시의 IOU와 NMS 결과는 파이썬으로 따로 계산해 이 페이지의 계산과 같은지 확인했다.</p>
+            <p class="hint" style="margin-top: 12px;">The scene and boxes in 02 are an example made for this explanation. Its IOU and NMS results were computed separately in Python and checked against this page's calculations.</p>
         </section>
     </main>
 
     <footer class="wrap">
-        마지막 업데이트 <time datetime="2026-10-02">2026-10-02</time> · <a href="/">Hugh Q Lee</a>
+        Last updated <time datetime="2026-10-02">2026-10-02</time> · <a href="/">Hugh Q Lee</a> · Translated from the <a href="/knowledge/iou-nms/" hreflang="ko">Korean original</a>
     </footer>
 
-    <script type="application/json" id="page-data">{"nms":{"object":{"label":0,"box":[0.22,0.3,0.78,0.74]},"threshold_defaults":[0.2,0.4],"candidates":[{"name":"A","box":[0.2312,0.2868,0.8024,0.7356],"score":0.92,"what":"거의 딱 맞는 박스"},{"name":"B","box":[0.304,0.322,0.864,0.762],"score":0.81,"what":"오른쪽으로 밀린 박스"},{"name":"C","box":[0.136,0.2604,0.864,0.8324],"score":0.64,"what":"조금 큰 박스"},{"name":"D","box":[0.108,0.2384,0.668,0.6784],"score":0.43,"what":"왼쪽 위로 밀린 박스"},{"name":"E","box":[0.2256,0.3572,0.5056,0.5772],"score":0.16,"what":"일부만 잡은 작은 박스"},{"name":"F","box":[0.024,0.1548,0.976,0.9028],"score":0.08,"what":"너무 큰 박스"}]}}</script>
+    <script type="application/json" id="page-data">{"nms":{"object":{"label":0,"box":[0.22,0.3,0.78,0.74]},"threshold_defaults":[0.2,0.4],"candidates":[{"name":"A","box":[0.2312,0.2868,0.8024,0.7356],"score":0.92,"what":"a box that fits almost exactly"},{"name":"B","box":[0.304,0.322,0.864,0.762],"score":0.81,"what":"a box shifted to the right"},{"name":"C","box":[0.136,0.2604,0.864,0.8324],"score":0.64,"what":"a slightly larger box"},{"name":"D","box":[0.108,0.2384,0.668,0.6784],"score":0.43,"what":"a box shifted up and to the left"},{"name":"E","box":[0.2256,0.3572,0.5056,0.5772],"score":0.16,"what":"a small box covering only part of the dog"},{"name":"F","box":[0.024,0.1548,0.976,0.9028],"score":0.08,"what":"a box that is far too big"}]}}</script>
     <!-- 계산 함수: IOU와 NMS. 따로 만든 파이썬 구현의 테스트가 이 블록을 Node에서 돌려 결과가 같은지 확인한다. -->
     <script id="metrics">
         var Metrics = (function () {
@@ -950,7 +951,7 @@
                 function label() {
                     var dark = root.dataset.theme !== "light";
                     toggle.textContent = dark ? "light" : "dark";
-                    toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+                    toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
                 }
                 toggle.addEventListener("click", function () {
                     var next = root.dataset.theme === "light" ? "dark" : "light";
@@ -974,11 +975,11 @@
                 var preset = null, drag = null;
                 var MIN = 0.03;
                 var CALLOUTS = {
-                    third: "같은 크기 박스를 폭의 ⅓만큼 옆으로 밀면 IOU는 딱 0.50이다. VOC는 0.5를 넘어야 맞음이라, 이것도 틀림이다.",
-                    double: "중심은 그대로 두고 넓이만 2배로 키워도 IOU는 0.50이다. 정답을 다 덮어도 군더더기가 크면 점수가 깎인다.",
-                    apart: "닿지 않으면 가까이 있든 멀리 있든 IOU는 0이다. IOU만으로는 얼마나 빗나갔는지 알 수 없다.",
-                    small: "폭 0.1짜리 박스를 사진 폭의 5%만큼 밀면 IOU는 0.33이다. VOC 기준 틀림이다.",
-                    large: "폭 0.8짜리 박스를 똑같이 5% 밀면 IOU는 0.88이다. 같은 실수가 작은 박스에 훨씬 치명적이다. YOLOv1이 w 대신 √w를 배우는 까닭이다."
+                    third: "Shift a box of the same size sideways by ⅓ of its width and IOU is exactly 0.50. VOC counts a box as correct only above 0.5, so this is still wrong.",
+                    double: "Keep the center and only double the area, and IOU is again 0.50. Covering the whole ground truth still costs points when the extra area is large.",
+                    apart: "If the boxes don't touch, IOU is 0 whether they are near or far. IOU alone can't tell how far off a box is.",
+                    small: "Shift a box of width 0.1 by 5% of the image width and IOU drops to 0.33. Wrong by the VOC rule.",
+                    large: "Shift a box of width 0.8 by the same 5% and IOU stays at 0.88. The same mistake hurts a small box far more, which is why YOLOv1 learns √w instead of w."
                 };
                 function square(cx, cy, s) { return [cx - s / 2, cy - s / 2, cx + s / 2, cy + s / 2]; }
                 var PRESETS = {
@@ -1031,10 +1032,10 @@
                     ctx.textBaseline = "bottom";
                     ctx.textAlign = "left";
                     ctx.fillStyle = text;
-                    ctx.fillText("정답", g[0] + 2, Math.max(16, g[1] - 4));
+                    ctx.fillText("ground truth", g[0] + 2, Math.max(16, g[1] - 4));
                     ctx.fillStyle = warn;
                     ctx.textBaseline = "top";
-                    ctx.fillText("예측", p[0] + 4, Math.min(448 - 18, p[1] + p[3] + 4));
+                    ctx.fillText("prediction", p[0] + 4, Math.min(448 - 18, p[1] + p[3] + 4));
                 });
                 var shiftChart = document.getElementById("shift-chart");
                 function drawShiftChart() {
@@ -1050,19 +1051,19 @@
                     [0.1, 0.2, 0.4, 0.6, 0.8].forEach(function (w) {
                         svgEl("text", { x: xs(w), y: box.y + box.h + 14, "text-anchor": "middle", fill: faint }, shiftChart).textContent = fixed(w, 1);
                     });
-                    svgEl("text", { x: box.x + box.w / 2, y: box.y + box.h + 30, "text-anchor": "middle", fill: faint }, shiftChart).textContent = "박스 폭 (사진 폭 = 1)";
+                    svgEl("text", { x: box.x + box.w / 2, y: box.y + box.h + 30, "text-anchor": "middle", fill: faint }, shiftChart).textContent = "box width (image width = 1)";
                     svgEl("line", { x1: box.x, y1: ys(0.5), x2: box.x + box.w, y2: ys(0.5), stroke: warn, "stroke-dasharray": "4 4" }, shiftChart);
-                    svgEl("text", { x: box.x + box.w, y: ys(0.5) - 5, "text-anchor": "end", fill: warn }, shiftChart).textContent = "VOC 기준 0.5";
+                    svgEl("text", { x: box.x + box.w, y: ys(0.5) - 5, "text-anchor": "end", fill: warn }, shiftChart).textContent = "VOC threshold 0.5";
                     var pts = [];
                     for (var w = 0.05; w <= 0.8001; w += 0.005) pts.push(xs(w) + "," + ys((w - 0.05) / (w + 0.05)));
                     svgEl("polyline", { points: pts.join(" "), fill: "none", stroke: accent, "stroke-width": 2 }, shiftChart);
                     svgEl("circle", { cx: xs(0.15), cy: ys(0.5), r: 3.5, fill: "none", stroke: warn, "stroke-width": 1.5 }, shiftChart);
-                    svgEl("text", { x: xs(0.15) + 8, y: ys(0.5) + 15, fill: warn }, shiftChart).textContent = "폭 0.15에서 0.5";
+                    svgEl("text", { x: xs(0.15) + 8, y: ys(0.5) + 15, fill: warn }, shiftChart).textContent = "0.5 at width 0.15";
                     [[0.1, "small"], [0.8, "large"]].forEach(function (m) {
                         var v = (m[0] - 0.05) / (m[0] + 0.05), on = preset === m[1];
                         svgEl("circle", { cx: xs(m[0]), cy: ys(v), r: on ? 6 : 4, fill: on ? warn : accent, stroke: text, "stroke-width": on ? 1.5 : 0 }, shiftChart);
                         svgEl("text", { x: xs(m[0]) + (m[0] < 0.5 ? 10 : -8), y: ys(v) + (m[0] < 0.5 ? 18 : 16), "text-anchor": m[0] < 0.5 ? "start" : "end", fill: text }, shiftChart)
-                            .textContent = "폭 " + fixed(m[0], 1) + " → " + fixed(v, 2);
+                            .textContent = "width " + fixed(m[0], 1) + " → " + fixed(v, 2);
                     });
                 }
                 redraws.push(drawShiftChart);
@@ -1074,15 +1075,15 @@
                     document.getElementById("iou-bar").style.width = (v * 100) + "%";
                     var verdict = document.getElementById("iou-verdict");
                     verdict.className = "verdict " + (v > 0.5 && !edge ? "ok" : "no");
-                    verdict.textContent = edge ? "VOC 기준 틀림 · 딱 0.5는 넘은 것이 아니다"
-                        : v > 0.5 ? "VOC 기준 맞음 · 0.5를 넘는다" : "VOC 기준 틀림 · 0.5를 넘지 못했다";
-                    document.getElementById("iou-formula").textContent = "겹친 넓이 " + fixed(a.inter * 100, 1) + " ÷ 합친 넓이 " +
-                        fixed(a.union * 100, 1) + " = " + fixed(v, 2) + " (사진 넓이 = 100)";
+                    verdict.textContent = edge ? "Wrong by the VOC rule · exactly 0.5 is not above 0.5"
+                        : v > 0.5 ? "Correct by the VOC rule · above 0.5" : "Wrong by the VOC rule · not above 0.5";
+                    document.getElementById("iou-formula").textContent = "Intersection " + fixed(a.inter * 100, 1) + " ÷ union " +
+                        fixed(a.union * 100, 1) + " = " + fixed(v, 2) + " (image area = 100)";
                     var callout = document.getElementById("iou-callout");
                     if (preset) callout.textContent = CALLOUTS[preset];
-                    else if (v >= 0.95) callout.textContent = "거의 완벽하게 겹쳤다. IOU가 1에 가깝다.";
-                    else callout.textContent = (v > 0.5 ? "IOU " + fixed(v, 2) + ": VOC 기준을 넘는다." :
-                        "IOU " + fixed(v, 2) + ": 꽤 겹쳐 보여도 VOC 기준에서는 틀린 박스다.");
+                    else if (v >= 0.95) callout.textContent = "An almost perfect overlap: IOU is close to 1.";
+                    else callout.textContent = (v > 0.5 ? "IOU " + fixed(v, 2) + ": above the VOC threshold." :
+                        "IOU " + fixed(v, 2) + ": it looks like a good overlap, but by the VOC rule it is a wrong box.");
                     Array.prototype.forEach.call(document.querySelectorAll("#iou-presets button"), function (b) {
                         b.setAttribute("aria-pressed", String(b.dataset.preset === preset));
                     });
@@ -1240,7 +1241,7 @@
                     }
                     function tagOf(c) {
                         var s = st[c.i].state;
-                        if (cur.kind === "compare" && c.i === cur.j) return { box: c.box, text: c.name + " 겹침 " + fixed(cur.v, 2), color: INK.compare, fg: "#fff" };
+                        if (cur.kind === "compare" && c.i === cur.j) return { box: c.box, text: c.name + " overlap " + fixed(cur.v, 2), color: INK.compare, fg: "#fff" };
                         if (s === "dropped") return { box: c.box, text: c.name + " " + fixed(c.score, 2) + " ✕", color: "#8a969f", fg: "#fff" };
                         if (s === "removed") return { box: c.box, text: c.name + " ✕", color: INK.removed, fg: "#fff" };
                         if (s === "kept") return { box: c.box, text: c.name + " " + fixed(c.score, 2) + " ✓", color: INK.keptFill, fg: "#111" };
@@ -1258,55 +1259,55 @@
                     }
                 });
                 function rowText(c, s, t) {
-                    var spared = s.spared ? cands[s.spared.by].name + " 박스와 겹침 " + fixed(s.spared.v, 2) + " ≤ 기준 " + fixed(t.n, 2) : "";
-                    if (s.state === "wait") return "대기";
-                    if (s.state === "dropped") return "① 버림 · 신뢰도 " + fixed(c.score, 2) + " < 기준 " + fixed(t.s, 2);
-                    if (s.state === "removed") return "② 지움 · " + cands[s.by].name + " 박스와 겹침 " + fixed(s.v, 2) + " > 기준 " + fixed(t.n, 2);
-                    if (s.state === "kept") return "② 남김 · " + (spared || "남은 것 중 신뢰도 1위");
-                    return "① 통과" + (spared ? " · " + spared : "");
+                    var spared = s.spared ? "overlap with box " + cands[s.spared.by].name + " " + fixed(s.spared.v, 2) + " ≤ threshold " + fixed(t.n, 2) : "";
+                    if (s.state === "wait") return "waiting";
+                    if (s.state === "dropped") return "① dropped · confidence " + fixed(c.score, 2) + " < threshold " + fixed(t.s, 2);
+                    if (s.state === "removed") return "② removed · overlap with box " + cands[s.by].name + " " + fixed(s.v, 2) + " > threshold " + fixed(t.n, 2);
+                    if (s.state === "kept") return "② kept · " + (spared || "most confident of the remaining boxes");
+                    return "① passed" + (spared ? " · " + spared : "");
                 }
                 function describe(cur, t) {
                     var passed = cands.filter(function (c) { return passes(c, t); });
                     var dropped = cands.filter(function (c) { return !passes(c, t); });
-                    if (cur.kind === "start") return "신경망이 개 한 마리를 두고 박스 " + cands.length + "개를 냈다. 박스마다 신뢰도가 붙어 있다. 다음 단계로 넘어가 보자.";
+                    if (cur.kind === "start") return "The network output " + cands.length + " boxes for one dog, each with a confidence. Go on to the next step.";
                     if (cur.kind === "score") {
                         return dropped.length
-                            ? "① 신뢰도 기준 " + fixed(t.s, 2) + "보다 낮은 박스를 버린다: " + dropped.map(function (c) { return c.name + " 박스(" + fixed(c.score, 2) + ")"; }).join(", ") + ". 남은 박스는 " + passed.length + "개."
-                            : "① 신뢰도 기준 " + fixed(t.s, 2) + "보다 낮은 박스가 없어 " + passed.length + "개가 모두 남는다.";
+                            ? "① Drop the boxes with confidence below " + fixed(t.s, 2) + ": " + dropped.map(function (c) { return "box " + c.name + " (" + fixed(c.score, 2) + ")"; }).join(", ") + ". " + passed.length + " boxes remain."
+                            : "① No box has a confidence below " + fixed(t.s, 2) + ", so all " + passed.length + " remain.";
                     }
                     if (cur.kind === "keep") {
                         var c = cands[cur.i];
                         return cur.first
-                            ? "② 남은 박스 중 신뢰도가 가장 높은 " + c.name + " 박스(" + fixed(c.score, 2) + ")를 결과로 남긴다. 이제 이 박스와 나머지 박스를 하나씩 겹쳐 본다."
-                            : "② 아직 남은 박스 중 신뢰도가 가장 높은 " + c.name + " 박스(" + fixed(c.score, 2) + ")를 남긴다. 앞서 남긴 박스와 덜 겹쳐 다른 물체로 본 박스다.";
+                            ? "② Keep box " + c.name + " (" + fixed(c.score, 2) + "), the most confident of the remaining boxes, as a result. Now compare its overlap with each of the other boxes."
+                            : "② Keep box " + c.name + " (" + fixed(c.score, 2) + "), the most confident box still remaining. It overlaps the box kept before too little, so it is taken as a different object.";
                     }
                     if (cur.kind === "compare") {
                         var a = cands[cur.i], b = cands[cur.j];
                         return cur.gone
-                            ? a.name + " 박스와 " + b.name + " 박스의 겹침(IOU) " + fixed(cur.v, 2) + " > 기준 " + fixed(t.n, 2) + ". 같은 개를 잡은 박스로 보고 " + b.name + " 박스를 지운다."
-                            : a.name + " 박스와 " + b.name + " 박스의 겹침(IOU) " + fixed(cur.v, 2) + " ≤ 기준 " + fixed(t.n, 2) + ". 다른 물체일 수 있어 " + b.name + " 박스는 지우지 않는다.";
+                            ? "The overlap (IOU) of box " + a.name + " and box " + b.name + " is " + fixed(cur.v, 2) + " > threshold " + fixed(t.n, 2) + ". Box " + b.name + " is taken to cover the same dog and is removed."
+                            : "The overlap (IOU) of box " + a.name + " and box " + b.name + " is " + fixed(cur.v, 2) + " ≤ threshold " + fixed(t.n, 2) + ". It may be a different object, so box " + b.name + " is not removed.";
                     }
                     var kept = steps.filter(function (s) { return s.kind === "keep"; }).map(function (s) { return cands[s.i]; });
                     var removed = steps.filter(function (s) { return s.kind === "compare" && s.gone; }).length;
                     if (kept.length === 1) {
-                        return "끝. 후보 " + cands.length + "개 중 신뢰도로 " + dropped.length + "개, NMS로 " + removed + "개가 걸러져 " + kept[0].name + " 박스 하나가 남았다. 개 한 마리에 박스 하나.";
+                        return "Done. Of the " + cands.length + " candidates, " + dropped.length + " were dropped by confidence and " + removed + " removed by NMS, leaving box " + kept[0].name + ". One dog, one box.";
                     }
                     var top = kept[0];
-                    return "끝. 박스 " + kept.length + "개가 남았다: " + kept.map(function (c) { return c.name; }).join(", ") + ". 개는 한 마리인데 박스가 여럿이다. " +
+                    return "Done. " + kept.length + " boxes are left: " + kept.map(function (c) { return c.name; }).join(", ") + ". There is one dog but several boxes. " +
                         kept.slice(1).map(function (c) {
-                            return c.name + " 박스는 " + top.name + " 박스와의 겹침(" + fixed(Metrics.iou(top.box, c.box), 2) + ")이 기준 " + fixed(t.n, 2) + " 이하라 남았다";
+                            return "Box " + c.name + " stayed because its overlap with box " + top.name + " (" + fixed(Metrics.iou(top.box, c.box), 2) + ") is at or below the threshold " + fixed(t.n, 2);
                         }).join(". ") + ".";
                 }
                 // A tab's short name, and which part of the run it belongs to (its color).
                 function tabInfo(s, t) {
-                    if (s.kind === "start") return { phase: "start", label: "후보 " + cands.length + "개" };
+                    if (s.kind === "start") return { phase: "start", label: cands.length + " candidates" };
                     if (s.kind === "score") {
                         var gone = cands.filter(function (c) { return !passes(c, t); });
-                        return { phase: "score", label: "신뢰도 거르기", sub: gone.length ? gone.map(function (c) { return c.name; }).join("·") + " 버림" : "버릴 것 없음" };
+                        return { phase: "score", label: "Confidence filter", sub: gone.length ? gone.map(function (c) { return c.name; }).join("·") + " dropped" : "none dropped" };
                     }
-                    if (s.kind === "keep") return { phase: "nms", label: cands[s.i].name + " 남김" };
-                    if (s.kind === "compare") return { phase: "nms", label: cands[s.j].name + (s.gone ? " 지움" : " 통과"), sub: "겹침 " + fixed(s.v, 2) };
-                    return { phase: "end", label: "최종 " + steps.filter(function (x) { return x.kind === "keep"; }).length + "개" };
+                    if (s.kind === "keep") return { phase: "nms", label: cands[s.i].name + " kept" };
+                    if (s.kind === "compare") return { phase: "nms", label: cands[s.j].name + (s.gone ? " removed" : " stays"), sub: "overlap " + fixed(s.v, 2) };
+                    return { phase: "end", label: steps.filter(function (x) { return x.kind === "keep"; }).length + " left" };
                 }
                 function drawTabs(t) {
                     clear(tabs);
@@ -1480,6 +1481,7 @@
             var source = document.getElementById("knowledge-map");
             if (!nav || !source) return;
             var MAP = JSON.parse(source.textContent);
+            MAP.nodes.forEach(function (n) { n.title = n.title_en || n.title; n.summary = n.summary_en || n.summary; });
             var svg = nav.querySelector(".kmap-graph");
             var current = nav.getAttribute("data-current");
             var NS = "http://www.w3.org/2000/svg";
@@ -1551,7 +1553,7 @@
                     t.setAttribute("style", "font-size: 13px; font-weight: 700;");
                     var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
                     svg.removeChild(t);
-                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 64 : 28)), h: 30 };
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 100 : 28)), h: 30 };
                 });
                 var pos = {};
                 layers.forEach(function (layer, r) {
@@ -1579,15 +1581,15 @@
                     var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
                     var link = n.id !== current && n.status !== "planned" && n.href;
                     var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
-                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (준비 중)" : "") + ": " + n.summary;
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (coming soon)" : "") + ": " + n.summary;
                     el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
                     var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
                     t.textContent = n.title;
                     if (n.status === "planned") {
                         var soon = el("tspan", { "class": "soon", dx: 6 }, t);
-                        soon.textContent = "준비 중";
+                        soon.textContent = "coming soon";
                     }
-                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "지금 이 글";
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "you are here";
                 });
             }
             draw();

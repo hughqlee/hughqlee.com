@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Knowledge | Hugh Q Lee</title>
-    <meta name="description" content="Hugh Q Lee가 공부한 개념을 직접 조작해 보며 이해하도록 만든 인터랙티브 지식 페이지 모음.">
+    <meta name="description" content="Interactive knowledge pages by Hugh Q Lee: concepts explained by letting you try them yourself.">
     <meta name="author" content="Hugh Q Lee">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
-    <link rel="canonical" href="https://hughqlee.com/knowledge/">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/en/">
     <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/">
     <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/">
     <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Hugh Q Lee">
-    <meta property="og:locale" content="ko_KR">
-    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ko_KR">
     <meta property="og:title" content="Knowledge | Hugh Q Lee">
-    <meta property="og:description" content="공부한 개념을 직접 조작해 보며 이해하도록 만든 인터랙티브 지식 페이지 모음.">
-    <meta property="og:url" content="https://hughqlee.com/knowledge/">
+    <meta property="og:description" content="Interactive knowledge pages: concepts explained by letting you try them yourself.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/en/">
     <meta property="og:image" content="https://hughqlee.com/images/og-cover.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Terminal-style portfolio of Hugh Q Lee, Vision AI Product Engineer.">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Knowledge | Hugh Q Lee">
-    <meta name="twitter:description" content="공부한 개념을 직접 조작해 보며 이해하도록 만든 인터랙티브 지식 페이지 모음.">
+    <meta name="twitter:description" content="Interactive knowledge pages: concepts explained by letting you try them yourself.">
     <meta name="twitter:image" content="https://hughqlee.com/images/og-cover.jpg">
     <!-- 페이지를 발행할 때마다 아래 목록(HTML)과 ItemList에 같은 순서(새 글이 위)로 추가한다. -->
     <script type="application/ld+json">
@@ -33,35 +33,39 @@
       "@graph": [
         {
           "@type": "CollectionPage",
-          "@id": "https://hughqlee.com/knowledge/#collection",
-          "workTranslation": { "@id": "https://hughqlee.com/knowledge/en/#collection" },
-          "url": "https://hughqlee.com/knowledge/",
+          "@id": "https://hughqlee.com/knowledge/en/#collection",
+          "url": "https://hughqlee.com/knowledge/en/",
           "name": "Knowledge",
-          "description": "Hugh Q Lee가 공부한 개념을 직접 조작해 보며 이해하도록 만든 인터랙티브 지식 페이지 모음.",
-          "inLanguage": "ko",
-          "author": { "@id": "https://hughqlee.com/#person" },
+          "description": "Interactive knowledge pages by Hugh Q Lee: concepts explained by letting you try them yourself.",
+          "inLanguage": "en",
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
           "mainEntity": {
             "@type": "ItemList",
             "itemListElement": [
               {
                 "@type": "ListItem",
                 "position": 1,
-                "url": "https://hughqlee.com/knowledge/yolo-v2/",
-                "name": "YOLOv2, 앵커 박스와 패스스루 레이어"
+                "url": "https://hughqlee.com/knowledge/en/yolo-v2/",
+                "name": "YOLOv2 Explained: Anchor Boxes and the Passthrough Layer"
               },
               {
                 "@type": "ListItem",
                 "position": 2,
-                "url": "https://hughqlee.com/knowledge/iou-nms/",
-                "name": "IOU와 NMS, 박스 하나만 남기기"
+                "url": "https://hughqlee.com/knowledge/en/iou-nms/",
+                "name": "IOU and NMS Explained: Keep One Box per Object"
               },
               {
                 "@type": "ListItem",
                 "position": 3,
-                "url": "https://hughqlee.com/knowledge/yolo-v1/",
-                "name": "YOLOv1, 한 번 보고 모두 찾기"
+                "url": "https://hughqlee.com/knowledge/en/yolo-v1/",
+                "name": "YOLOv1 Explained: Look Once, Find Every Object"
               }
             ]
+          },
+          "translationOfWork": {
+            "@id": "https://hughqlee.com/knowledge/#collection"
           }
         },
         {
@@ -79,8 +83,18 @@
         {
           "@type": "BreadcrumbList",
           "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Hugh Q Lee", "item": "https://hughqlee.com/" },
-            { "@type": "ListItem", "position": 2, "name": "Knowledge", "item": "https://hughqlee.com/knowledge/" }
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/en/"
+            }
           ]
         }
       ]
@@ -244,14 +258,14 @@
     </style>
 </head>
 <body>
-    <a class="skip" href="#main">본문으로 건너뛰기</a>
+    <a class="skip" href="#main">Skip to content</a>
 
     <header class="wrap topbar">
-        <nav class="crumbs" aria-label="위치">
+        <nav class="crumbs" aria-label="Breadcrumb">
             <a href="/">hughqlee.com</a> / <span aria-current="page">knowledge</span>
         </nav>
         <div class="topbar-tools">
-            <a class="lang-switch" href="/knowledge/en/" hreflang="en" lang="en">English</a>
+            <a class="lang-switch" href="/knowledge/" hreflang="ko" lang="ko">한국어</a>
             <button id="theme-toggle" class="theme-toggle" type="button">light</button>
         </div>
     </header>
@@ -260,36 +274,36 @@
         <section class="hero" aria-labelledby="page-title">
             <p class="eyebrow">KNOWLEDGE</p>
             <h1 id="page-title">Knowledge</h1>
-            <p class="lead">공부한 개념을 직접 조작해 보며 이해하도록 만든 페이지 모음이다.</p>
+            <p class="lead">Pages that explain concepts by letting you try them yourself.</p>
         </section>
 
-        <ol class="pages" aria-label="지식 페이지">
+        <ol class="pages" aria-label="Knowledge pages">
             <li>
                 <article>
-                    <p class="meta"><time datetime="2026-10-02">2026-10-02</time> · 물체 탐지</p>
-                    <h2><a href="/knowledge/yolo-v2/">YOLOv2, 앵커 박스와 패스스루 레이어</a></h2>
-                    <p>칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 레이어로 26 × 26의 세밀한 특징을 13 × 13 칸에 접어 붙이는 YOLOv2를, 물체를 끌고 앵커를 고르고 특징 지도를 접어 보며 이해한다. YOLOv1의 다음 글이다.</p>
+                    <p class="meta"><time datetime="2026-10-02">2026-10-02</time> · Object detection</p>
+                    <h2><a href="/knowledge/en/yolo-v2/">YOLOv2 Explained: Anchor Boxes and the Passthrough Layer</a></h2>
+                    <p>How YOLOv2 shares objects among five anchor boxes per cell and folds fine 26 × 26 features into the 13 × 13 grid with a passthrough layer: drag objects, pick anchors, and fold a feature map. It follows the YOLOv1 page.</p>
                 </article>
             </li>
             <li>
                 <article>
-                    <p class="meta"><time datetime="2026-10-01">2026-10-01</time> · 물체 탐지</p>
-                    <h2><a href="/knowledge/iou-nms/">IOU와 NMS, 박스 하나만 남기기</a></h2>
-                    <p>두 박스가 얼마나 겹치는지 재는 IOU와, 한 물체에 겹친 박스를 하나만 남기는 NMS를, 박스를 직접 옮기고 단계를 따라가며 이해한다. YOLOv1의 선행 지식이다.</p>
+                    <p class="meta"><time datetime="2026-10-01">2026-10-01</time> · Object detection</p>
+                    <h2><a href="/knowledge/en/iou-nms/">IOU and NMS Explained: Keep One Box per Object</a></h2>
+                    <p>IOU measures how much two boxes overlap, and NMS keeps one of the boxes that overlap on an object: move the boxes and step through the algorithm. Background for the YOLOv1 page.</p>
                 </article>
             </li>
             <li>
                 <article>
-                    <p class="meta"><time datetime="2026-09-30">2026-09-30</time> · 물체 탐지</p>
-                    <h2><a href="/knowledge/yolo-v1/">YOLOv1, 한 번 보고 모두 찾기</a></h2>
-                    <p>사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을, 직접 구현한 모델의 구조와 출력으로 만져 보며 이해한다.</p>
+                    <p class="meta"><time datetime="2026-09-30">2026-09-30</time> · Object detection</p>
+                    <h2><a href="/knowledge/en/yolo-v1/">YOLOv1 Explained: Look Once, Find Every Object</a></h2>
+                    <p>How YOLOv1 splits an image into a 7×7 grid and finds every object in one pass of the network, explored through the architecture and outputs of a model built from the paper.</p>
                 </article>
             </li>
         </ol>
     </main>
 
     <footer class="wrap">
-        <a href="/">Hugh Q Lee</a>
+        <a href="/">Hugh Q Lee</a> · Translated from the <a href="/knowledge/" hreflang="ko">Korean original</a>
     </footer>
 
     <script>
@@ -300,7 +314,7 @@
             function label() {
                 var dark = root.dataset.theme !== "light";
                 toggle.textContent = dark ? "light" : "dark";
-                toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+                toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
             }
             toggle.addEventListener("click", function () {
                 var next = root.dataset.theme === "light" ? "dark" : "light";

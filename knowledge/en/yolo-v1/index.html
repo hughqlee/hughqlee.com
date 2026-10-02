@@ -1,39 +1,39 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOLOv1, 한 번 보고 모두 찾기 | Hugh Q Lee</title>
-    <meta name="description" content="사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을, 직접 구현한 모델의 구조와 출력으로 만져 보며 이해한다.">
+    <title>YOLOv1 Explained: Look Once, Find Every Object | Hugh Q Lee</title>
+    <meta name="description" content="An interactive explanation of YOLOv1: split an image into a 7×7 grid and find every object in a single pass of the network. Explore the architecture, the 98 boxes, NMS, and the loss with a model built from the paper.">
     <meta name="author" content="Hugh Q Lee">
-    <meta name="keywords" content="YOLO, YOLOv1, You Only Look Once, 물체 탐지, 객체 탐지, object detection, 딥러닝, 컴퓨터 비전, NMS, IOU">
+    <meta name="keywords" content="YOLO, YOLOv1, You Only Look Once, YOLO explained, object detection, real-time object detection, deep learning, computer vision, NMS, IOU">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <link rel="canonical" href="https://hughqlee.com/knowledge/yolo-v1/">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/en/yolo-v1/">
     <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/yolo-v1/">
     <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/yolo-v1/">
     <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/yolo-v1/">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Hugh Q Lee">
-    <meta property="og:locale" content="ko_KR">
-    <meta property="og:locale:alternate" content="en_US">
-    <meta property="og:title" content="YOLOv1, 한 번 보고 모두 찾기">
-    <meta property="og:description" content="사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을 직접 만져 보며 이해한다.">
-    <meta property="og:url" content="https://hughqlee.com/knowledge/yolo-v1/">
-    <meta property="og:image" content="https://hughqlee.com/knowledge/yolo-v1/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ko_KR">
+    <meta property="og:title" content="YOLOv1 Explained: Look Once, Find Every Object">
+    <meta property="og:description" content="Split an image into a 7×7 grid and find every object in one pass of the network: an interactive guide to how YOLOv1 works.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/en/yolo-v1/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/en/yolo-v1/og.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="YOLOv1, 한 번 보고 모두 찾기: 7×7 격자 위 두 물체의 중심과 박스">
+    <meta property="og:image:alt" content="YOLOv1 Explained: the centers and boxes of two objects on a 7×7 grid">
     <meta property="article:published_time" content="2026-09-30">
     <meta property="article:modified_time" content="2026-10-02">
     <meta property="article:author" content="https://hughqlee.com/">
     <meta property="article:section" content="Knowledge">
     <meta property="article:tag" content="YOLO">
-    <meta property="article:tag" content="물체 탐지">
+    <meta property="article:tag" content="object detection">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="YOLOv1, 한 번 보고 모두 찾기">
-    <meta name="twitter:description" content="사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을 직접 만져 보며 이해한다.">
-    <meta name="twitter:image" content="https://hughqlee.com/knowledge/yolo-v1/og.png">
-    <meta name="twitter:image:alt" content="YOLOv1, 한 번 보고 모두 찾기: 7×7 격자 위 두 물체의 중심과 박스">
+    <meta name="twitter:title" content="YOLOv1 Explained: Look Once, Find Every Object">
+    <meta name="twitter:description" content="Split an image into a 7×7 grid and find every object in one pass of the network: an interactive guide to how YOLOv1 works.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/en/yolo-v1/og.png">
+    <meta name="twitter:image:alt" content="YOLOv1 Explained: the centers and boxes of two objects on a 7×7 grid">
     <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. 아래 "자주 묻는 질문"과 문장이 같아야 한다. -->
     <script type="application/ld+json">
     {
@@ -41,20 +41,19 @@
       "@graph": [
         {
           "@type": "TechArticle",
-          "@id": "https://hughqlee.com/knowledge/yolo-v1/#article",
-          "workTranslation": { "@id": "https://hughqlee.com/knowledge/en/yolo-v1/#article" },
-          "headline": "YOLOv1, 한 번 보고 모두 찾기",
-          "alternativeHeadline": "사진 한 장에서 물체를 모두 찾으려면, 몇 번 봐야 할까?",
-          "description": "사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을, 직접 구현한 모델의 구조와 출력으로 만져 보며 이해한다.",
-          "abstract": "YOLOv1은 사진을 7×7 칸으로 나누고, 신경망을 한 번만 통과시켜 모든 물체의 위치와 종류를 한꺼번에 맞힌다.",
-          "inLanguage": "ko",
+          "@id": "https://hughqlee.com/knowledge/en/yolo-v1/#article",
+          "headline": "YOLOv1 Explained: Look Once, Find Every Object",
+          "alternativeHeadline": "How many looks does it take to find every object in a photo?",
+          "description": "An interactive explanation of YOLOv1: split an image into a 7×7 grid and find every object in a single pass of the network. Explore the architecture, the 98 boxes, NMS, and the loss with a model built from the paper.",
+          "abstract": "YOLOv1 divides a photo into a 7×7 grid and passes it through a neural network just once to predict where every object is and what it is, all at the same time.",
+          "inLanguage": "en",
           "datePublished": "2026-09-30",
           "dateModified": "2026-10-02",
-          "url": "https://hughqlee.com/knowledge/yolo-v1/",
-          "mainEntityOfPage": "https://hughqlee.com/knowledge/yolo-v1/",
+          "url": "https://hughqlee.com/knowledge/en/yolo-v1/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/en/yolo-v1/",
           "image": {
             "@type": "ImageObject",
-            "url": "https://hughqlee.com/knowledge/yolo-v1/og.png",
+            "url": "https://hughqlee.com/knowledge/en/yolo-v1/og.png",
             "width": 1200,
             "height": 630
           },
@@ -65,7 +64,7 @@
             "@id": "https://hughqlee.com/#person"
           },
           "isPartOf": {
-            "@id": "https://hughqlee.com/knowledge/#collection"
+            "@id": "https://hughqlee.com/knowledge/en/#collection"
           },
           "about": [
             {
@@ -74,15 +73,13 @@
             },
             {
               "@type": "Thing",
-              "name": "물체 탐지 (object detection)"
+              "name": "Object detection"
             }
           ],
           "keywords": [
             "YOLO",
             "YOLOv1",
             "You Only Look Once",
-            "물체 탐지",
-            "객체 탐지",
             "object detection",
             "NMS",
             "IOU"
@@ -112,6 +109,9 @@
             ],
             "datePublished": "2016",
             "url": "https://arxiv.org/abs/1506.02640"
+          },
+          "translationOfWork": {
+            "@id": "https://hughqlee.com/knowledge/yolo-v1/#article"
           }
         },
         {
@@ -139,82 +139,82 @@
               "@type": "ListItem",
               "position": 2,
               "name": "Knowledge",
-              "item": "https://hughqlee.com/knowledge/"
+              "item": "https://hughqlee.com/knowledge/en/"
             },
             {
               "@type": "ListItem",
               "position": 3,
-              "name": "YOLOv1, 한 번 보고 모두 찾기",
-              "item": "https://hughqlee.com/knowledge/yolo-v1/"
+              "name": "YOLOv1 Explained: Look Once, Find Every Object",
+              "item": "https://hughqlee.com/knowledge/en/yolo-v1/"
             }
           ]
         },
         {
           "@type": "FAQPage",
-          "@id": "https://hughqlee.com/knowledge/yolo-v1/#faq",
+          "@id": "https://hughqlee.com/knowledge/en/yolo-v1/#faq",
           "mainEntity": [
             {
               "@type": "Question",
-              "name": "YOLO는 무슨 뜻인가?",
+              "name": "What does YOLO stand for?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "You Only Look Once의 줄임말이다. 사진 속 물체의 위치와 종류를 찾는 물체 탐지(객체 탐지, object detection) 방법으로, 후보 영역을 하나씩 검사하지 않고 사진 전체를 신경망에 한 번만 통과시켜 모든 물체를 한꺼번에 예측한다."
+                "text": "YOLO stands for You Only Look Once. It is an object detection method, which finds where the objects in an image are and what they are. Instead of checking candidate regions one by one, it passes the whole image through a neural network once and predicts every object at the same time."
               }
             },
             {
               "@type": "Question",
-              "name": "YOLOv1은 어떤 구조인가?",
+              "name": "What is the YOLOv1 architecture?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "합성곱 24층과 완전연결 2층으로 이루어진다. 448 × 448 사진을 받아 7 × 7 × 30을 낸다. 논문 구조대로 구현해 세면 파라미터는 약 2억 7천만 개이고, 그중 약 76%가 첫 완전연결 층에 있다."
+                "text": "It has 24 convolutional layers followed by 2 fully connected layers. It takes a 448 × 448 image and outputs a 7 × 7 × 30 tensor. Counted on an implementation that follows the paper, it has about 272 million parameters, and about 76% of them are in the first fully connected layer."
               }
             },
             {
               "@type": "Question",
-              "name": "출력은 왜 7 × 7 × 30인가?",
+              "name": "Why is the YOLOv1 output 7 × 7 × 30?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "사진을 7 × 7 칸으로 나누고, 칸마다 박스 2개와 클래스 확률 20개를 내기 때문이다. 박스 하나는 x, y, w, h, 신뢰도의 5개 숫자라서 2 × 5 + 20 = 30이다."
+                "text": "The image is divided into a 7 × 7 grid, and each cell predicts 2 boxes and 20 class probabilities. Each box is 5 numbers (x, y, w, h, and confidence), so each cell has 2 × 5 + 20 = 30 numbers."
               }
             },
             {
               "@type": "Question",
-              "name": "한 장에서 박스는 몇 개 나오고, 어떻게 줄이나?",
+              "name": "How many boxes does YOLOv1 predict per image, and how are they reduced?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "7 × 7 칸 × 2개 = 98개가 나온다. 박스마다 클래스 확률 × 신뢰도로 점수를 매겨 낮은 것을 버리고, 같은 물체를 겹쳐 잡은 박스는 NMS(겹침 제거)로 점수가 가장 높은 하나만 남긴다."
+                "text": "It predicts 7 × 7 cells × 2 = 98 boxes. Each box is scored by class probability × confidence and low-scoring boxes are discarded; among boxes that overlap on the same object, non-maximum suppression (NMS) keeps only the one with the highest score."
               }
             },
             {
               "@type": "Question",
-              "name": "왜 너비 대신 √너비를 예측하나?",
+              "name": "Why does YOLO predict the square root of the width instead of the width?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "같은 크기의 오차라도 작은 박스에서는 겹침(IOU)이 크게 떨어지고, 큰 박스에서는 거의 그대로이기 때문이다. √w의 차이로 벌점을 매기면, 너비를 똑같이 0.05 틀렸을 때 작은 박스(w = 0.1)의 벌점이 큰 박스(w = 0.8)의 약 6.7배가 된다. 논문도 이 방법이 문제를 일부만 해결한다고 쓴다."
+                "text": "Because the same size error makes the overlap (IOU) of a small box drop sharply but barely affects a large box. With the penalty computed on the difference of square roots, getting the width wrong by the same 0.05 costs a small box (w = 0.1) about 6.7 times as much as a large box (w = 0.8). The paper notes that this only partially addresses the problem."
               }
             },
             {
               "@type": "Question",
-              "name": "손실의 λcoord와 λnoobj는 무엇인가?",
+              "name": "What are λcoord and λnoobj in the YOLO loss?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "손실(식 3)에 곱하는 가중치다. 박스 좌표 오차에는 λcoord = 5를 곱해 키우고, 물체가 없는 박스의 신뢰도 오차에는 λnoobj = 0.5를 곱해 줄인다. 대부분의 칸에는 물체가 없어서, 그대로 두면 신뢰도를 0으로 끌어내리는 신호가 물체가 있는 칸의 신호를 압도해 학습이 불안정해지기 때문이다."
+                "text": "They are weights in the loss function (Eq. 3). Box coordinate errors are multiplied by λcoord = 5 to increase them, and the confidence errors of boxes without objects are multiplied by λnoobj = 0.5 to reduce them. Most cells contain no object, so without these weights the signal pushing confidence toward 0 would overpower the signal from cells with objects and make training unstable."
               }
             },
             {
               "@type": "Question",
-              "name": "YOLOv1은 얼마나 빠른가?",
+              "name": "How fast is YOLOv1?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "논문 기준으로 Titan X GPU에서 초당 45장을 처리하고, 더 작은 Fast YOLO는 초당 155장을 처리한다. 스트리밍 영상을 25밀리초 이내의 지연으로 실시간 처리할 수 있는 속도다."
+                "text": "According to the paper, it processes 45 images per second on a Titan X GPU, and the smaller Fast YOLO processes 155 images per second. That is fast enough to process streaming video in real time with less than 25 milliseconds of latency."
               }
             },
             {
               "@type": "Question",
-              "name": "YOLOv1의 한계는 무엇인가?",
+              "name": "What are the limitations of YOLOv1?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "칸마다 박스 2개와 클래스 1개만 예측해서, 새 떼처럼 붙어 있는 작은 물체는 놓치기 쉽다. 학습에서 보지 못한 비율이나 배치의 물체에 약하고, 가장 흔한 오류는 부정확한 위치다."
+                "text": "Each cell predicts only 2 boxes and 1 class, so small objects that appear in groups, like a flock of birds, are easy to miss. It struggles with objects in aspect ratios or arrangements not seen in training, and its most common error is inaccurate localization."
               }
             }
           ]
@@ -604,204 +604,204 @@
     </style>
 </head>
 <body>
-    <a class="skip" href="#main">본문으로 건너뛰기</a>
+    <a class="skip" href="#main">Skip to content</a>
 
     <header class="wide topbar">
-        <nav class="crumbs" aria-label="위치">
-            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/en/">knowledge</a>
         </nav>
         <div class="topbar-tools">
-            <a class="lang-switch" href="/knowledge/en/yolo-v1/" hreflang="en" lang="en">English</a>
+            <a class="lang-switch" href="/knowledge/yolo-v1/" hreflang="ko" lang="ko">한국어</a>
             <button id="theme-toggle" class="theme-toggle" type="button">light</button>
         </div>
     </header>
 
     <main id="main">
         <section class="wrap hero" aria-labelledby="page-title">
-            <nav class="kmap" aria-label="지식 지도" data-current="yolo-v1">
-                <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">컴퓨터 비전 › 물체 탐지</span></p>
+            <nav class="kmap" aria-label="Knowledge map" data-current="yolo-v1">
+                <p class="kmap-head"><span class="kmap-label">KNOWLEDGE MAP</span><span class="kmap-path">Computer vision › Object detection</span></p>
                 <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
-                <p class="kmap-text">먼저 읽을 글: <a href="../iou-nms/">IOU·NMS</a> · 이어서 읽을 글: <a href="../yolo-v2/">YOLOv2</a> · 같은 분야: mAP(준비 중)</p>
+                <p class="kmap-text">Read first: <a href="../iou-nms/">IOU &amp; NMS</a> · Read next: <a href="../yolo-v2/">YOLOv2</a> · Same field: mAP (coming soon)</p>
             </nav>
-            <p class="eyebrow">KNOWLEDGE · 물체 탐지</p>
-            <h1 id="page-title">사진 한 장에서 물체를 모두 찾으려면, 몇 번 봐야 할까?</h1>
-            <p class="answer">YOLOv1은 사진을 7×7 칸으로 나누고, 신경망을 한 번만 통과시켜 모든 물체의 위치와 종류를 한꺼번에 맞힌다.</p>
-            <p>YOLO 이전의 탐지기는 물체가 있을 법한 후보 영역을 약 2,000개 뽑아 하나씩 검사했다. YOLO는 이 과정을 한 번의 예측으로 바꿨다. 이름도 그래서 You Only Look Once다. 네 장면을 직접 만져 보며 어떻게 가능한지 따라가 보자.</p>
+            <p class="eyebrow">KNOWLEDGE · OBJECT DETECTION</p>
+            <h1 id="page-title">How many looks does it take to find every object in a photo?</h1>
+            <p class="answer">YOLOv1 divides a photo into a 7×7 grid and passes it through a neural network just once to predict where every object is and what it is, all at the same time.</p>
+            <p>Detectors before YOLO proposed about 2,000 candidate regions where an object might be and checked them one by one. YOLO replaced that whole process with a single prediction, which is where the name comes from: You Only Look Once. Work through four interactive scenes to see how that is possible.</p>
             <ol class="toc">
-                <li><a href="#grid"><span>01 격자</span>누가 찾나</a></li>
-                <li><a href="#structure"><span>02 구조</span>무엇으로 계산하나</a></li>
-                <li><a href="#inference"><span>03 추론</span>98개에서 몇 개로</a></li>
-                <li><a href="#loss"><span>04 학습</span>무엇을 벌점으로 주나</a></li>
+                <li><a href="#grid"><span>01 Grid</span>Who finds the object</a></li>
+                <li><a href="#structure"><span>02 Architecture</span>What does the computing</a></li>
+                <li><a href="#inference"><span>03 Inference</span>From 98 boxes to a few</a></li>
+                <li><a href="#loss"><span>04 Training</span>What gets penalized</a></li>
             </ol>
         </section>
 
         <section id="grid" class="wide step" aria-labelledby="grid-title">
             <div class="wrap" style="width: 100%; max-width: var(--measure); margin: 0;">
-                <p class="step-no">01 격자</p>
-                <h2 id="grid-title">물체의 중심이 떨어진 칸이 맡는다</h2>
-                <p>사진을 가로세로 7칸, 모두 49칸으로 나눈다. 물체의 중심이 들어간 칸 하나가 그 물체를 맡는다. 칸마다 박스 2개와 클래스 확률 20개, 모두 30개의 숫자를 내놓는다.</p>
-                <p class="hint" id="grid-hint">개나 자전거를 끌어 보자. 키보드로는 그림을 선택한 뒤 화살표로 움직이고(Shift는 한 칸씩), 스페이스로 물체를 바꾼다.</p>
+                <p class="step-no">01 Grid</p>
+                <h2 id="grid-title">The cell where an object's center falls is responsible for it</h2>
+                <p>The photo is divided into 7 cells across and 7 down, 49 cells in all. The one cell that contains an object's center is responsible for that object. Each cell outputs 2 boxes and 20 class probabilities: 30 numbers in total.</p>
+                <p class="hint" id="grid-hint">Drag the dog or the bicycle. With a keyboard, select the picture, move with the arrow keys (Shift moves one cell at a time), and press Space to switch objects.</p>
             </div>
             <div class="panel split">
                 <canvas id="grid-canvas" class="stage" tabindex="0" role="img"
-                        aria-label="7×7 격자 위의 개와 자전거. 화살표 키로 선택한 물체를 움직인다."
+                        aria-label="A dog and a bicycle on a 7×7 grid. The arrow keys move the selected object."
                         aria-describedby="grid-hint"></canvas>
                 <div>
-                    <p class="muted" style="margin: 0;">선택한 물체</p>
-                    <p class="big" style="margin: 0 0 8px;"><span id="grid-name">개</span> → <span id="grid-cell">5행 3열</span> 칸</p>
+                    <p class="muted" style="margin: 0;">Selected object</p>
+                    <p class="big" style="margin: 0 0 8px;"><span id="grid-name">dog</span> → <span id="grid-cell">row 5, column 3</span></p>
                     <dl class="kv">
-                        <dt>x, y (칸 안에서)</dt><dd id="grid-xy">0.10, 0.48</dd>
-                        <dt>w, h (사진 대비)</dt><dd id="grid-wh">0.36, 0.30</dd>
-                        <dt>√w, √h (예측하는 값)</dt><dd id="grid-sqrt">0.60, 0.55</dd>
+                        <dt>x, y (within the cell)</dt><dd id="grid-xy">0.10, 0.48</dd>
+                        <dt>w, h (relative to the image)</dt><dd id="grid-wh">0.36, 0.30</dd>
+                        <dt>√w, √h (what is predicted)</dt><dd id="grid-sqrt">0.60, 0.55</dd>
                     </dl>
-                    <p class="muted" style="margin: 0; font-size: 14px;">이 칸이 내놓는 숫자 30개 중 채워지는 곳</p>
+                    <p class="muted" style="margin: 0; font-size: 14px;">Which of this cell's 30 numbers get filled</p>
                     <div class="slots" id="grid-slots" aria-hidden="true"></div>
                     <div class="slot-legend">
-                        <span>1–5: 박스 1</span><span>6–10: 박스 2</span><span>11–30: 클래스 20개</span>
+                        <span>1–5: box 1</span><span>6–10: box 2</span><span>11–30: 20 classes</span>
                     </div>
-                    <p class="hint" style="margin-top: 8px;">박스 두 개 중 정답과 더 많이 겹치는 쪽이 물체를 맡고, 신뢰도는 그 겹침(IOU)을 배운다. 나머지 박스와 48칸은 신뢰도 0을 배운다.</p>
-                    <p class="chip" id="grid-collision" hidden>두 중심이 같은 칸에 있다. 칸마다 클래스가 하나뿐이라 한 물체만 배울 수 있다. 붙어 있는 작은 물체 무리에 약한 이유다.</p>
+                    <p class="hint" style="margin-top: 8px;">Of the two boxes, the one that overlaps the ground truth more takes the object, and its confidence learns that overlap (IOU). The other box and the other 48 cells learn a confidence of 0.</p>
+                    <p class="chip" id="grid-collision" hidden>Both centers are in the same cell. Each cell has only one class, so it can learn only one of the objects. This is why YOLOv1 struggles with groups of small objects close together.</p>
                     <p class="sr-only" aria-live="polite" id="grid-live"></p>
                 </div>
             </div>
-            <p class="source">출처: 논문 §2, 그림 2, §2.4</p>
+            <p class="source">Source: paper §2, Figure 2, §2.4</p>
         </section>
 
         <section id="structure" class="wide step" aria-labelledby="structure-title">
             <div style="max-width: var(--measure);">
-                <p class="step-no">02 구조</p>
-                <h2 id="structure-title">448 × 448 사진이 7 × 7 × 30이 되기까지</h2>
-                <p>합성곱 24층이 가로세로를 64분의 1로 줄이며 특징을 뽑고, 완전연결 2층이 7 × 7 × 30개의 숫자를 만든다. 앞 20층은 ImageNet 사진 분류로 미리 배우고, 나머지 4층과 완전연결 층은 탐지를 위해 붙였다.</p>
-                <p class="hint">블록 하나가 한 층의 출력이다. 정사각형 면은 가로세로 크기, 두께는 채널 수다(둘 다 로그 척도).</p>
+                <p class="step-no">02 Architecture</p>
+                <h2 id="structure-title">How a 448 × 448 image becomes 7 × 7 × 30</h2>
+                <p>24 convolutional layers extract features while shrinking the width and height to 1/64, and 2 fully connected layers produce the 7 × 7 × 30 numbers. The first 20 layers are pretrained on ImageNet image classification; the remaining 4 convolutional layers and the fully connected layers are added for detection.</p>
+                <p class="hint">Each block is the output of one layer. The square face is its width and height; its thickness is the number of channels (both on a log scale).</p>
             </div>
             <div class="panel">
                 <div class="row">
-                    <div class="seg" role="group" aria-label="보기 방식" id="view-seg">
-                        <button type="button" data-view="3d" aria-pressed="true">3D 구조</button>
-                        <button type="button" data-view="2d" aria-pressed="false">2D 막대</button>
+                    <div class="seg" role="group" aria-label="View" id="view-seg">
+                        <button type="button" data-view="3d" aria-pressed="true">3D structure</button>
+                        <button type="button" data-view="2d" aria-pressed="false">2D bars</button>
                     </div>
-                    <div class="seg" role="group" aria-label="함께 볼 값" id="mode-seg">
-                        <button type="button" data-mode="shape" aria-pressed="true">모양</button>
-                        <button type="button" data-mode="params" aria-pressed="false">파라미터</button>
-                        <button type="button" data-mode="macs" aria-pressed="false">계산량</button>
+                    <div class="seg" role="group" aria-label="Value to show" id="mode-seg">
+                        <button type="button" data-mode="shape" aria-pressed="true">Shape</button>
+                        <button type="button" data-mode="params" aria-pressed="false">Parameters</button>
+                        <button type="button" data-mode="macs" aria-pressed="false">Compute</button>
                     </div>
                 </div>
-                <p class="numbers" id="structure-totals">합성곱 <b>24</b> · 완전연결 <b>2</b> · 파라미터 <b>271,703,550</b> · 한 장에 곱셈-덧셈 약 <b>203억</b> 번</p>
-                <p class="callout" id="structure-callout" aria-live="polite">가로세로는 448에서 7로 64분의 1이 되고, 채널은 3에서 1024로 늘어난다. 층을 고르면, 입력의 어느 창이 모든 채널을 거쳐 출력 한 칸이 되는지 선으로 보인다.</p>
+                <p class="numbers" id="structure-totals"><b>24</b> conv layers · <b>2</b> fully connected · <b>271,703,550</b> parameters · about <b>20.3 billion</b> multiply-adds per image</p>
+                <p class="callout" id="structure-callout" aria-live="polite">Width and height shrink 64-fold, from 448 to 7, while the channels grow from 3 to 1024. Pick a layer, and lines show which window of its input passes through every channel to become one cell of its output.</p>
                 <div id="view3d">
                     <canvas id="net3d" class="stage3d" tabindex="0" role="img"
-                            aria-label="YOLOv1의 층을 입체 블록으로 나타낸 그림. 선택한 층은 아래 설명에 나온다."
+                            aria-label="YOLOv1's layers drawn as 3D blocks. The selected layer is described below."
                             aria-describedby="net3d-hint"></canvas>
                     <div class="row" style="margin-top: 8px;">
-                        <p class="hint" id="net3d-hint" style="margin: 0; flex: 1 1 280px;">끌어서 돌리고, 휠이나 두 손가락으로 확대한다. 블록을 누르면 그 층으로 간다. 키보드: 화살표로 회전, +/−로 확대, [ ]로 층 이동.</p>
+                        <p class="hint" id="net3d-hint" style="margin: 0; flex: 1 1 280px;">Drag to rotate; zoom with the wheel or two fingers. Click a block to go to that layer. Keyboard: arrows rotate, +/− zoom, [ ] move between layers.</p>
                         <div class="seg">
-                            <button type="button" id="net3d-fit">전체 보기</button>
-                            <button type="button" id="net3d-reset">처음 각도</button>
+                            <button type="button" id="net3d-fit">Fit all</button>
+                            <button type="button" id="net3d-reset">Reset view</button>
                         </div>
                     </div>
                 </div>
                 <div class="strip-wrap" id="view2d" hidden>
-                    <svg class="strip" id="strip" role="img" aria-label="층별 텐서 크기 막대"></svg>
+                    <svg class="strip" id="strip" role="img" aria-label="The tensor size of each layer as bars"></svg>
                 </div>
                 <div class="legend">
-                    <span><i style="background: var(--accent);"></i>사전 학습한 앞 20층</span>
-                    <span><i style="background: var(--accent-green);"></i>탐지용으로 붙인 합성곱 4층</span>
-                    <span><i style="background: var(--accent-warn);"></i>완전연결</span>
-                    <span><i style="border: 1px solid var(--line-strong);"></i>풀링·입출력</span>
+                    <span><i style="background: var(--accent);"></i>First 20 layers, pretrained</span>
+                    <span><i style="background: var(--accent-green);"></i>4 conv layers added for detection</span>
+                    <span><i style="background: var(--accent-warn);"></i>Fully connected</span>
+                    <span><i style="border: 1px solid var(--line-strong);"></i>Pooling, input and output</span>
                 </div>
                 <div class="stepper">
-                    <button class="btn" type="button" id="layer-prev" aria-label="이전 층">←</button>
-                    <input type="range" id="layer-range" min="0" max="1" value="0" aria-label="층 선택">
-                    <button class="btn" type="button" id="layer-next" aria-label="다음 층">→</button>
+                    <button class="btn" type="button" id="layer-prev" aria-label="Previous layer">←</button>
+                    <input type="range" id="layer-range" min="0" max="1" value="0" aria-label="Select a layer">
+                    <button class="btn" type="button" id="layer-next" aria-label="Next layer">→</button>
                 </div>
                 <div class="detail" aria-live="polite">
-                    <h3 id="layer-title">0 / 31 · 입력</h3>
-                    <p id="layer-text" style="margin: 0;">448 × 448 크기의 사진, RGB 3채널. 원본 사진을 이 크기로 바꿔 넣는다.</p>
+                    <h3 id="layer-title">0 / 31 · Input</h3>
+                    <p id="layer-text" style="margin: 0;">A 448 × 448 image with 3 RGB channels. The original photo is resized to this size.</p>
                     <p class="numbers" id="layer-numbers"></p>
                 </div>
             </div>
-            <p class="source">출처: 논문 §2.1, §2.2, 그림 3 · 수치는 이 구조를 PyTorch로 구현해 센 값</p>
+            <p class="source">Source: paper §2.1, §2.2, Figure 3 · Numbers counted on this architecture implemented in PyTorch</p>
         </section>
 
         <section id="inference" class="wide step" aria-labelledby="inference-title">
             <div style="max-width: var(--measure);">
-                <p class="step-no">03 추론</p>
-                <h2 id="inference-title">98개의 박스가 몇 개로 줄어드나</h2>
-                <p>신경망을 한 번 통과시키면 칸마다 박스 2개, 모두 98개가 나온다. 박스의 점수는 클래스 확률 × 신뢰도다. 점수가 낮은 박스를 버리고, 같은 물체를 겹쳐 잡은 박스는 NMS(겹침 제거)로 점수가 가장 높은 하나만 남긴다.</p>
-                <p class="hint">점수 기준을 올려 보고, NMS를 켜 보자.</p>
+                <p class="step-no">03 Inference</p>
+                <h2 id="inference-title">How 98 boxes shrink to a few</h2>
+                <p>One pass through the network gives 2 boxes per cell, 98 in all. A box's score is class probability × confidence. Boxes with low scores are dropped, and among boxes that overlap on the same object, NMS (non-maximum suppression) keeps only the one with the highest score.</p>
+                <p class="hint">Raise the score threshold, then turn on NMS.</p>
             </div>
             <div class="panel split">
-                <canvas id="infer-canvas" class="stage view" role="img" aria-label="합성 장면 위의 예측 박스"></canvas>
+                <canvas id="infer-canvas" class="stage view" role="img" aria-label="Predicted boxes on a synthetic scene"></canvas>
                 <div>
-                    <div class="seg" role="group" aria-label="장면" id="scene-buttons"></div>
+                    <div class="seg" role="group" aria-label="Scene" id="scene-buttons"></div>
                     <div class="controls">
                         <div class="control">
-                            <label for="score-range">점수 기준 <output id="score-out" for="score-range">0.00</output></label>
+                            <label for="score-range">Score threshold <output id="score-out" for="score-range">0.00</output></label>
                             <input type="range" id="score-range" min="0" max="0.6" step="0.01" value="0">
                         </div>
                         <div class="control">
-                            <label for="nms-range">NMS 겹침 기준(IOU) <output id="nms-out" for="nms-range">0.50</output></label>
+                            <label for="nms-range">NMS overlap threshold (IOU) <output id="nms-out" for="nms-range">0.50</output></label>
                             <input type="range" id="nms-range" min="0.3" max="0.8" step="0.05" value="0.5">
                         </div>
                     </div>
                     <div class="row" style="justify-content: flex-start; gap: 18px;">
-                        <label class="check"><input type="checkbox" id="nms-check"> NMS 켜기</label>
-                        <label class="check"><input type="checkbox" id="gt-check"> 정답 박스 보기</label>
+                        <label class="check"><input type="checkbox" id="nms-check"> Turn on NMS</label>
+                        <label class="check"><input type="checkbox" id="gt-check"> Show ground truth</label>
                     </div>
                     <div class="funnel" aria-live="polite">
-                        <div><span>신경망 출력</span><b id="count-all">98</b></div>
-                        <div><span>점수 기준 통과</span><b id="count-pass">98</b></div>
-                        <div><span>최종</span><b id="count-final">98</b></div>
+                        <div><span>Network output</span><b id="count-all">98</b></div>
+                        <div><span>Above threshold</span><b id="count-pass">98</b></div>
+                        <div><span>Final</span><b id="count-final">98</b></div>
                     </div>
-                    <p class="hint" style="margin-top: 12px;">이 박스들은 논문대로 직접 구현한 YOLO(합성곱 8층의 작은 구성)를 사각형·원·삼각형 그림으로 학습시킨 뒤, 처음 보는 장면에서 낸 실제 출력이다.</p>
+                    <p class="hint" style="margin-top: 12px;">These boxes are real outputs from a YOLO implemented from scratch following the paper (a small version with 8 conv layers). It was trained on pictures of squares, circles, and triangles and run on scenes it had never seen.</p>
                 </div>
             </div>
-            <p class="source">출처: 논문 §2, 식 1, §2.3</p>
+            <p class="source">Source: paper §2, Eq. 1, §2.3</p>
         </section>
 
         <section id="loss" class="wide step" aria-labelledby="loss-title">
             <div style="max-width: var(--measure);">
-                <p class="step-no">04 학습</p>
-                <h2 id="loss-title">무엇을 틀리면 벌점이 큰가</h2>
-                <p>학습은 다섯 가지 오차의 제곱합을 줄인다. 박스 중심, 박스 크기, 물체가 있는 박스의 신뢰도, 물체가 없는 박스의 신뢰도, 클래스다. 그런데 제곱합을 그대로 쓰면 두 군데서 어긋난다.</p>
+                <p class="step-no">04 Training</p>
+                <h2 id="loss-title">Which mistakes cost the most</h2>
+                <p>Training minimizes a sum of squared errors over five things: box center, box size, the confidence of boxes with objects, the confidence of boxes without objects, and the class. Used as is, though, a plain sum of squares goes wrong in two places.</p>
             </div>
             <div class="twin">
                 <div class="panel">
-                    <h3>크기 오차: 같은 오차도 작은 박스에 더 치명적이다</h3>
-                    <p class="hint">Δw는 예측 너비와 정답 너비 w의 차이다. √w의 차이가 아니라, 사진 너비를 1로 둔 w 자체를 얼마나 틀렸는지다. 같은 Δw라도 작은 박스는 겹침(IOU)이 크게 떨어지고 큰 박스는 거의 그대로다. 그래서 YOLO는 w 대신 √w를 예측하고, 벌점도 √w끼리의 차이로 매긴다.</p>
+                    <h3>Size error: the same error hurts small boxes more</h3>
+                    <p class="hint">Δw is the difference between the predicted width and the ground-truth width w. It is not a difference of square roots: it is how far off w itself is, with the image width taken as 1. The same Δw makes the overlap (IOU) of a small box drop sharply but barely changes a large one. That is why YOLO predicts √w instead of w and computes the penalty on the difference of square roots.</p>
                     <div class="controls">
                         <div class="control">
-                            <label for="w-range">정답 너비 w <output id="w-out" for="w-range">0.10</output></label>
+                            <label for="w-range">Ground-truth width w <output id="w-out" for="w-range">0.10</output></label>
                             <input type="range" id="w-range" min="0.05" max="0.8" step="0.01" value="0.1">
                         </div>
                         <div class="control">
-                            <label for="d-range">너비 오차 Δw <output id="d-out" for="d-range">0.05</output></label>
+                            <label for="d-range">Width error Δw <output id="d-out" for="d-range">0.05</output></label>
                             <input type="range" id="d-range" min="0.01" max="0.2" step="0.01" value="0.05">
                         </div>
                     </div>
-                    <svg class="mini" id="size-mini" viewBox="0 0 200 200" role="img" aria-label="너비 w인 정답 박스와 너비 w + Δw인 예측 박스"></svg>
+                    <svg class="mini" id="size-mini" viewBox="0 0 200 200" role="img" aria-label="A ground-truth box of width w and a predicted box of width w + Δw"></svg>
                     <div class="legend" style="margin-top: 0;">
-                        <span><i style="border: 2px dashed var(--muted);"></i>정답 박스 · 너비 w</span>
-                        <span><i style="background: var(--accent-soft); border: 2px solid var(--accent);"></i>예측 박스 · 너비 w + Δw</span>
+                        <span><i style="border: 2px dashed var(--muted);"></i>Ground truth · width w</span>
+                        <span><i style="background: var(--accent-soft); border: 2px solid var(--accent);"></i>Prediction · width w + Δw</span>
                     </div>
-                    <p class="numbers"><span>예측 너비 w + Δw <b id="pred-out">0.15</b></span><span>겹침 IOU <b id="iou-out">0.667</b></span></p>
+                    <p class="numbers"><span>Predicted width w + Δw <b id="pred-out">0.15</b></span><span>Overlap IOU <b id="iou-out">0.667</b></span></p>
                     <div class="bars">
-                        <p class="formula">벌점 = λcoord × (예측 − 정답)², λcoord = 5</p>
-                        <div class="bar"><span>w 그대로</span><span class="track"><span class="fill plain" id="plain-bar"></span></span><output id="plain-out">0.0125</output></div>
+                        <p class="formula">Penalty = λcoord × (prediction − ground truth)², λcoord = 5</p>
+                        <div class="bar"><span>w as is</span><span class="track"><span class="fill plain" id="plain-bar"></span></span><output id="plain-out">0.0125</output></div>
                         <p class="formula" id="plain-formula">5 × (0.15 − 0.10)²</p>
                         <div class="bar"><span>√w (YOLO)</span><span class="track"><span class="fill" id="sqrt-bar"></span></span><output id="sqrt-out">0.0253</output></div>
                         <p class="formula" id="sqrt-formula">5 × (√0.15 − √0.10)² = 5 × (0.387 − 0.316)²</p>
                     </div>
-                    <p class="formula" id="chart-caption" style="margin-top: 14px;">Δw를 0.05에 고정하고 정답 너비 w만 바꾼 벌점</p>
-                    <svg class="chart" id="sqrt-chart" viewBox="0 0 320 170" role="img" aria-label="정답 너비 w에 따른 두 벌점 곡선"></svg>
-                    <p class="callout" id="sqrt-callout">같은 Δw(0.05)에서 √w의 차이는 작은 박스(w = 0.1)가 0.071, 큰 박스(w = 0.8)가 0.028이다. 벌점은 이 차이의 제곱이라 작은 박스 쪽이 6.7배 크다. w를 그대로 쓰면 두 벌점이 같다(0.0125).</p>
+                    <p class="formula" id="chart-caption" style="margin-top: 14px;">Penalty with Δw fixed at 0.05, varying only the ground-truth width w</p>
+                    <svg class="chart" id="sqrt-chart" viewBox="0 0 320 170" role="img" aria-label="The two penalty curves as the ground-truth width w changes"></svg>
+                    <p class="callout" id="sqrt-callout">With the same Δw (0.05), the difference in √w is 0.071 for a small box (w = 0.1) and 0.028 for a large box (w = 0.8). The penalty is the square of that difference, so the small box's penalty is 6.7 times larger. Using w as is, the two penalties would be equal (0.0125).</p>
                 </div>
                 <div class="panel">
-                    <h3>빈 박스: 98개 중 대부분은 물체가 없다</h3>
-                    <p class="hint">7 × 7 칸마다 박스가 2개씩, 모두 98개다. 물체의 중심이 있는 칸에서 박스 하나만 그 물체를 맡고, 나머지 박스는 모두 신뢰도 0을 배운다. 빈 박스가 압도적으로 많아 그대로 두면 물체를 맡은 박스의 신호를 덮는다. 논문은 빈 박스의 벌점에 λnoobj = 0.5를 곱한다.</p>
+                    <h3>Empty boxes: most of the 98 have no object</h3>
+                    <p class="hint">Two boxes in each of the 7 × 7 cells make 98 boxes. In the cell with an object's center, only one box takes that object; every other box learns a confidence of 0. Empty boxes far outnumber the others, so left alone they drown out the signal from the boxes responsible for objects. The paper multiplies the empty boxes' penalty by λnoobj = 0.5.</p>
                     <div class="controls">
                         <div class="control">
-                            <label for="k-range">사진 속 물체 수 <output id="k-out" for="k-range">2</output></label>
+                            <label for="k-range">Objects in the image <output id="k-out" for="k-range">2</output></label>
                             <input type="range" id="k-range" min="0" max="10" step="1" value="2">
                         </div>
                         <div class="control">
@@ -810,100 +810,100 @@
                         </div>
                     </div>
                     <canvas id="noobj3d" class="stage3d square" tabindex="0" role="img"
-                            aria-label="7 × 7 칸에 박스가 2개씩 선 막대 98개. 물체를 맡은 박스는 색 막대, 빈 박스는 회색 막대이고, 높이가 신뢰도 벌점의 무게다."
+                            aria-label="98 bars, two in each of the 7 × 7 cells. Boxes responsible for an object are colored, empty boxes are gray, and the height is the weight of the confidence penalty."
                             aria-describedby="noobj3d-hint"></canvas>
                     <div class="row" style="margin-top: 8px;">
-                        <p class="hint" id="noobj3d-hint" style="margin: 0; flex: 1 1 240px;">막대 높이가 신뢰도 벌점의 무게다. 끌어서 돌리고, 칸을 누르면 물체를 놓거나 뺀다(누른 박스가 맡는다). 키보드: 화살표로 회전.</p>
+                        <p class="hint" id="noobj3d-hint" style="margin: 0; flex: 1 1 240px;">Bar height is the weight of the confidence penalty. Drag to rotate; click a cell to place or remove an object (the box you click takes it). Keyboard: arrows rotate.</p>
                         <div class="seg">
-                            <button type="button" id="noobj3d-top">위에서 보기</button>
-                            <button type="button" id="noobj3d-reset">처음 각도</button>
+                            <button type="button" id="noobj3d-top">Top view</button>
+                            <button type="button" id="noobj3d-reset">Reset view</button>
                         </div>
                     </div>
                     <div class="legend">
-                        <span><i style="background: var(--accent);"></i>물체를 맡은 박스 · 무게 1</span>
-                        <span><i style="background: var(--line-strong);"></i>빈 박스 · 무게 λnoobj</span>
-                        <span><i style="background: var(--accent-soft); border: 1px solid var(--accent);"></i>물체 중심이 있는 칸</span>
+                        <span><i style="background: var(--accent);"></i>Responsible box · weight 1</span>
+                        <span><i style="background: var(--line-strong);"></i>Empty box · weight λnoobj</span>
+                        <span><i style="background: var(--accent-soft); border: 1px solid var(--accent);"></i>Cell with an object's center</span>
                     </div>
-                    <p class="numbers">물체를 맡은 박스 <b id="resp-count">2</b> · 빈 박스 <b id="empty-count">96</b></p>
-                    <p class="hint" id="noobj-pick" aria-live="polite" style="margin: 8px 0 0; font-size: 14px;">칸을 눌러 물체를 놓으면, 그 칸의 두 박스가 각각 무엇을 배우는지 여기에 나온다.</p>
-                    <p class="muted" style="margin: 10px 0 4px; font-size: 14px;">신뢰도 벌점의 무게</p>
+                    <p class="numbers">Responsible boxes <b id="resp-count">2</b> · empty boxes <b id="empty-count">96</b></p>
+                    <p class="hint" id="noobj-pick" aria-live="polite" style="margin: 8px 0 0; font-size: 14px;">Click a cell to place an object, and this line shows what each of the cell's two boxes learns.</p>
+                    <p class="muted" style="margin: 10px 0 4px; font-size: 14px;">Weight of the confidence penalty</p>
                     <div class="stack" aria-hidden="true"><span class="empty" id="empty-share-bar"></span><span class="full" id="resp-share-bar"></span></div>
-                    <p class="callout" id="noobj-callout" aria-live="polite">빈 박스 하나의 무게(λnoobj = 0.50)는 작아도 96개를 모두 합하면 신뢰도 벌점 무게의 96.0%를 차지한다(λnoobj = 1이면 98.0%). 논문은 λnoobj = 0.5로 빈 박스의 벌점을 줄이는 동시에, 좌표 벌점에는 λcoord = 5를 곱해 키운다.</p>
+                    <p class="callout" id="noobj-callout" aria-live="polite">Each empty box weighs little (λnoobj = 0.50), but all 96 together carry 96.0% of the confidence-penalty weight (98.0% with λnoobj = 1). The paper shrinks the empty boxes' penalty with λnoobj = 0.5 and, at the same time, scales up the coordinate penalty with λcoord = 5.</p>
                 </div>
             </div>
-            <p class="source">출처: 논문 §2.2, 식 3</p>
+            <p class="source">Source: paper §2.2, Eq. 3</p>
         </section>
 
         <section id="limits" class="wrap step" aria-labelledby="limits-title">
-            <p class="step-no">한계</p>
-            <h2 id="limits-title">한 번에 보는 대가</h2>
+            <p class="step-no">Limits</p>
+            <h2 id="limits-title">The price of looking once</h2>
             <ul class="limits">
-                <li>칸마다 박스 2개와 클래스 1개만 예측한다. 새 떼처럼 붙어 있는 작은 물체는 놓치기 쉽다.</li>
-                <li>박스 모양을 데이터에서 배우므로 처음 보는 비율이나 배치의 물체에 약하다.</li>
-                <li>여러 번 줄어든 거친 특징으로 박스를 맞히므로, 가장 흔한 오류는 부정확한 위치다.</li>
+                <li>Each cell predicts only 2 boxes and 1 class, so small objects that come in groups, like a flock of birds, are easy to miss.</li>
+                <li>It learns box shapes from data, so it struggles with objects in new or unusual aspect ratios or arrangements.</li>
+                <li>It predicts boxes from coarse features that have been downsampled many times, so its most common error is inaccurate localization.</li>
             </ul>
             <div class="note">
-                <p><strong>오해</strong>한 번만 본다는 건 대충 본다는 뜻이다.</p>
-                <p class="fact"><strong>실제로는</strong>사진 전체를 한 번에 보기 때문에 주변 맥락을 쓴다. 논문에서 배경을 물체로 착각하는 실수는 Fast R-CNN의 절반 이하였다.</p>
+                <p><strong>Myth</strong>Looking only once means looking carelessly.</p>
+                <p class="fact"><strong>Actually</strong>Because it sees the whole image at once, it uses the surrounding context. In the paper, YOLO made less than half as many background errors (mistaking background for an object) as Fast R-CNN.</p>
             </div>
-            <p class="source">출처: 논문 §1, §2.4, §4.2</p>
+            <p class="source">Source: paper §1, §2.4, §4.2</p>
         </section>
 
         <section id="faq" class="wrap step" aria-labelledby="faq-title">
-            <p class="step-no">질문</p>
-            <h2 id="faq-title">자주 묻는 질문</h2>
+            <p class="step-no">Questions</p>
+            <h2 id="faq-title">Frequently asked questions</h2>
             <div class="faq">
                 <details>
-                    <summary>YOLO는 무슨 뜻인가?</summary>
-                    <p>You Only Look Once의 줄임말이다. 사진 속 물체의 위치와 종류를 찾는 물체 탐지(객체 탐지, object detection) 방법으로, 후보 영역을 하나씩 검사하지 않고 사진 전체를 신경망에 한 번만 통과시켜 모든 물체를 한꺼번에 예측한다.</p>
+                    <summary>What does YOLO stand for?</summary>
+                    <p>YOLO stands for You Only Look Once. It is an object detection method, which finds where the objects in an image are and what they are. Instead of checking candidate regions one by one, it passes the whole image through a neural network once and predicts every object at the same time.</p>
                 </details>
                 <details>
-                    <summary>YOLOv1은 어떤 구조인가?</summary>
-                    <p>합성곱 24층과 완전연결 2층으로 이루어진다. 448 × 448 사진을 받아 7 × 7 × 30을 낸다. 논문 구조대로 구현해 세면 파라미터는 약 2억 7천만 개이고, 그중 약 76%가 첫 완전연결 층에 있다.</p>
+                    <summary>What is the YOLOv1 architecture?</summary>
+                    <p>It has 24 convolutional layers followed by 2 fully connected layers. It takes a 448 × 448 image and outputs a 7 × 7 × 30 tensor. Counted on an implementation that follows the paper, it has about 272 million parameters, and about 76% of them are in the first fully connected layer.</p>
                 </details>
                 <details>
-                    <summary>출력은 왜 7 × 7 × 30인가?</summary>
-                    <p>사진을 7 × 7 칸으로 나누고, 칸마다 박스 2개와 클래스 확률 20개를 내기 때문이다. 박스 하나는 x, y, w, h, 신뢰도의 5개 숫자라서 2 × 5 + 20 = 30이다.</p>
+                    <summary>Why is the YOLOv1 output 7 × 7 × 30?</summary>
+                    <p>The image is divided into a 7 × 7 grid, and each cell predicts 2 boxes and 20 class probabilities. Each box is 5 numbers (x, y, w, h, and confidence), so each cell has 2 × 5 + 20 = 30 numbers.</p>
                 </details>
                 <details>
-                    <summary>한 장에서 박스는 몇 개 나오고, 어떻게 줄이나?</summary>
-                    <p>7 × 7 칸 × 2개 = 98개가 나온다. 박스마다 클래스 확률 × 신뢰도로 점수를 매겨 낮은 것을 버리고, 같은 물체를 겹쳐 잡은 박스는 NMS(겹침 제거)로 점수가 가장 높은 하나만 남긴다.</p>
+                    <summary>How many boxes does YOLOv1 predict per image, and how are they reduced?</summary>
+                    <p>It predicts 7 × 7 cells × 2 = 98 boxes. Each box is scored by class probability × confidence and low-scoring boxes are discarded; among boxes that overlap on the same object, non-maximum suppression (NMS) keeps only the one with the highest score.</p>
                 </details>
                 <details>
-                    <summary>왜 너비 대신 √너비를 예측하나?</summary>
-                    <p>같은 크기의 오차라도 작은 박스에서는 겹침(IOU)이 크게 떨어지고, 큰 박스에서는 거의 그대로이기 때문이다. √w의 차이로 벌점을 매기면, 너비를 똑같이 0.05 틀렸을 때 작은 박스(w = 0.1)의 벌점이 큰 박스(w = 0.8)의 약 6.7배가 된다. 논문도 이 방법이 문제를 일부만 해결한다고 쓴다.</p>
+                    <summary>Why does YOLO predict the square root of the width instead of the width?</summary>
+                    <p>Because the same size error makes the overlap (IOU) of a small box drop sharply but barely affects a large box. With the penalty computed on the difference of square roots, getting the width wrong by the same 0.05 costs a small box (w = 0.1) about 6.7 times as much as a large box (w = 0.8). The paper notes that this only partially addresses the problem.</p>
                 </details>
                 <details>
-                    <summary>손실의 λcoord와 λnoobj는 무엇인가?</summary>
-                    <p>손실(식 3)에 곱하는 가중치다. 박스 좌표 오차에는 λcoord = 5를 곱해 키우고, 물체가 없는 박스의 신뢰도 오차에는 λnoobj = 0.5를 곱해 줄인다. 대부분의 칸에는 물체가 없어서, 그대로 두면 신뢰도를 0으로 끌어내리는 신호가 물체가 있는 칸의 신호를 압도해 학습이 불안정해지기 때문이다.</p>
+                    <summary>What are λcoord and λnoobj in the YOLO loss?</summary>
+                    <p>They are weights in the loss function (Eq. 3). Box coordinate errors are multiplied by λcoord = 5 to increase them, and the confidence errors of boxes without objects are multiplied by λnoobj = 0.5 to reduce them. Most cells contain no object, so without these weights the signal pushing confidence toward 0 would overpower the signal from cells with objects and make training unstable.</p>
                 </details>
                 <details>
-                    <summary>YOLOv1은 얼마나 빠른가?</summary>
-                    <p>논문 기준으로 Titan X GPU에서 초당 45장을 처리하고, 더 작은 Fast YOLO는 초당 155장을 처리한다. 스트리밍 영상을 25밀리초 이내의 지연으로 실시간 처리할 수 있는 속도다.</p>
+                    <summary>How fast is YOLOv1?</summary>
+                    <p>According to the paper, it processes 45 images per second on a Titan X GPU, and the smaller Fast YOLO processes 155 images per second. That is fast enough to process streaming video in real time with less than 25 milliseconds of latency.</p>
                 </details>
                 <details>
-                    <summary>YOLOv1의 한계는 무엇인가?</summary>
-                    <p>칸마다 박스 2개와 클래스 1개만 예측해서, 새 떼처럼 붙어 있는 작은 물체는 놓치기 쉽다. 학습에서 보지 못한 비율이나 배치의 물체에 약하고, 가장 흔한 오류는 부정확한 위치다.</p>
+                    <summary>What are the limitations of YOLOv1?</summary>
+                    <p>Each cell predicts only 2 boxes and 1 class, so small objects that appear in groups, like a flock of birds, are easy to miss. It struggles with objects in aspect ratios or arrangements not seen in training, and its most common error is inaccurate localization.</p>
                 </details>
             </div>
-            <p class="source">출처: 논문 초록, §1, §2, §2.2, §2.3, §2.4, 표 1 · 파라미터 수와 벌점 배율은 이 페이지의 구현과 계산</p>
+            <p class="source">Source: paper abstract, §1, §2, §2.2, §2.3, §2.4, Table 1 · The parameter count and the penalty ratio come from this page's implementation and calculation</p>
         </section>
 
         <section class="wrap step" aria-labelledby="more-title">
-            <h2 id="more-title">더 보기</h2>
+            <h2 id="more-title">Further reading</h2>
             <ul class="links">
                 <li><a href="https://arxiv.org/abs/1506.02640">Redmon et al., You Only Look Once: Unified, Real-Time Object Detection (CVPR 2016)</a></li>
                 <!-- 영상이 나오면 추가: <li><a href="https://www.youtube.com/watch?v=...">영상으로 보기</a></li> -->
             </ul>
-            <p class="hint" style="margin-top: 12px;">이 페이지의 층 구조와 계산량, 예측 박스는 논문대로 직접 구현한 PyTorch 코드에서 뽑았다.</p>
+            <p class="hint" style="margin-top: 12px;">The layer structure, compute figures, and predicted boxes on this page come from a PyTorch implementation that follows the paper.</p>
         </section>
     </main>
 
     <footer class="wrap">
-        마지막 업데이트 <time datetime="2026-10-02">2026-10-02</time> · <a href="/">Hugh Q Lee</a>
+        Last updated <time datetime="2026-10-02">2026-10-02</time> · <a href="/">Hugh Q Lee</a> · Translated from the <a href="/knowledge/yolo-v1/" hreflang="ko">Korean original</a>
     </footer>
 
-    <script type="application/json" id="yolo-data">{"structure":{"layers":[["conv",7,64,2,64,224,224,9472,472055808,"pretrained"],["maxpool",2,0,2,64,112,112,0,0,null],["conv",3,192,1,192,112,112,110784,1387266048,"pretrained"],["maxpool",2,0,2,192,56,56,0,0,null],["conv",1,128,1,128,56,56,24704,77070336,"pretrained"],["conv",3,256,1,256,56,56,295168,924844032,"pretrained"],["conv",1,256,1,256,56,56,65792,205520896,"pretrained"],["conv",3,512,1,512,56,56,1180160,3699376128,"pretrained"],["maxpool",2,0,2,512,28,28,0,0,null],["conv",1,256,1,256,28,28,131328,102760448,"pretrained"],["conv",3,512,1,512,28,28,1180160,924844032,"pretrained"],["conv",1,256,1,256,28,28,131328,102760448,"pretrained"],["conv",3,512,1,512,28,28,1180160,924844032,"pretrained"],["conv",1,256,1,256,28,28,131328,102760448,"pretrained"],["conv",3,512,1,512,28,28,1180160,924844032,"pretrained"],["conv",1,256,1,256,28,28,131328,102760448,"pretrained"],["conv",3,512,1,512,28,28,1180160,924844032,"pretrained"],["conv",1,512,1,512,28,28,262656,205520896,"pretrained"],["conv",3,1024,1,1024,28,28,4719616,3699376128,"pretrained"],["maxpool",2,0,2,1024,14,14,0,0,null],["conv",1,512,1,512,14,14,524800,102760448,"pretrained"],["conv",3,1024,1,1024,14,14,4719616,924844032,"pretrained"],["conv",1,512,1,512,14,14,524800,102760448,"pretrained"],["conv",3,1024,1,1024,14,14,4719616,924844032,"pretrained"],["conv",3,1024,1,1024,14,14,9438208,1849688064,"added"],["conv",3,1024,2,1024,7,7,9438208,462422016,"added"],["conv",3,1024,1,1024,7,7,9438208,462422016,"added"],["conv",3,1024,1,1024,7,7,9438208,462422016,"added"],["fc",0,4096,1,4096,1,1,205524992,205520896,"added"],["fc",0,1470,1,1470,1,1,6022590,6021120,"added"]],"grid":7,"cell":30,"totals":{"params":271703550,"macs":20285153280,"conv":24,"fc":2}},"synthetic":{"S":7,"B":2,"C":3,"classes_ko":["사각형","원","삼각형"],"colors":[[230,80,70],[80,200,110],[80,140,240]],"map50_test":0.9482518138583438,"scenes":[{"background":[40,41,41],"objects":[{"label":0,"box":[0.546,0.5786,0.3825,0.3301]},{"label":1,"box":[0.8709,0.7268,0.1318,0.2029]}],"prediction":[[[0.452,0.766,0.307,0.399,0.016,-0.022,-0.039,-0.023,-0.013,0.008,0.321,0.384,0.32],[0.437,0.584,0.42,0.433,0.023,-0.016,-0.05,-0.073,-0.003,-0.002,0.675,0.229,0.131],[0.441,0.585,0.419,0.441,-0.009,0.056,-0.034,0.05,0.028,-0.014,0.624,0.184,0.235],[-0.022,-0.02,0.006,0.005,-0.011,0.424,0.643,0.395,0.408,-0.006,0.515,0.393,0.09],[0.018,0.017,-0.026,-0.023,-0.009,0.413,0.71,0.308,0.301,-0.018,0.421,0.371,0.232],[0.028,-0.006,-0.036,-0.016,0.007,0.483,0.616,0.443,0.341,-0.022,0.583,0.318,0.099],[0.014,-0.02,0.066,-0.035,0.001,0.216,0.732,0.462,0.422,-0.011,0.471,0.168,0.43]],[[-0.025,-0.04,0.011,-0.022,0.002,0.52,0.379,0.415,0.414,0.002,0.54,0.221,0.273],[-0.024,-0.002,-0.017,-0.062,-0.009,0.389,0.377,0.346,0.387,-0.009,0.575,0.233,0.144],[-0.07,-0.029,0.014,0.015,-0.003,0.394,0.43,0.355,0.412,-0.017,0.612,0.229,0.097],[0.126,0.07,0.054,0.07,0.011,0.427,0.517,0.372,0.428,-0.014,0.604,0.206,0.158],[0.048,-0.024,0.005,-0.027,-0.002,0.403,0.466,0.402,0.408,-0.026,0.617,0.237,0.073],[0.114,0.097,0.129,0.083,-0.007,0.44,0.44,0.375,0.417,0.019,0.534,0.209,0.131],[-0.008,0.017,-0.025,-0.005,-0.0,0.147,0.441,0.32,0.375,0.016,0.471,0.216,0.222]],[[0.666,0.451,0.354,0.417,-0.004,-0.046,0.035,0.03,-0.02,0.002,0.565,0.336,0.189],[0.022,-0.01,0.054,-0.048,0.004,0.412,0.408,0.379,0.423,0.003,0.622,0.235,0.09],[0.476,0.443,0.382,0.385,-0.055,0.087,0.074,0.034,-0.047,-0.002,0.712,0.162,0.032],[0.53,0.41,0.442,0.359,0.076,-0.001,0.025,-0.042,0.036,-0.005,0.703,0.152,0.061],[-0.018,0.003,0.034,0.035,-0.004,0.35,0.474,0.387,0.389,0.034,0.705,0.111,0.122],[0.384,0.361,0.403,0.461,-0.03,0.442,0.423,0.168,0.265,0.012,0.633,0.163,0.113],[0.257,0.362,0.354,0.413,0.01,0.023,-0.015,-0.074,0.011,0.005,0.59,0.124,0.235]],[[0.57,0.485,0.337,0.341,0.027,-0.02,-0.016,0.068,0.003,0.001,0.447,0.31,0.298],[0.008,-0.029,-0.003,-0.088,0.006,0.38,0.461,0.371,0.441,-0.029,0.635,0.155,0.183],[0.454,0.483,0.1,0.458,0.003,0.513,0.664,0.423,0.414,-0.01,0.827,0.072,0.038],[0.005,-0.033,-0.029,-0.003,-0.009,0.828,1.033,0.597,0.522,0.238,0.982,-0.0,0.005],[-0.015,0.023,0.056,0.026,-0.008,0.12,0.822,0.486,0.496,0.01,0.952,0.035,-0.043],[0.376,0.561,0.331,0.436,0.032,0.11,0.151,0.109,0.055,0.003,0.642,0.212,0.046],[0.254,0.37,0.343,0.445,0.027,-0.004,-0.003,-0.02,0.02,-0.009,0.313,0.439,0.2]],[[0.602,0.41,0.368,0.365,0.003,0.023,0.005,0.042,-0.053,-0.005,0.581,0.156,0.306],[0.012,-0.02,0.052,-0.006,-0.016,0.42,0.424,0.369,0.408,0.004,0.636,0.133,0.134],[0.644,0.411,0.417,0.452,-0.011,0.135,0.142,0.097,0.113,0.004,0.715,0.177,0.083],[0.835,0.16,0.589,0.504,0.426,0.815,0.11,0.655,0.541,0.406,0.966,0.048,-0.052],[0.166,0.135,0.07,0.082,-0.016,0.002,0.155,0.493,0.525,0.211,0.769,0.228,0.006],[0.777,0.791,0.381,0.473,0.065,0.045,0.013,0.036,0.056,0.005,0.271,0.802,-0.068],[0.139,1.12,0.371,0.487,0.082,0.122,0.143,0.024,0.048,-0.002,0.043,0.95,-0.086]],[[0.004,0.01,0.015,-0.006,-0.011,0.695,0.461,0.205,0.377,0.042,0.539,0.257,0.22],[0.408,0.337,0.402,0.383,0.006,0.354,0.421,0.4,0.475,0.005,0.612,0.174,0.189],[0.0,-0.05,0.057,-0.024,0.013,0.389,0.398,0.405,0.462,-0.025,0.691,0.156,0.058],[-0.067,-0.006,0.008,-0.015,-0.001,0.607,0.311,0.461,0.427,-0.031,0.715,0.145,0.13],[0.4,0.554,0.547,0.35,0.031,0.218,0.329,0.446,0.409,0.016,0.586,0.225,0.124],[0.952,0.074,0.446,0.384,-0.014,0.016,-0.001,0.007,-0.002,0.011,0.15,0.932,-0.077],[0.099,0.005,0.399,0.458,0.643,-0.035,0.032,-0.071,0.034,0.002,-0.069,1.109,-0.043]],[[-0.016,0.008,-0.021,-0.029,-0.01,0.881,0.331,0.391,0.273,0.002,0.466,0.154,0.511],[0.374,0.349,0.363,0.313,-0.009,0.069,0.017,0.003,-0.029,0.005,0.452,0.384,0.19],[0.034,-0.014,0.024,-0.016,0.001,0.423,0.26,0.333,0.281,0.036,0.539,0.234,0.239],[0.389,0.296,0.35,0.401,0.036,0.066,-0.053,0.02,0.008,-0.008,0.517,0.26,0.223],[0.028,0.013,0.028,-0.053,0.0,0.244,0.129,0.384,0.306,0.012,0.437,0.195,0.251],[0.532,0.156,0.277,0.396,0.023,-0.015,0.032,-0.02,-0.015,-0.0,0.14,0.76,0.009],[0.009,-0.01,0.028,-0.079,-0.002,0.222,0.113,0.284,0.299,-0.019,-0.031,0.772,0.151]]]},{"background":[28,31,22],"objects":[{"label":0,"box":[0.701,0.6041,0.2522,0.3581]},{"label":2,"box":[0.3222,0.7108,0.3572,0.3046]},{"label":1,"box":[0.6531,0.2304,0.1347,0.2723]}],"prediction":[[[0.794,0.433,0.453,0.3,-0.012,0.04,-0.031,0.036,-0.017,-0.004,0.347,0.037,0.494],[0.498,0.598,0.417,0.357,-0.042,-0.01,0.014,-0.079,0.004,-0.0,0.603,0.312,0.146],[0.505,0.733,0.478,0.406,0.014,0.027,-0.022,0.01,0.065,-0.001,0.526,0.243,0.304],[0.004,0.016,0.001,0.0,0.008,0.476,0.596,0.421,0.391,0.039,0.274,0.567,0.115],[0.026,0.053,-0.011,-0.039,0.01,0.577,0.825,0.21,0.443,-0.023,0.096,0.745,0.148],[0.018,0.041,0.005,-0.056,0.01,0.482,0.695,0.459,0.421,-0.008,0.443,0.589,-0.008],[0.005,-0.061,0.041,0.0,0.002,0.225,0.463,0.562,0.325,-0.0,0.458,0.307,0.207]],[[-0.016,0.034,0.056,0.004,-0.006,0.632,0.488,0.465,0.478,0.025,0.482,0.305,0.273],[0.001,0.006,0.013,0.023,-0.006,0.483,0.524,0.366,0.457,0.043,0.548,0.31,0.123],[-0.023,-0.031,0.052,-0.032,0.009,0.368,0.457,0.372,0.457,0.005,0.491,0.312,0.153],[0.194,0.079,0.115,0.117,-0.02,0.628,0.55,0.459,0.47,-0.042,0.41,0.611,-0.028],[-0.023,0.039,0.031,0.036,0.004,0.569,0.655,0.426,0.456,0.792,-0.01,1.043,-0.039],[0.148,0.134,0.055,0.061,0.021,0.182,0.475,0.428,0.439,-0.021,0.336,0.681,-0.083],[0.04,0.021,0.005,-0.08,-0.006,0.283,0.556,0.474,0.4,0.048,0.383,0.511,0.041]],[[0.59,0.469,0.268,0.422,-0.009,0.001,-0.034,-0.005,-0.018,0.002,0.548,0.297,0.196],[-0.043,-0.015,-0.009,-0.03,-0.014,0.411,0.458,0.395,0.415,0.007,0.552,0.295,0.172],[0.33,0.407,0.387,0.369,-0.043,-0.013,0.021,-0.049,-0.042,0.015,0.517,0.212,0.205],[0.438,0.467,0.461,0.433,0.006,-0.067,-0.012,0.004,0.032,-0.005,0.548,0.389,0.05],[-0.007,0.018,-0.017,0.069,-0.001,0.547,0.162,0.321,0.449,-0.003,0.25,0.657,0.048],[0.348,0.317,0.371,0.316,0.008,0.407,0.256,0.414,0.3,-0.005,0.578,0.396,0.054],[0.219,0.384,0.36,0.401,-0.037,0.008,0.027,0.048,-0.072,0.011,0.532,0.261,0.207]],[[0.637,0.448,0.323,0.414,0.018,0.051,-0.031,0.019,0.032,-0.008,0.559,0.18,0.27],[0.054,-0.007,-0.015,0.025,0.02,0.402,0.449,0.348,0.428,0.028,0.505,0.17,0.32],[0.284,0.44,0.394,0.405,-0.0,0.428,0.473,0.369,0.468,0.001,0.445,0.06,0.478],[0.018,-0.018,-0.009,-0.047,0.003,0.469,0.518,0.403,0.441,0.087,0.606,0.172,0.214],[0.004,0.004,0.032,0.001,0.0,0.736,0.887,0.454,0.52,0.012,0.859,0.068,0.07],[0.084,0.799,0.437,0.484,-0.024,0.147,0.229,0.164,-0.02,0.012,0.909,0.041,0.016],[0.3,0.396,0.36,0.429,-0.047,-0.101,0.031,0.06,-0.041,0.001,0.633,0.16,0.22]],[[0.691,0.542,0.468,0.465,-0.009,-0.022,0.005,0.032,-0.032,-0.002,0.522,0.143,0.319],[0.025,0.009,0.01,0.01,0.008,0.879,0.737,0.559,0.458,-0.016,0.261,0.104,0.602],[0.266,1.026,0.531,0.542,0.498,0.192,0.113,0.175,0.055,0.006,0.087,-0.039,0.985],[0.368,0.56,0.482,0.534,0.034,0.45,0.558,0.553,0.646,-0.033,0.55,0.103,0.265],[0.159,0.104,0.086,0.126,-0.0,0.837,0.194,0.551,0.628,0.842,1.021,-0.038,0.061],[0.004,0.295,0.503,0.554,0.132,0.038,-0.031,0.005,0.031,-0.014,0.958,0.028,0.026],[0.279,0.443,0.356,0.448,0.022,0.077,0.055,0.066,0.062,0.009,0.653,0.041,0.208]],[[0.003,0.09,0.019,0.031,-0.005,0.658,0.361,0.285,0.497,-0.006,0.383,0.078,0.47],[0.714,0.293,0.368,0.333,0.003,0.866,0.102,0.566,0.55,-0.004,0.176,0.111,0.668],[-0.021,0.053,-0.013,0.032,0.023,0.231,0.02,0.629,0.58,0.437,0.021,0.058,0.924],[-0.024,0.003,0.023,0.029,0.016,0.342,0.384,0.403,0.427,-0.101,0.454,0.081,0.448],[0.242,0.641,0.265,0.355,-0.015,0.52,0.281,0.396,0.386,-0.049,0.787,0.079,0.123],[0.22,0.348,0.423,0.395,-0.034,0.02,-0.012,0.038,-0.0,0.004,0.789,0.091,0.078],[0.185,0.463,0.258,0.504,-0.029,-0.053,-0.017,0.007,0.04,0.0,0.5,0.295,0.213]],[[-0.011,0.016,0.001,-0.006,-0.005,0.624,0.231,0.453,0.415,-0.012,0.181,0.167,0.495],[0.544,0.202,0.368,0.225,0.013,-0.0,0.067,0.013,-0.009,0.003,0.192,0.267,0.504],[-0.024,-0.037,0.001,0.008,0.013,0.35,0.22,0.484,0.353,0.033,0.095,0.182,0.64],[0.312,0.284,0.382,0.318,-0.015,-0.011,0.026,0.007,-0.033,-0.004,0.59,0.08,0.327],[0.012,-0.014,0.021,-0.02,-0.009,0.444,0.293,0.386,0.395,0.064,0.527,0.193,0.168],[0.391,0.366,0.415,0.418,-0.014,0.011,-0.073,0.04,-0.04,-0.008,0.502,0.219,0.25],[0.014,-0.038,-0.006,-0.051,-0.009,0.376,0.139,0.382,0.512,0.009,0.403,0.444,0.067]]]},{"background":[22,36,36],"objects":[{"label":1,"box":[0.398,0.5898,0.3046,0.3811]},{"label":2,"box":[0.5964,0.2895,0.1813,0.3832]},{"label":0,"box":[0.3578,0.3474,0.3254,0.1365]}],"prediction":[[[0.719,0.722,0.27,0.326,0.013,0.027,0.085,0.017,-0.007,0.0,0.223,0.116,0.491],[0.458,0.572,0.42,0.363,0.042,0.001,-0.042,-0.008,0.032,-0.007,0.681,0.246,0.08],[0.369,0.658,0.448,0.429,-0.007,0.022,0.006,-0.022,-0.023,-0.02,0.631,0.142,0.172],[-0.038,0.015,-0.006,0.017,-0.001,0.523,0.643,0.349,0.366,0.022,0.492,0.165,0.272],[-0.016,0.013,0.004,0.004,-0.016,0.264,0.742,0.224,0.418,0.001,0.108,0.198,0.674],[-0.015,0.025,0.02,0.005,0.002,0.448,0.628,0.429,0.503,0.018,0.547,0.188,0.231],[-0.018,0.003,-0.039,-0.04,0.017,0.632,0.44,0.383,0.416,-0.016,0.419,0.452,-0.033]],[[-0.027,0.02,-0.011,-0.003,0.002,0.66,0.533,0.361,0.481,-0.006,0.527,0.112,0.253],[-0.035,0.015,0.028,-0.058,-0.01,0.627,0.662,0.386,0.446,-0.074,0.819,0.054,0.029],[-0.097,-0.074,0.012,0.03,0.003,0.357,0.701,0.44,0.418,0.019,0.864,0.047,0.034],[0.168,0.062,0.074,0.1,-0.004,0.601,0.726,0.497,0.458,-0.081,0.478,-0.011,0.482],[0.01,0.041,0.054,0.061,0.0,0.211,0.984,0.392,0.557,0.321,0.066,0.006,0.907],[0.134,0.22,0.06,0.093,-0.004,0.378,0.593,0.343,0.437,-0.052,0.4,0.25,0.275],[-0.005,0.038,0.026,-0.07,-0.008,0.329,0.397,0.318,0.437,0.004,0.381,0.193,0.31]],[[0.634,0.499,0.418,0.424,0.004,-0.069,0.01,0.063,-0.054,-0.001,0.66,0.092,0.212],[-0.094,0.023,0.003,0.011,-0.012,0.825,0.375,0.412,0.337,0.034,0.959,0.016,-0.033],[0.565,0.399,0.571,0.386,0.674,-0.011,0.022,0.069,0.032,0.009,0.962,0.108,-0.012],[0.59,0.364,0.503,0.496,0.03,-0.008,-0.022,-0.037,-0.029,0.009,0.393,0.168,0.446],[0.008,-0.038,-0.01,0.025,0.001,0.198,0.118,0.422,0.633,0.864,0.006,-0.032,1.089],[0.39,0.398,0.308,0.415,-0.05,0.311,0.286,0.399,0.339,-0.022,0.45,0.177,0.344],[0.18,0.449,0.321,0.341,-0.003,-0.047,-0.055,-0.011,0.003,0.017,0.502,0.217,0.244]],[[0.632,0.456,0.372,0.327,-0.02,-0.01,-0.092,-0.015,0.047,-0.005,0.462,0.227,0.285],[-0.015,0.008,0.049,-0.005,-0.013,0.65,0.588,0.367,0.444,0.041,0.5,0.362,0.11],[0.633,0.327,0.066,0.474,0.008,0.733,0.638,0.58,0.61,0.157,0.384,0.664,-0.005],[-0.0,0.002,0.062,-0.058,-0.015,0.119,0.544,0.411,0.476,-0.008,0.18,0.656,0.137],[-0.002,-0.029,0.004,-0.0,-0.005,0.271,0.319,0.398,0.478,-0.007,0.256,0.263,0.464],[0.335,0.435,0.395,0.422,0.002,0.14,0.06,0.134,-0.048,0.008,0.529,0.282,0.151],[0.249,0.341,0.34,0.459,0.01,0.002,-0.016,0.054,0.035,0.002,0.502,0.26,0.2]],[[0.716,0.491,0.41,0.421,-0.002,-0.023,-0.051,0.047,-0.053,0.002,0.395,0.448,0.205],[0.003,-0.044,-0.015,0.017,-0.007,0.722,0.354,0.499,0.463,0.0,0.28,0.643,0.005],[0.763,0.174,0.556,0.629,0.869,0.208,0.144,0.085,0.044,0.0,0.049,1.014,-0.014],[0.003,0.217,0.487,0.523,-0.054,-0.002,0.328,0.454,0.647,0.018,0.108,0.868,-0.002],[0.107,0.118,0.091,0.073,0.003,0.447,0.386,0.353,0.422,0.008,0.485,0.303,0.147],[0.444,0.451,0.397,0.406,0.041,0.006,0.037,-0.03,-0.014,-0.0,0.516,0.3,0.152],[0.131,0.507,0.324,0.378,-0.036,0.078,0.11,0.097,0.065,0.001,0.554,0.286,0.11]],[[-0.025,-0.002,-0.034,0.081,-0.001,0.667,0.394,0.3,0.382,0.026,0.505,0.233,0.295],[0.442,0.368,0.398,0.433,0.006,0.379,0.426,0.4,0.453,-0.041,0.556,0.326,0.145],[0.039,0.02,0.025,-0.017,-0.002,0.54,0.321,0.42,0.462,-0.074,0.268,0.557,0.123],[0.05,-0.005,-0.051,-0.042,-0.011,0.359,0.392,0.417,0.4,-0.016,0.334,0.5,0.092],[0.291,0.528,0.273,0.141,0.011,0.365,0.421,0.368,0.366,0.018,0.449,0.297,0.219],[0.392,0.423,0.393,0.393,-0.008,0.021,-0.032,0.064,0.034,-0.002,0.496,0.287,0.11],[0.171,0.339,0.332,0.384,-0.032,0.011,0.017,-0.035,-0.015,0.023,0.4,0.258,0.225]],[[-0.027,0.031,-0.072,0.013,0.011,0.476,0.208,0.184,0.184,0.016,0.3,0.316,0.329],[0.471,0.27,0.3,0.406,-0.033,0.032,-0.021,0.014,-0.044,0.0,0.484,0.474,0.098],[-0.005,-0.078,-0.026,0.016,0.001,0.544,0.288,0.431,0.476,0.028,0.495,0.256,0.175],[0.41,0.291,0.362,0.37,0.02,-0.03,-0.03,0.044,0.033,0.003,0.446,0.35,0.16],[-0.022,-0.074,-0.025,0.05,-0.007,0.421,0.235,0.365,0.159,0.015,0.538,0.16,0.19],[0.379,0.264,0.444,0.346,-0.028,-0.009,-0.027,0.067,-0.012,-0.003,0.489,0.244,0.261],[-0.008,-0.049,0.063,-0.015,0.003,0.267,0.028,0.385,0.409,-0.016,0.203,0.339,0.351]]]}]}}</script>
+    <script type="application/json" id="yolo-data">{"structure":{"layers":[["conv",7,64,2,64,224,224,9472,472055808,"pretrained"],["maxpool",2,0,2,64,112,112,0,0,null],["conv",3,192,1,192,112,112,110784,1387266048,"pretrained"],["maxpool",2,0,2,192,56,56,0,0,null],["conv",1,128,1,128,56,56,24704,77070336,"pretrained"],["conv",3,256,1,256,56,56,295168,924844032,"pretrained"],["conv",1,256,1,256,56,56,65792,205520896,"pretrained"],["conv",3,512,1,512,56,56,1180160,3699376128,"pretrained"],["maxpool",2,0,2,512,28,28,0,0,null],["conv",1,256,1,256,28,28,131328,102760448,"pretrained"],["conv",3,512,1,512,28,28,1180160,924844032,"pretrained"],["conv",1,256,1,256,28,28,131328,102760448,"pretrained"],["conv",3,512,1,512,28,28,1180160,924844032,"pretrained"],["conv",1,256,1,256,28,28,131328,102760448,"pretrained"],["conv",3,512,1,512,28,28,1180160,924844032,"pretrained"],["conv",1,256,1,256,28,28,131328,102760448,"pretrained"],["conv",3,512,1,512,28,28,1180160,924844032,"pretrained"],["conv",1,512,1,512,28,28,262656,205520896,"pretrained"],["conv",3,1024,1,1024,28,28,4719616,3699376128,"pretrained"],["maxpool",2,0,2,1024,14,14,0,0,null],["conv",1,512,1,512,14,14,524800,102760448,"pretrained"],["conv",3,1024,1,1024,14,14,4719616,924844032,"pretrained"],["conv",1,512,1,512,14,14,524800,102760448,"pretrained"],["conv",3,1024,1,1024,14,14,4719616,924844032,"pretrained"],["conv",3,1024,1,1024,14,14,9438208,1849688064,"added"],["conv",3,1024,2,1024,7,7,9438208,462422016,"added"],["conv",3,1024,1,1024,7,7,9438208,462422016,"added"],["conv",3,1024,1,1024,7,7,9438208,462422016,"added"],["fc",0,4096,1,4096,1,1,205524992,205520896,"added"],["fc",0,1470,1,1470,1,1,6022590,6021120,"added"]],"grid":7,"cell":30,"totals":{"params":271703550,"macs":20285153280,"conv":24,"fc":2}},"synthetic":{"S":7,"B":2,"C":3,"classes_ko":["square","circle","triangle"],"colors":[[230,80,70],[80,200,110],[80,140,240]],"map50_test":0.9482518138583438,"scenes":[{"background":[40,41,41],"objects":[{"label":0,"box":[0.546,0.5786,0.3825,0.3301]},{"label":1,"box":[0.8709,0.7268,0.1318,0.2029]}],"prediction":[[[0.452,0.766,0.307,0.399,0.016,-0.022,-0.039,-0.023,-0.013,0.008,0.321,0.384,0.32],[0.437,0.584,0.42,0.433,0.023,-0.016,-0.05,-0.073,-0.003,-0.002,0.675,0.229,0.131],[0.441,0.585,0.419,0.441,-0.009,0.056,-0.034,0.05,0.028,-0.014,0.624,0.184,0.235],[-0.022,-0.02,0.006,0.005,-0.011,0.424,0.643,0.395,0.408,-0.006,0.515,0.393,0.09],[0.018,0.017,-0.026,-0.023,-0.009,0.413,0.71,0.308,0.301,-0.018,0.421,0.371,0.232],[0.028,-0.006,-0.036,-0.016,0.007,0.483,0.616,0.443,0.341,-0.022,0.583,0.318,0.099],[0.014,-0.02,0.066,-0.035,0.001,0.216,0.732,0.462,0.422,-0.011,0.471,0.168,0.43]],[[-0.025,-0.04,0.011,-0.022,0.002,0.52,0.379,0.415,0.414,0.002,0.54,0.221,0.273],[-0.024,-0.002,-0.017,-0.062,-0.009,0.389,0.377,0.346,0.387,-0.009,0.575,0.233,0.144],[-0.07,-0.029,0.014,0.015,-0.003,0.394,0.43,0.355,0.412,-0.017,0.612,0.229,0.097],[0.126,0.07,0.054,0.07,0.011,0.427,0.517,0.372,0.428,-0.014,0.604,0.206,0.158],[0.048,-0.024,0.005,-0.027,-0.002,0.403,0.466,0.402,0.408,-0.026,0.617,0.237,0.073],[0.114,0.097,0.129,0.083,-0.007,0.44,0.44,0.375,0.417,0.019,0.534,0.209,0.131],[-0.008,0.017,-0.025,-0.005,-0.0,0.147,0.441,0.32,0.375,0.016,0.471,0.216,0.222]],[[0.666,0.451,0.354,0.417,-0.004,-0.046,0.035,0.03,-0.02,0.002,0.565,0.336,0.189],[0.022,-0.01,0.054,-0.048,0.004,0.412,0.408,0.379,0.423,0.003,0.622,0.235,0.09],[0.476,0.443,0.382,0.385,-0.055,0.087,0.074,0.034,-0.047,-0.002,0.712,0.162,0.032],[0.53,0.41,0.442,0.359,0.076,-0.001,0.025,-0.042,0.036,-0.005,0.703,0.152,0.061],[-0.018,0.003,0.034,0.035,-0.004,0.35,0.474,0.387,0.389,0.034,0.705,0.111,0.122],[0.384,0.361,0.403,0.461,-0.03,0.442,0.423,0.168,0.265,0.012,0.633,0.163,0.113],[0.257,0.362,0.354,0.413,0.01,0.023,-0.015,-0.074,0.011,0.005,0.59,0.124,0.235]],[[0.57,0.485,0.337,0.341,0.027,-0.02,-0.016,0.068,0.003,0.001,0.447,0.31,0.298],[0.008,-0.029,-0.003,-0.088,0.006,0.38,0.461,0.371,0.441,-0.029,0.635,0.155,0.183],[0.454,0.483,0.1,0.458,0.003,0.513,0.664,0.423,0.414,-0.01,0.827,0.072,0.038],[0.005,-0.033,-0.029,-0.003,-0.009,0.828,1.033,0.597,0.522,0.238,0.982,-0.0,0.005],[-0.015,0.023,0.056,0.026,-0.008,0.12,0.822,0.486,0.496,0.01,0.952,0.035,-0.043],[0.376,0.561,0.331,0.436,0.032,0.11,0.151,0.109,0.055,0.003,0.642,0.212,0.046],[0.254,0.37,0.343,0.445,0.027,-0.004,-0.003,-0.02,0.02,-0.009,0.313,0.439,0.2]],[[0.602,0.41,0.368,0.365,0.003,0.023,0.005,0.042,-0.053,-0.005,0.581,0.156,0.306],[0.012,-0.02,0.052,-0.006,-0.016,0.42,0.424,0.369,0.408,0.004,0.636,0.133,0.134],[0.644,0.411,0.417,0.452,-0.011,0.135,0.142,0.097,0.113,0.004,0.715,0.177,0.083],[0.835,0.16,0.589,0.504,0.426,0.815,0.11,0.655,0.541,0.406,0.966,0.048,-0.052],[0.166,0.135,0.07,0.082,-0.016,0.002,0.155,0.493,0.525,0.211,0.769,0.228,0.006],[0.777,0.791,0.381,0.473,0.065,0.045,0.013,0.036,0.056,0.005,0.271,0.802,-0.068],[0.139,1.12,0.371,0.487,0.082,0.122,0.143,0.024,0.048,-0.002,0.043,0.95,-0.086]],[[0.004,0.01,0.015,-0.006,-0.011,0.695,0.461,0.205,0.377,0.042,0.539,0.257,0.22],[0.408,0.337,0.402,0.383,0.006,0.354,0.421,0.4,0.475,0.005,0.612,0.174,0.189],[0.0,-0.05,0.057,-0.024,0.013,0.389,0.398,0.405,0.462,-0.025,0.691,0.156,0.058],[-0.067,-0.006,0.008,-0.015,-0.001,0.607,0.311,0.461,0.427,-0.031,0.715,0.145,0.13],[0.4,0.554,0.547,0.35,0.031,0.218,0.329,0.446,0.409,0.016,0.586,0.225,0.124],[0.952,0.074,0.446,0.384,-0.014,0.016,-0.001,0.007,-0.002,0.011,0.15,0.932,-0.077],[0.099,0.005,0.399,0.458,0.643,-0.035,0.032,-0.071,0.034,0.002,-0.069,1.109,-0.043]],[[-0.016,0.008,-0.021,-0.029,-0.01,0.881,0.331,0.391,0.273,0.002,0.466,0.154,0.511],[0.374,0.349,0.363,0.313,-0.009,0.069,0.017,0.003,-0.029,0.005,0.452,0.384,0.19],[0.034,-0.014,0.024,-0.016,0.001,0.423,0.26,0.333,0.281,0.036,0.539,0.234,0.239],[0.389,0.296,0.35,0.401,0.036,0.066,-0.053,0.02,0.008,-0.008,0.517,0.26,0.223],[0.028,0.013,0.028,-0.053,0.0,0.244,0.129,0.384,0.306,0.012,0.437,0.195,0.251],[0.532,0.156,0.277,0.396,0.023,-0.015,0.032,-0.02,-0.015,-0.0,0.14,0.76,0.009],[0.009,-0.01,0.028,-0.079,-0.002,0.222,0.113,0.284,0.299,-0.019,-0.031,0.772,0.151]]]},{"background":[28,31,22],"objects":[{"label":0,"box":[0.701,0.6041,0.2522,0.3581]},{"label":2,"box":[0.3222,0.7108,0.3572,0.3046]},{"label":1,"box":[0.6531,0.2304,0.1347,0.2723]}],"prediction":[[[0.794,0.433,0.453,0.3,-0.012,0.04,-0.031,0.036,-0.017,-0.004,0.347,0.037,0.494],[0.498,0.598,0.417,0.357,-0.042,-0.01,0.014,-0.079,0.004,-0.0,0.603,0.312,0.146],[0.505,0.733,0.478,0.406,0.014,0.027,-0.022,0.01,0.065,-0.001,0.526,0.243,0.304],[0.004,0.016,0.001,0.0,0.008,0.476,0.596,0.421,0.391,0.039,0.274,0.567,0.115],[0.026,0.053,-0.011,-0.039,0.01,0.577,0.825,0.21,0.443,-0.023,0.096,0.745,0.148],[0.018,0.041,0.005,-0.056,0.01,0.482,0.695,0.459,0.421,-0.008,0.443,0.589,-0.008],[0.005,-0.061,0.041,0.0,0.002,0.225,0.463,0.562,0.325,-0.0,0.458,0.307,0.207]],[[-0.016,0.034,0.056,0.004,-0.006,0.632,0.488,0.465,0.478,0.025,0.482,0.305,0.273],[0.001,0.006,0.013,0.023,-0.006,0.483,0.524,0.366,0.457,0.043,0.548,0.31,0.123],[-0.023,-0.031,0.052,-0.032,0.009,0.368,0.457,0.372,0.457,0.005,0.491,0.312,0.153],[0.194,0.079,0.115,0.117,-0.02,0.628,0.55,0.459,0.47,-0.042,0.41,0.611,-0.028],[-0.023,0.039,0.031,0.036,0.004,0.569,0.655,0.426,0.456,0.792,-0.01,1.043,-0.039],[0.148,0.134,0.055,0.061,0.021,0.182,0.475,0.428,0.439,-0.021,0.336,0.681,-0.083],[0.04,0.021,0.005,-0.08,-0.006,0.283,0.556,0.474,0.4,0.048,0.383,0.511,0.041]],[[0.59,0.469,0.268,0.422,-0.009,0.001,-0.034,-0.005,-0.018,0.002,0.548,0.297,0.196],[-0.043,-0.015,-0.009,-0.03,-0.014,0.411,0.458,0.395,0.415,0.007,0.552,0.295,0.172],[0.33,0.407,0.387,0.369,-0.043,-0.013,0.021,-0.049,-0.042,0.015,0.517,0.212,0.205],[0.438,0.467,0.461,0.433,0.006,-0.067,-0.012,0.004,0.032,-0.005,0.548,0.389,0.05],[-0.007,0.018,-0.017,0.069,-0.001,0.547,0.162,0.321,0.449,-0.003,0.25,0.657,0.048],[0.348,0.317,0.371,0.316,0.008,0.407,0.256,0.414,0.3,-0.005,0.578,0.396,0.054],[0.219,0.384,0.36,0.401,-0.037,0.008,0.027,0.048,-0.072,0.011,0.532,0.261,0.207]],[[0.637,0.448,0.323,0.414,0.018,0.051,-0.031,0.019,0.032,-0.008,0.559,0.18,0.27],[0.054,-0.007,-0.015,0.025,0.02,0.402,0.449,0.348,0.428,0.028,0.505,0.17,0.32],[0.284,0.44,0.394,0.405,-0.0,0.428,0.473,0.369,0.468,0.001,0.445,0.06,0.478],[0.018,-0.018,-0.009,-0.047,0.003,0.469,0.518,0.403,0.441,0.087,0.606,0.172,0.214],[0.004,0.004,0.032,0.001,0.0,0.736,0.887,0.454,0.52,0.012,0.859,0.068,0.07],[0.084,0.799,0.437,0.484,-0.024,0.147,0.229,0.164,-0.02,0.012,0.909,0.041,0.016],[0.3,0.396,0.36,0.429,-0.047,-0.101,0.031,0.06,-0.041,0.001,0.633,0.16,0.22]],[[0.691,0.542,0.468,0.465,-0.009,-0.022,0.005,0.032,-0.032,-0.002,0.522,0.143,0.319],[0.025,0.009,0.01,0.01,0.008,0.879,0.737,0.559,0.458,-0.016,0.261,0.104,0.602],[0.266,1.026,0.531,0.542,0.498,0.192,0.113,0.175,0.055,0.006,0.087,-0.039,0.985],[0.368,0.56,0.482,0.534,0.034,0.45,0.558,0.553,0.646,-0.033,0.55,0.103,0.265],[0.159,0.104,0.086,0.126,-0.0,0.837,0.194,0.551,0.628,0.842,1.021,-0.038,0.061],[0.004,0.295,0.503,0.554,0.132,0.038,-0.031,0.005,0.031,-0.014,0.958,0.028,0.026],[0.279,0.443,0.356,0.448,0.022,0.077,0.055,0.066,0.062,0.009,0.653,0.041,0.208]],[[0.003,0.09,0.019,0.031,-0.005,0.658,0.361,0.285,0.497,-0.006,0.383,0.078,0.47],[0.714,0.293,0.368,0.333,0.003,0.866,0.102,0.566,0.55,-0.004,0.176,0.111,0.668],[-0.021,0.053,-0.013,0.032,0.023,0.231,0.02,0.629,0.58,0.437,0.021,0.058,0.924],[-0.024,0.003,0.023,0.029,0.016,0.342,0.384,0.403,0.427,-0.101,0.454,0.081,0.448],[0.242,0.641,0.265,0.355,-0.015,0.52,0.281,0.396,0.386,-0.049,0.787,0.079,0.123],[0.22,0.348,0.423,0.395,-0.034,0.02,-0.012,0.038,-0.0,0.004,0.789,0.091,0.078],[0.185,0.463,0.258,0.504,-0.029,-0.053,-0.017,0.007,0.04,0.0,0.5,0.295,0.213]],[[-0.011,0.016,0.001,-0.006,-0.005,0.624,0.231,0.453,0.415,-0.012,0.181,0.167,0.495],[0.544,0.202,0.368,0.225,0.013,-0.0,0.067,0.013,-0.009,0.003,0.192,0.267,0.504],[-0.024,-0.037,0.001,0.008,0.013,0.35,0.22,0.484,0.353,0.033,0.095,0.182,0.64],[0.312,0.284,0.382,0.318,-0.015,-0.011,0.026,0.007,-0.033,-0.004,0.59,0.08,0.327],[0.012,-0.014,0.021,-0.02,-0.009,0.444,0.293,0.386,0.395,0.064,0.527,0.193,0.168],[0.391,0.366,0.415,0.418,-0.014,0.011,-0.073,0.04,-0.04,-0.008,0.502,0.219,0.25],[0.014,-0.038,-0.006,-0.051,-0.009,0.376,0.139,0.382,0.512,0.009,0.403,0.444,0.067]]]},{"background":[22,36,36],"objects":[{"label":1,"box":[0.398,0.5898,0.3046,0.3811]},{"label":2,"box":[0.5964,0.2895,0.1813,0.3832]},{"label":0,"box":[0.3578,0.3474,0.3254,0.1365]}],"prediction":[[[0.719,0.722,0.27,0.326,0.013,0.027,0.085,0.017,-0.007,0.0,0.223,0.116,0.491],[0.458,0.572,0.42,0.363,0.042,0.001,-0.042,-0.008,0.032,-0.007,0.681,0.246,0.08],[0.369,0.658,0.448,0.429,-0.007,0.022,0.006,-0.022,-0.023,-0.02,0.631,0.142,0.172],[-0.038,0.015,-0.006,0.017,-0.001,0.523,0.643,0.349,0.366,0.022,0.492,0.165,0.272],[-0.016,0.013,0.004,0.004,-0.016,0.264,0.742,0.224,0.418,0.001,0.108,0.198,0.674],[-0.015,0.025,0.02,0.005,0.002,0.448,0.628,0.429,0.503,0.018,0.547,0.188,0.231],[-0.018,0.003,-0.039,-0.04,0.017,0.632,0.44,0.383,0.416,-0.016,0.419,0.452,-0.033]],[[-0.027,0.02,-0.011,-0.003,0.002,0.66,0.533,0.361,0.481,-0.006,0.527,0.112,0.253],[-0.035,0.015,0.028,-0.058,-0.01,0.627,0.662,0.386,0.446,-0.074,0.819,0.054,0.029],[-0.097,-0.074,0.012,0.03,0.003,0.357,0.701,0.44,0.418,0.019,0.864,0.047,0.034],[0.168,0.062,0.074,0.1,-0.004,0.601,0.726,0.497,0.458,-0.081,0.478,-0.011,0.482],[0.01,0.041,0.054,0.061,0.0,0.211,0.984,0.392,0.557,0.321,0.066,0.006,0.907],[0.134,0.22,0.06,0.093,-0.004,0.378,0.593,0.343,0.437,-0.052,0.4,0.25,0.275],[-0.005,0.038,0.026,-0.07,-0.008,0.329,0.397,0.318,0.437,0.004,0.381,0.193,0.31]],[[0.634,0.499,0.418,0.424,0.004,-0.069,0.01,0.063,-0.054,-0.001,0.66,0.092,0.212],[-0.094,0.023,0.003,0.011,-0.012,0.825,0.375,0.412,0.337,0.034,0.959,0.016,-0.033],[0.565,0.399,0.571,0.386,0.674,-0.011,0.022,0.069,0.032,0.009,0.962,0.108,-0.012],[0.59,0.364,0.503,0.496,0.03,-0.008,-0.022,-0.037,-0.029,0.009,0.393,0.168,0.446],[0.008,-0.038,-0.01,0.025,0.001,0.198,0.118,0.422,0.633,0.864,0.006,-0.032,1.089],[0.39,0.398,0.308,0.415,-0.05,0.311,0.286,0.399,0.339,-0.022,0.45,0.177,0.344],[0.18,0.449,0.321,0.341,-0.003,-0.047,-0.055,-0.011,0.003,0.017,0.502,0.217,0.244]],[[0.632,0.456,0.372,0.327,-0.02,-0.01,-0.092,-0.015,0.047,-0.005,0.462,0.227,0.285],[-0.015,0.008,0.049,-0.005,-0.013,0.65,0.588,0.367,0.444,0.041,0.5,0.362,0.11],[0.633,0.327,0.066,0.474,0.008,0.733,0.638,0.58,0.61,0.157,0.384,0.664,-0.005],[-0.0,0.002,0.062,-0.058,-0.015,0.119,0.544,0.411,0.476,-0.008,0.18,0.656,0.137],[-0.002,-0.029,0.004,-0.0,-0.005,0.271,0.319,0.398,0.478,-0.007,0.256,0.263,0.464],[0.335,0.435,0.395,0.422,0.002,0.14,0.06,0.134,-0.048,0.008,0.529,0.282,0.151],[0.249,0.341,0.34,0.459,0.01,0.002,-0.016,0.054,0.035,0.002,0.502,0.26,0.2]],[[0.716,0.491,0.41,0.421,-0.002,-0.023,-0.051,0.047,-0.053,0.002,0.395,0.448,0.205],[0.003,-0.044,-0.015,0.017,-0.007,0.722,0.354,0.499,0.463,0.0,0.28,0.643,0.005],[0.763,0.174,0.556,0.629,0.869,0.208,0.144,0.085,0.044,0.0,0.049,1.014,-0.014],[0.003,0.217,0.487,0.523,-0.054,-0.002,0.328,0.454,0.647,0.018,0.108,0.868,-0.002],[0.107,0.118,0.091,0.073,0.003,0.447,0.386,0.353,0.422,0.008,0.485,0.303,0.147],[0.444,0.451,0.397,0.406,0.041,0.006,0.037,-0.03,-0.014,-0.0,0.516,0.3,0.152],[0.131,0.507,0.324,0.378,-0.036,0.078,0.11,0.097,0.065,0.001,0.554,0.286,0.11]],[[-0.025,-0.002,-0.034,0.081,-0.001,0.667,0.394,0.3,0.382,0.026,0.505,0.233,0.295],[0.442,0.368,0.398,0.433,0.006,0.379,0.426,0.4,0.453,-0.041,0.556,0.326,0.145],[0.039,0.02,0.025,-0.017,-0.002,0.54,0.321,0.42,0.462,-0.074,0.268,0.557,0.123],[0.05,-0.005,-0.051,-0.042,-0.011,0.359,0.392,0.417,0.4,-0.016,0.334,0.5,0.092],[0.291,0.528,0.273,0.141,0.011,0.365,0.421,0.368,0.366,0.018,0.449,0.297,0.219],[0.392,0.423,0.393,0.393,-0.008,0.021,-0.032,0.064,0.034,-0.002,0.496,0.287,0.11],[0.171,0.339,0.332,0.384,-0.032,0.011,0.017,-0.035,-0.015,0.023,0.4,0.258,0.225]],[[-0.027,0.031,-0.072,0.013,0.011,0.476,0.208,0.184,0.184,0.016,0.3,0.316,0.329],[0.471,0.27,0.3,0.406,-0.033,0.032,-0.021,0.014,-0.044,0.0,0.484,0.474,0.098],[-0.005,-0.078,-0.026,0.016,0.001,0.544,0.288,0.431,0.476,0.028,0.495,0.256,0.175],[0.41,0.291,0.362,0.37,0.02,-0.03,-0.03,0.044,0.033,0.003,0.446,0.35,0.16],[-0.022,-0.074,-0.025,0.05,-0.007,0.421,0.235,0.365,0.159,0.015,0.538,0.16,0.19],[0.379,0.264,0.444,0.346,-0.028,-0.009,-0.027,0.067,-0.012,-0.003,0.489,0.244,0.261],[-0.008,-0.049,0.063,-0.015,0.003,0.267,0.028,0.385,0.409,-0.016,0.203,0.339,0.351]]]}]}}</script>
     <script>
         (function () {
             "use strict";
@@ -926,12 +926,12 @@
                 return Number(v).toFixed(d);
             }
             function grouped(n) {
-                return Math.round(n).toLocaleString("ko-KR");
+                return Math.round(n).toLocaleString("en-US");
             }
             // Large counts in Korean units: 20,290,000,000 -> "203억", 77,070,000 -> "7,707만".
             function korean(n) {
-                if (n >= 1e8) return (n / 1e8).toFixed(n >= 1e10 ? 0 : 1).replace(/\.0$/, "") + "억";
-                if (n >= 1e4) return Math.round(n / 1e4).toLocaleString("ko-KR") + "만";
+                if (n >= 1e9) return (n / 1e9).toFixed(1).replace(/\.0$/, "") + " billion";
+                if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, "") + " million";
                 return grouped(n);
             }
             function percent(v) {
@@ -1032,7 +1032,7 @@
                 function label() {
                     var dark = root.dataset.theme !== "light";
                     toggle.textContent = dark ? "light" : "dark";
-                    toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+                    toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
                 }
                 toggle.addEventListener("click", function () {
                     var next = root.dataset.theme === "light" ? "dark" : "light";
@@ -1050,11 +1050,11 @@
 
             // 01 Grid and responsibility.
             (function () {
-                var VOC = ["비행기", "자전거", "새", "보트", "병", "버스", "자동차", "고양이", "의자", "소",
-                           "식탁", "개", "말", "오토바이", "사람", "화분", "양", "소파", "기차", "모니터"];
+                var VOC = ["airplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow",
+                           "dining table", "dog", "horse", "motorbike", "person", "potted plant", "sheep", "sofa", "train", "TV monitor"];
                 var objects = [
-                    { name: "개", emoji: "🐕", cls: 11, color: "--accent-warn", cx: 0.30, cy: 0.64, w: 0.36, h: 0.30 },
-                    { name: "자전거", emoji: "🚲", cls: 1, color: "--accent", cx: 0.70, cy: 0.38, w: 0.36, h: 0.26 }
+                    { name: "dog", emoji: "🐕", cls: 11, color: "--accent-warn", cx: 0.30, cy: 0.64, w: 0.36, h: 0.30 },
+                    { name: "bicycle", emoji: "🚲", cls: 1, color: "--accent", cx: 0.70, cy: 0.38, w: 0.36, h: 0.26 }
                 ];
                 var selected = 0;
                 var drag = null;
@@ -1129,7 +1129,7 @@
                 for (var s = 0; s < 30; s++) {
                     var el = document.createElement("span");
                     el.className = "slot";
-                    el.title = s < 10 ? "박스 " + (s < 5 ? 1 : 2) + " · " + names[s] : VOC[s - 10];
+                    el.title = s < 10 ? "box " + (s < 5 ? 1 : 2) + " · " + names[s] : VOC[s - 10];
                     slots.appendChild(el);
                     slotEls.push(el);
                 }
@@ -1140,7 +1140,7 @@
                     var cell = cellOf(o);
                     var x = o.cx * 7 - cell[1], y = o.cy * 7 - cell[0];
                     document.getElementById("grid-name").textContent = o.name;
-                    document.getElementById("grid-cell").textContent = (cell[0] + 1) + "행 " + (cell[1] + 1) + "열";
+                    document.getElementById("grid-cell").textContent = "row " + (cell[0] + 1) + ", column " + (cell[1] + 1);
                     document.getElementById("grid-xy").textContent = fixed(x, 2) + ", " + fixed(y, 2);
                     document.getElementById("grid-wh").textContent = fixed(o.w, 2) + ", " + fixed(o.h, 2);
                     document.getElementById("grid-sqrt").textContent = fixed(Math.sqrt(o.w), 2) + ", " + fixed(Math.sqrt(o.h), 2);
@@ -1164,8 +1164,8 @@
                     if (announce) {
                         clearTimeout(liveTimer);
                         liveTimer = setTimeout(function () {
-                            live.textContent = o.name + "는 " + (cell[0] + 1) + "행 " + (cell[1] + 1) + "열 칸이 맡는다." +
-                                (sameCell() ? " 두 물체가 같은 칸이다." : "");
+                            live.textContent = "The cell at row " + (cell[0] + 1) + ", column " + (cell[1] + 1) + " is responsible for the " + o.name + "." +
+                                (sameCell() ? " Both objects are in the same cell." : "");
                         }, 250);
                     }
                 }
@@ -1238,8 +1238,8 @@
                 var view = "3d", mode = "shape", current = 0;
 
                 document.getElementById("structure-totals").innerHTML =
-                    "합성곱 <b>" + S.totals.conv + "</b> · 완전연결 <b>" + S.totals.fc + "</b> · 파라미터 <b>" + grouped(totalParams) +
-                    "</b> · 한 장에 곱셈-덧셈 약 <b>" + korean(totalMacs) + "</b> 번";
+                    "<b>" + S.totals.conv + "</b> conv layers · <b>" + S.totals.fc + "</b> fully connected · <b>" + grouped(totalParams) +
+                    "</b> parameters · about <b>" + korean(totalMacs) + "</b> multiply-adds per image";
 
                 function tone(n) {
                     if (n.type === "conv") return n.stage === "pretrained" ? "--accent" : "--accent-green";
@@ -1255,36 +1255,36 @@
                     var prev = i > 0 ? nodes[i - 1] : null;
                     var title, text;
                     if (n.type === "input") {
-                        title = "입력";
-                        text = "448 × 448 크기의 사진, RGB 3채널. 원본 사진을 이 크기로 바꿔 넣는다.";
+                        title = "Input";
+                        text = "A 448 × 448 image with 3 RGB channels. The original photo is resized to this size.";
                     } else if (n.type === "output") {
-                        title = "출력 7 × 7 × " + n.C;
-                        text = "마지막 완전연결 층의 숫자 " + (S.grid * S.grid * n.C) + "개를 7 × 7 칸 × " + n.C + "개로 다시 묶는다. 칸마다 박스 2개 × 5와 클래스 20개다.";
+                        title = "Output 7 × 7 × " + n.C;
+                        text = "Regroups the " + (S.grid * S.grid * n.C) + " numbers from the last fully connected layer into 7 × 7 cells × " + n.C + ". Each cell holds 2 boxes × 5 values and 20 classes.";
                     } else if (n.type === "maxpool") {
-                        title = "최대 풀링 2×2";
-                        text = "2×2 구역에서 가장 큰 값만 남겨 가로세로를 절반으로 줄인다. 파라미터는 없다. " + shapeText(prev) + " → " + shapeText(n);
+                        title = "Max pooling 2×2";
+                        text = "Keeps only the largest value in each 2×2 patch, halving the width and height. No parameters. " + shapeText(prev) + " → " + shapeText(n);
                     } else if (n.type === "fc") {
                         var isFirst = n === fc1;
-                        title = "완전연결 " + (isFirst ? "1" : "2") + " · " + shapeText(prev) + " → " + n.C;
+                        title = "Fully connected " + (isFirst ? "1" : "2") + " · " + shapeText(prev) + " → " + n.C;
                         text = isFirst
-                            ? "7×7×1024개의 값을 모두 이어 4096개로 만든다. 모든 입력이 모든 출력과 연결되어 파라미터가 가장 많다. 뒤에 dropout 0.5가 붙는다."
-                            : "4096개를 1470 = 7×7×30개로 만든다. 활성화 함수가 없는 선형 층이다.";
+                            ? "Flattens all 7×7×1024 values and maps them to 4096. Every input connects to every output, so this layer has the most parameters. Dropout 0.5 follows it."
+                            : "Maps the 4096 values to 1470 = 7×7×30. A linear layer with no activation function.";
                     } else {
-                        title = "합성곱 " + n.k + "×" + n.k + " · 필터 " + n.filters + (n.stride > 1 ? " · 보폭 2" : "");
-                        text = (n.k === 1 ? "1×1 축소 층: 채널 수를 줄여 다음 3×3 합성곱의 계산을 아낀다. " : "") +
-                            (n.stride > 1 ? "보폭 2로 가로세로를 절반으로 줄인다. " : "") +
+                        title = "Conv " + n.k + "×" + n.k + " · " + n.filters + " filters" + (n.stride > 1 ? " · stride 2" : "");
+                        text = (n.k === 1 ? "1×1 reduction layer: cuts the number of channels to save computation in the next 3×3 convolution. " : "") +
+                            (n.stride > 1 ? "Stride 2 halves the width and height. " : "") +
                             shapeText(prev) + " → " + shapeText(n) + ". " +
-                            (n.stage === "pretrained" ? "ImageNet으로 미리 배운 앞 20층 중 하나다." : "탐지를 위해 새로 붙인 4층 중 하나다.");
+                            (n.stage === "pretrained" ? "One of the first 20 layers, pretrained on ImageNet." : "One of the 4 layers added for detection.");
                     }
                     return { title: i + " / " + (nodes.length - 1) + " · " + title, text: text };
                 }
                 function callout() {
                     var text = {
-                        shape: "가로세로는 448에서 7로 64분의 1이 되고, 채널은 3에서 1024로 늘어난다. " +
-                            (view === "3d" ? "층을 고르면, 입력의 어느 창이 모든 채널을 거쳐 출력 한 칸이 되는지 선으로 보인다." : "막대 높이는 가로세로 크기다."),
-                        params: "파라미터 " + grouped(totalParams) + "개 중 " + percent(fc1.params / totalParams) + "가 첫 완전연결 층 하나에 있다." +
-                            (view === "3d" ? " 블록 위 막대가 층별 몫이다." : ""),
-                        macs: "사진 한 장에 드는 곱셈-덧셈 약 " + korean(totalMacs) + " 번 중 " + percent(convMacs / totalMacs) + "가 합성곱에서 나온다. 첫 완전연결 층의 몫은 " + percent(fc1.macs / totalMacs) + "뿐이다."
+                        shape: "Width and height shrink 64-fold, from 448 to 7, while the channels grow from 3 to 1024. " +
+                            (view === "3d" ? "Pick a layer, and lines show which window of its input passes through every channel to become one cell of its output." : "Bar height is the width and height."),
+                        params: percent(fc1.params / totalParams) + " of the " + grouped(totalParams) + " parameters sit in the first fully connected layer alone." +
+                            (view === "3d" ? " The bar on top of each block is that layer's share." : ""),
+                        macs: "Of the roughly " + korean(totalMacs) + " multiply-adds per image, " + percent(convMacs / totalMacs) + " come from the convolutions. The first fully connected layer accounts for only " + percent(fc1.macs / totalMacs) + "."
                     }[mode];
                     document.getElementById("structure-callout").textContent = text;
                 }
@@ -1334,7 +1334,7 @@
                     });
                     if (mode === "params") {
                         svgEl("text", { x: Math.max(4, fc1.x2 - 120), y: TOP - 8, "font-size": 12, fill: "var(--text)", "font-family": "var(--mono)" }, labels2)
-                            .textContent = "첫 완전연결 층 " + percent(fc1.params / totalParams);
+                            .textContent = "First FC layer " + percent(fc1.params / totalParams);
                     }
                 }
                 function highlight2d(scroll) {
@@ -1648,8 +1648,8 @@
                     document.getElementById("layer-title").textContent = d.title;
                     document.getElementById("layer-text").textContent = d.text;
                     document.getElementById("layer-numbers").innerHTML = n.type === "input" || n.type === "output" ? "" :
-                        "파라미터 <b>" + grouped(n.params) + "</b> (" + percent(n.params / totalParams) + ") · 곱셈-덧셈 <b>" +
-                        korean(n.macs) + "</b> 번 (" + percent(n.macs / totalMacs) + ")";
+                        "Parameters <b>" + grouped(n.params) + "</b> (" + percent(n.params / totalParams) + ") · multiply-adds <b>" +
+                        korean(n.macs) + "</b> (" + percent(n.macs / totalMacs) + ")";
                     highlight2d(move);
                     if (view !== "3d") return;
                     if (move) {
@@ -1824,7 +1824,7 @@
                 D.scenes.forEach(function (sc, i) {
                     var b = document.createElement("button");
                     b.type = "button";
-                    b.textContent = "장면 " + (i + 1);
+                    b.textContent = "Scene " + (i + 1);
                     b.setAttribute("aria-pressed", String(i === 0));
                     b.addEventListener("click", function () {
                         scene = i;
@@ -1883,11 +1883,11 @@
                         if (i) formula.appendChild(document.createTextNode(" "));
                         formula.appendChild(document.createElement("span")).textContent = s;
                     });
-                    document.getElementById("chart-caption").textContent = "Δw를 " + fixed(d, 2) + "에 고정하고 정답 너비 w만 바꾼 벌점";
+                    document.getElementById("chart-caption").textContent = "Penalty with Δw fixed at " + fixed(d, 2) + ", varying only the ground-truth width w";
                     var small = Math.sqrt(0.1 + d) - Math.sqrt(0.1), large = Math.sqrt(0.8 + d) - Math.sqrt(0.8);
-                    document.getElementById("sqrt-callout").textContent = "같은 Δw(" + fixed(d, 2) + ")에서 √w의 차이는 작은 박스(w = 0.1)가 " + fixed(small, 3) +
-                        ", 큰 박스(w = 0.8)가 " + fixed(large, 3) + "이다. 벌점은 이 차이의 제곱이라 작은 박스 쪽이 " + fixed(small * small / (large * large), 1) +
-                        "배 크다. w를 그대로 쓰면 두 벌점이 같다(" + fixed(pp, 4) + ").";
+                    document.getElementById("sqrt-callout").textContent = "With the same Δw (" + fixed(d, 2) + "), the difference in √w is " + fixed(small, 3) +
+                        " for a small box (w = 0.1) and " + fixed(large, 3) + " for a large box (w = 0.8). The penalty is the square of that difference, so the small box's penalty is " + fixed(small * small / (large * large), 1) +
+                        " times larger. Using w as is, the two penalties would be equal (" + fixed(pp, 4) + ").";
 
                     while (chart.firstChild) chart.removeChild(chart.firstChild);
                     var L = 34, R = 312, T = 12, B = 140, LO = 0.05, HI = 0.8;
@@ -1908,9 +1908,9 @@
                     };
                     t(L, B + 16, "0.05");
                     t(R, B + 16, "0.8", "end");
-                    t((L + R) / 2, B + 16, "정답 너비 w", "middle");
-                    t(L - 5, T + 8, "벌점", "end");
-                    t(R, sy(pp) - 6, "w 그대로", "end");
+                    t((L + R) / 2, B + 16, "Ground-truth width w", "middle");
+                    t(L - 5, T + 8, "loss", "end");
+                    t(R, sy(pp) - 6, "w as is", "end");
                     t(L + 6, T + 10, "√w (YOLO)", "start", "var(--accent)");
                 }
                 [wRange, dRange].forEach(function (el) { el.addEventListener("input", drawSize); });
@@ -1931,7 +1931,7 @@
                     var PRESET = [[3, 2, 0], [1, 5, 1], [5, 4, 0], [1, 1, 1], [4, 6, 0], [6, 2, 1], [0, 3, 0], [3, 4, 1], [5, 0, 0], [6, 6, 1]];
                     var HALF_X = 0.17, HALF_Z = 0.36, OFFSET = 0.21, UNIT = 1.3;  // bar footprint, a box's offset in its cell, height of weight 1
                     var PITCH = [0.12, 1.52], HOME = { yaw: 0.62, pitch: 0.7 }, TOP = { yaw: 0, pitch: 1.52 };
-                    var SUBJECT = ["박스 1이", "박스 2가"], TOPIC = ["박스 1은", "박스 2는"];
+                    var SUBJECT = ["Box 1", "Box 2"], TOPIC = ["box 1", "box 2"];
                     var cam = { yaw: HOME.yaw, pitch: HOME.pitch };
                     var W = 1, H = 1, dpr = 1, zoom = 1, hits = [], anim = null, tween = null, drag = null, selected = null;
                     var objects = [], heights = [], bars = [];
@@ -2071,12 +2071,12 @@
                         document.getElementById("empty-share-bar").style.width = (100 * share) + "%";
                         document.getElementById("resp-share-bar").style.width = (100 * (1 - share)) + "%";
                         var sum = lambda < 1 ?
-                            "빈 박스 하나의 무게(λnoobj = " + fixed(lambda, 2) + ")는 작아도 " + empty + "개를 모두 합하면 신뢰도 벌점 무게의 " + percent(share) +
-                            "를 차지한다(λnoobj = 1이면 " + percent(plainShare) + ")." :
-                            "λnoobj = 1이면 빈 박스 " + empty + "개가 신뢰도 벌점 무게의 " + percent(share) + "를 차지한다.";
+                            "Each empty box weighs little (λnoobj = " + fixed(lambda, 2) + "), but all " + empty + " together carry " + percent(share) +
+                            " of the confidence-penalty weight (" + percent(plainShare) + " with λnoobj = 1)." :
+                            "With λnoobj = 1, the " + empty + " empty boxes carry " + percent(share) + " of the confidence-penalty weight.";
                         document.getElementById("noobj-callout").textContent = k === 0 ?
-                            "물체가 없는 사진에서는 98개 모두 빈 박스라, 신뢰도 벌점이 전부 빈 박스에서 나온다." :
-                            sum + " 논문은 λnoobj = 0.5로 빈 박스의 벌점을 줄이는 동시에, 좌표 벌점에는 λcoord = 5를 곱해 키운다.";
+                            "In an image with no objects, all 98 boxes are empty, so the whole confidence penalty comes from empty boxes." :
+                            sum + " The paper shrinks the empty boxes' penalty with λnoobj = 0.5 and, at the same time, scales up the coordinate penalty with λcoord = 5.";
                         grow();
                     }
                     // the selected cell as it is now, after a slider moved
@@ -2086,11 +2086,11 @@
                             return;
                         }
                         var j = owner(selected.r, selected.c), lambda = fixed(Number(lRange.value), 2);
-                        var where = "칸 (" + (selected.r + 1) + "행, " + (selected.c + 1) + "열)";
+                        var where = "The cell at row " + (selected.r + 1) + ", column " + (selected.c + 1);
                         pickOut.textContent = j < 0 ?
-                            where + "에는 물체가 없다. 두 박스 모두 빈 박스로 신뢰도 0을 배운다(무게 " + lambda + ")." :
-                            where + "에는 물체가 있다. " + SUBJECT[objects[j][2]] + " 맡고(무게 1), " + TOPIC[1 - objects[j][2]] +
-                            " 빈 박스로 신뢰도 0을 배운다(무게 " + lambda + ").";
+                            where + " has no object. Both boxes are empty and learn a confidence of 0 (weight " + lambda + ")." :
+                            where + " has an object. " + SUBJECT[objects[j][2]] + " takes it (weight 1), and " + TOPIC[1 - objects[j][2]] +
+                            " is empty and learns a confidence of 0 (weight " + lambda + ").";
                     }
                     // the slider keeps objects placed by hand: it removes the newest first and adds from PRESET
                     function setCount(k) {
@@ -2100,20 +2100,20 @@
                         }
                     }
                     function toggle(r, c, b) {
-                        var j = owner(r, c), lambda = fixed(Number(lRange.value), 2), where = "칸 (" + (r + 1) + "행, " + (c + 1) + "열)";
+                        var j = owner(r, c), lambda = fixed(Number(lRange.value), 2), where = "the cell at row " + (r + 1) + ", column " + (c + 1);
                         if (j < 0 && objects.length >= MAX) {
-                            pickOut.textContent = "물체는 " + MAX + "개까지 놓을 수 있다(위 슬라이더의 범위). 먼저 하나를 빼야 한다.";
+                            pickOut.textContent = "You can place up to " + MAX + " objects (the slider's range). Remove one first.";
                             return;
                         }
                         selected = { r: r, c: c };
                         if (j >= 0) {
                             objects.splice(j, 1);
-                            pickOut.textContent = where + "의 물체를 뺐다. 두 박스 모두 빈 박스가 되어 신뢰도 0을 배운다(무게 " + lambda + ").";
+                            pickOut.textContent = "Removed the object from " + where + ". Both boxes are now empty and learn a confidence of 0 (weight " + lambda + ").";
                         } else {
                             if (b < 0) b = (r + c) % 2;  // the floor was hit: either box may be the one with the higher IOU
                             objects.push([r, c, b]);
-                            pickOut.textContent = where + "에 물체를 놓았다. " + SUBJECT[b] + " 이 물체를 맡고(무게 1), 같은 칸의 " + TOPIC[1 - b] +
-                                " 빈 박스로 남아 신뢰도 0을 배운다(무게 " + lambda + ").";
+                            pickOut.textContent = "Placed an object in " + where + ". " + SUBJECT[b] + " takes it (weight 1); " + TOPIC[1 - b] + " in the same cell" +
+                                " stays empty and learns a confidence of 0 (weight " + lambda + ").";
                         }
                         kRange.value = objects.length;
                         update();
@@ -2193,6 +2193,7 @@
             var source = document.getElementById("knowledge-map");
             if (!nav || !source) return;
             var MAP = JSON.parse(source.textContent);
+            MAP.nodes.forEach(function (n) { n.title = n.title_en || n.title; n.summary = n.summary_en || n.summary; });
             var svg = nav.querySelector(".kmap-graph");
             var current = nav.getAttribute("data-current");
             var NS = "http://www.w3.org/2000/svg";
@@ -2264,7 +2265,7 @@
                     t.setAttribute("style", "font-size: 13px; font-weight: 700;");
                     var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
                     svg.removeChild(t);
-                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 64 : 28)), h: 30 };
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 100 : 28)), h: 30 };
                 });
                 var pos = {};
                 layers.forEach(function (layer, r) {
@@ -2292,15 +2293,15 @@
                     var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
                     var link = n.id !== current && n.status !== "planned" && n.href;
                     var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
-                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (준비 중)" : "") + ": " + n.summary;
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (coming soon)" : "") + ": " + n.summary;
                     el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
                     var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
                     t.textContent = n.title;
                     if (n.status === "planned") {
                         var soon = el("tspan", { "class": "soon", dx: 6 }, t);
-                        soon.textContent = "준비 중";
+                        soon.textContent = "coming soon";
                     }
-                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "지금 이 글";
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "you are here";
                 });
             }
             draw();

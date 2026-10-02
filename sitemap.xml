@@ -40,4 +40,30 @@
         <priority>0.8</priority>
     </url>
 
+    <!-- Knowledge in English: generated from the Korean pages (System/build_en.py in the Knowledge vault). -->
+    <url>
+        <loc>https://hughqlee.com/knowledge/en/</loc>
+        <lastmod>2026-10-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://hughqlee.com/knowledge/en/yolo-v1/</loc>
+        <lastmod>2026-10-02</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://hughqlee.com/knowledge/en/iou-nms/</loc>
+        <lastmod>2026-10-02</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://hughqlee.com/knowledge/en/yolo-v2/</loc>
+        <lastmod>2026-10-02</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
 </urlset>

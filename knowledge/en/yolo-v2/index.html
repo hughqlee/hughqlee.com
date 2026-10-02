@@ -1,42 +1,42 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOLOv2, 앵커 박스와 패스스루 레이어 | Hugh Q Lee</title>
-    <meta name="description" content="YOLOv2가 칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 레이어로 26 × 26의 세밀한 특징을 13 × 13 칸에 접어 붙이는 방법을, 물체를 끌고 앵커를 고르고 특징 지도를 접어 보며 이해한다.">
+    <title>YOLOv2 Explained: Anchor Boxes and the Passthrough Layer | Hugh Q Lee</title>
+    <meta name="description" content="An interactive explanation of YOLOv2: five anchor boxes per cell share the objects, and a passthrough layer folds fine 26 × 26 features into the 13 × 13 grid. Drag objects, pick anchors with k-means, and fold a feature map yourself.">
     <meta name="author" content="Hugh Q Lee">
-    <meta name="keywords" content="YOLOv2, YOLO9000, 앵커 박스, anchor box, 차원 군집, dimension clusters, k-평균, k-means, 패스스루 레이어, passthrough layer, reorg, space-to-depth, 물체 탐지, 객체 탐지, object detection">
+    <meta name="keywords" content="YOLOv2, YOLO9000, YOLOv2 explained, anchor boxes, dimension clusters, k-means, passthrough layer, reorg, space-to-depth, object detection">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <link rel="canonical" href="https://hughqlee.com/knowledge/yolo-v2/">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/en/yolo-v2/">
     <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/yolo-v2/">
     <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/yolo-v2/">
     <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/yolo-v2/">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Hugh Q Lee">
-    <meta property="og:locale" content="ko_KR">
-    <meta property="og:locale:alternate" content="en_US">
-    <meta property="og:title" content="YOLOv2, 앵커 박스와 패스스루 레이어">
-    <meta property="og:description" content="칸마다 앵커 박스 5개로 물체를 나눠 맡고, 26 × 26 특징을 접어 13 × 13에 붙이는 YOLOv2를 직접 만져 보며 이해한다.">
-    <meta property="og:url" content="https://hughqlee.com/knowledge/yolo-v2/">
-    <meta property="og:image" content="https://hughqlee.com/knowledge/yolo-v2/og.png">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ko_KR">
+    <meta property="og:title" content="YOLOv2 Explained: Anchor Boxes and the Passthrough Layer">
+    <meta property="og:description" content="Five anchor boxes per cell share the objects, and 26 × 26 features fold into the 13 × 13 grid: an interactive guide to how YOLOv2 works.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/en/yolo-v2/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/en/yolo-v2/og.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="YOLOv2, 앵커 박스와 패스스루: 13×13 격자의 가운데 칸에 놓인 앵커 박스 5개">
+    <meta property="og:image:alt" content="YOLOv2 Explained: five anchor boxes in the center cell of a 13×13 grid">
     <meta property="article:published_time" content="2026-10-02">
     <meta property="article:modified_time" content="2026-10-02">
     <meta property="article:author" content="https://hughqlee.com/">
     <meta property="article:section" content="Knowledge">
     <meta property="article:tag" content="YOLO">
-    <meta property="article:tag" content="물체 탐지">
+    <meta property="article:tag" content="object detection">
     <meta property="article:tag" content="YOLOv2">
-    <meta property="article:tag" content="앵커 박스">
-    <meta property="article:tag" content="패스스루 레이어">
+    <meta property="article:tag" content="anchor boxes">
+    <meta property="article:tag" content="passthrough layer">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="YOLOv2, 앵커 박스와 패스스루 레이어">
-    <meta name="twitter:description" content="칸마다 앵커 박스 5개로 물체를 나눠 맡고, 26 × 26 특징을 접어 13 × 13에 붙이는 YOLOv2를 직접 만져 보며 이해한다.">
-    <meta name="twitter:image" content="https://hughqlee.com/knowledge/yolo-v2/og.png">
-    <meta name="twitter:image:alt" content="YOLOv2, 앵커 박스와 패스스루: 13×13 격자의 가운데 칸에 놓인 앵커 박스 5개">
+    <meta name="twitter:title" content="YOLOv2 Explained: Anchor Boxes and the Passthrough Layer">
+    <meta name="twitter:description" content="Five anchor boxes per cell share the objects, and 26 × 26 features fold into the 13 × 13 grid: an interactive guide to how YOLOv2 works.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/en/yolo-v2/og.png">
+    <meta name="twitter:image:alt" content="YOLOv2 Explained: five anchor boxes in the center cell of a 13×13 grid">
     <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage는 빌드 스크립트가 본문 "자주 묻는 질문"에서 글자 그대로 옮긴다. -->
     <script type="application/ld+json">
     {
@@ -44,20 +44,19 @@
       "@graph": [
         {
           "@type": "TechArticle",
-          "@id": "https://hughqlee.com/knowledge/yolo-v2/#article",
-          "workTranslation": { "@id": "https://hughqlee.com/knowledge/en/yolo-v2/#article" },
-          "headline": "YOLOv2, 앵커 박스와 패스스루 레이어",
-          "alternativeHeadline": "붙어 있거나 작은 물체를, YOLOv2는 어떻게 더 잘 찾을까?",
-          "description": "YOLOv2가 칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 레이어로 26 × 26의 세밀한 특징을 13 × 13 칸에 접어 붙이는 방법을, 물체를 끌고 앵커를 고르고 특징 지도를 접어 보며 이해한다.",
-          "abstract": "YOLOv2는 칸마다 데이터에서 고른 앵커 박스 5개를 두어 한 칸에서도 여러 물체를 나눠 맡고, 패스스루 레이어로 26 × 26의 세밀한 특징을 13 × 13 칸에 접어 붙인다.",
-          "inLanguage": "ko",
+          "@id": "https://hughqlee.com/knowledge/en/yolo-v2/#article",
+          "headline": "YOLOv2 Explained: Anchor Boxes and the Passthrough Layer",
+          "alternativeHeadline": "How does YOLOv2 find crowded and small objects better?",
+          "description": "An interactive explanation of YOLOv2: five anchor boxes per cell share the objects, and a passthrough layer folds fine 26 × 26 features into the 13 × 13 grid. Drag objects, pick anchors with k-means, and fold a feature map yourself.",
+          "abstract": "YOLOv2 gives each cell five anchor boxes chosen from the data, so even one cell can share several objects among them, and a passthrough layer folds fine-grained 26 × 26 features into the 13 × 13 grid.",
+          "inLanguage": "en",
           "datePublished": "2026-10-02",
           "dateModified": "2026-10-02",
-          "url": "https://hughqlee.com/knowledge/yolo-v2/",
-          "mainEntityOfPage": "https://hughqlee.com/knowledge/yolo-v2/",
+          "url": "https://hughqlee.com/knowledge/en/yolo-v2/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/en/yolo-v2/",
           "image": {
             "@type": "ImageObject",
-            "url": "https://hughqlee.com/knowledge/yolo-v2/og.png",
+            "url": "https://hughqlee.com/knowledge/en/yolo-v2/og.png",
             "width": 1200,
             "height": 630
           },
@@ -68,7 +67,7 @@
             "@id": "https://hughqlee.com/#person"
           },
           "isPartOf": {
-            "@id": "https://hughqlee.com/knowledge/#collection"
+            "@id": "https://hughqlee.com/knowledge/en/#collection"
           },
           "about": [
             {
@@ -77,24 +76,22 @@
             },
             {
               "@type": "Thing",
-              "name": "앵커 박스 (anchor box)"
+              "name": "Anchor box"
             },
             {
               "@type": "Thing",
-              "name": "패스스루 레이어 (passthrough layer)"
+              "name": "Passthrough layer"
             }
           ],
           "keywords": [
             "YOLOv2",
             "YOLO9000",
-            "앵커 박스",
+            "anchor boxes",
             "anchor box",
-            "차원 군집",
-            "k-평균",
-            "패스스루 레이어",
+            "dimension clusters",
+            "k-means",
             "passthrough layer",
-            "물체 탐지",
-            "객체 탐지"
+            "object detection"
           ],
           "proficiencyLevel": "Beginner",
           "isAccessibleForFree": true,
@@ -113,6 +110,9 @@
             ],
             "datePublished": "2017",
             "url": "https://arxiv.org/abs/1612.08242"
+          },
+          "translationOfWork": {
+            "@id": "https://hughqlee.com/knowledge/yolo-v2/#article"
           }
         },
         {
@@ -140,82 +140,82 @@
               "@type": "ListItem",
               "position": 2,
               "name": "Knowledge",
-              "item": "https://hughqlee.com/knowledge/"
+              "item": "https://hughqlee.com/knowledge/en/"
             },
             {
               "@type": "ListItem",
               "position": 3,
-              "name": "YOLOv2, 앵커 박스와 패스스루 레이어",
-              "item": "https://hughqlee.com/knowledge/yolo-v2/"
+              "name": "YOLOv2 Explained: Anchor Boxes and the Passthrough Layer",
+              "item": "https://hughqlee.com/knowledge/en/yolo-v2/"
             }
           ]
         },
         {
           "@type": "FAQPage",
-          "@id": "https://hughqlee.com/knowledge/yolo-v2/#faq",
+          "@id": "https://hughqlee.com/knowledge/en/yolo-v2/#faq",
           "mainEntity": [
             {
               "@type": "Question",
-              "name": "YOLOv2는 YOLOv1과 무엇이 다른가?",
+              "name": "How is YOLOv2 different from YOLOv1?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "배치 정규화, 고해상도 분류기, 앵커 박스, k-평균으로 고른 앵커 크기, 칸에 묶은 위치 예측, 패스스루 레이어, 여러 크기로 학습하기, 새 네트워크 Darknet-19를 더했다. 논문 표 2에서 VOC 2007 mAP가 63.4에서 78.6으로 올랐고, 같은 모델을 416 × 416에서 돌리면 초당 67장에 mAP 76.8이다."
+                "text": "It adds batch normalization, a high-resolution classifier, anchor boxes, anchor sizes chosen by k-means, location prediction bound to the cell, a passthrough layer, multi-scale training, and a new network, Darknet-19. In the paper's Table 2, VOC 2007 mAP rises from 63.4 to 78.6, and the same model run at 416 × 416 reaches 76.8 mAP at 67 frames per second."
               }
             },
             {
               "@type": "Question",
-              "name": "앵커 박스(anchor box)란 무엇인가?",
+              "name": "What is an anchor box?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "미리 정해 둔 박스 모양이다. 신경망은 박스를 처음부터 그리지 않고, 앵커를 얼마나 옮기고 늘릴지를 예측한다. YOLOv2는 13 × 13 칸마다 앵커 5개를 두고 앵커마다 물체 여부와 클래스를 따로 예측해서, 한 칸에 모양이 다른 물체가 둘 있어도 둘 다 찾을 수 있다."
+                "text": "It is a predefined box shape. Instead of drawing a box from scratch, the network predicts how far to move and stretch the anchor. YOLOv2 has 5 anchors in each of its 13 × 13 cells and predicts objectness and classes separately for each anchor, so it can find two differently shaped objects in the same cell."
               }
             },
             {
               "@type": "Question",
-              "name": "YOLOv2의 앵커 박스는 몇 개이고 어떻게 정하나?",
+              "name": "How many anchor boxes does YOLOv2 use, and how are they chosen?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "5개다. 학습 데이터 정답 박스의 너비와 높이에 k-평균 군집을 돌려 고르고, 거리로 1 − IOU를 쓴다. 앵커를 늘릴수록 평균 IOU가 오르지만 모델이 복잡해져, 논문은 그 사이의 균형으로 5개를 골랐다(표 1: 5개 61.0, 9개 67.2)."
+                "text": "Five. They are chosen by running k-means clustering on the widths and heights of the training data's ground-truth boxes, with 1 − IOU as the distance. More anchors raise the average IOU but make the model more complex, so the paper chose 5 as a balance (Table 1: 61.0 with 5, 67.2 with 9)."
               }
             },
             {
               "@type": "Question",
-              "name": "앵커를 고르는 k-평균에 왜 유클리드 거리 대신 1 − IOU를 쓰나?",
+              "name": "Why does the anchor k-means use 1 − IOU instead of Euclidean distance?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "유클리드 거리를 쓰면 큰 박스가 오차를 더 많이 만들어 군집 중심이 큰 박스 쪽으로 끌린다. 원하는 것은 박스 크기와 상관없이 IOU가 높은 앵커라서 1 − IOU를 쓴다. 논문 표 1에서 같은 5개일 때 평균 IOU는 유클리드 거리 58.7, IOU 거리 61.0이었다."
+                "text": "With Euclidean distance, large boxes produce larger errors, which pulls the cluster centers toward large boxes. What we want are anchors with high IOU regardless of box size, so 1 − IOU is used. In the paper's Table 1, with 5 anchors the average IOU was 58.7 with Euclidean distance and 61.0 with IOU distance."
               }
             },
             {
               "@type": "Question",
-              "name": "YOLOv2는 박스 위치와 크기를 어떻게 예측하나?",
+              "name": "How does YOLOv2 predict box position and size?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "칸의 왼쪽 위 (c_x, c_y)와 앵커 크기 (p_w, p_h)를 기준으로 b_x = σ(t_x) + c_x, b_y = σ(t_y) + c_y, b_w = p_w·e^(t_w), b_h = p_h·e^(t_h)로 박스를 만든다. 시그모이드 σ가 중심을 자기 칸 안에 묶어 학습이 안정되고, k-평균으로 고른 앵커와 함께 쓰면 논문 표 2에서 mAP가 69.6에서 74.4로 오른다."
+                "text": "Relative to the cell's top-left corner (c_x, c_y) and the anchor size (p_w, p_h), it builds the box as b_x = σ(t_x) + c_x, b_y = σ(t_y) + c_y, b_w = p_w·e^(t_w), b_h = p_h·e^(t_h). The sigmoid σ keeps the center inside its own cell, which stabilizes training; combined with anchors chosen by k-means, mAP rises from 69.6 to 74.4 in the paper's Table 2."
               }
             },
             {
               "@type": "Question",
-              "name": "패스스루 레이어(passthrough layer)란 무엇인가?",
+              "name": "What is the passthrough layer in YOLOv2?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "앞 층의 26 × 26 × 512 특징을 가져와 이웃한 2 × 2 칸을 채널 방향으로 쌓아 13 × 13 × 2048로 바꾸고, 원래의 13 × 13 특징에 이어 붙이는 층이다. 값을 버리지 않고 자리만 옮기므로 세밀한 특징이 그대로 남아 작은 물체의 위치를 잡는 데 쓰인다. 논문에서 mAP를 74.4에서 75.4로 올렸다."
+                "text": "It takes the 26 × 26 × 512 features of an earlier layer, stacks each neighboring 2 × 2 group of cells along the channels to get 13 × 13 × 2048, and concatenates that with the original 13 × 13 features. Nothing is thrown away, only moved, so the fine-grained features survive and help locate small objects. In the paper it raised mAP from 74.4 to 75.4."
               }
             },
             {
               "@type": "Question",
-              "name": "YOLOv2의 출력은 왜 13 × 13 × 125인가?",
+              "name": "Why is the YOLOv2 output 13 × 13 × 125?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "416 × 416 입력을 32분의 1로 줄여 13 × 13 칸이 되고, 칸마다 앵커 5개가 좌표 4개, 물체 여부 1개, 클래스 20개(PASCAL VOC)를 내기 때문이다. 5 × (4 + 1 + 20) = 125이고, 한 장에 박스 845개가 나온다. 13이 홀수라 사진 한가운데에 칸이 하나 생긴다."
+                "text": "The 416 × 416 input is downsampled 32 times to a 13 × 13 grid, and in each cell 5 anchors each output 4 coordinates, 1 objectness score, and 20 classes (PASCAL VOC): 5 × (4 + 1 + 20) = 125, or 845 boxes per image. Because 13 is odd, there is a single cell at the very center of the image."
               }
             },
             {
               "@type": "Question",
-              "name": "YOLOv2와 YOLO9000은 같은 것인가?",
+              "name": "Are YOLOv2 and YOLO9000 the same?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "같은 논문(YOLO9000: Better, Faster, Stronger, CVPR 2017)에 나오지만 다른 모델이다. YOLOv2는 앞부분에서 개선한 탐지기이고, YOLO9000은 그 구조로 COCO 탐지 데이터와 ImageNet 분류 데이터를 함께 학습해 9000개 넘는 물체 종류를 찾는 모델이다. YOLO9000은 앵커를 5개 대신 3개 쓴다."
+                "text": "They come from the same paper (YOLO9000: Better, Faster, Stronger, CVPR 2017) but are different models. YOLOv2 is the improved detector from the first part; YOLO9000 uses that architecture, trained jointly on COCO detection data and ImageNet classification data, to detect more than 9000 object categories. YOLO9000 uses 3 anchors instead of 5."
               }
             }
           ]
@@ -650,290 +650,290 @@
     </style>
 </head>
 <body>
-    <a class="skip" href="#main">본문으로 건너뛰기</a>
+    <a class="skip" href="#main">Skip to content</a>
 
     <header class="wide topbar">
-        <nav class="crumbs" aria-label="위치">
-            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/en/">knowledge</a>
         </nav>
         <div class="topbar-tools">
-            <a class="lang-switch" href="/knowledge/en/yolo-v2/" hreflang="en" lang="en">English</a>
+            <a class="lang-switch" href="/knowledge/yolo-v2/" hreflang="ko" lang="ko">한국어</a>
             <button id="theme-toggle" class="theme-toggle" type="button">light</button>
         </div>
     </header>
 
     <main id="main">
         <section class="wrap hero" aria-labelledby="page-title">
-            <nav class="kmap" aria-label="지식 지도" data-current="yolo-v2">
-                <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">컴퓨터 비전 › 물체 탐지</span></p>
+            <nav class="kmap" aria-label="Knowledge map" data-current="yolo-v2">
+                <p class="kmap-head"><span class="kmap-label">KNOWLEDGE MAP</span><span class="kmap-path">Computer vision › Object detection</span></p>
                 <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
-                <p class="kmap-text">먼저 읽을 글: <a href="../yolo-v1/">YOLOv1</a>(그 전에 <a href="../iou-nms/">IOU·NMS</a>) · 이어서 읽을 글은 아직 없다 · 같은 분야: mAP(준비 중)</p>
+                <p class="kmap-text">Read first: <a href="../yolo-v1/">YOLOv1</a> (and before it, <a href="../iou-nms/">IOU &amp; NMS</a>) · Nothing to read next yet · Same field: mAP (coming soon)</p>
             </nav>
-            <p class="eyebrow">KNOWLEDGE · 물체 탐지</p>
-            <h1 id="page-title">붙어 있거나 작은 물체를, YOLOv2는 어떻게 더 잘 찾을까?</h1>
-            <p class="answer">YOLOv2는 칸마다 데이터에서 고른 앵커 박스 5개를 두어 한 칸에서도 여러 물체를 나눠 맡고, 패스스루 레이어로 26 × 26의 세밀한 특징을 13 × 13 칸에 접어 붙인다.</p>
-            <p><a href="../yolo-v1/">YOLOv1</a>은 사진을 7 × 7 칸으로 나누고, 칸마다 박스 2개를 내지만 클래스는 한 벌만 맞혔다. 그래서 한 칸에 물체 중심이 둘이면 하나를 놓치고, 여러 번 줄어든 거친 특징 탓에 위치가 자주 어긋났다. YOLOv2는 이 약점을 여러 개선으로 고쳤다. 이 글은 그중 두 가지, 앵커 박스와 패스스루 레이어를 직접 만져 본다.</p>
-            <p class="path-title">YOLOv1에서 YOLOv2까지 하나씩 더하며 잰 VOC 2007 mAP (논문 표 2)</p>
+            <p class="eyebrow">KNOWLEDGE · OBJECT DETECTION</p>
+            <h1 id="page-title">How does YOLOv2 find crowded and small objects better?</h1>
+            <p class="answer">YOLOv2 gives each cell five anchor boxes chosen from the data, so even one cell can share several objects among them, and a passthrough layer folds fine-grained 26 × 26 features into the 13 × 13 grid.</p>
+            <p><a href="../yolo-v1/">YOLOv1</a> divides an image into a 7 × 7 grid; each cell outputs 2 boxes but predicts only one set of classes. So when two object centers fall in one cell it misses one of them, and because it works from coarse, heavily downsampled features, its boxes are often off. YOLOv2 fixed these weaknesses with a series of improvements. This page lets you try two of them: anchor boxes and the passthrough layer.</p>
+            <p class="path-title">VOC 2007 mAP as each change is added, from YOLOv1 to YOLOv2 (paper Table 2)</p>
             <ol class="path">
                 <li><span>YOLOv1</span><span class="track"><i style="width: 17%;"></i></span><b>63.4</b><small></small></li>
-                <li><span>배치 정규화</span><span class="track"><i style="width: 29%;"></i></span><b>65.8</b><small>+2.4</small></li>
-                <li><span>고해상도 분류기</span><span class="track"><i style="width: 47.5%;"></i></span><b>69.5</b><small>+3.7</small></li>
-                <li class="hit"><span>합성곱 + 앵커 박스<span class="sec">01</span></span><span class="track"><i style="width: 46%;"></i></span><b>69.2</b><small>−0.3</small></li>
-                <li><span>새 네트워크 Darknet-19</span><span class="track"><i style="width: 48%;"></i></span><b>69.6</b><small>+0.4</small></li>
-                <li class="hit"><span>데이터로 고른 앵커 + 칸에 묶은 위치<span class="sec">01·02</span></span><span class="track"><i style="width: 72%;"></i></span><b>74.4</b><small>+4.8</small></li>
-                <li class="hit"><span>패스스루<span class="sec">03</span></span><span class="track"><i style="width: 77%;"></i></span><b>75.4</b><small>+1.0</small></li>
-                <li><span>여러 크기로 학습</span><span class="track"><i style="width: 84%;"></i></span><b>76.8</b><small>+1.4</small></li>
-                <li><span>고해상도 탐지(544)</span><span class="track"><i style="width: 93%;"></i></span><b>78.6</b><small>+1.8</small></li>
+                <li><span>Batch normalization</span><span class="track"><i style="width: 29%;"></i></span><b>65.8</b><small>+2.4</small></li>
+                <li><span>High-resolution classifier</span><span class="track"><i style="width: 47.5%;"></i></span><b>69.5</b><small>+3.7</small></li>
+                <li class="hit"><span>Convolutional + anchor boxes<span class="sec">01</span></span><span class="track"><i style="width: 46%;"></i></span><b>69.2</b><small>−0.3</small></li>
+                <li><span>New network: Darknet-19</span><span class="track"><i style="width: 48%;"></i></span><b>69.6</b><small>+0.4</small></li>
+                <li class="hit"><span>Anchors from data + location bound to the cell<span class="sec">01·02</span></span><span class="track"><i style="width: 72%;"></i></span><b>74.4</b><small>+4.8</small></li>
+                <li class="hit"><span>Passthrough<span class="sec">03</span></span><span class="track"><i style="width: 77%;"></i></span><b>75.4</b><small>+1.0</small></li>
+                <li><span>Multi-scale training</span><span class="track"><i style="width: 84%;"></i></span><b>76.8</b><small>+1.4</small></li>
+                <li><span>High-resolution detector (544)</span><span class="track"><i style="width: 93%;"></i></span><b>78.6</b><small>+1.8</small></li>
             </ol>
-            <p class="source" style="margin-top: 6px;">막대는 mAP 60부터 80까지. 앵커 박스로 바꾼 단계는 mAP가 조금 내려갔지만 재현율은 81%에서 88%로 올랐다(§2).</p>
+            <p class="source" style="margin-top: 6px;">The bars run from mAP 60 to 80. The switch to anchor boxes lowered mAP slightly, but recall rose from 81% to 88% (§2).</p>
             <ol class="toc">
-                <li><a href="#anchors"><span>01 앵커 박스</span>한 칸, 박스 틀 다섯</a></li>
-                <li><a href="#clusters"><span>02 앵커 고르기</span>틀 모양은 데이터가</a></li>
-                <li><a href="#passthrough"><span>03 패스스루</span>접어서 붙이기</a></li>
+                <li><a href="#anchors"><span>01 Anchor boxes</span>One cell, five box templates</a></li>
+                <li><a href="#clusters"><span>02 Choosing anchors</span>The data picks the shapes</a></li>
+                <li><a href="#passthrough"><span>03 Passthrough</span>Fold and attach</a></li>
             </ol>
         </section>
 
         <section id="anchors" class="wide step" aria-labelledby="anchors-title">
             <div style="max-width: var(--measure);">
-                <p class="step-no">01 앵커 박스</p>
-                <h2 id="anchors-title">한 칸에 박스 틀 다섯, 틀마다 클래스 하나</h2>
-                <p>YOLOv2는 416 × 416 사진을 받아 13 × 13 칸으로 나눈다. 칸마다 모양이 다른 박스 틀 5개, 곧 앵커 박스를 둔다. 물체는 중심이 든 칸에서, 중심을 맞춰 겹쳤을 때 가장 많이 겹치는 앵커 하나가 맡는다. YOLOv1과 달리 앵커마다 물체 여부와 클래스를 따로 맞히므로, 한 칸에 물체가 둘이어도 모양이 다르면 둘 다 배울 수 있다.</p>
-                <p class="hint" id="anchors-hint">사람, 자동차, 개를 끌어 보자. 위의 단추로 YOLOv1과 YOLOv2를 바꿔 본다. 키보드로는 그림을 선택한 뒤 화살표로 움직이고(Shift는 한 칸씩), 스페이스로 물체를 바꾼다.</p>
+                <p class="step-no">01 Anchor boxes</p>
+                <h2 id="anchors-title">Five box templates per cell, one class per template</h2>
+                <p>YOLOv2 takes a 416 × 416 image and divides it into a 13 × 13 grid. Each cell has five box templates of different shapes: the anchor boxes. An object is taken by one anchor in the cell that contains its center, the anchor that overlaps it most when their centers are aligned. Unlike YOLOv1, each anchor predicts its own objectness and classes, so even two objects in one cell can both be learned if their shapes differ.</p>
+                <p class="hint" id="anchors-hint">Drag the person, the car, and the dog. Switch between YOLOv1 and YOLOv2 with the buttons above. With a keyboard, select the picture, move with the arrow keys (Shift moves one cell at a time), and press Space to switch objects.</p>
             </div>
             <div class="panel split">
                 <div>
-                    <div class="seg" role="group" aria-label="모델" id="anchor-mode" style="margin-bottom: 10px;">
-                        <button type="button" data-mode="v1" aria-pressed="false">YOLOv1 · 7 × 7 × 박스 2</button>
-                        <button type="button" data-mode="v2" aria-pressed="true">YOLOv2 · 13 × 13 × 앵커 5</button>
+                    <div class="seg" role="group" aria-label="Model" id="anchor-mode" style="margin-bottom: 10px;">
+                        <button type="button" data-mode="v1" aria-pressed="false">YOLOv1 · 7 × 7 × 2 boxes</button>
+                        <button type="button" data-mode="v2" aria-pressed="true">YOLOv2 · 13 × 13 × 5 anchors</button>
                     </div>
-                    <p class="counts" id="a-counts">박스 13 × 13 × 5 = <b>845</b>개 · 클래스 확률 <b>845</b>벌(앵커마다 1벌)</p>
+                    <p class="counts" id="a-counts">Boxes 13 × 13 × 5 = <b>845</b> · class probabilities: <b>845</b> sets (1 per anchor)</p>
                     <canvas id="anchor-canvas" class="stage" tabindex="0" role="img"
-                            aria-label="격자 위의 사람, 자동차, 개. 선택한 물체의 칸에 앵커 박스 5개가 겹쳐 보인다. 화살표 키로 선택한 물체를 움직인다."
+                            aria-label="A person, a car, and a dog on a grid. The five anchor boxes of the selected object's cell are drawn on top. The arrow keys move the selected object."
                             aria-describedby="anchors-hint"></canvas>
                 </div>
                 <div>
-                    <p class="muted" style="margin: 0;">선택한 물체</p>
-                    <p class="big" style="margin: 0 0 8px;"><span id="a-name">사람</span> → <span id="a-cell">7행 7열</span> 칸<span id="a-anchor"> · 앵커 2</span></p>
+                    <p class="muted" style="margin: 0;">Selected object</p>
+                    <p class="big" style="margin: 0 0 8px;"><span id="a-name">person</span> → <span id="a-cell">row 7, column 7</span><span id="a-anchor"> · anchor 2</span></p>
                     <div id="a-v2">
-                        <p class="muted small" style="margin: 0;">이 칸의 앵커 5개와 겹치는 정도(중심을 맞춘 IOU). 가장 큰 앵커가 맡는다.</p>
+                        <p class="muted small" style="margin: 0;">How much the object overlaps each of this cell's 5 anchors (IOU with centers aligned). The anchor with the most overlap takes it.</p>
                         <div class="bars" id="a-ious" aria-hidden="true"></div>
                         <dl class="kv">
-                            <dt>칸 안의 위치 σ(t<sub>x</sub>), σ(t<sub>y</sub>)</dt><dd id="a-sig">0.11, 0.76</dd>
-                            <dt>앵커 대비 크기 e<sup>t<sub>w</sub></sup>, e<sup>t<sub>h</sub></sup></dt><dd id="a-exp">0.74, 0.67</dd>
-                            <dt>신경망이 맞힐 t<sub>w</sub>, t<sub>h</sub></dt><dd id="a-t">−0.30, −0.40</dd>
+                            <dt>Position in the cell σ(t<sub>x</sub>), σ(t<sub>y</sub>)</dt><dd id="a-sig">0.11, 0.76</dd>
+                            <dt>Size relative to the anchor e<sup>t<sub>w</sub></sup>, e<sup>t<sub>h</sub></sup></dt><dd id="a-exp">0.74, 0.67</dd>
+                            <dt>What the network predicts: t<sub>w</sub>, t<sub>h</sub></dt><dd id="a-t">−0.30, −0.40</dd>
                         </dl>
                         <div class="control">
-                            <label for="a-morph">앵커에서 박스로 <output id="a-morph-out" for="a-morph">100%</output></label>
+                            <label for="a-morph">From anchor to box <output id="a-morph-out" for="a-morph">100%</output></label>
                             <input type="range" id="a-morph" min="0" max="100" value="100" step="1">
                         </div>
                         <p class="formula">b<sub>x</sub> = σ(t<sub>x</sub>) + c<sub>x</sub> · b<sub>y</sub> = σ(t<sub>y</sub>) + c<sub>y</sub> · b<sub>w</sub> = p<sub>w</sub>e<sup>t<sub>w</sub></sup> · b<sub>h</sub> = p<sub>h</sub>e<sup>t<sub>h</sub></sup></p>
-                        <p class="hint small" style="margin-top: 6px;">0%면 앵커 그대로 칸 한가운데에 놓인다. 신경망은 앵커를 옮기고 늘려 물체에 맞춘다. 중심은 시그모이드 σ 때문에 자기 칸을 벗어나지 못하고, 크기는 앵커의 e<sup>t</sup>배가 된다. 앵커 모양이 물체와 비슷할수록 t<sub>w</sub>, t<sub>h</sub>가 0에 가까워 배우기 쉽다.</p>
+                        <p class="hint small" style="margin-top: 6px;">At 0%, the anchor sits unchanged at the center of the cell. The network moves and stretches the anchor to fit the object: the sigmoid σ keeps the center inside its own cell, and the size becomes e<sup>t</sup> times the anchor. The closer the anchor's shape is to the object, the closer t<sub>w</sub> and t<sub>h</sub> are to 0, and the easier they are to learn.</p>
                     </div>
                     <div id="a-v1" hidden>
-                        <p style="margin: 0 0 8px;">YOLOv1은 칸마다 박스 2개를 내지만 클래스 확률은 칸마다 한 벌(20개)이다. 그래서 칸 하나가 물체 하나를 맡는다. 중심이 같은 칸에 든 물체가 둘이면, 박스가 2개여도 한 물체만 배울 수 있다. 박스 2개 중 정답과 더 많이 겹치는 쪽이 그 물체를 맡는다.</p>
+                        <p style="margin: 0 0 8px;">YOLOv1 outputs 2 boxes per cell but only one set of class probabilities (20) per cell, so one cell takes one object. If two objects have their centers in the same cell, only one of them can be learned, even with 2 boxes. Of the 2 boxes, the one that overlaps the ground truth more takes the object.</p>
                     </div>
                     <p class="chip" id="a-collision" hidden></p>
                     <p class="sr-only" aria-live="polite" id="a-live"></p>
                 </div>
             </div>
-            <p class="callout" style="max-width: var(--measure);" id="a-voc">VOC 2007 테스트 세트의 물체 12,032개로 세어 보면, YOLOv1(7 × 7 × 박스 2, 클래스는 칸마다 한 벌)에서는 6.8%가 같은 칸의 다른 물체에 자리를 내준다. YOLOv2(13 × 13 × 앵커 5, 클래스는 앵커마다 한 벌)에서는 1.5%다. 사진 넓이의 1%보다 작은 물체만 보면 24.0%에서 7.9%로 준다.</p>
-            <p class="source">출처: 논문 §2 Convolutional With Anchor Boxes, Direct location prediction, 그림 3 · 앵커 배정 규칙은 저자 Darknet 코드(region_layer.c) · 앵커 크기와 6.8%·1.5%는 VOC 정답 박스로 직접 계산</p>
+            <p class="callout" style="max-width: var(--measure);" id="a-voc">Counted over the 12,032 objects in the VOC 2007 test set, 6.8% lose their slot to another object in the same cell with YOLOv1 (7 × 7 × 2 boxes, one set of classes per cell). With YOLOv2 (13 × 13 × 5 anchors, one set of classes per anchor) it is 1.5%. For objects smaller than 1% of the image area, it drops from 24.0% to 7.9%.</p>
+            <p class="source">Source: paper §2 Convolutional With Anchor Boxes, Direct location prediction, Figure 3 · The anchor assignment rule follows the author's Darknet code (region_layer.c) · The anchor sizes and the 6.8% and 1.5% were computed directly from the VOC ground-truth boxes</p>
         </section>
 
         <section id="clusters" class="wide step" aria-labelledby="clusters-title">
             <div style="max-width: var(--measure);">
-                <p class="step-no">02 앵커 고르기</p>
-                <h2 id="clusters-title">박스 틀 다섯, 어떤 모양으로 고를까</h2>
-                <p>앵커가 물체 모양과 비슷할수록 신경망이 고칠 양이 작아 배우기 쉽다. YOLOv2는 앵커를 손으로 고르지 않고, 학습 데이터의 정답 박스를 k-평균으로 묶어 고른다. 점마다 가장 가까운 앵커를 고르고, 앵커를 그 점들의 평균 자리로 옮기기를 더 바뀌지 않을 때까지 되풀이한다. 거리는 1 − IOU다. 중심을 맞춰 겹쳤을 때 많이 겹칠수록 가깝다.</p>
-                <p class="hint" id="clusters-hint">점 하나가 VOC 정답 박스 하나의 너비와 높이다(사진 대비, 눈금은 로그). 반복 막대나 곡선을 끌어 k-평균이 앵커를 옮기는 과정을 따라가 보자. 앵커가 지나온 길이 남는다(고리가 출발점). 손잡이를 끌면 그 자리에서 다시 시작한다. 키보드: 반복 막대는 화살표, 그림에서는 [ ]로 앵커를 고르고 화살표로 크기를 바꾼다.</p>
+                <p class="step-no">02 Choosing anchors</p>
+                <h2 id="clusters-title">Five box templates: which shapes?</h2>
+                <p>The closer the anchors are to the shapes of objects, the less the network has to correct, and the easier it learns. YOLOv2 doesn't hand-pick its anchors: it clusters the ground-truth boxes of the training data with k-means. Each point picks its nearest anchor, then each anchor moves to the mean of its points, and this repeats until nothing changes. The distance is 1 − IOU: the more two boxes overlap with their centers aligned, the closer they are.</p>
+                <p class="hint" id="clusters-hint">Each dot is the width and height of one VOC ground-truth box (relative to the image, on a log scale). Drag the iteration slider or the curve to follow k-means as it moves the anchors; each anchor leaves a trail (the ring is where it started). Drag a handle to restart from there. Keyboard: arrows on the iteration slider; in the picture, pick an anchor with [ ] and resize it with the arrow keys.</p>
             </div>
             <div class="panel split">
                 <canvas id="km-canvas" class="stage" tabindex="0" role="img"
-                        aria-label="정답 박스 2,000개의 너비와 높이를 찍은 점과, 앵커 손잡이와 앵커가 지나온 길. 점의 색은 가장 가까운 앵커다."
+                        aria-label="Dots for the width and height of 2,000 ground-truth boxes, with the anchor handles and the paths the anchors took. Each dot is colored by its nearest anchor."
                         aria-describedby="clusters-hint"></canvas>
                 <div>
                     <div class="controls" style="margin-top: 0;">
                         <div class="control">
-                            <label for="km-k">앵커 수 k <output id="km-k-out" for="km-k">5</output></label>
+                            <label for="km-k">Number of anchors k <output id="km-k-out" for="km-k">5</output></label>
                             <input type="range" id="km-k" min="1" max="9" step="1" value="5">
                         </div>
                         <div class="control">
-                            <span class="label">거리</span>
-                            <div class="seg" role="group" aria-label="k-평균의 거리" id="km-metric">
+                            <span class="label">Distance</span>
+                            <div class="seg" role="group" aria-label="Distance for k-means" id="km-metric">
                                 <button type="button" data-metric="iou" aria-pressed="true">1 − IOU</button>
-                                <button type="button" data-metric="sse" aria-pressed="false">유클리드</button>
+                                <button type="button" data-metric="sse" aria-pressed="false">Euclidean</button>
                             </div>
                         </div>
                     </div>
-                    <p class="muted small" style="margin: 14px 0 0;">k-평균 과정: 앵커를 옮길 때마다의 평균 IOU</p>
-                    <svg class="kmchart" id="km-chart" viewBox="0 0 320 112" role="img" aria-label="반복마다 평균 IOU가 오르는 곡선. 누르거나 끌어 그 반복으로 간다."></svg>
+                    <p class="muted small" style="margin: 14px 0 0;">k-means progress: the average IOU after each move of the anchors</p>
+                    <svg class="kmchart" id="km-chart" viewBox="0 0 320 112" role="img" aria-label="A curve of the average IOU rising with each iteration. Click or drag to go to that iteration."></svg>
                     <div class="control">
-                        <label for="km-iter">반복 <output id="km-iter-out" for="km-iter">0 / 28</output></label>
+                        <label for="km-iter">Iteration <output id="km-iter-out" for="km-iter">0 / 28</output></label>
                         <input type="range" id="km-iter" min="0" max="28" step="1" value="0">
                     </div>
-                    <p class="step-text" id="km-text" aria-live="polite">반복 0 · 처음 틀: 정사각형 5개. 점의 색은 가장 가까운 앵커다. 평균 IOU 57.9%. 막대를 오른쪽으로 끌어 k-평균이 앵커를 옮기는 과정을 따라가 보자.</p>
+                    <p class="step-text" id="km-text" aria-live="polite">Iteration 0 · starting anchors: 5 squares. Each dot is colored by its nearest anchor. Average IOU 57.9%. Drag the slider to the right to watch k-means move the anchors.</p>
                     <div class="score">
-                        <div class="main"><span>평균 IOU</span><b id="km-avg">57.9%</b></div>
-                        <div><span>작은 박스 절반</span><b id="km-small">53.7%</b></div>
-                        <div><span>큰 박스 절반</span><b id="km-large">62.2%</b></div>
+                        <div class="main"><span>Average IOU</span><b id="km-avg">57.9%</b></div>
+                        <div><span>Smaller half of boxes</span><b id="km-small">53.7%</b></div>
+                        <div><span>Larger half of boxes</span><b id="km-large">62.2%</b></div>
                     </div>
-                    <p class="muted small" style="margin: 6px 0 0;">평균 IOU: 박스마다 가장 잘 맞는 앵커와의 IOU를 평균한 값</p>
-                    <canvas id="km-shapes" class="stage view" style="max-width: 240px; margin-top: 10px;" role="img" aria-label="지금 앵커들을 13 × 13 격자의 가운데 칸에 겹쳐 그린 모양"></canvas>
-                    <p class="muted small" style="margin: 4px 0 0;">지금 앵커를 416 × 416 입력의 가운데 칸에 그린 모양</p>
+                    <p class="muted small" style="margin: 6px 0 0;">Average IOU: the mean, over all boxes, of each box's IOU with its best-matching anchor</p>
+                    <canvas id="km-shapes" class="stage view" style="max-width: 240px; margin-top: 10px;" role="img" aria-label="The current anchors drawn over the center cell of a 13 × 13 grid"></canvas>
+                    <p class="muted small" style="margin: 4px 0 0;">The current anchors drawn in the center cell of a 416 × 416 input</p>
                 </div>
             </div>
             <div style="max-width: var(--measure);">
-                <table class="mini" aria-label="논문 표 1">
-                    <caption class="muted small" style="text-align: left; caption-side: top; padding-bottom: 4px;">논문 표 1: VOC 2007 정답 박스와 가장 가까운 앵커의 평균 IOU</caption>
-                    <thead><tr><th>앵커를 고른 방법</th><th>개수</th><th>평균 IOU</th></tr></thead>
+                <table class="mini" aria-label="Paper Table 1">
+                    <caption class="muted small" style="text-align: left; caption-side: top; padding-bottom: 4px;">Paper Table 1: average IOU of the VOC 2007 ground-truth boxes with their closest anchor</caption>
+                    <thead><tr><th>How the anchors were chosen</th><th>Count</th><th>Avg IOU</th></tr></thead>
                     <tbody>
-                        <tr><td>k-평균, 유클리드 거리</td><td class="num">5</td><td class="num">58.7</td></tr>
-                        <tr><td>k-평균, 1 − IOU 거리</td><td class="num">5</td><td class="num">61.0</td></tr>
-                        <tr><td>k-평균, 1 − IOU 거리</td><td class="num">9</td><td class="num">67.2</td></tr>
+                        <tr><td>k-means, Euclidean distance</td><td class="num">5</td><td class="num">58.7</td></tr>
+                        <tr><td>k-means, 1 − IOU distance</td><td class="num">5</td><td class="num">61.0</td></tr>
+                        <tr><td>k-means, 1 − IOU distance</td><td class="num">9</td><td class="num">67.2</td></tr>
                     </tbody>
                 </table>
-                <p class="hint" style="margin-top: 10px;">같은 5개라도 1 − IOU 거리가 유클리드 거리보다 잘 맞는다. 유클리드 거리는 큰 박스의 오차를 크게 쳐서 앵커가 큰 박스 쪽으로 끌린다. 위에서 거리를 바꿔 앵커가 지나온 길과 작은 박스 절반의 점수를 비교해 보자. 앵커를 9개로 늘리면 더 잘 맞지만 모델이 복잡해진다. 논문은 그 사이의 균형으로 k = 5를 골랐다.</p>
+                <p class="hint" style="margin-top: 10px;">With the same 5 anchors, 1 − IOU distance fits better than Euclidean distance. Euclidean distance weighs the errors of large boxes heavily, so the anchors get pulled toward large boxes. Switch the distance above and compare the anchors' paths and the score for the smaller half of the boxes. With 9 anchors the fit improves, but the model gets more complex; the paper chose k = 5 as a balance.</p>
             </div>
-            <p class="source">출처: 논문 §2 Dimension Clusters, 표 1, 그림 2 · 점은 VOC 2007+2012 학습 세트의 정답 박스 40,058개 중 무작위 2,000개(사진 없이 숫자만), 점수는 이 점들로 직접 계산</p>
+            <p class="source">Source: paper §2 Dimension Clusters, Table 1, Figure 2 · The dots are a random 2,000 of the 40,058 ground-truth boxes in the VOC 2007+2012 training set (numbers only, no images), and the scores were computed directly from these dots</p>
         </section>
 
         <section id="passthrough" class="wide step" aria-labelledby="passthrough-title">
             <div style="max-width: var(--measure);">
-                <p class="step-no">03 패스스루</p>
-                <h2 id="passthrough-title">26 × 26의 세밀한 특징을 접어서 붙인다</h2>
-                <p>13 × 13 특징 지도의 한 칸은 입력의 32 × 32픽셀이다. 큰 물체에는 충분하지만 작은 물체의 위치를 잡기에는 거칠다. 패스스루 레이어(passthrough layer)는 더 앞 층에 남아 있는 26 × 26 특징을 가져와 13 × 13 특징에 이어 붙인다. 탐지기는 이 넓어진 특징 위에서 박스를 맞힌다.</p>
-                <h3 style="margin-top: 22px;">어디서 가져와 어디에 붙이나</h3>
-                <p>YOLOv2 탐지기는 합성곱 22개다. Darknet-19에서 분류용 마지막 합성곱을 뗀 18개 뒤에, 탐지용 3 × 3 × 1024 합성곱 3개와 출력용 1 × 1 합성곱 1개를 붙였다. 논문은 패스스루를 "마지막 3 × 3 × 512 층에서 끝에서 두 번째 합성곱으로" 잇는다고 쓴다. 블록에 올리거나 누르면 그 층이 무엇인지 나오고, ①~④를 누르면 아래 접기 그림이 그 단계로 간다.</p>
+                <p class="step-no">03 Passthrough</p>
+                <h2 id="passthrough-title">Fold the fine 26 × 26 features and attach them</h2>
+                <p>One cell of the 13 × 13 feature map covers 32 × 32 pixels of the input. That is enough for large objects but coarse for locating small ones. The passthrough layer takes the 26 × 26 features still available in an earlier layer and attaches them to the 13 × 13 features. The detector predicts boxes from these widened features.</p>
+                <h3 style="margin-top: 22px;">Where it takes from and where it attaches</h3>
+                <p>The YOLOv2 detector has 22 convolutional layers: the 18 of Darknet-19 without its last, classification convolution, followed by three 3 × 3 × 1024 convolutions for detection and one 1 × 1 output convolution. The paper adds the passthrough “from the final 3 × 3 × 512 layer to the second to last convolutional layer.” Hover over or click a block to see what that layer is; click ①–④ to send the folding picture below to that step.</p>
             </div>
             <div class="panel">
                 <div class="netmap-wrap" id="netmap-wrap">
-                    <svg class="netmap" id="netmap" role="img" aria-label="YOLOv2 탐지기의 합성곱 22개와 최대 풀링 5개를 블록으로 늘어놓은 그림. 13번째 합성곱의 26 × 26 × 512 출력이 원래 길을 건너뛰어 접힌 뒤, 21번째 합성곱 앞에서 원래 길의 13 × 13 × 1024와 이어 붙는다."></svg>
+                    <svg class="netmap" id="netmap" role="img" aria-label="The 22 convolutions and 5 max-pooling layers of the YOLOv2 detector laid out as blocks. The 26 × 26 × 512 output of the 13th convolution skips the main path, is folded, and is concatenated with the main path's 13 × 13 × 1024 before the 21st convolution."></svg>
                 </div>
-                <p class="numbers" id="netmap-detail" aria-live="polite">합성곱 13 · 3 × 3 × 512 · 출력 26 × 26 × 512 · 26 × 26 해상도의 마지막 층. 패스스루가 이 출력을 가져간다</p>
+                <p class="numbers" id="netmap-detail" aria-live="polite">conv 13 · 3 × 3 × 512 · output 26 × 26 × 512 · the last layer at 26 × 26 resolution; the passthrough takes this output</p>
                 <ol class="route">
-                    <li><b>① 가져오는 곳</b>13번째 합성곱(3 × 3 × 512)의 출력 26 × 26 × 512. 26 × 26 해상도의 마지막 층이고, 다섯 번째 최대 풀링 바로 앞이다.</li>
-                    <li><b>② 원래 길</b>같은 출력이 다섯 번째 최대 풀링에서 13 × 13이 되고, 합성곱 7개(Darknet-19의 14~18번, 탐지용 19, 20번)를 지나 13 × 13 × 1024가 된다.</li>
-                    <li><b>③ 지름길</b>패스스루는 이 길을 건너뛴다. 26 × 26 × 512를 2 × 2씩 채널로 접어 13 × 13 × 2048로 만든다. 아래에서 직접 접어 본다.</li>
-                    <li><b>④ 합치는 곳</b>21번째 합성곱(끝에서 두 번째, 3 × 3 × 1024) 바로 앞에서 두 길을 채널 방향으로 이어 붙여 13 × 13 × 3072를 만든다. 21번째 합성곱이 이것을 받아 13 × 13 × 1024를 내고, 22번째 합성곱(1 × 1 × 125)이 13 × 13 × 125를 낸다.</li>
+                    <li><b>① Source</b>The 26 × 26 × 512 output of the 13th convolution (3 × 3 × 512): the last layer at 26 × 26 resolution, right before the fifth max pooling.</li>
+                    <li><b>② Main path</b>The same output becomes 13 × 13 at the fifth max pooling and passes through 7 convolutions (14–18 of Darknet-19 and detection layers 19 and 20) to become 13 × 13 × 1024.</li>
+                    <li><b>③ Shortcut</b>The passthrough skips that path. It folds 26 × 26 × 512 into channels, 2 × 2 at a time, making 13 × 13 × 2048. You fold it yourself below.</li>
+                    <li><b>④ Merge</b>Right before the 21st convolution (second to last, 3 × 3 × 1024), the two paths are concatenated along the channels into 13 × 13 × 3072. The 21st convolution takes this and outputs 13 × 13 × 1024, and the 22nd (1 × 1 × 125) outputs 13 × 13 × 125.</li>
                 </ol>
             </div>
             <div style="max-width: var(--measure);">
-                <h3 style="margin-top: 26px;">어떻게 접어 붙이나</h3>
-                <p>③ 지름길에서는 이웃한 2 × 2 칸을 공간이 아니라 채널 방향으로 쌓는다. 26 × 26 × 512는 13 × 13 × 2048이 되고, ④에서 원래 길의 13 × 13 × 1024 옆에 이어 붙어 13 × 13 × 3072가 된다.</p>
-                <p class="hint" id="fold-hint">단계 탭을 눌러 접어 보자. 위 그림에서 지금 단계가 일어나는 곳이 밝아진다. 26 × 26 면의 칸을 누르면 그 칸이 든 2 × 2 묶음이 어디로 가는지 따라간다. 끌어서 돌린다. 키보드: 화살표로 회전, Shift + 화살표로 묶음 이동.</p>
+                <h3 style="margin-top: 26px;">How it folds and attaches</h3>
+                <p>On the ③ shortcut, each neighboring 2 × 2 group of cells is stacked along the channels instead of in space. 26 × 26 × 512 becomes 13 × 13 × 2048, which at ④ is concatenated next to the main path's 13 × 13 × 1024 to make 13 × 13 × 3072.</p>
+                <p class="hint" id="fold-hint">Click the step tabs to fold. In the picture above, the place where the current step happens lights up. Click a cell on the 26 × 26 face to follow where its 2 × 2 group goes. Drag to rotate. Keyboard: arrows rotate, Shift + arrows move the group.</p>
             </div>
             <div class="panel">
                 <div class="row">
-                    <div class="seg" role="group" aria-label="줄이는 방법" id="fold-mode">
-                        <button type="button" data-mode="pass" aria-pressed="true">패스스루: 접어서 쌓기</button>
-                        <button type="button" data-mode="pool" aria-pressed="false">최대 풀링이었다면</button>
+                    <div class="seg" role="group" aria-label="How to shrink" id="fold-mode">
+                        <button type="button" data-mode="pass" aria-pressed="true">Passthrough: fold and stack</button>
+                        <button type="button" data-mode="pool" aria-pressed="false">If it were max pooling</button>
                     </div>
                     <div class="seg">
-                        <button type="button" id="fold-front">정면</button>
-                        <button type="button" id="fold-reset">처음 각도</button>
+                        <button type="button" id="fold-front">Front view</button>
+                        <button type="button" id="fold-reset">Reset view</button>
                     </div>
                 </div>
-                <div class="tabs" role="tablist" aria-label="패스스루 단계" id="fold-tabs" style="margin-top: 10px;"></div>
+                <div class="tabs" role="tablist" aria-label="Passthrough steps" id="fold-tabs" style="margin-top: 10px;"></div>
                 <div class="pager">
-                    <button class="btn" type="button" id="fold-prev" aria-label="이전 단계">←</button>
+                    <button class="btn" type="button" id="fold-prev" aria-label="Previous step">←</button>
                     <span class="pos" id="fold-pos">1 / 4</span>
-                    <button class="btn" type="button" id="fold-next" aria-label="다음 단계">→</button>
+                    <button class="btn" type="button" id="fold-next" aria-label="Next step">→</button>
                 </div>
-                <p class="step-text" id="fold-text" aria-live="polite">① 13번째 합성곱(26 × 26 해상도의 마지막 3 × 3 × 512 층)이 낸 26 × 26 × 512 특징이다. 칸마다 512개의 숫자가 있다. 색은 칸이 2 × 2 묶음의 어디에 있는지다.</p>
+                <p class="step-text" id="fold-text" aria-live="polite">① The 26 × 26 × 512 features from the 13th convolution (the last 3 × 3 × 512 layer at 26 × 26 resolution). Each cell holds 512 numbers. The color shows where a cell sits in its 2 × 2 group.</p>
                 <canvas id="fold3d" class="stage3d" tabindex="0" role="img"
-                        aria-label="26 × 26 특징 지도의 칸들이 2 × 2 묶음별로 나뉘어 13 × 13 칸의 채널로 쌓이는 입체 그림"
+                        aria-label="A 3D picture of the cells of a 26 × 26 feature map split by their place in each 2 × 2 group and stacked as the channels of a 13 × 13 grid"
                         aria-describedby="fold-hint"></canvas>
                 <div class="groups" aria-hidden="true">
-                    <span><i style="background: var(--accent);"></i>묶음의 왼쪽 위 ↖</span>
-                    <span><i style="background: var(--accent-green);"></i>오른쪽 위 ↗</span>
-                    <span><i style="background: var(--accent-warn);"></i>왼쪽 아래 ↙</span>
-                    <span><i style="background: var(--violet);"></i>오른쪽 아래 ↘</span>
-                    <span><i style="background: var(--muted);"></i>원래의 13 × 13 × 1024</span>
+                    <span><i style="background: var(--accent);"></i>Top-left of a group ↖</span>
+                    <span><i style="background: var(--accent-green);"></i>Top-right ↗</span>
+                    <span><i style="background: var(--accent-warn);"></i>Bottom-left ↙</span>
+                    <span><i style="background: var(--violet);"></i>Bottom-right ↘</span>
+                    <span><i style="background: var(--muted);"></i>The original 13 × 13 × 1024</span>
                 </div>
-                <p class="numbers" id="fold-pick">고른 묶음: 26 × 26의 13–14행 13–14열 → 13 × 13의 7행 7열 한 칸</p>
-                <p class="numbers" id="fold-count">값의 수: 26 × 26 × 512 = <b>346,112</b> → 13 × 13 × 2048 = <b>346,112</b></p>
+                <p class="numbers" id="fold-pick">Picked group: rows 13–14, columns 13–14 of 26 × 26 → one cell at row 7, column 7 of 13 × 13</p>
+                <p class="numbers" id="fold-count">Number of values: 26 × 26 × 512 = <b>346,112</b> → 13 × 13 × 2048 = <b>346,112</b></p>
             </div>
             <div style="max-width: var(--measure);">
-                <p class="callout">2 × 2 묶음의 값 4개가 출력 한 칸의 서로 다른 채널로 들어간다. 값을 하나도 버리지 않고 자리만 옮기므로, 26 × 26 해상도의 세밀한 정보가 13 × 13 칸에 그대로 남는다. 최대 풀링이었다면 넷 중 가장 큰 값 하나만 남는다. 논문에서 패스스루는 mAP를 74.4에서 75.4로 1 올렸다.</p>
-                <p class="hint">저자가 공개한 설정 파일은 시기에 따라 다르다. 2016년 11월 첫 판은 이 그림처럼 512채널을 그대로 접어 3072채널을 만든다. 2017년 3월 판부터는 ③ 지름길에서 접기 전에 1 × 1 합성곱으로 채널을 64개로 줄여, 13 × 13 × 256을 붙인다(합쳐 1280채널). 가져오는 곳과 합치는 곳은 같다.</p>
+                <p class="callout">The 4 values of a 2 × 2 group go into different channels of one output cell. Nothing is thrown away, only moved, so the fine detail of the 26 × 26 resolution survives in the 13 × 13 grid. Max pooling would keep only the largest of the four. In the paper, the passthrough raised mAP by 1, from 74.4 to 75.4.</p>
+                <p class="hint">The author's published configuration files changed over time. The first version, from November 2016, folds all 512 channels as in this picture, making 3072 channels. From the March 2017 version on, a 1 × 1 convolution on the ③ shortcut first cuts the channels to 64, so 13 × 13 × 256 is attached (1280 channels in total). The source and the merge point stay the same.</p>
             </div>
-            <p class="source">출처: 논문 §2 Fine-Grained Features, §3 Training for detection, 표 2 · 층의 순서와 연결은 저자 Darknet 저장소 cfg/yolo-voc.cfg(route −9, reorg 2, route −1,−3)와 그 이력</p>
+            <p class="source">Source: paper §2 Fine-Grained Features, §3 Training for detection, Table 2 · The layer order and connections follow cfg/yolo-voc.cfg in the author's Darknet repository (route −9, reorg 2, route −1,−3) and its history</p>
         </section>
 
         <section id="summary" class="wrap step" aria-labelledby="summary-title">
-            <p class="step-no">정리</p>
-            <h2 id="summary-title">YOLOv1의 한계에서 YOLOv2로</h2>
+            <p class="step-no">Summary</p>
+            <h2 id="summary-title">From YOLOv1's limits to YOLOv2</h2>
             <ol class="limits">
-                <li><b>칸마다 클래스 하나 → 앵커마다 클래스 하나.</b> YOLOv1은 7 × 7 × 박스 2 = 98개 박스에 클래스 확률이 49벌(칸마다 1벌)이었다. YOLOv2는 13 × 13 × 앵커 5 = 845개 박스에 클래스 확률이 845벌(앵커마다 1벌)이다. 한 칸에 모양이 다른 물체 여럿을 맡는다. 출력은 13 × 13 × 125다.</li>
-                <li><b>박스를 처음부터 → 데이터로 고른 틀에서 조금만.</b> 앵커 모양은 정답 박스에 1 − IOU 거리의 k-평균을 돌려 고르고, 신경망은 중심을 칸 안에서, 크기를 앵커의 e<sup>t</sup>배로 고친다. 고칠 양이 작고 중심이 칸을 벗어나지 않아 학습이 안정된다.</li>
-                <li><b>거친 13 × 13 → 세밀한 26 × 26을 접어 붙이기.</b> 패스스루가 2 × 2 이웃을 채널로 쌓아 13 × 13 × 3072를 만든다. 작은 물체의 위치를 잡을 정보가 남는다.</li>
+                <li><b>One class per cell → one class per anchor.</b> YOLOv1 had 7 × 7 × 2 = 98 boxes with 49 sets of class probabilities (one per cell). YOLOv2 has 13 × 13 × 5 = 845 boxes with 845 sets (one per anchor), so one cell can take several objects of different shapes. The output is 13 × 13 × 125.</li>
+                <li><b>Boxes from scratch → small edits to templates chosen from data.</b> The anchor shapes come from running k-means with 1 − IOU distance on the ground-truth boxes, and the network adjusts the center within the cell and the size to e<sup>t</sup> times the anchor. The corrections are small and the center can't leave its cell, so training is stable.</li>
+                <li><b>Coarse 13 × 13 → fine 26 × 26 folded in.</b> The passthrough stacks each 2 × 2 neighborhood into channels to make 13 × 13 × 3072, keeping the information needed to locate small objects.</li>
             </ol>
-            <p class="hint">그래도 작은 물체는 여전히 약하다. COCO에서 작은 물체의 AP는 5.0으로, 같은 표의 SSD512(9.0)보다 낮다(논문 표 5).</p>
+            <p class="hint">Small objects are still a weak spot: on COCO, YOLOv2's AP for small objects is 5.0, lower than the 9.0 of SSD512 in the same table (paper Table 5).</p>
             <div class="note">
-                <p><strong>오해</strong>앵커 박스를 쓰면 박스 크기가 앵커 5가지로 정해진다.</p>
-                <p class="fact"><strong>실제로는</strong>앵커는 출발점이다. 신경망이 너비와 높이를 앵커의 e<sup>t</sup>배로 고치고, 중심은 칸 안 어디로든 옮긴다. 앵커는 어느 예측기가 어느 물체를 맡을지 정하고, 고칠 양을 작게 만든다.</p>
+                <p><strong>Myth</strong>With anchor boxes, box sizes are limited to the 5 anchors.</p>
+                <p class="fact"><strong>Actually</strong>Anchors are starting points. The network scales the width and height to e<sup>t</sup> times the anchor and moves the center anywhere within the cell. Anchors decide which predictor takes which object, and they keep the corrections small.</p>
             </div>
             <div class="note">
-                <p><strong>오해</strong>패스스루는 앞 층의 특징을 줄여서(풀링해서) 붙인다.</p>
-                <p class="fact"><strong>실제로는</strong>줄이지 않는다. 2 × 2 이웃을 채널로 옮겨 쌓을 뿐이라, 26 × 26 × 512의 값 346,112개가 13 × 13 × 2048에 모두 들어간다. 최대 풀링이었다면 4개 중 1개만 남는다.</p>
+                <p><strong>Myth</strong>The passthrough shrinks (pools) the earlier layer's features before attaching them.</p>
+                <p class="fact"><strong>Actually</strong>It doesn't shrink anything. It only moves each 2 × 2 neighborhood into channels, so all 346,112 values of 26 × 26 × 512 fit into 13 × 13 × 2048. Max pooling would keep only 1 in 4.</p>
             </div>
-            <p class="source">출처: 논문 §2, §3, 그림 3, 표 5</p>
+            <p class="source">Source: paper §2, §3, Figure 3, Table 5</p>
         </section>
 
         <section id="faq" class="wrap step" aria-labelledby="faq-title">
-            <p class="step-no">질문</p>
-            <h2 id="faq-title">자주 묻는 질문</h2>
+            <p class="step-no">Questions</p>
+            <h2 id="faq-title">Frequently asked questions</h2>
             <div class="faq" id="faq-list">
                 <details>
-                    <summary>YOLOv2는 YOLOv1과 무엇이 다른가?</summary>
-                    <p>배치 정규화, 고해상도 분류기, 앵커 박스, k-평균으로 고른 앵커 크기, 칸에 묶은 위치 예측, 패스스루 레이어, 여러 크기로 학습하기, 새 네트워크 Darknet-19를 더했다. 논문 표 2에서 VOC 2007 mAP가 63.4에서 78.6으로 올랐고, 같은 모델을 416 × 416에서 돌리면 초당 67장에 mAP 76.8이다.</p>
+                    <summary>How is YOLOv2 different from YOLOv1?</summary>
+                    <p>It adds batch normalization, a high-resolution classifier, anchor boxes, anchor sizes chosen by k-means, location prediction bound to the cell, a passthrough layer, multi-scale training, and a new network, Darknet-19. In the paper's Table 2, VOC 2007 mAP rises from 63.4 to 78.6, and the same model run at 416 × 416 reaches 76.8 mAP at 67 frames per second.</p>
                 </details>
                 <details>
-                    <summary>앵커 박스(anchor box)란 무엇인가?</summary>
-                    <p>미리 정해 둔 박스 모양이다. 신경망은 박스를 처음부터 그리지 않고, 앵커를 얼마나 옮기고 늘릴지를 예측한다. YOLOv2는 13 × 13 칸마다 앵커 5개를 두고 앵커마다 물체 여부와 클래스를 따로 예측해서, 한 칸에 모양이 다른 물체가 둘 있어도 둘 다 찾을 수 있다.</p>
+                    <summary>What is an anchor box?</summary>
+                    <p>It is a predefined box shape. Instead of drawing a box from scratch, the network predicts how far to move and stretch the anchor. YOLOv2 has 5 anchors in each of its 13 × 13 cells and predicts objectness and classes separately for each anchor, so it can find two differently shaped objects in the same cell.</p>
                 </details>
                 <details>
-                    <summary>YOLOv2의 앵커 박스는 몇 개이고 어떻게 정하나?</summary>
-                    <p>5개다. 학습 데이터 정답 박스의 너비와 높이에 k-평균 군집을 돌려 고르고, 거리로 1 − IOU를 쓴다. 앵커를 늘릴수록 평균 IOU가 오르지만 모델이 복잡해져, 논문은 그 사이의 균형으로 5개를 골랐다(표 1: 5개 61.0, 9개 67.2).</p>
+                    <summary>How many anchor boxes does YOLOv2 use, and how are they chosen?</summary>
+                    <p>Five. They are chosen by running k-means clustering on the widths and heights of the training data's ground-truth boxes, with 1 − IOU as the distance. More anchors raise the average IOU but make the model more complex, so the paper chose 5 as a balance (Table 1: 61.0 with 5, 67.2 with 9).</p>
                 </details>
                 <details>
-                    <summary>앵커를 고르는 k-평균에 왜 유클리드 거리 대신 1 − IOU를 쓰나?</summary>
-                    <p>유클리드 거리를 쓰면 큰 박스가 오차를 더 많이 만들어 군집 중심이 큰 박스 쪽으로 끌린다. 원하는 것은 박스 크기와 상관없이 IOU가 높은 앵커라서 1 − IOU를 쓴다. 논문 표 1에서 같은 5개일 때 평균 IOU는 유클리드 거리 58.7, IOU 거리 61.0이었다.</p>
+                    <summary>Why does the anchor k-means use 1 − IOU instead of Euclidean distance?</summary>
+                    <p>With Euclidean distance, large boxes produce larger errors, which pulls the cluster centers toward large boxes. What we want are anchors with high IOU regardless of box size, so 1 − IOU is used. In the paper's Table 1, with 5 anchors the average IOU was 58.7 with Euclidean distance and 61.0 with IOU distance.</p>
                 </details>
                 <details>
-                    <summary>YOLOv2는 박스 위치와 크기를 어떻게 예측하나?</summary>
-                    <p>칸의 왼쪽 위 (c_x, c_y)와 앵커 크기 (p_w, p_h)를 기준으로 b_x = σ(t_x) + c_x, b_y = σ(t_y) + c_y, b_w = p_w·e^(t_w), b_h = p_h·e^(t_h)로 박스를 만든다. 시그모이드 σ가 중심을 자기 칸 안에 묶어 학습이 안정되고, k-평균으로 고른 앵커와 함께 쓰면 논문 표 2에서 mAP가 69.6에서 74.4로 오른다.</p>
+                    <summary>How does YOLOv2 predict box position and size?</summary>
+                    <p>Relative to the cell's top-left corner (c_x, c_y) and the anchor size (p_w, p_h), it builds the box as b_x = σ(t_x) + c_x, b_y = σ(t_y) + c_y, b_w = p_w·e^(t_w), b_h = p_h·e^(t_h). The sigmoid σ keeps the center inside its own cell, which stabilizes training; combined with anchors chosen by k-means, mAP rises from 69.6 to 74.4 in the paper's Table 2.</p>
                 </details>
                 <details>
-                    <summary>패스스루 레이어(passthrough layer)란 무엇인가?</summary>
-                    <p>앞 층의 26 × 26 × 512 특징을 가져와 이웃한 2 × 2 칸을 채널 방향으로 쌓아 13 × 13 × 2048로 바꾸고, 원래의 13 × 13 특징에 이어 붙이는 층이다. 값을 버리지 않고 자리만 옮기므로 세밀한 특징이 그대로 남아 작은 물체의 위치를 잡는 데 쓰인다. 논문에서 mAP를 74.4에서 75.4로 올렸다.</p>
+                    <summary>What is the passthrough layer in YOLOv2?</summary>
+                    <p>It takes the 26 × 26 × 512 features of an earlier layer, stacks each neighboring 2 × 2 group of cells along the channels to get 13 × 13 × 2048, and concatenates that with the original 13 × 13 features. Nothing is thrown away, only moved, so the fine-grained features survive and help locate small objects. In the paper it raised mAP from 74.4 to 75.4.</p>
                 </details>
                 <details>
-                    <summary>YOLOv2의 출력은 왜 13 × 13 × 125인가?</summary>
-                    <p>416 × 416 입력을 32분의 1로 줄여 13 × 13 칸이 되고, 칸마다 앵커 5개가 좌표 4개, 물체 여부 1개, 클래스 20개(PASCAL VOC)를 내기 때문이다. 5 × (4 + 1 + 20) = 125이고, 한 장에 박스 845개가 나온다. 13이 홀수라 사진 한가운데에 칸이 하나 생긴다.</p>
+                    <summary>Why is the YOLOv2 output 13 × 13 × 125?</summary>
+                    <p>The 416 × 416 input is downsampled 32 times to a 13 × 13 grid, and in each cell 5 anchors each output 4 coordinates, 1 objectness score, and 20 classes (PASCAL VOC): 5 × (4 + 1 + 20) = 125, or 845 boxes per image. Because 13 is odd, there is a single cell at the very center of the image.</p>
                 </details>
                 <details>
-                    <summary>YOLOv2와 YOLO9000은 같은 것인가?</summary>
-                    <p>같은 논문(YOLO9000: Better, Faster, Stronger, CVPR 2017)에 나오지만 다른 모델이다. YOLOv2는 앞부분에서 개선한 탐지기이고, YOLO9000은 그 구조로 COCO 탐지 데이터와 ImageNet 분류 데이터를 함께 학습해 9000개 넘는 물체 종류를 찾는 모델이다. YOLO9000은 앵커를 5개 대신 3개 쓴다.</p>
+                    <summary>Are YOLOv2 and YOLO9000 the same?</summary>
+                    <p>They come from the same paper (YOLO9000: Better, Faster, Stronger, CVPR 2017) but are different models. YOLOv2 is the improved detector from the first part; YOLO9000 uses that architecture, trained jointly on COCO detection data and ImageNet classification data, to detect more than 9000 object categories. YOLO9000 uses 3 anchors instead of 5.</p>
                 </details>
             </div>
-            <p class="source">출처: 논문 §2, §3, §4, 표 1, 표 2, 표 3 · 845개와 출력 크기는 이 페이지의 계산</p>
+            <p class="source">Source: paper §2, §3, §4, Table 1, Table 2, Table 3 · The 845 boxes and the output size are this page's calculation</p>
         </section>
 
         <section class="wrap step" aria-labelledby="more-title">
-            <h2 id="more-title">더 보기</h2>
+            <h2 id="more-title">Further reading</h2>
             <ul class="links">
                 <li><a href="https://arxiv.org/abs/1612.08242">Redmon &amp; Farhadi, YOLO9000: Better, Faster, Stronger (CVPR 2017)</a></li>
-                <li><a href="https://github.com/pjreddie/darknet/blob/master/cfg/yolov2-voc.cfg">저자의 Darknet 설정 yolov2-voc.cfg</a></li>
-                <li><a href="../yolo-v1/">YOLOv1, 한 번 보고 모두 찾기</a> · <a href="../iou-nms/">IOU와 NMS, 박스 하나만 남기기</a></li>
+                <li><a href="https://github.com/pjreddie/darknet/blob/master/cfg/yolov2-voc.cfg">The author's Darknet configuration, yolov2-voc.cfg</a></li>
+                <li><a href="../yolo-v1/">YOLOv1 Explained: Look Once, Find Every Object</a> · <a href="../iou-nms/">IOU and NMS Explained: Keep One Box per Object</a></li>
                 <!-- 영상이 나오면 추가: <li><a href="https://www.youtube.com/watch?v=...">영상으로 보기</a></li> -->
             </ul>
-            <p class="hint" style="margin-top: 12px;">01의 앵커 크기, 02의 점과 점수, 01의 6.8%·1.5%는 PASCAL VOC 정답 박스의 숫자로 직접 계산했다. 사진은 쓰지 않았다.</p>
+            <p class="hint" style="margin-top: 12px;">The anchor sizes in 01, the dots and scores in 02, and the 6.8% and 1.5% in 01 were computed directly from the numbers of the PASCAL VOC ground-truth boxes. No images were used.</p>
         </section>
     </main>
 
     <footer class="wrap">
-        마지막 업데이트 <time datetime="2026-10-02">2026-10-02</time> · <a href="/">Hugh Q Lee</a>
+        Last updated <time datetime="2026-10-02">2026-10-02</time> · <a href="/">Hugh Q Lee</a> · Translated from the <a href="/knowledge/yolo-v2/" hreflang="ko">Korean original</a>
     </footer>
 
     <script type="application/json" id="yolo2-data">{"anchors":[[1.221,2.025],[2.82,4.636],[4.56,8.961],[8.087,5.322],[10.353,10.689]],"released_anchors":[[1.3221,1.73145],[3.19275,4.00944],[5.05587,8.09892],[9.47112,4.84053],[11.2364,10.0071]],"boxes":[[128,291],[96,93],[274,348],[328,933],[592,644],[68,171],[950,505],[434,840],[788,820],[82,309],[790,821],[84,131],[184,368],[58,205],[220,416],[186,253],[996,994],[94,262],[208,410],[338,888],[450,776],[304,328],[214,331],[158,299],[224,360],[242,109],[158,291],[204,404],[64,64],[56,141],[160,368],[64,72],[174,144],[494,464],[328,612],[426,412],[678,1000],[266,487],[852,866],[132,109],[296,731],[998,659],[132,261],[612,747],[382,432],[100,351],[626,480],[194,474],[956,560],[38,101],[68,336],[606,632],[96,464],[488,733],[186,799],[502,446],[250,132],[269,336],[466,933],[224,328],[138,357],[790,485],[130,496],[350,572],[522,563],[252,699],[264,304],[445,538],[340,498],[546,293],[136,227],[674,745],[462,629],[774,907],[575,754],[58,293],[44,172],[440,360],[108,163],[54,149],[58,149],[70,177],[90,135],[902,453],[362,494],[42,125],[40,133],[250,453],[86,96],[602,847],[900,931],[288,982],[350,360],[104,192],[178,123],[620,520],[558,880],[204,314],[126,251],[843,998],[90,219],[80,213],[54,187],[696,564],[218,317],[538,489],[66,171],[162,388],[660,739],[477,390],[148,275],[298,779],[390,405],[972,751],[70,213],[148,579],[234,178],[770,699],[848,396],[80,568],[168,795],[196,339],[536,896],[42,210],[40,201],[495,474],[844,1000],[976,501],[206,495],[192,246],[64,80],[176,395],[116,224],[120,160],[180,515],[116,360],[62,267],[162,336],[498,240],[164,296],[315,426],[598,501],[34,45],[136,180],[98,165],[238,656],[358,813],[428,789],[66,114],[280,621],[372,448],[270,497],[172,117],[910,971],[90,324],[108,225],[744,553],[131,531],[134,437],[532,622],[94,267],[226,175],[186,275],[228,368],[476,605],[554,609],[872,871],[928,526],[156,708],[354,632],[452,403],[78,222],[212,69],[344,797],[468,992],[138,605],[118,213],[278,564],[302,632],[90,341],[352,795],[72,195],[696,520],[180,231],[190,301],[324,334],[56,251],[66,492],[354,776],[278,307],[428,1000],[614,536],[918,730],[772,593],[877,356],[80,93],[277,462],[296,129],[78,291],[362,450],[704,862],[996,712],[216,819],[502,848],[32,120],[370,790],[590,173],[366,456],[76,213],[998,989],[46,136],[184,101],[176,96],[592,453],[98,157],[804,613],[348,350],[172,486],[316,365],[448,608],[650,773],[266,443],[56,227],[502,886],[42,123],[230,333],[124,470],[174,524],[238,674],[118,296],[123,206],[80,138],[854,352],[818,413],[1000,995],[306,508],[326,805],[366,488],[590,778],[586,704],[246,484],[109,298],[362,714],[997,850],[306,152],[728,584],[536,731],[838,242],[418,281],[70,104],[244,419],[184,688],[496,431],[320,693],[68,164],[788,749],[102,140],[772,780],[224,389],[174,344],[90,165],[539,344],[412,773],[568,530],[264,427],[352,503],[42,189],[994,952],[226,174],[210,129],[490,747],[1000,749],[126,419],[32,115],[168,307],[130,235],[240,250],[229,521],[226,604],[62,331],[342,365],[270,862],[851,802],[252,963],[150,152],[64,152],[84,144],[86,362],[76,146],[168,600],[222,365],[1000,700],[187,266],[996,709],[1000,309],[36,163],[1000,527],[138,237],[308,313],[308,574],[950,637],[272,623],[547,150],[363,306],[501,290],[874,370],[78,365],[370,427],[318,344],[252,467],[260,444],[870,888],[274,583],[334,501],[904,661],[102,223],[752,765],[456,460],[346,491],[622,523],[938,945],[316,517],[250,696],[114,284],[144,211],[140,221],[130,196],[820,441],[997,668],[32,143],[120,99],[312,195],[451,592],[872,869],[136,115],[576,416],[696,742],[266,694],[646,560],[70,274],[197,150],[180,693],[110,71],[318,296],[156,445],[88,114],[76,313],[168,205],[541,862],[118,445],[538,384],[286,440],[584,699],[148,136],[350,428],[50,152],[324,217],[92,123],[130,267],[224,453],[230,631],[278,229],[108,598],[418,557],[282,155],[232,136],[44,88],[664,862],[268,264],[206,339],[152,376],[90,192],[600,508],[291,276],[120,384],[66,339],[652,741],[108,555],[508,727],[48,85],[46,155],[248,120],[56,141],[68,131],[100,293],[106,236],[554,1000],[146,307],[570,317],[264,475],[80,139],[120,451],[76,381],[446,360],[86,85],[138,208],[92,83],[116,437],[922,440],[276,523],[154,192],[436,347],[284,328],[408,827],[80,307],[512,856],[110,454],[74,467],[182,512],[88,304],[122,427],[278,277],[110,253],[42,205],[262,514],[435,310],[388,360],[250,429],[292,200],[203,510],[52,308],[376,248],[46,179],[306,405],[784,361],[102,201],[154,290],[130,204],[180,583],[69,176],[164,183],[276,381],[36,123],[1000,647],[997,916],[86,423],[96,106],[978,992],[82,387],[806,799],[152,493],[114,139],[998,936],[918,997],[244,576],[304,362],[973,426],[396,435],[94,150],[112,450],[378,250],[156,216],[38,168],[158,227],[210,277],[670,757],[40,228],[202,899],[264,307],[168,309],[116,323],[347,266],[252,246],[494,592],[256,403],[998,869],[708,752],[52,139],[140,299],[264,813],[230,528],[166,131],[832,926],[270,267],[688,254],[286,552],[46,205],[260,507],[1000,732],[32,110],[48,126],[93,80],[198,467],[160,144],[290,538],[364,586],[564,642],[630,556],[294,536],[154,413],[124,221],[324,705],[240,810],[902,683],[90,171],[278,178],[616,332],[136,312],[106,286],[110,157],[266,440],[110,99],[328,264],[323,430],[70,77],[250,739],[233,366],[180,401],[88,208],[252,341],[148,547],[404,375],[80,82],[136,351],[132,384],[126,221],[522,436],[94,80],[26,80],[314,174],[216,459],[410,899],[91,158],[72,123],[554,208],[253,254],[67,132],[968,773],[90,309],[90,115],[50,80],[58,125],[202,129],[922,907],[886,532],[588,789],[377,481],[1000,221],[144,253],[998,579],[364,104],[424,998],[194,667],[72,280],[234,315],[716,755],[168,355],[154,352],[88,165],[100,136],[94,397],[228,627],[324,944],[320,392],[282,552],[348,373],[166,424],[102,387],[995,788],[90,148],[126,101],[114,90],[500,696],[238,224],[610,325],[114,248],[100,242],[112,616],[985,888],[530,608],[640,944],[144,112],[922,752],[588,817],[746,605],[116,221],[576,851],[652,916],[94,90],[406,771],[334,393],[388,584],[548,531],[110,147],[438,181],[172,203],[582,960],[290,588],[162,325],[170,219],[592,157],[501,502],[894,997],[540,598],[810,949],[904,968],[96,130],[250,757],[224,109],[142,115],[165,160],[174,245],[222,294],[525,444],[178,566],[292,672],[102,648],[408,445],[472,997],[300,68],[814,976],[188,703],[564,339],[230,415],[136,144],[109,176],[640,931],[476,816],[576,354],[80,120],[928,293],[162,95],[808,437],[46,107],[56,109],[406,528],[101,198],[104,414],[268,429],[101,296],[741,700],[565,668],[1000,874],[148,75],[236,712],[148,608],[42,109],[410,787],[320,531],[695,382],[76,221],[648,279],[336,352],[376,797],[744,958],[285,761],[422,965],[108,102],[516,507],[919,951],[728,733],[825,976],[413,812],[850,519],[296,323],[248,631],[128,435],[134,400],[144,205],[60,236],[454,747],[414,664],[654,555],[824,821],[83,148],[512,956],[63,276],[67,291],[114,235],[1000,605],[376,626],[56,66],[292,293],[85,176],[286,1000],[670,525],[134,267],[560,871],[128,546],[74,155],[72,291],[342,324],[1000,934],[352,648],[64,227],[280,395],[770,790],[928,592],[94,237],[432,138],[267,446],[467,748],[931,818],[36,133],[325,252],[995,820],[312,868],[452,255],[335,411],[137,306],[144,224],[259,98],[240,579],[182,480],[191,460],[134,70],[310,410],[894,824],[262,490],[88,390],[116,80],[598,720],[80,69],[142,272],[36,115],[438,856],[88,138],[324,674],[714,721],[90,392],[278,813],[219,638],[142,173],[40,83],[178,453],[134,312],[799,792],[120,739],[282,568],[150,625],[74,372],[68,402],[178,400],[36,428],[712,891],[54,75],[312,459],[829,960],[627,818],[316,552],[661,338],[283,302],[406,157],[81,328],[456,761],[168,827],[350,918],[581,666],[190,347],[245,294],[396,862],[180,581],[800,687],[544,765],[184,757],[238,731],[708,584],[104,323],[270,344],[94,252],[146,767],[93,88],[144,552],[322,309],[288,670],[26,131],[262,467],[472,664],[636,441],[352,459],[798,890],[96,93],[120,139],[196,160],[1000,845],[330,669],[221,318],[574,811],[784,960],[424,940],[1000,840],[354,590],[84,147],[840,589],[62,29],[70,120],[338,875],[1000,891],[107,58],[1000,539],[344,379],[220,149],[228,477],[557,512],[530,619],[854,551],[136,495],[110,387],[229,596],[102,93],[48,91],[1000,765],[316,480],[318,291],[236,521],[915,948],[390,699],[48,261],[311,114],[306,769],[128,319],[182,189],[84,197],[196,365],[115,158],[333,226],[620,848],[32,245],[650,723],[50,91],[988,1000],[302,795],[901,1000],[59,56],[290,236],[552,665],[62,224],[188,275],[506,981],[417,628],[84,434],[290,641],[278,859],[304,312],[602,792],[870,764],[276,941],[48,234],[819,906],[278,320],[222,563],[172,275],[1000,1000],[252,154],[158,270],[410,616],[648,960],[896,800],[416,895],[360,766],[188,181],[620,984],[427,514],[70,120],[334,856],[744,932],[418,459],[84,417],[82,429],[372,449],[530,955],[469,996],[352,293],[498,1000],[190,156],[202,208],[232,826],[300,440],[160,400],[928,1000],[204,403],[88,288],[162,642],[754,920],[128,112],[76,149],[256,640],[372,432],[168,46],[350,249],[322,207],[86,62],[512,920],[315,96],[288,754],[472,542],[158,432],[866,931],[202,309],[302,333],[100,456],[262,147],[332,371],[224,304],[998,1000],[334,676],[162,180],[136,592],[352,363],[128,336],[328,764],[691,612],[382,488],[206,224],[730,742],[250,416],[50,125],[454,391],[734,920],[140,198],[432,462],[992,1000],[32,101],[92,459],[1000,651],[138,160],[118,752],[160,429],[638,978],[653,831],[717,884],[636,625],[240,192],[392,757],[578,475],[168,147],[46,120],[44,120],[90,248],[110,245],[94,112],[482,437],[114,557],[142,253],[922,746],[204,363],[144,381],[280,354],[1000,1000],[300,679],[158,525],[236,755],[314,941],[228,637],[116,93],[290,411],[269,340],[990,653],[149,170],[72,84],[512,792],[58,112],[130,423],[641,882],[50,134],[400,512],[938,907],[120,184],[70,48],[312,414],[744,886],[318,685],[942,600],[208,459],[516,787],[242,97],[571,514],[124,392],[832,923],[479,636],[322,324],[550,1000],[422,726],[429,416],[94,125],[514,986],[204,248],[484,293],[376,165],[272,458],[618,939],[40,112],[360,888],[132,109],[346,243],[68,95],[282,150],[455,170],[240,96],[72,348],[458,847],[768,328],[122,216],[594,453],[254,584],[82,365],[56,48],[354,564],[96,285],[310,448],[532,997],[659,558],[278,398],[446,584],[528,363],[120,557],[140,707],[256,200],[416,283],[614,988],[226,248],[444,491],[704,488],[832,976],[328,614],[230,400],[264,480],[264,315],[406,920],[484,376],[90,111],[442,1000],[894,784],[852,288],[560,563],[402,608],[60,189],[232,138],[272,578],[252,342],[64,123],[240,245],[164,195],[76,103],[310,339],[335,414],[216,404],[380,901],[856,659],[152,142],[220,387],[754,549],[214,411],[180,371],[820,514],[54,258],[204,104],[163,108],[254,173],[594,520],[669,582],[402,725],[488,579],[1000,1000],[819,374],[628,716],[252,456],[38,117],[108,261],[348,696],[523,588],[618,771],[432,491],[116,131],[190,150],[546,291],[798,869],[550,1000],[514,584],[48,291],[64,80],[438,458],[678,898],[322,973],[30,166],[92,174],[972,434],[416,611],[93,150],[138,104],[416,752],[130,315],[666,578],[188,557],[288,447],[296,773],[294,643],[88,200],[454,253],[106,102],[868,397],[308,963],[134,292],[122,96],[74,99],[126,221],[226,195],[260,883],[98,240],[205,288],[152,279],[338,216],[232,805],[276,345],[242,760],[270,225],[344,509],[86,303],[42,67],[526,787],[288,443],[80,72],[364,587],[606,770],[36,128],[210,365],[106,117],[128,261],[924,1000],[444,267],[222,243],[410,280],[98,261],[114,159],[44,96],[540,629],[112,138],[331,211],[670,379],[252,492],[284,518],[875,694],[874,920],[267,300],[620,424],[512,910],[950,760],[760,944],[762,868],[632,365],[79,122],[69,116],[96,136],[1000,732],[298,493],[98,485],[272,682],[62,72],[535,728],[70,246],[1000,970],[72,109],[210,136],[408,334],[448,435],[36,141],[812,910],[80,78],[219,380],[140,111],[1000,1000],[594,806],[762,784],[544,817],[18,72],[157,292],[32,53],[428,909],[88,107],[70,80],[194,200],[74,165],[674,326],[174,184],[22,83],[44,249],[558,812],[534,982],[60,49],[318,189],[392,498],[1000,902],[130,147],[96,143],[968,499],[110,123],[115,38],[72,219],[836,708],[236,694],[288,171],[170,342],[866,453],[476,192],[144,168],[534,1000],[320,586],[808,882],[751,630],[190,435],[98,1000],[158,711],[940,449],[1000,1000],[102,432],[328,199],[84,122],[154,269],[304,935],[354,562],[464,535],[22,35],[152,249],[126,159],[242,293],[954,426],[234,429],[852,909],[837,758],[370,648],[26,48],[48,54],[688,1000],[420,701],[848,973],[152,691],[408,695],[70,217],[58,45],[714,494],[156,568],[395,846],[188,605],[549,586],[154,347],[106,101],[883,732],[192,218],[822,631],[1000,1000],[345,252],[218,414],[616,800],[27,98],[138,408],[216,269],[120,471],[860,523],[298,544],[84,133],[156,379],[222,335],[108,180],[256,498],[120,333],[260,528],[306,653],[1000,1000],[866,419],[534,429],[40,171],[126,184],[902,958],[604,318],[10,40],[22,56],[916,512],[36,61],[206,152],[78,85],[228,432],[64,129],[240,168],[142,67],[130,309],[76,75],[250,525],[26,77],[990,878],[192,301],[140,366],[714,625],[396,605],[102,99],[474,296],[312,835],[946,1000],[756,1000],[934,877],[138,107],[243,158],[100,117],[916,885],[263,816],[332,465],[162,139],[46,144],[66,64],[62,124],[190,440],[244,869],[184,536],[447,856],[106,261],[686,731],[250,251],[52,211],[104,182],[42,88],[158,168],[306,216],[792,559],[138,210],[392,400],[66,56],[274,500],[132,649],[424,321],[752,563],[992,886],[108,208],[64,65],[76,267],[56,125],[280,533],[379,908],[38,47],[94,157],[166,946],[466,559],[440,411],[386,358],[96,190],[112,193],[540,483],[42,64],[440,434],[548,349],[341,490],[462,186],[424,136],[510,530],[300,644],[627,860],[44,57],[20,30],[148,549],[126,144],[108,93],[656,557],[488,476],[790,544],[790,1000],[901,930],[56,120],[44,40],[60,56],[560,456],[370,257],[58,96],[676,648],[132,627],[336,395],[402,623],[196,575],[629,540],[550,1000],[818,931],[54,264],[202,765],[602,850],[496,407],[529,734],[404,389],[524,203],[916,387],[78,205],[180,189],[132,277],[910,349],[427,834],[250,912],[120,50],[238,432],[530,396],[46,88],[1000,1000],[386,997],[132,125],[318,400],[553,1000],[676,360],[432,539],[372,571],[72,163],[66,43],[496,290],[997,880],[1000,786],[62,163],[106,421],[194,368],[36,29],[1000,1000],[234,297],[434,613],[34,160],[34,155],[150,147],[680,895],[421,554],[408,961],[80,81],[600,960],[54,67],[132,199],[990,814],[813,764],[1000,996],[36,59],[174,286],[94,75],[110,99],[687,1000],[50,117],[528,253],[345,328],[182,117],[116,272],[464,949],[142,104],[60,48],[220,455],[884,902],[1000,1000],[846,475],[120,224],[245,122],[534,462],[27,26],[99,168],[119,194],[100,107],[924,338],[168,390],[312,599],[192,164],[134,183],[1000,1000],[770,656],[198,763],[972,799],[132,108],[24,84],[1000,1000],[30,117],[228,678],[762,1000],[26,48],[314,637],[202,308],[64,192],[966,941],[568,228],[1000,350],[226,346],[156,229],[484,549],[272,544],[536,468],[980,912],[818,701],[260,557],[945,500],[206,157],[104,56],[37,22],[824,590],[163,74],[608,387],[214,293],[504,957],[440,967],[1000,500],[56,93],[236,608],[128,177],[62,312],[318,355],[642,848],[170,296],[840,806],[88,125],[554,886],[928,852],[456,411],[928,285],[72,213],[992,837],[66,140],[418,431],[482,520],[124,440],[100,115],[704,712],[256,744],[154,288],[400,811],[108,181],[82,51],[444,611],[164,619],[102,120],[328,133],[868,877],[122,189],[860,472],[152,283],[144,342],[672,536],[357,228],[150,155],[491,612],[763,676],[34,112],[92,144],[352,416],[512,389],[360,192],[726,866],[266,416],[952,643],[586,515],[206,226],[274,490],[98,155],[490,982],[108,84],[940,520],[613,1000],[578,786],[82,80],[118,531],[178,413],[166,373],[568,659],[674,1000],[196,285],[603,398],[938,613],[134,515],[275,856],[785,737],[596,444],[448,1000],[460,568],[586,414],[580,867],[234,407],[144,60],[302,760],[532,997],[166,72],[144,373],[192,259],[86,48],[997,694],[320,232],[579,244],[321,631],[517,428],[34,264],[80,129],[70,173],[178,173],[116,109],[421,560],[410,333],[904,846],[76,779],[316,538],[194,117],[904,640],[484,270],[783,786],[288,717],[50,96],[642,768],[775,648],[456,565],[168,156],[814,507],[108,75],[998,965],[299,388],[564,259],[338,608],[38,144],[60,226],[196,154],[246,635],[550,789],[826,973],[300,301],[192,160],[556,568],[310,304],[480,747],[190,613],[384,520],[570,768],[990,584],[144,152],[491,276],[685,342],[568,802],[128,132],[372,680],[176,381],[1000,1000],[56,232],[483,380],[781,638],[280,685],[108,339],[96,363],[472,841],[342,448],[868,1000],[792,736],[760,650],[1000,1000],[536,398],[38,88],[298,688],[318,413],[200,484],[750,589],[188,477],[64,359],[300,357],[558,667],[154,296],[400,898],[808,717],[176,325],[150,155],[338,339],[837,864],[878,725],[420,341],[556,270],[1000,919],[602,736],[304,591],[164,440],[142,258],[30,88],[542,912],[424,234],[466,288],[174,105],[894,572],[490,881],[1000,814],[808,717],[910,997],[152,78],[704,675],[250,326],[322,705],[186,180],[967,638],[116,553],[722,528],[250,173],[354,563],[728,707],[568,652],[676,720],[94,136],[188,805],[450,550],[110,276],[779,712],[180,371],[416,709],[508,325],[224,280],[454,793],[592,597],[780,752],[342,515],[132,246],[18,85],[164,431],[576,963],[250,466],[986,652],[932,1000],[424,559],[78,187],[60,224],[54,187],[496,984],[998,1000],[866,805],[76,51],[408,478],[234,790],[644,349],[452,472],[86,147],[133,160],[355,844],[440,549],[306,250],[144,485],[976,384],[908,1000],[842,875],[38,109],[192,563],[72,155],[656,776],[670,707],[92,43],[156,99],[124,88],[394,902],[48,184],[813,570],[290,261],[389,585],[74,168],[340,411],[534,823],[62,285],[230,752],[948,1000],[1000,419],[860,1000],[142,342],[936,723],[923,822],[124,96],[126,232],[76,216],[64,200],[64,108],[298,916],[298,541],[182,373],[1000,1000],[126,133],[36,43],[56,112],[796,952],[973,998],[214,227],[224,408],[132,43],[890,597],[132,184],[78,315],[1000,997],[769,726],[116,312],[790,1000],[288,720],[92,232],[262,275],[972,832],[94,77],[1000,802],[1000,1000],[874,672],[192,225],[358,760],[382,741],[366,626],[96,99],[334,510],[334,453],[390,664],[134,747],[835,400],[280,165],[50,81],[132,357],[346,435],[502,511],[432,451],[446,723],[846,421],[436,528],[262,453],[698,485],[66,53],[94,80],[982,856],[244,320],[322,592],[340,327],[778,368],[118,45],[978,1000],[110,848],[184,356],[461,342],[707,794],[248,444],[194,240],[128,189],[166,179],[140,147],[480,774],[726,409],[34,109],[152,211],[172,389],[190,238],[918,464],[256,392],[284,443],[154,189],[188,263],[430,506],[70,253],[118,293],[242,560],[228,736],[498,828],[62,280],[718,704],[991,534],[74,173],[642,173],[214,384],[197,102],[298,350],[997,884],[228,363],[468,842],[32,163],[54,144],[372,416],[108,93],[354,496],[98,240],[426,371],[478,1000],[84,74],[80,102],[616,749],[246,292],[292,661],[178,311],[227,164],[309,419],[163,172],[463,700],[186,219],[430,829],[120,195],[168,265],[340,429],[172,64],[634,627],[186,260],[692,416],[687,856],[330,549],[432,314],[150,307],[52,177],[244,428],[76,133],[92,60],[609,398],[96,287],[272,828],[214,387],[78,179],[934,883],[158,344],[998,1000],[248,652],[98,210],[45,74],[49,62],[150,395],[892,416],[742,666],[46,51],[60,141],[58,240],[428,112],[130,811],[190,432],[42,397],[48,141],[996,771],[250,945],[898,696],[946,955],[428,869],[520,392],[698,727],[58,136],[376,225],[54,51],[96,312],[456,388],[268,397],[82,285],[148,197],[114,136],[565,812],[454,744],[270,574],[162,339],[514,651],[1000,522],[296,251],[106,234],[56,87],[489,160],[102,205],[144,150],[115,196],[437,118],[82,139],[226,601],[120,329],[226,666],[438,621],[356,552],[446,429],[714,398],[616,832],[322,651],[54,104],[132,297],[218,613],[32,64],[171,96],[398,411],[202,464],[180,387],[1000,961],[322,525],[148,144],[52,104],[225,330],[218,475],[688,408],[164,270],[410,408],[802,752],[102,352],[120,147],[150,84],[96,201],[184,541],[192,139],[178,187],[222,781],[102,256],[56,125],[224,883],[92,165],[123,200],[108,151],[643,532],[600,752],[445,412],[32,136],[851,828],[52,339],[206,139],[116,131],[120,336],[126,342],[766,635],[536,445],[34,114],[196,157],[220,267],[1000,624],[568,525],[38,181],[60,51],[158,269],[228,323],[36,91],[516,763],[93,58],[50,248],[768,275]],"check":{"sample_avg_iou_k5":0.6166,"full_avg_iou_k5":0.6189},"collisions":{"objects":12032,"v1":0.0684,"grid13":0.0203,"anchors7":0.0496,"v2":0.0151,"v1_small":0.24,"v2_small":0.0794}}</script>
@@ -1065,7 +1065,7 @@
                 function label() {
                     var dark = root.dataset.theme !== "light";
                     toggle.textContent = dark ? "light" : "dark";
-                    toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+                    toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
                 }
                 toggle.addEventListener("click", function () {
                     var next = root.dataset.theme === "light" ? "dark" : "light";
@@ -1086,9 +1086,9 @@
             (function () {
                 var ANCHORS = DATA.anchors || [[1.2, 2.0], [2.8, 4.6], [4.6, 9.0], [8.1, 5.3], [10.4, 10.7]];  // 13 x 13 cells
                 var objects = [
-                    { name: "사람", emoji: "🧍", color: "--accent", cx: 0.47, cy: 0.52, w: 0.16, h: 0.46 },
-                    { name: "자동차", emoji: "🚗", color: "--accent-green", cx: 0.515, cy: 0.505, w: 0.5, h: 0.3 },
-                    { name: "개", emoji: "🐕", color: "--accent-warn", cx: 0.2, cy: 0.82, w: 0.22, h: 0.17 }
+                    { name: "person", emoji: "🧍", color: "--accent", cx: 0.47, cy: 0.52, w: 0.16, h: 0.46 },
+                    { name: "car", emoji: "🚗", color: "--accent-green", cx: 0.515, cy: 0.505, w: 0.5, h: 0.3 },
+                    { name: "dog", emoji: "🐕", color: "--accent-warn", cx: 0.2, cy: 0.82, w: 0.22, h: 0.17 }
                 ];
                 var mode = "v2", selected = 0, morph = 1, drag = null, liveTimer = null;
                 var canvas = document.getElementById("anchor-canvas");
@@ -1191,7 +1191,7 @@
                         ctx.font = "600 13px " + css("--sans");
                         ctx.textAlign = "left";
                         ctx.textBaseline = "top";
-                        var label = o.name + (mode === "v2" ? " · 앵커 " + (best(o) + 1) : "");
+                        var label = o.name + (mode === "v2" ? " · anchor " + (best(o) + 1) : "");
                         var tw = ctx.measureText(label).width + 10;
                         var ty = y - 21 >= 0 ? y - 21 : y + h + 1;
                         var tx = clamp(x, 0, Z - tw);
@@ -1218,7 +1218,7 @@
                 var barEls = ANCHORS.map(function (a, k) {
                     var row = document.createElement("div");
                     row.className = "bar";
-                    row.innerHTML = '<span class="name">앵커 ' + (k + 1) + " · " + fixed(a[0], 1) + " × " + fixed(a[1], 1) + '칸</span><span class="track"><span class="fill"></span></span><output>0.00</output>';
+                    row.innerHTML = '<span class="name">anchor ' + (k + 1) + " · " + fixed(a[0], 1) + " × " + fixed(a[1], 1) + ' cells</span><span class="track"><span class="fill"></span></span><output>0.00</output>';
                     barsEl.appendChild(row);
                     return row;
                 });
@@ -1227,13 +1227,13 @@
                     render();
                     var o = objects[selected], s = grid(), c = cellOf(o, s), b = best(o);
                     document.getElementById("a-name").textContent = o.name;
-                    document.getElementById("a-cell").textContent = (c[0] + 1) + "행 " + (c[1] + 1) + "열";
-                    document.getElementById("a-anchor").textContent = mode === "v2" ? " · 앵커 " + (b + 1) : "";
+                    document.getElementById("a-cell").textContent = "row " + (c[0] + 1) + ", column " + (c[1] + 1);
+                    document.getElementById("a-anchor").textContent = mode === "v2" ? " · anchor " + (b + 1) : "";
                     document.getElementById("a-v2").hidden = mode !== "v2";
                     document.getElementById("a-v1").hidden = mode !== "v1";
                     document.getElementById("a-counts").innerHTML = mode === "v1"
-                        ? "박스 7 × 7 × 2 = <b>98</b>개 · 클래스 확률 <b>49</b>벌(칸마다 1벌)"
-                        : "박스 13 × 13 × 5 = <b>845</b>개 · 클래스 확률 <b>845</b>벌(앵커마다 1벌)";
+                        ? "Boxes 7 × 7 × 2 = <b>98</b> · class probabilities: <b>49</b> sets (1 per cell)"
+                        : "Boxes 13 × 13 × 5 = <b>845</b> · class probabilities: <b>845</b> sets (1 per anchor)";
                     if (mode === "v2") {
                         var v = ious(o);
                         barEls.forEach(function (row, k) {
@@ -1251,26 +1251,26 @@
                     var groups = clashes();
                     if (groups.length) {
                         var list = groups[0].map(function (i) { return objects[i].name; });
-                        var names = list.map(function (n, i) { return i < list.length - 1 ? n + (batchim(n) ? "과" : "와") : n; }).join(" ");
+                        var names = list.length < 3 ? "the " + list.join(" and the ") : "the " + list.slice(0, -1).join(", the ") + ", and the " + list[list.length - 1];
                         var last = list[list.length - 1];
                         chip.className = "chip";
                         chip.textContent = mode === "v1"
-                            ? names + "의 중심이 같은 칸에 있다. 칸에 박스는 2개지만 클래스는 한 벌뿐이라 한 물체만 배울 수 있다."
-                            : names + (batchim(last) ? "이" : "가") + " 같은 칸에서 같은 앵커를 고른다. 모양이 비슷하면 YOLOv2도 한 물체만 배운다.";
+                            ? "The centers of " + names + " are in the same cell. The cell has 2 boxes but only one set of classes, so it can learn only one object."
+                            : names.charAt(0).toUpperCase() + names.slice(1) + " pick the same anchor in the same cell. When their shapes are similar, YOLOv2 also learns only one of them.";
                         chip.hidden = false;
                     } else {
                         var shared = mode === "v2" && objects.some(function (p, i) {
                             return i !== selected && cellOf(p, 13)[0] === c[0] && cellOf(p, 13)[1] === c[1];
                         });
                         chip.className = "chip ok";
-                        chip.textContent = "같은 칸의 두 물체를 서로 다른 앵커가 맡는다. 앵커마다 클래스가 따로 있어 둘 다 배운다.";
+                        chip.textContent = "Two objects in the same cell are taken by different anchors. Each anchor has its own classes, so both are learned.";
                         chip.hidden = !shared;
                     }
                     if (announce) {
                         clearTimeout(liveTimer);
                         liveTimer = setTimeout(function () {
-                            live.textContent = o.name + ": " + (c[0] + 1) + "행 " + (c[1] + 1) + "열 칸" +
-                                (mode === "v2" ? ", 앵커 " + (b + 1) : "") + ". " + (chip.hidden ? "" : chip.textContent);
+                            live.textContent = o.name + ": row " + (c[0] + 1) + ", column " + (c[1] + 1) +
+                                (mode === "v2" ? ", anchor " + (b + 1) : "") + ". " + (chip.hidden ? "" : chip.textContent);
                         }, 250);
                     }
                 }
@@ -1458,12 +1458,12 @@
                     ctx.fillStyle = css("--muted");
                     ctx.font = "11px " + css("--sans");
                     ctx.textAlign = "center"; ctx.textBaseline = "bottom";
-                    ctx.fillText("너비 (사진 대비)", L + (Z - L - R) / 2, Z - 4);
+                    ctx.fillText("width (relative to image)", L + (Z - L - R) / 2, Z - 4);
                     ctx.save();
                     ctx.translate(11, T + (Z - T - BOT) / 2);
                     ctx.rotate(-Math.PI / 2);
                     ctx.textBaseline = "middle";
-                    ctx.fillText("높이 (사진 대비)", 0, 0);
+                    ctx.fillText("height (relative to image)", 0, 0);
                     ctx.restore();
                     // square shapes lie on the diagonal
                     ctx.setLineDash([3, 4]);
@@ -1567,7 +1567,7 @@
                     var n = last(run);
                     el("text", { x: CX0, y: 106, "text-anchor": "middle", fill: faint, "font-size": 10, "font-family": css("--mono") }).textContent = "0";
                     if (n) el("text", { x: CX1, y: 106, "text-anchor": "middle", fill: faint, "font-size": 10, "font-family": css("--mono") }).textContent = String(n);
-                    el("text", { x: (CX0 + CX1) / 2, y: 106, "text-anchor": "middle", fill: faint, "font-size": 10, "font-family": css("--sans") }).textContent = "반복";
+                    el("text", { x: (CX0 + CX1) / 2, y: 106, "text-anchor": "middle", fill: faint, "font-size": 10, "font-family": css("--sans") }).textContent = "iteration";
                     el("line", { x1: chartX(at), x2: chartX(at), y1: CY1 - 4, y2: CY0 + 2, stroke: accent, "stroke-width": 1.2 });
                     el("polyline", { points: vals.map(function (v, i) { return chartX(i) + "," + chartY(v); }).join(" "), fill: "none", stroke: text, "stroke-width": 1.6 });
                     vals.forEach(function (v, i) {
@@ -1599,32 +1599,32 @@
                 chart.addEventListener("pointercancel", function () { chartDrag = false; });
 
                 function differ(a, b) {
-                    return Math.abs(a - b) < 0.005 ? "와 비슷하다" : a < b ? "보다 낮다" : "보다 높다";
+                    return Math.abs(a - b) < 0.005 ? "similar to" : a < b ? "lower than" : "higher than";
                 }
                 function describe() {
                     var n = last(run), s = run.scores[at], s0 = run.scores[0];
-                    var from = custom ? "직접 고른 앵커 " + k + "개" : "처음 틀: 정사각형 " + k + "개";
+                    var from = custom ? k + " anchors you placed" : "starting anchors: " + k + " squares";
                     if (at === 0) {
-                        return "반복 0 · " + from + ". 점의 색은 가장 가까운 앵커다. 평균 IOU " + pct(s.all) + ". " +
-                            (n ? "막대를 오른쪽으로 끌어 k-평균이 앵커를 옮기는 과정을 따라가 보자." : "이미 더 옮겨지는 앵커가 없다.");
+                        return "Iteration 0 · " + from + ". Each dot is colored by its nearest anchor. Average IOU " + pct(s.all) + ". " +
+                            (n ? "Drag the slider to the right to watch k-means move the anchors." : "No anchor moves any further.");
                     }
-                    var gain = (s.all - s0.all) * 100, change = "처음보다 " + (gain >= 0 ? "+" : "−") + Math.abs(gain).toFixed(1) + "%p";
+                    var gain = (s.all - s0.all) * 100, change = (gain >= 0 ? "+" : "−") + Math.abs(gain).toFixed(1) + " points from the start";
                     if (at < n) {
-                        return "반복 " + at + " · 점마다 가장 가까운 앵커를 고르고(색), 앵커를 그 점들의 평균 자리로 옮겼다. 평균 IOU " + pct(s.all) + ", " + change + ".";
+                        return "Iteration " + at + " · each dot picked its nearest anchor (color), and each anchor moved to the mean of its dots. Average IOU " + pct(s.all) + ", " + change + ".";
                     }
                     var o = otherRun(), os = o.scores[last(o)], tail;
                     if (metric === "iou") {
-                        tail = " 같은 출발에서 유클리드 거리로 돌리면 작은 박스 절반의 평균 IOU가 " + pct(os.small) + "로, 1 − IOU 거리(" + pct(s.small) + ")" + differ(os.small, s.small) + ".";
+                        tail = " Run from the same start with Euclidean distance, the smaller half of the boxes would average an IOU of " + pct(os.small) + ", " + differ(os.small, s.small) + " the " + pct(s.small) + " it gets here with 1 − IOU distance.";
                     } else {
-                        tail = " 유클리드 거리는 큰 박스의 오차를 크게 쳐서 앵커가 큰 박스 쪽으로 끌린다. 작은 박스 절반은 " + pct(s.small) + "로, 1 − IOU 거리(" + pct(os.small) + ")" + differ(s.small, os.small) + ".";
+                        tail = " Euclidean distance weighs the errors of large boxes heavily, so the anchors are pulled toward large boxes. The smaller half of the boxes averages " + pct(s.small) + ", " + differ(s.small, os.small) + " the " + pct(os.small) + " it gets with 1 − IOU distance.";
                     }
                     // Moving to the mean is not the move that raises IOU the most, so the average can peak and settle a little lower.
                     var peak = 0;
                     run.scores.forEach(function (v, i) { if (v.all > run.scores[peak].all) peak = i; });
                     var settle = run.scores[peak].all - s.all > 0.0005
-                        ? " 평균 IOU는 반복 " + peak + "에서 " + pct(run.scores[peak].all) + "로 가장 높았다가 조금 내려와 멈춘다. 평균 자리가 IOU를 가장 높이는 자리와 꼭 같지는 않아서다."
+                        ? " The average IOU peaked at " + pct(run.scores[peak].all) + " in iteration " + peak + ", then settled a little lower, because the mean position is not always the position that maximizes IOU."
                         : "";
-                    return "반복 " + at + " · 더 옮겨지는 앵커가 없다. 평균 IOU " + pct(s.all) + ", " + change + "." + settle + tail;
+                    return "Iteration " + at + " · no anchor moves any further. Average IOU " + pct(s.all) + ", " + change + "." + settle + tail;
                 }
                 function update() {
                     var n = last(run);
@@ -1641,7 +1641,7 @@
                     document.getElementById("km-small").textContent = pct(s.small);
                     document.getElementById("km-large").textContent = pct(s.large);
                     document.getElementById("km-text").textContent = dragging
-                        ? "반복 0 · 직접 고른 앵커 " + k + "개. 놓으면 이 자리에서 k-평균을 다시 돌린다. 평균 IOU " + pct(s.all) + "."
+                        ? "Iteration 0 · " + k + " anchors you placed. Let go to rerun k-means from here. Average IOU " + pct(s.all) + "."
                         : describe();
                 }
                 iterInput.addEventListener("input", function () {
@@ -1745,15 +1745,15 @@
                 function winner(t) { return (((t.Y * 73856093) ^ (t.X * 19349663)) >>> 0) % 4; }
                 var STEPS = {
                     pass: [
-                        { tab: "26 × 26 × 512", small: "① 합성곱 13의 출력", text: "① 13번째 합성곱(26 × 26 해상도의 마지막 3 × 3 × 512 층)이 낸 26 × 26 × 512 특징이다. 칸마다 512개의 숫자가 있다. 색은 칸이 2 × 2 묶음의 어디에 있는지다." },
-                        { tab: "2 × 2 묶음 나누기", small: "③ 지름길 · ↖ ↗ ↙ ↘", text: "③ 지름길의 첫 단계다. 2 × 2 묶음마다 왼쪽 위, 오른쪽 위, 왼쪽 아래, 오른쪽 아래 칸을 따로 모은다. 13 × 13 크기의 판이 넷 생긴다." },
-                        { tab: "채널로 쌓기", small: "③ 13 × 13 × 2048", text: "네 판을 공간이 아니라 채널 방향으로 겹쳐 쌓는다. 512 × 4 = 2048채널이다. 한 칸에 원래 2 × 2 묶음의 값이 모두 들어 있다." },
-                        { tab: "이어 붙이기", small: "④ 합성곱 21 앞 · 3072", text: "④ 원래 길(최대 풀링과 합성곱 7개)로 온 13 × 13 × 1024 옆에 이어 붙인다. 2048 + 1024 = 3072채널이다. 이것이 21번째 합성곱의 입력이 되고, 22번째 합성곱이 13 × 13 × 125를 낸다." }
+                        { tab: "26 × 26 × 512", small: "① conv 13 output", text: "① The 26 × 26 × 512 features from the 13th convolution (the last 3 × 3 × 512 layer at 26 × 26 resolution). Each cell holds 512 numbers. The color shows where a cell sits in its 2 × 2 group." },
+                        { tab: "Split 2 × 2 groups", small: "③ shortcut · ↖ ↗ ↙ ↘", text: "③ The first step of the shortcut. From every 2 × 2 group, the top-left, top-right, bottom-left, and bottom-right cells are gathered separately, giving four 13 × 13 sheets." },
+                        { tab: "Stack as channels", small: "③ 13 × 13 × 2048", text: "The four sheets are stacked along the channels, not in space: 512 × 4 = 2048 channels. Each cell now holds every value of its original 2 × 2 group." },
+                        { tab: "Concatenate", small: "④ before conv 21 · 3072", text: "④ They are concatenated next to the 13 × 13 × 1024 that came down the main path (max pooling and 7 convolutions): 2048 + 1024 = 3072 channels. This is the input to the 21st convolution, and the 22nd convolution outputs 13 × 13 × 125." }
                     ],
                     pool: [
-                        { tab: "26 × 26 × 512", small: "① 합성곱 13의 출력", text: "① 같은 26 × 26 × 512 특징이다. 이번에는 ② 원래 길처럼 2 × 2 최대 풀링으로 13 × 13을 만들어 본다." },
-                        { tab: "2 × 2마다 가장 큰 값", small: "② 최대 풀링 5", text: "② 원래 길의 다섯 번째 최대 풀링이 하는 일이다. 2 × 2 묶음마다 가장 큰 값 하나만 남긴다. 어느 칸이 남을지는 값에 따라 다르다." },
-                        { tab: "13 × 13 × 512", small: "값 4분의 1", text: "13 × 13 × 512가 남는다. 값은 86,528개로 4분의 1이고, 나머지 4분의 3은 버려진다. 패스스루는 이것과 달리 하나도 버리지 않는다." }
+                        { tab: "26 × 26 × 512", small: "① conv 13 output", text: "① The same 26 × 26 × 512 features. This time, make 13 × 13 with 2 × 2 max pooling, as the ② main path does." },
+                        { tab: "Max of each 2 × 2", small: "② max pooling 5", text: "② This is what the fifth max pooling on the main path does: only the largest value of each 2 × 2 group remains. Which cell survives depends on the values." },
+                        { tab: "13 × 13 × 512", small: "¼ of the values", text: "13 × 13 × 512 remains: 86,528 values, a quarter, while the other three quarters are thrown away. The passthrough, in contrast, throws nothing away." }
                     ]
                 };
                 var mode = "pass", step = 0, shown = 0, anim = null, pick = { Y: 6, X: 6 };
@@ -1797,17 +1797,17 @@
                 }
                 function blockText(L) {
                     var shape = L.S + " × " + L.S + " × " + L.C;
-                    if (L.t === "in") return "입력 · " + shape;
+                    if (L.t === "in") return "input · " + shape;
                     if (L.t === "pool") {
-                        return "최대 풀링 " + L.n + " · 2 × 2 · 출력 " + shape + (L.n === 5 ? " · 원래 길은 여기서 26 × 26을 13 × 13으로 줄인다. 2 × 2마다 가장 큰 값 하나만 남는다" : "");
+                        return "max pooling " + L.n + " · 2 × 2 · output " + shape + (L.n === 5 ? " · here the main path shrinks 26 × 26 to 13 × 13, keeping only the largest value of each 2 × 2" : "");
                     }
-                    if (L.t === "cat") return "이어 붙이기 · 접은 13 × 13 × 2048 + 합성곱 20의 13 × 13 × 1024 = 13 × 13 × 3072";
-                    var note = { 13: " · 26 × 26 해상도의 마지막 층. 패스스루가 이 출력을 가져간다", 18: " · Darknet-19의 마지막 합성곱(분류 층을 뗀 뒤)",
-                                 19: " · 탐지용으로 붙인 첫 합성곱", 20: " · 탐지용. 원래 길의 끝, 이 출력에 패스스루를 이어 붙인다",
-                                 21: " · 끝에서 두 번째 합성곱. 이어 붙인 13 × 13 × 3072를 받는다", 22: " · 출력. 앵커 5개 × (좌표 4 + 물체 1 + 클래스 20)" }[L.n] || "";
-                    return "합성곱 " + L.n + " · " + L.k + " × " + L.k + " × " + L.C + " · 출력 " + shape + note;
+                    if (L.t === "cat") return "concatenation · folded 13 × 13 × 2048 + conv 20's 13 × 13 × 1024 = 13 × 13 × 3072";
+                    var note = { 13: " · the last layer at 26 × 26 resolution; the passthrough takes this output", 18: " · the last convolution of Darknet-19 (once its classification layer is removed)",
+                                 19: " · the first convolution added for detection", 20: " · for detection; the end of the main path, where the passthrough is concatenated",
+                                 21: " · the second-to-last convolution; it takes the concatenated 13 × 13 × 3072", 22: " · output: 5 anchors × (4 coordinates + 1 objectness + 20 classes)" }[L.n] || "";
+                    return "conv " + L.n + " · " + L.k + " × " + L.k + " × " + L.C + " · output " + shape + note;
                 }
-                var REORG_TEXT = "접기(재배열) · 26 × 26 × 512 → 13 × 13 × 2048 · 2 × 2 이웃을 채널로 옮길 뿐, 값은 그대로다";
+                var REORG_TEXT = "fold (reorg) · 26 × 26 × 512 → 13 × 13 × 2048 · it only moves each 2 × 2 neighborhood into channels; the values stay the same";
                 function buildNet() {
                     var x = 20;
                     NET.forEach(function (L) {
@@ -1832,7 +1832,7 @@
                     // ② brackets the original path from the 5th pooling to the 20th convolution
                     var b2 = sv("g", { "class": "part", "data-part": "mainbr" });
                     sv("path", { d: "M" + p5.x + "," + (NY - 30) + " v-6 H" + (c20.x + c20.w) + " v6", "class": "bracket" }, b2);
-                    sv("text", { x: (p5.x + c20.x + c20.w) / 2, y: NY - 42, "text-anchor": "middle", "class": "lbl" }, b2).textContent = "② 원래 길: 최대 풀링 + 합성곱 7개 → 13 × 13 × 1024";
+                    sv("text", { x: (p5.x + c20.x + c20.w) / 2, y: NY - 42, "text-anchor": "middle", "class": "lbl" }, b2).textContent = "② main path: max pooling + 7 convolutions → 13 × 13 × 1024";
                     parts.push({ part: "mainbr", el: b2 });
                     // the passthrough: up from the 13th convolution, over the main path, down into the concatenation
                     var sxm = src.x + src.w / 2, cxm = cat.x + cat.w / 2, rx = (sxm + cxm) / 2;
@@ -1841,7 +1841,7 @@
                     var node = sv("g", { "class": "node", "data-part": "bridge", tabindex: "-1" });
                     sv("rect", { x: rx - 106, y: BRIDGE - 13, width: 212, height: 26, rx: 13, "class": "nodebg" }, node);  // opaque, so the path does not show through
                     sv("rect", { x: rx - 106, y: BRIDGE - 13, width: 212, height: 26, rx: 13 }, node);
-                    sv("text", { x: rx, y: BRIDGE + 4, "text-anchor": "middle", "class": "lbl" }, node).textContent = "③ 지름길: 접어서 13 × 13 × 2048";
+                    sv("text", { x: rx, y: BRIDGE + 4, "text-anchor": "middle", "class": "lbl" }, node).textContent = "③ shortcut: fold to 13 × 13 × 2048";
                     node.addEventListener("click", function () {
                         if (mode !== "pass") setMode("pass");
                         goTo(2);
@@ -1851,10 +1851,10 @@
                     node.addEventListener("pointerleave", function () { showDetail(null); });
                     parts.push({ part: "bridge", el: node });
                     var l1 = sv("text", { x: sxm - 8, y: BRIDGE + 30, "text-anchor": "end", "class": "lbl", "data-part": "src" });
-                    l1.textContent = "① 합성곱 13의 출력 26 × 26 × 512";
+                    l1.textContent = "① conv 13 output 26 × 26 × 512";
                     parts.push({ part: "src", el: l1 });
                     var l4 = sv("text", { x: cxm + 8, y: BRIDGE + 30, "text-anchor": "start", "class": "lbl", "data-part": "cat" });
-                    l4.textContent = "④ 이어 붙이기 13 × 13 × 3072";
+                    l4.textContent = "④ merge → 13 × 13 × 3072";
                     parts.push({ part: "cat", el: l4 });
                     // blocks
                     var lastS = null;
@@ -1895,8 +1895,8 @@
                         sv("path", { d: "M" + a + "," + (y - 5) + " v5 H" + b + " v-5", "class": "bracket" });
                         sv("text", { x: (a + b) / 2, y: y + 15, "text-anchor": "middle", "class": "grp" }).textContent = text;
                     }
-                    brace(NET[1].x, c18.x + c18.w, NY + 84, "Darknet-19 · 합성곱 1–18 (분류 층을 뗀 것)");
-                    brace(c19.x, c22.x + c22.w, NY + 84, "탐지용 · 합성곱 19–22");
+                    brace(NET[1].x, c18.x + c18.w, NY + 84, "Darknet-19 · conv 1–18 (classification layer removed)");
+                    brace(c19.x, c22.x + c22.w, NY + 84, "detection · conv 19–22");
                 }
                 var pinned = null;
                 function showDetail(text, pin) {
@@ -2096,7 +2096,7 @@
                             tag(a + " 13 × 13 × 512", p, false);
                         });
                     }
-                    if (s === 1 && mode === "pool") tag("2 × 2마다 하나만 남는다", project([0, 7.7, 0]), true);
+                    if (s === 1 && mode === "pool") tag("one value per 2 × 2 survives", project([0, 7.7, 0]), true);
                     if (s === 2 && mode === "pool") tag("13 × 13 × 512", project([0, 7.7, 0]), true);
                     if (s >= 2 && mode === "pass") {
                         tag(s === 3 ? "13 × 13 × 3072" : "13 × 13 × 2048", project([s === 3 ? T : 0, 8.2, 0]), true);
@@ -2167,12 +2167,12 @@
                 }
                 function describePick() {
                     var r = pick.Y * 2 + 1, c = pick.X * 2 + 1;
-                    var head = "고른 묶음: 26 × 26의 " + r + "–" + (r + 1) + "행 " + c + "–" + (c + 1) + "열 → 13 × 13의 " + (pick.Y + 1) + "행 " + (pick.X + 1) + "열 한 칸";
-                    var tail = mode === "pool" ? " · 넷 중 가장 큰 값 하나만" : " · 채널 1–512 ↖, 513–1024 ↗, 1025–1536 ↙, 1537–2048 ↘";
+                    var head = "Picked group: rows " + r + "–" + (r + 1) + ", columns " + c + "–" + (c + 1) + " of 26 × 26 → one cell at row " + (pick.Y + 1) + ", column " + (pick.X + 1) + " of 13 × 13";
+                    var tail = mode === "pool" ? " · only the largest of the four" : " · channels 1–512 ↖, 513–1024 ↗, 1025–1536 ↙, 1537–2048 ↘";
                     document.getElementById("fold-pick").textContent = head + tail;
                     document.getElementById("fold-count").innerHTML = mode === "pool"
-                        ? "값의 수: 26 × 26 × 512 = <b>346,112</b> → 13 × 13 × 512 = <b>86,528</b>"
-                        : "값의 수: 26 × 26 × 512 = <b>346,112</b> → 13 × 13 × 2048 = <b>346,112</b>";
+                        ? "Number of values: 26 × 26 × 512 = <b>346,112</b> → 13 × 13 × 512 = <b>86,528</b>"
+                        : "Number of values: 26 × 26 × 512 = <b>346,112</b> → 13 × 13 × 2048 = <b>346,112</b>";
                 }
                 document.getElementById("fold-prev").addEventListener("click", function () { goTo(step - 1); });
                 document.getElementById("fold-next").addEventListener("click", function () { goTo(step + 1); });
@@ -2276,6 +2276,7 @@
             var source = document.getElementById("knowledge-map");
             if (!nav || !source) return;
             var MAP = JSON.parse(source.textContent);
+            MAP.nodes.forEach(function (n) { n.title = n.title_en || n.title; n.summary = n.summary_en || n.summary; });
             var svg = nav.querySelector(".kmap-graph");
             var current = nav.getAttribute("data-current");
             var NS = "http://www.w3.org/2000/svg";
@@ -2347,7 +2348,7 @@
                     t.setAttribute("style", "font-size: 13px; font-weight: 700;");
                     var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
                     svg.removeChild(t);
-                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 64 : 28)), h: 30 };
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 100 : 28)), h: 30 };
                 });
                 var pos = {};
                 layers.forEach(function (layer, r) {
@@ -2375,15 +2376,15 @@
                     var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
                     var link = n.id !== current && n.status !== "planned" && n.href;
                     var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
-                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (준비 중)" : "") + ": " + n.summary;
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (coming soon)" : "") + ": " + n.summary;
                     el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
                     var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
                     t.textContent = n.title;
                     if (n.status === "planned") {
                         var soon = el("tspan", { "class": "soon", dx: 6 }, t);
-                        soon.textContent = "준비 중";
+                        soon.textContent = "coming soon";
                     }
-                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "지금 이 글";
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "you are here";
                 });
             }
             draw();
