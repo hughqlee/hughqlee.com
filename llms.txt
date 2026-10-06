@@ -4,15 +4,17 @@
 
 ## Knowledge (English)
 
-Each page starts with a small knowledge map of the pages it builds on and leads to. Suggested reading order: IOU and NMS → YOLOv1 → YOLOv2.
+Each page starts with a small knowledge map of the pages it builds on and leads to. Suggested reading order: IOU and NMS → YOLOv1 → YOLOv2 → YOLOv3.
 
-- [YOLOv2 Explained: Anchor Boxes and the Passthrough Layer](https://hughqlee.com/knowledge/en/yolo-v2/): How YOLOv2 shares objects among five anchor boxes per cell, chosen from the data with k-means, and folds fine 26 × 26 features into the 13 × 13 grid with a passthrough layer. Read YOLOv1 first. Sources: Redmon & Farhadi, "YOLO9000: Better, Faster, Stronger" (CVPR 2017) and the authors' Darknet configuration.
+- [YOLOv3 Explained: Multi-Scale Prediction and Bounding Box Prediction](https://hughqlee.com/knowledge/en/yolo-v3/): How YOLOv3 predicts on three grids (13 × 13, 26 × 26, 52 × 52) with nine anchors, three per grid, so large and small objects go to different grids; how deep features are upsampled and concatenated with earlier ones, the shape the paper compares to feature pyramid networks; and how each object teaches objectness to only one anchor while close but not best matches are ignored. Read YOLOv2 first. Sources: Redmon & Farhadi, "YOLOv3: An Incremental Improvement" (arXiv 2018) and the authors' Darknet configuration and code.
+- [YOLOv2 Explained: Anchor Boxes and the Passthrough Layer](https://hughqlee.com/knowledge/en/yolo-v2/): How YOLOv2 shares objects among five anchor boxes per cell, chosen from the data with k-means, and folds fine 26 × 26 features into the 13 × 13 grid with a passthrough layer. Read YOLOv1 first; YOLOv3 comes next. Sources: Redmon & Farhadi, "YOLO9000: Better, Faster, Stronger" (CVPR 2017) and the authors' Darknet configuration.
 - [IOU and NMS Explained: Keep One Box per Object](https://hughqlee.com/knowledge/en/iou-nms/): IOU (intersection area ÷ union area) measures how much two boxes overlap; dropping low-confidence boxes and then running non-maximum suppression (NMS) leaves one box per object. Background for YOLOv1. Sources: Everingham et al., "The PASCAL Visual Object Classes (VOC) Challenge" (IJCV 2010); Redmon et al., "You Only Look Once" (CVPR 2016) and the author's Darknet code; Bodla et al., "Soft-NMS" (ICCV 2017).
 - [YOLOv1 Explained: Look Once, Find Every Object](https://hughqlee.com/knowledge/en/yolo-v1/): How YOLOv1 splits an image into a 7×7 grid and finds every object in one pass of the network: the architecture, the 98 predicted boxes, NMS, and the loss, explored with a model implemented from the paper. Read IOU and NMS first; YOLOv2 comes next. Source: Redmon et al., "You Only Look Once: Unified, Real-Time Object Detection" (CVPR 2016).
 
 ## Knowledge (Korean originals)
 
-- [YOLOv2, 앵커 박스와 패스스루 레이어](https://hughqlee.com/knowledge/yolo-v2/): 칸마다 데이터에서 고른 앵커 박스 5개로 한 칸에서도 여러 물체를 나눠 맡고, 패스스루 레이어로 26 × 26의 세밀한 특징을 13 × 13 칸에 접어 붙이는 YOLOv2를, 물체를 끌고 k-평균으로 앵커를 고르고 특징 지도를 접어 보며 이해한다. 먼저 읽으면 좋은 글: YOLOv1.
+- [YOLOv3, 멀티 스케일 예측과 바운딩 박스 예측](https://hughqlee.com/knowledge/yolo-v3/): 13 × 13, 26 × 26, 52 × 52 세 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 깊은 특징을 펼쳐 앞쪽 특징과 이어 붙이고, 정답마다 앵커 하나에만 물체 있음을 가르치는 YOLOv3를, 물체를 끌고 107층을 피라미드로 쌓아 보며 이해한다. 먼저 읽으면 좋은 글: YOLOv2.
+- [YOLOv2, 앵커 박스와 패스스루 레이어](https://hughqlee.com/knowledge/yolo-v2/): 칸마다 데이터에서 고른 앵커 박스 5개로 한 칸에서도 여러 물체를 나눠 맡고, 패스스루 레이어로 26 × 26의 세밀한 특징을 13 × 13 칸에 접어 붙이는 YOLOv2를, 물체를 끌고 k-평균으로 앵커를 고르고 특징 지도를 접어 보며 이해한다. 먼저 읽으면 좋은 글: YOLOv1. 다음 글: YOLOv3.
 - [IOU와 NMS, 박스 하나만 남기기](https://hughqlee.com/knowledge/iou-nms/): 두 박스가 얼마나 겹치는지 재는 IOU(겹친 넓이 ÷ 합친 넓이)와, 한 물체에 겹친 박스를 하나만 남기는 NMS를, 박스를 직접 옮기고 단계를 따라가며 이해한다. YOLOv1의 선행 지식이다.
 - [YOLOv1, 한 번 보고 모두 찾기](https://hughqlee.com/knowledge/yolo-v1/): 사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을, 직접 구현한 모델의 구조와 출력으로 만져 보며 이해한다. 먼저 읽으면 좋은 글: IOU와 NMS. 다음 글: YOLOv2.
 

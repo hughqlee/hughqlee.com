@@ -1,0 +1,2904 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLOv3, 멀티 스케일 예측과 바운딩 박스 예측 | Hugh Q Lee</title>
+    <meta name="description" content="YOLOv3가 13 × 13, 26 × 26, 52 × 52 세 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 깊은 특징을 펼쳐 앞쪽 특징과 이어 붙이고, 정답마다 앵커 하나에만 물체 있음을 가르치는 방법을, 물체를 끌고 특징 지도를 펼쳐 보며 이해한다.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="YOLOv3, 멀티 스케일 예측, multi-scale prediction, 특징 피라미드, feature pyramid network, FPN, 업샘플링, upsampling, 앵커 박스, anchor box, 물체 여부, objectness, 다중 레이블 분류, multi-label classification, Darknet-53, 물체 탐지, 객체 탐지, object detection">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/yolo-v3/">
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/yolo-v3/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/yolo-v3/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/yolo-v3/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:title" content="YOLOv3, 멀티 스케일 예측과 바운딩 박스 예측">
+    <meta property="og:description" content="세 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치는 YOLOv3를 직접 만져 보며 이해한다.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/yolo-v3/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/yolo-v3/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="YOLOv3, 세 격자와 앵커 9개: 13×13, 26×26, 52×52 격자의 가운데 칸에 놓인 앵커 3개씩">
+    <meta property="article:published_time" content="2026-10-06">
+    <meta property="article:modified_time" content="2026-10-06">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta property="article:tag" content="YOLO">
+    <meta property="article:tag" content="물체 탐지">
+    <meta property="article:tag" content="YOLOv3">
+    <meta property="article:tag" content="멀티 스케일 예측">
+    <meta property="article:tag" content="바운딩 박스 예측">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="YOLOv3, 멀티 스케일 예측과 바운딩 박스 예측">
+    <meta name="twitter:description" content="세 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치는 YOLOv3를 직접 만져 보며 이해한다.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/yolo-v3/og.png">
+    <meta name="twitter:image:alt" content="YOLOv3, 세 격자와 앵커 9개: 13×13, 26×26, 52×52 격자의 가운데 칸에 놓인 앵커 3개씩">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage는 빌드 스크립트가 본문 "자주 묻는 질문"에서 글자 그대로 옮긴다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/yolo-v3/#article",
+          "workTranslation": {
+            "@id": "https://hughqlee.com/knowledge/en/yolo-v3/#article"
+          },
+          "headline": "YOLOv3, 멀티 스케일 예측과 바운딩 박스 예측",
+          "alternativeHeadline": "크고 작은 물체를, YOLOv3는 어떻게 한 번에 찾을까?",
+          "description": "YOLOv3가 13 × 13, 26 × 26, 52 × 52 세 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 깊은 특징을 펼쳐 앞쪽 특징과 이어 붙이고, 정답마다 앵커 하나에만 물체 있음을 가르치는 방법을, 물체를 끌고 특징 지도를 펼쳐 보며 이해한다.",
+          "abstract": "YOLOv3는 13 × 13, 26 × 26, 52 × 52 세 격자에서 칸마다 앵커 3개로 박스를 예측해 크고 작은 물체를 나눠 맡고, 정답마다 앵커 9개 중 가장 잘 맞는 하나에만 물체 있음을 가르친다.",
+          "inLanguage": "ko",
+          "datePublished": "2026-10-06",
+          "dateModified": "2026-10-06",
+          "url": "https://hughqlee.com/knowledge/yolo-v3/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/yolo-v3/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/yolo-v3/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/#collection"
+          },
+          "about": [
+            {
+              "@type": "Thing",
+              "name": "YOLOv3"
+            },
+            {
+              "@type": "Thing",
+              "name": "멀티 스케일 예측 (multi-scale prediction)"
+            },
+            {
+              "@type": "Thing",
+              "name": "바운딩 박스 예측 (bounding box prediction)"
+            }
+          ],
+          "keywords": [
+            "YOLOv3",
+            "멀티 스케일 예측",
+            "multi-scale prediction",
+            "특징 피라미드",
+            "업샘플링",
+            "앵커 박스",
+            "물체 여부",
+            "objectness",
+            "다중 레이블 분류",
+            "Darknet-53",
+            "물체 탐지",
+            "객체 탐지"
+          ],
+          "proficiencyLevel": "Beginner",
+          "isAccessibleForFree": true,
+          "citation": {
+            "@type": "ScholarlyArticle",
+            "name": "YOLOv3: An Incremental Improvement",
+            "author": [
+              {
+                "@type": "Person",
+                "name": "Joseph Redmon"
+              },
+              {
+                "@type": "Person",
+                "name": "Ali Farhadi"
+              }
+            ],
+            "datePublished": "2018",
+            "url": "https://arxiv.org/abs/1804.02767"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "YOLOv3, 멀티 스케일 예측과 바운딩 박스 예측",
+              "item": "https://hughqlee.com/knowledge/yolo-v3/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/yolo-v3/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "YOLOv3는 YOLOv2와 무엇이 다른가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "세 크기의 격자(13 × 13, 26 × 26, 52 × 52)에서 예측하고, 앵커를 9개로 늘려 격자마다 3개씩 나눈다. 물체 여부는 로지스틱 회귀로 정답마다 앵커 하나의 박스만 1을 배우고, 클래스는 softmax 대신 서로 독립인 로지스틱으로 예측한다. 백본은 Darknet-19에서 잔차 연결이 있는 Darknet-53으로 바뀌었다. COCO에서 AP는 21.6에서 33.0으로, 작은 물체의 AP는 5.0에서 18.3으로 올랐다(논문 표 3)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "YOLOv3의 멀티 스케일 예측(multi-scale prediction)이란?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "한 사진을 크기가 다른 세 격자에서 예측하는 것이다. 416 × 416 입력에서 13 × 13(칸 32픽셀), 26 × 26(16픽셀), 52 × 52(8픽셀) 격자가 각각 칸마다 앵커 3개로 박스를 낸다. 큰 앵커는 거친 격자, 작은 앵커는 촘촘한 격자에 두어 작은 물체도 맡는다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "YOLOv3의 출력 크기와 박스 수는?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "416 × 416 입력에서 13 × 13 × 255, 26 × 26 × 255, 52 × 52 × 255다. 255는 앵커 3개 × (좌표 4 + 물체 여부 1 + COCO 클래스 80)이다. 박스는 507 + 2,028 + 8,112 = 10,647개이고, 608 × 608 입력이면 22,743개다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "YOLOv3의 앵커 9개는 무엇이고 어떻게 나누나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "COCO 정답 박스에 k-평균을 돌려 고른 (10 × 13), (16 × 30), (33 × 23), (30 × 61), (62 × 45), (59 × 119), (116 × 90), (156 × 198), (373 × 326)픽셀이다. 작은 셋은 52 × 52, 가운데 셋은 26 × 26, 큰 셋은 13 × 13 격자가 쓴다. 논문은 9개와 3크기를 임의로 골랐다고 쓴다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "물체는 YOLOv3의 어느 격자에서 예측되나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "앵커 9개 중 물체와 모양이 가장 잘 맞는(중심을 맞춘 IOU가 가장 큰) 앵커가 물체를 맡고, 그 앵커가 속한 격자에서 물체 중심이 든 칸이 예측한다. 크기로 격자를 정하는 기준이 따로 있지는 않다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "YOLOv3의 업샘플링과 이어 붙이기(concatenation)는 무엇을 하나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "넥의 13 × 13 줄 마지막 층(79번) 특징을 1 × 1 합성곱으로 256채널로 줄이고 2배로 업샘플링해 26 × 26으로 만든 뒤, Darknet-53 앞쪽의 26 × 26 × 512 지도(61번 층)와 채널 방향으로 이어 붙여 768채널을 만든다. 같은 일을 한 번 더 해 52 × 52 지도(384채널)를 만든다. 논문은 업샘플한 특징에서 의미 있는 정보를, 앞쪽 지도에서 세밀한 정보를 얻는다고 쓴다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "YOLOv3의 물체 여부(objectness)는 어떻게 학습하나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "로지스틱 회귀로 학습한다. 정답마다 앵커 9개 중 가장 잘 맞는 앵커의 박스 하나만 목표가 1이고, 그 박스만 좌표와 클래스도 배운다. 가장 잘 맞지는 않지만 정답과 0.5보다 많이 겹치는 앵커의 박스는 무시하고(벌점 없음), 나머지는 목표가 0이다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "YOLOv3는 왜 softmax 대신 로지스틱 분류기를 쓰나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "softmax는 박스마다 클래스가 정확히 하나라고 가정한다. Open Images처럼 '여성'과 '사람' 같은 레이블이 겹치는 데이터에서는 맞지 않아, 클래스마다 독립인 로지스틱 분류기와 이진 교차 엔트로피를 쓴다. 논문은 COCO에서 softmax가 좋은 성능에 필요하지 않았다고 쓴다."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --danger: #ff8c8c;
+            --violet: #c9a7ff;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --green-soft: rgba(156, 227, 125, 0.14);
+            --warn-soft: rgba(240, 198, 116, 0.16);
+            --danger-soft: rgba(255, 140, 140, 0.18);
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            --wide: 980px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --danger: #b42323;
+            --violet: #6b3fb8;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --green-soft: rgba(37, 114, 63, 0.12);
+            --warn-soft: rgba(150, 106, 16, 0.14);
+            --danger-soft: rgba(180, 35, 35, 0.12);
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+        p { margin: 0 0 12px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+        .wide { width: min(var(--wide), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle, .btn {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-family: var(--mono);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover, .btn:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+        .btn:disabled { opacity: 0.45; cursor: default; }
+
+        .hero { padding: 40px 0 28px; }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0 0 20px; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+        .muted { color: var(--muted); }
+        .small { font-size: 14px; }
+
+        /* YOLOv2 -> YOLOv3: Table 3 of the paper as paired bars */
+        .path-title { margin: 22px 0 6px; color: var(--muted); font-size: 14px; }
+        .duo { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+        .duo li { display: grid; grid-template-columns: minmax(0, 1fr) 40% 6.6em; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; line-height: 1.35; }
+        .duo .tracks { display: grid; gap: 3px; }
+        .duo .tracks i { display: block; height: 7px; border-radius: 999px; }
+        .duo .tracks i.v2 { background: var(--line-strong); }
+        .duo .tracks i.v3 { background: var(--accent); opacity: 0.55; }
+        .duo b { color: var(--text); font-family: var(--mono); font-weight: 600; font-size: 13px; text-align: right; white-space: nowrap; }
+        .duo li.hit { color: var(--text); }
+        .duo li.hit .tracks i.v3 { opacity: 1; }
+        .duo li.hit .sec { margin-left: 6px; padding: 1px 6px; border: 1px solid var(--accent); border-radius: 999px; color: var(--accent); font-family: var(--mono); font-size: 11px; white-space: nowrap; }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            margin: 24px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+        .toc a {
+            display: block;
+            height: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+            text-decoration: none;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+        .toc a:hover { border-color: var(--line-strong); }
+        .toc span { display: block; color: var(--accent); font-family: var(--mono); font-size: 12px; }
+
+        .step { padding: 48px 0 8px; border-top: 1px solid var(--line); margin-top: 32px; }
+        .step-no { margin: 0 0 6px; color: var(--accent); font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; }
+        h2 { margin: 0 0 14px; font-size: clamp(22px, 4vw, 30px); line-height: 1.35; letter-spacing: -0.01em; }
+        h3 { margin: 0 0 8px; font-size: 18px; line-height: 1.45; }
+        .hint { color: var(--muted); font-size: 15px; }
+        .source { margin-top: 12px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+
+        .panel {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .split {
+            display: grid;
+            grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+            gap: 20px;
+            align-items: start;
+        }
+        canvas.stage {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 6px;
+            background: var(--panel-soft);
+            touch-action: none;
+            cursor: grab;
+        }
+        canvas.stage3d {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            margin-top: 12px;
+            border-radius: 6px;
+            background: var(--panel-soft);
+            touch-action: none;
+            cursor: grab;
+        }
+        canvas.stage3d:active { cursor: grabbing; }
+        canvas.stage3d.pyramid3d { aspect-ratio: 2 / 1; }
+
+        .kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0 0 12px; font-size: 15px; }
+        .kv dt { color: var(--muted); }
+        .kv dd { margin: 0; font-family: var(--mono); }
+        .big { font-family: var(--mono); font-size: 18px; line-height: 1.5; }
+
+        .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 18px; margin-top: 12px; }
+        .control { display: grid; gap: 2px; margin-top: 10px; }
+        .control label, .control .label { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 14px; }
+        .control output { color: var(--text); font-family: var(--mono); }
+        input[type="range"] { width: 100%; min-height: 32px; margin: 0; accent-color: var(--accent); }
+        [hidden] { display: none !important; }
+
+        .seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+        .seg button {
+            min-height: 36px;
+            padding: 4px 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .seg button:hover { border-color: var(--line-strong); color: var(--text); }
+        .seg button[aria-pressed="true"] { border-color: var(--line-strong); color: var(--text); background: var(--panel-strong); }
+
+        .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+        .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 8px; font-size: 13px; color: var(--muted); }
+        .legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; border-radius: 3px; vertical-align: -1px; }
+        .callout { margin: 14px 0 0; padding-left: 12px; border-left: 3px solid var(--accent); }
+        .numbers { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 8px 0 0; font-family: var(--mono); font-size: 14px; color: var(--muted); }
+        .numbers b { color: var(--text); font-weight: 600; }
+        .formula { margin: 0; color: var(--faint); font-family: var(--mono); font-size: 13px; overflow-wrap: anywhere; }
+
+        .bars { display: grid; gap: 5px; margin: 6px 0 12px; font-size: 14px; }
+        .bar { display: grid; grid-template-columns: 6.4em 1fr 3.4em; align-items: center; gap: 8px; color: var(--muted); }
+        .bar .track { height: 12px; overflow: hidden; border-radius: 999px; background: var(--panel-strong); }
+        .bar .fill { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--line-strong); transition: width 0.2s ease; }
+        .bar.on { color: var(--text); }
+        .bar.on .fill { background: var(--accent); }
+        .bar output { color: var(--text); font-family: var(--mono); text-align: right; }
+        .bar .name { font-family: var(--mono); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .grp-head { display: flex; align-items: center; gap: 6px; margin: 10px 0 0; color: var(--muted); font-size: 13px; }
+        .grp-head i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
+        .grp-head.on { color: var(--text); font-weight: 600; }
+
+        .counts { margin: 0 0 10px; color: var(--muted); font-family: var(--mono); font-size: 14px; }
+        .counts b { color: var(--text); font-weight: 600; }
+
+        /* 01: the three grids side by side */
+        .trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 14px 0 0; }
+        .trio figure { margin: 0; }
+        .trio canvas { display: block; width: 100%; aspect-ratio: 1; border-radius: 4px; background: var(--panel-soft); }
+        .trio figcaption { margin-top: 4px; color: var(--muted); font-family: var(--mono); font-size: 12px; line-height: 1.4; text-align: center; }
+
+        /* 02 macro view: the 107 layers as blocks, with the two routes back */
+        .route { margin: 12px 0 0; padding-left: 0; list-style: none; }
+        .route li { margin: 6px 0; }
+        .route b { margin-right: 6px; }
+
+        /* step tabs (same pattern as the IOU·NMS and YOLOv2 pages) */
+        .tabs { position: relative; display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 10px; overscroll-behavior-x: contain; }
+        .tab { position: relative; flex: 0 0 auto; display: grid; justify-items: start; min-height: 44px; padding: 6px 12px 6px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--muted); font: inherit; font-size: 14px; line-height: 1.3; text-align: left; cursor: pointer; }
+        .tab b { color: var(--faint); font-family: var(--mono); font-size: 11px; }
+        .tab small { color: var(--faint); font-size: 11.5px; }
+        .tab + .tab::before { content: ""; position: absolute; left: -11px; top: 50%; width: 10px; border-top: 1px solid var(--line-strong); }
+        .tab.done { background: var(--panel-soft); color: var(--text); }
+        .tab.current { border-color: var(--accent); background: var(--accent-soft); color: var(--text); box-shadow: 0 0 0 1px var(--accent) inset; }
+        .tab.current b { color: var(--text); }
+        .pager { display: flex; align-items: center; gap: 10px; margin: 2px 0 10px; }
+        .pager .pos { min-width: 64px; color: var(--muted); font-family: var(--mono); font-size: 14px; text-align: center; }
+        .step-text { min-height: 3.4em; margin: 0; }
+
+        /* 03: what each prediction learns */
+        .tally { display: grid; gap: 6px; margin: 8px 0 12px; }
+        .tally div { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); font-size: 14px; }
+        .tally b { font-family: var(--mono); font-size: 18px; }
+        .tally .one { border-color: var(--accent-green); background: var(--green-soft); }
+        .tally .skip0 { border-color: var(--accent-warn); background: var(--warn-soft); }
+        .tally .now { box-shadow: 0 0 0 1px var(--text) inset; }
+        .stack { display: flex; height: 14px; overflow: hidden; margin: 6px 0 4px; border-radius: 999px; background: var(--panel-strong); }
+        .stack i { display: block; height: 100%; }
+        .ignored { margin: 4px 0 0; padding: 0; list-style: none; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+        .ignored li { margin: 2px 0; }
+        .ignored i { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 2px; vertical-align: -1px; }
+
+        .limits { margin: 0; padding-left: 1.2em; }
+        .limits li { margin: 8px 0; }
+        .note {
+            margin-top: 16px;
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+        footer {
+            margin-top: 48px;
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (max-width: 760px) {
+            canvas.stage3d { aspect-ratio: 1; }
+            canvas.stage3d.pyramid3d { aspect-ratio: 4 / 3; }
+            .split { grid-template-columns: 1fr; }
+            .toc { grid-template-columns: 1fr; }
+            .duo li { grid-template-columns: minmax(0, 1fr) 30% 6.4em; gap: 8px; font-size: 13px; }
+        }
+        @media (max-width: 420px) {
+            .bar { grid-template-columns: 5.8em 1fr 3em; }
+            .big { font-size: 16px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+    <header class="wide topbar">
+        <nav class="crumbs" aria-label="위치">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/en/yolo-v3/" hreflang="en" lang="en">English</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="wrap hero" aria-labelledby="page-title">
+            <nav class="kmap" aria-label="지식 지도" data-current="yolo-v3">
+                <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">컴퓨터 비전 › 물체 탐지</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">먼저 읽을 글: <a href="../yolo-v2/">YOLOv2</a>(그 전에 <a href="../yolo-v1/">YOLOv1</a>, <a href="../iou-nms/">IOU·NMS</a>) · 이어서 읽을 글은 아직 없다 · 같은 분야: mAP(준비 중)</p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE · 물체 탐지</p>
+            <h1 id="page-title">크고 작은 물체를, YOLOv3는 어떻게 한 번에 찾을까?</h1>
+            <p class="answer">YOLOv3는 13 × 13, 26 × 26, 52 × 52 세 격자에서 칸마다 앵커 3개로 박스를 예측해 크고 작은 물체를 나눠 맡고, 정답마다 앵커 9개 중 가장 잘 맞는 하나에만 물체 있음을 가르친다.</p>
+            <p><a href="../yolo-v2/">YOLOv2</a>는 416 × 416 사진을 13 × 13 칸으로 나누고, 칸마다 앵커 박스 5개로 박스 845개를 냈다. 칸 하나가 사진의 32 × 32픽셀이라 작은 물체에는 거칠었고, COCO에서 작은 물체의 AP는 5.0이었다. YOLOv3는 작은 변화 여럿을 더했다. 이 글은 그중 두 가지, 세 크기의 격자에서 예측하기(멀티 스케일 예측)와 박스마다 무엇을 배우는지(바운딩 박스 예측)를 직접 만져 본다.</p>
+            <p class="path-title">YOLOv2와 YOLOv3의 COCO 성적 (논문 표 3, test-dev)</p>
+            <ol class="duo">
+                <li class="hit"><span>작은 물체 AP<sub>S</sub><span class="sec">01·02</span></span><span class="tracks"><i class="v2" style="width: 8.3%;"></i><i class="v3" style="width: 30.5%;"></i></span><b>5.0 → 18.3</b></li>
+                <li><span>중간 물체 AP<sub>M</sub></span><span class="tracks"><i class="v2" style="width: 37.3%;"></i><i class="v3" style="width: 59%;"></i></span><b>22.4 → 35.4</b></li>
+                <li><span>큰 물체 AP<sub>L</sub></span><span class="tracks"><i class="v2" style="width: 59.2%;"></i><i class="v3" style="width: 69.8%;"></i></span><b>35.5 → 41.9</b></li>
+                <li><span>AP50 (IOU 0.5)</span><span class="tracks"><i class="v2" style="width: 73.3%;"></i><i class="v3" style="width: 96.5%;"></i></span><b>44.0 → 57.9</b></li>
+                <li><span>AP (IOU 0.5~0.95 평균)</span><span class="tracks"><i class="v2" style="width: 36%;"></i><i class="v3" style="width: 55%;"></i></span><b>21.6 → 33.0</b></li>
+            </ol>
+            <p class="legend"><span><i style="background: var(--line-strong);"></i>YOLOv2</span><span><i style="background: var(--accent);"></i>YOLOv3 608 × 608</span></p>
+            <p class="source" style="margin-top: 6px;">막대는 0부터 60까지. 백본(Darknet-53)과 입력 크기를 포함한 여러 변화가 함께 든 비교이고, 하나씩 더하며 잰 표는 논문에 없다. 논문은 작은 물체의 향상을 새 다중 크기 예측 덕분으로 본다(§3).</p>
+            <ol class="toc">
+                <li><a href="#scales"><span>01 세 격자</span>물체 크기마다 다른 격자</a></li>
+                <li><a href="#pyramid"><span>02 특징의 길</span>펼쳐서 이어 붙이기</a></li>
+                <li><a href="#targets"><span>03 박스가 배우는 것</span>1, 무시, 0</a></li>
+            </ol>
+        </section>
+
+        <section id="scales" class="wide step" aria-labelledby="scales-title">
+            <div style="max-width: var(--measure);">
+                <p class="step-no">01 멀티 스케일 예측</p>
+                <h2 id="scales-title">세 격자, 칸마다 앵커 셋</h2>
+                <p>YOLOv3는 416 × 416 사진을 크기가 다른 세 격자로 나눠 본다. 13 × 13(칸 한 변 32픽셀), 26 × 26(16픽셀), 52 × 52(8픽셀)이다. 격자마다 칸마다 앵커 박스 3개를 두므로 앵커는 모두 9개다. 큰 앵커 셋은 13 × 13, 가운데 셋은 26 × 26, 작은 셋은 52 × 52가 쓴다. 물체마다 9개 중 모양이 가장 잘 맞는 앵커 하나가 물체를 맡고, 그 앵커가 속한 격자에서 물체 중심이 든 칸이 박스를 예측한다.</p>
+                <p class="hint" id="scales-hint">버스, 개, 새를 끌어 보자. 크기 막대로 고른 물체를 키우거나 줄이면 맡는 앵커와 격자가 바뀐다. 키보드로는 그림을 선택한 뒤 화살표로 움직이고(Shift는 크게), + −로 크기를 바꾸고, 스페이스로 물체를 바꾼다.</p>
+            </div>
+            <div class="panel split">
+                <div>
+                    <p class="counts">박스 13 × 13 × 3 = <b>507</b> · 26 × 26 × 3 = <b>2,028</b> · 52 × 52 × 3 = <b>8,112</b> · 합 <b>10,647</b>개</p>
+                    <canvas id="scale-canvas" class="stage" tabindex="0" role="img"
+                            aria-label="416 × 416 사진 위의 버스, 개, 새. 선택한 물체를 맡는 격자와 칸, 앵커가 겹쳐 보인다. 화살표 키로 선택한 물체를 움직인다."
+                            aria-describedby="scales-hint"></canvas>
+                    <div class="control">
+                        <label for="s-size">고른 물체의 크기 <output id="s-size-out" for="s-size">250 × 170픽셀</output></label>
+                        <input type="range" id="s-size" min="0" max="100" step="1" value="88">
+                    </div>
+                </div>
+                <div>
+                    <p class="muted" style="margin: 0;">선택한 물체</p>
+                    <p class="big" style="margin: 0 0 8px;" id="s-result">버스 → 13 × 13 격자 · 7행 9열 칸 · 앵커 156 × 198</p>
+                    <p class="muted small" style="margin: 0;">앵커 9개와 겹치는 정도(중심을 맞춘 IOU). 가장 큰 앵커 하나가 물체를 맡고, 그 앵커의 격자가 예측한다.</p>
+                    <div id="s-ious" aria-hidden="true"></div>
+                    <div class="trio" aria-hidden="true">
+                        <figure><canvas id="mini-0"></canvas><figcaption>13 × 13 × 앵커 3<br>507개</figcaption></figure>
+                        <figure><canvas id="mini-1"></canvas><figcaption>26 × 26 × 앵커 3<br>2,028개</figcaption></figure>
+                        <figure><canvas id="mini-2"></canvas><figcaption>52 × 52 × 앵커 3<br>8,112개</figcaption></figure>
+                    </div>
+                    <p class="sr-only" aria-live="polite" id="s-live"></p>
+                </div>
+            </div>
+            <p class="callout" style="max-width: var(--measure);">격자를 크기로 정하는 규칙은 따로 없다. 모양이 가장 닮은 앵커가 정해지면 격자도 따라 정해진다. 그래서 작은 물체는 칸이 8픽셀인 52 × 52에서, 큰 물체는 칸이 32픽셀인 13 × 13에서 예측한다. YOLOv2는 박스 845개(13 × 13 × 앵커 5)를 모두 13 × 13에서 냈고, YOLOv3는 세 격자에서 10,647개를 낸다.</p>
+            <p class="source">출처: 논문 §2.3 Predictions Across Scales · 앵커 9개는 §2.3의 COCO 값 · 격자마다 앵커 셋은 저자 Darknet 설정 cfg/yolov3.cfg(mask 6,7,8 / 3,4,5 / 0,1,2) · 물체를 맡는 앵커를 9개 전체에서 고르는 규칙은 저자 코드(yolo_layer.c)</p>
+        </section>
+
+        <section id="pyramid" class="wide step" aria-labelledby="pyramid-title">
+            <div style="max-width: var(--measure);">
+                <p class="step-no">02 업샘플링과 이어 붙이기</p>
+                <h2 id="pyramid-title">깊은 특징을 펼쳐 세밀한 격자에 붙인다</h2>
+                <p>세 격자에서 예측하려면 13 × 13, 26 × 26, 52 × 52 특징 지도가 모두 있어야 한다. 신경망 앞쪽의 26 × 26, 52 × 52 지도는 세밀하지만 지난 층이 적고, 끝의 13 × 13 지도는 많은 층을 지났지만 거칠다. YOLOv3는 끝 쪽 특징을 2배씩 펼쳐(업샘플링) 앞쪽 지도와 이어 붙인다. 논문은 업샘플한 특징에서 의미 있는 정보를, 앞쪽 지도에서 세밀한 정보를 얻는다고 쓴다.</p>
+                <h3 style="margin-top: 22px;">107층을 피라미드로 쌓으면</h3>
+                <p>YOLOv3는 107층이다(저자 설정 파일의 층 번호 0~106). 아래 그림은 층 하나를 판 하나로 그려 해상도 순서로 쌓고, 물체 탐지기를 흔히 그리는 대로 백본·넥·헤드 세 열로 나눴다. 판의 가로세로는 해상도, 두께는 채널 수다. 백본(Darknet-53, 0~74번)은 사진을 반씩 줄이며 위로 쌓여 피라미드가 된다. 넥은 꼭대기에서 시작해 한 층씩 내려온다. 층마다 같은 높이의 백본 지도(74번, 61번, 36번)를 옆에서 받고, 79번과 91번의 특징을 1 × 1 합성곱과 2배 업샘플로 펼쳐 아래 층으로 보내 이어 붙인다(86번, 98번). 그래서 넥은 아래로 갈수록 넓어진다. 헤드는 넥의 세 층에서 3 × 3과 1 × 1 합성곱으로 예측한다. 논문이 특징 피라미드 네트워크(FPN)와 비슷하다고 한 모양이 이 세 갈래(아래에서 위로, 위에서 아래로, 옆 연결)다.</p>
+                <p class="hint" id="fpn-hint">단계 탭을 따라가 보자. ‘층 지도’를 누르면 정면에서 층 번호와 함께 보고, ‘피라미드’를 누르면 비스듬히 본다. 판에 올리거나 누르면 그 층이 무엇인지 나오고, ①~⑤를 누르면 아래 그림이 그 단계로 간다. 끌어서 돌린다. 키보드: 화살표로 회전. 판의 가로세로는 실제 비율이 아니라 해상도가 반이 될 때마다 같은 만큼 줄여 그렸고, 두께는 채널 수에 비례한다.</p>
+            </div>
+            <div class="panel">
+                <div class="row">
+                    <div class="tabs" role="tablist" aria-label="피라미드를 쌓는 순서" id="fpn-tabs"></div>
+                    <div class="seg">
+                        <button type="button" id="fpn-pyramid" aria-pressed="true">피라미드</button>
+                        <button type="button" id="fpn-map" aria-pressed="false">층 지도</button>
+                    </div>
+                </div>
+                <div class="pager">
+                    <button class="btn" type="button" id="fpn-prev" aria-label="이전 단계">←</button>
+                    <span class="pos" id="fpn-pos">1 / 5</span>
+                    <button class="btn" type="button" id="fpn-next" aria-label="다음 단계">→</button>
+                </div>
+                <p class="step-text" id="fpn-text" aria-live="polite">층 하나를 판 하나로 그려 해상도 순서로 쌓은 YOLOv3 전체다. 왼쪽 백본은 사진에서 13 × 13까지 좁아지는 피라미드, 가운데 넥은 13 × 13에서 52 × 52로 넓어지며 내려오는 거꾸로 된 피라미드, 오른쪽 헤드는 세 높이의 예측이다. ‘층 지도’로 돌리면 정면에서 층 번호와 함께 본다.</p>
+                <canvas id="fpn3d" class="stage3d pyramid3d" tabindex="0" role="img"
+                        aria-label="YOLOv3의 107층을 층마다 판 하나로 그려 해상도별로 쌓은 입체 그림. 왼쪽 백본은 416 × 416 사진에서 13 × 13 × 1024까지, 해상도마다 보폭 2 합성곱과 잔차 블록 묶음이 쌓여 작아지고 두꺼워지는 피라미드다. 가운데 넥은 13 × 13 줄(75~79번)에서 시작해, 79번과 91번에서 1 × 1 합성곱과 2배 업샘플로 한 층씩 내려가 같은 높이의 백본 지도 61번, 36번과 이어 붙는다(86번, 98번). 오른쪽 헤드는 세 층에서 3 × 3과 1 × 1 합성곱으로 예측한다."
+                        aria-describedby="fpn-hint"></canvas>
+                <div class="legend" aria-hidden="true">
+                    <span><i style="background: var(--line-strong);"></i>백본 층</span>
+                    <span><i style="background: var(--violet);"></i>넥이 옆에서 받는 백본 지도(74·61·36번)</span>
+                    <span><i style="background: var(--accent);"></i>13 × 13 층에서 나온 것</span>
+                    <span><i style="background: var(--accent-green);"></i>26 × 26 층에서 나온 것</span>
+                    <span><i style="background: var(--accent-warn);"></i>52 × 52 층에서 나온 것</span>
+                </div>
+                <div class="legend" aria-hidden="true">
+                    <span><b style="color: var(--muted);">↗</b> 아래에서 위로</span>
+                    <span><b style="color: var(--accent);">↙</b> 위에서 아래로: 2배로 펼쳐 내려 보내기</span>
+                    <span><b style="color: var(--violet);">⇢</b> 옆 연결: 같은 높이의 백본 지도</span>
+                </div>
+                <p class="numbers" id="fpn-detail" aria-live="polite">넥이 받는 백본 지도: 74번(13 × 13 × 1024), 61번(26 × 26 × 512), 36번(52 × 52 × 256) · 헤드의 예측: 13 × 13, 26 × 26, 52 × 52 × 255</p>
+                <ol class="route">
+                    <li><b>① 가져오는 곳</b>넥의 13 × 13 줄 마지막 층인 79번(1 × 1 × 512)이 낸 13 × 13 × 512. 헤드의 두 층(80, 81번)을 지나기 전이라, 예측을 내는 출력 합성곱(81번)보다 2층 앞이다. 논문이 말하는 "2층 앞의 특징 지도"다.</li>
+                    <li><b>② 줄이기</b>1 × 1 합성곱 256개(84번)로 13 × 13 × 256을 만든다.</li>
+                    <li><b>③ 펼치기</b>2배 업샘플(85번). 값마다 2 × 2 네 칸에 복사해 26 × 26 × 256이 된다.</li>
+                    <li><b>④ 합치는 곳</b>Darknet-53의 61번 층(26 × 26 해상도의 마지막 잔차 블록, 26 × 26 × 512)과 채널 방향으로 이어 붙인다(86번). 256 + 512 = 768채널이다.</li>
+                    <li><b>⑤ 예측</b>넥의 합성곱 5층(87~91번)과 헤드의 3 × 3 합성곱(92번), 출력 합성곱(93번)을 지나 26 × 26 × 255를 예측한다(94번). 같은 설계를 한 번 더 하면 52 × 52다. 91번 → 1 × 1 × 128 → 2배 업샘플 → 36번(52 × 52 × 256)과 이어 붙이기(384채널) → 52 × 52 × 255(106번).</li>
+                </ol>
+            </div>
+            <div style="max-width: var(--measure);">
+                <h3 style="margin-top: 26px;">어떻게 펼쳐 붙이나</h3>
+                <p>②~⑤를 13 × 13에서 26 × 26으로 가는 길에서 직접 본다. 업샘플링은 값 하나를 2 × 2 네 칸에 그대로 복사한다(최근접 이웃). 학습하는 가중치가 없고 새 값도 만들지 않는다. 26 × 26의 세밀한 정보는 이어 붙이는 앞쪽 지도에서 온다.</p>
+                <p class="hint" id="pyr-hint">단계 탭을 눌러 따라가 보자. 위 그림에서 지금 단계가 일어나는 곳이 밝아진다. 칸을 누르면 그 칸이 어디로 가는지 따라간다. 끌어서 돌린다. 키보드: 화살표로 회전, Shift + 화살표로 칸 이동.</p>
+            </div>
+            <div class="panel">
+                <div class="row">
+                    <div class="tabs" role="tablist" aria-label="업샘플링과 이어 붙이기 단계" id="pyr-tabs"></div>
+                    <div class="seg">
+                        <button type="button" id="pyr-front">정면</button>
+                        <button type="button" id="pyr-reset">처음 각도</button>
+                    </div>
+                </div>
+                <div class="pager">
+                    <button class="btn" type="button" id="pyr-prev" aria-label="이전 단계">←</button>
+                    <span class="pos" id="pyr-pos">1 / 6</span>
+                    <button class="btn" type="button" id="pyr-next" aria-label="다음 단계">→</button>
+                </div>
+                <p class="step-text" id="pyr-text" aria-live="polite">① 넥의 13 × 13 줄 마지막 층(79번)이 낸 13 × 13 × 512 특징이다. 헤드의 출력 합성곱(81번)보다 2층 앞이다. 칸 하나가 사진의 32 × 32픽셀을 맡는다.</p>
+                <canvas id="pyr3d" class="stage3d" tabindex="0" role="img"
+                        aria-label="13 × 13 특징 지도가 1 × 1 합성곱으로 얇아지고, 칸마다 2 × 2로 복사되어 26 × 26이 된 뒤, 61번 층의 26 × 26 × 512와 채널 방향으로 이어 붙는 입체 그림"
+                        aria-describedby="pyr-hint"></canvas>
+                <div class="legend" aria-hidden="true">
+                    <span><i style="background: var(--accent);"></i>깊은 특징: 개가 있는 곳(13 × 13 해상도)</span>
+                    <span><i style="background: var(--violet);"></i>61번 지도: 개의 윤곽(26 × 26 해상도)</span>
+                    <span><i style="background: var(--accent-green);"></i>26 × 26 예측</span>
+                </div>
+                <p class="numbers" id="pyr-pick">고른 칸: 13 × 13의 7행 7열 · 값 512개</p>
+                <p class="numbers" id="pyr-count">값의 수: 13 × 13 × 512 = <b>86,528</b></p>
+            </div>
+            <div style="max-width: var(--measure);">
+                <p class="callout">YOLOv2의 패스스루는 방향이 반대였다. 26 × 26 지도를 2 × 2씩 채널로 접어 13 × 13에 붙였다(세밀한 특징을 거친 격자로). YOLOv3는 거친 격자의 깊은 특징을 펼쳐 26 × 26, 52 × 52로 보내고, 그 격자에서도 예측한다. FPN과 다른 점도 있다. FPN은 두 지도를 더하고, YOLOv3는 이어 붙인다.</p>
+                <p class="hint">그림의 색은 설명을 위한 개념도다. 깊은 특징은 개가 있는 곳을 13 × 13 해상도로, 앞쪽 지도는 개의 윤곽을 26 × 26 해상도로 담는다고 가정하고 칠했다. 실제 특징 값은 사람이 이렇게 읽을 수 있는 모양이 아니다.</p>
+            </div>
+            <p class="source">출처: 논문 §2.3 · 층의 순서와 모양은 저자 Darknet 설정 cfg/yolov3.cfg(route −4, upsample 2, route −1, 61 / route −1, 36) · 업샘플링은 저자 코드(upsample_layer.c, 최근접 이웃) · 백본·넥·헤드라는 이름은 YOLOv4 논문 §2.1, §3.4에서 왔고(YOLOv3 논문에는 없다), 넥과 헤드의 경계는 MMDetection의 YOLOv3 구현(YOLOV3Neck, YOLOV3Head)을 따랐다</p>
+        </section>
+
+        <section id="targets" class="wide step" aria-labelledby="targets-title">
+            <div style="max-width: var(--measure);">
+                <p class="step-no">03 바운딩 박스 예측</p>
+                <h2 id="targets-title">정답 하나에 앵커 하나, 나머지는 0 아니면 무시</h2>
+                <p>예측 박스 10,647개는 저마다 좌표 4개, 물체 여부(objectness: 박스 안에 물체가 있을 확률) 1개, 클래스 80개를 낸다. 좌표는 YOLOv2와 같은 식으로 앵커를 옮기고 늘린다. 달라진 것은 학습에서 각 박스가 맞혀야 할 목표다. 정답 물체 하나마다 앵커 9개 중 가장 잘 맞는 하나의 박스만 물체 여부 1과 좌표, 클래스를 배운다. 정답과 0.5보다 많이 겹치지만 가장 잘 맞지는 않은 앵커의 박스는 벌점 없이 둔다. 나머지는 모두 물체 여부 0을 배운다.</p>
+                <p class="hint" id="targets-hint">단계 탭을 따라가 보자. 개를 끌거나 크기 막대를 움직이면 단계마다의 개수가 바뀐다. 겹침은 학습을 시작할 때의 예측 박스, 곧 칸 가운데에 놓인 앵커로 잰다. 키보드: 그림에서 화살표로 개를 움직이고, + −로 크기를 바꾼다.</p>
+            </div>
+            <div class="panel">
+                <div class="tabs" role="tablist" aria-label="정답 하나가 정하는 학습 목표" id="tg-tabs"></div>
+                <div class="pager">
+                    <button class="btn" type="button" id="tg-prev" aria-label="이전 단계">←</button>
+                    <span class="pos" id="tg-pos">1 / 4</span>
+                    <button class="btn" type="button" id="tg-next" aria-label="다음 단계">→</button>
+                </div>
+                <p class="step-text" id="tg-text" aria-live="polite">① 정답 박스와 앵커 9개를 중심을 맞춰 겹쳐 본다. 위치는 보지 않고 모양만 비교한다. 겹침(IOU)이 가장 큰 앵커 하나가 이 개를 맡는다.</p>
+                <div class="split" style="margin-top: 10px;">
+                    <div>
+                        <canvas id="tg-canvas" class="stage" tabindex="0" role="img"
+                                aria-label="416 × 416 사진 위의 개 한 마리와, 지금 단계의 앵커와 예측 박스. 화살표 키로 개를 움직인다."
+                                aria-describedby="targets-hint"></canvas>
+                        <div class="control">
+                            <label for="tg-size">개의 크기 <output id="tg-size-out" for="tg-size">130 × 84픽셀</output></label>
+                            <input type="range" id="tg-size" min="0" max="100" step="1" value="70">
+                        </div>
+                    </div>
+                    <div id="tg-side">
+                        <p class="muted small" style="margin: 0;">앵커 9개와 겹치는 정도(중심을 맞춘 IOU)</p>
+                    </div>
+                </div>
+                <p class="sr-only" aria-live="polite" id="tg-live"></p>
+            </div>
+            <div style="max-width: var(--measure);">
+                <p class="callout">YOLOv2에서는 물체를 맡은 박스의 물체 여부가 예측 박스와 정답의 IOU를 맞혔다. YOLOv3는 로지스틱 회귀로 1을 맞힌다. 그리고 정답마다 앵커 9개 중 하나의 박스만 맡는다. 가장 잘 맞지는 않아도 정답과 많이 겹치는 박스는 0도 1도 배우지 않는다.</p>
+                <h3 style="margin-top: 26px;">클래스는 하나만 고르지 않는다</h3>
+                <p>YOLOv3는 클래스 80개를 softmax로 한꺼번에 나누지 않고, 클래스마다 따로 로지스틱(0~1 확률)으로 예측한다. softmax는 모든 클래스의 확률을 더하면 1이라서 박스 하나에 클래스가 정확히 하나라고 가정한다. 레이블이 겹치는 데이터(예: Open Images의 '여성'과 '사람')에서는 그 가정이 틀린다.</p>
+                <p class="hint" id="cls-hint">한 박스의 정답이 '사람'이면서 '여성'이라고 하자. 신경망이 내는 점수(로짓)를 움직여 두 방식의 확률을 비교해 보자.</p>
+            </div>
+            <div class="panel split">
+                <div>
+                    <div class="control" style="margin-top: 0;">
+                        <label for="cls-0">사람 점수 <output id="cls-0-out" for="cls-0">2.0</output></label>
+                        <input type="range" id="cls-0" min="-6" max="6" step="0.1" value="2" aria-describedby="cls-hint">
+                    </div>
+                    <div class="control">
+                        <label for="cls-1">여성 점수 <output id="cls-1-out" for="cls-1">1.0</output></label>
+                        <input type="range" id="cls-1" min="-6" max="6" step="0.1" value="1" aria-describedby="cls-hint">
+                    </div>
+                    <div class="control">
+                        <label for="cls-2">개 점수 <output id="cls-2-out" for="cls-2">−2.0</output></label>
+                        <input type="range" id="cls-2" min="-6" max="6" step="0.1" value="-2" aria-describedby="cls-hint">
+                    </div>
+                    <p class="muted small" style="margin: 10px 0 0;">정답: 사람 1 · 여성 1 · 개 0</p>
+                </div>
+                <div>
+                    <p class="muted small" style="margin: 0;">softmax (YOLOv2): 셋을 더하면 1</p>
+                    <div class="bars" id="cls-soft" aria-hidden="true"></div>
+                    <p class="muted small" style="margin: 0;">클래스마다 로지스틱 (YOLOv3): 따로따로 0~1</p>
+                    <div class="bars" id="cls-sig" aria-hidden="true"></div>
+                    <p class="step-text" id="cls-text" aria-live="polite">softmax: 사람 0.72, 여성 0.27 · 로지스틱: 사람 0.88, 여성 0.73. softmax는 두 정답이 확률 1을 나눠 가져 둘 다 0.5를 넘을 수 없다. 로지스틱에서는 사람과 여성이 둘 다 0.5를 넘는다. 둘 다 정답이라는 것을 그대로 나타낸다.</p>
+                </div>
+            </div>
+            <div style="max-width: var(--measure);">
+                <p class="hint" style="margin-top: 12px;">학습은 클래스마다 이진 교차 엔트로피로 한다. 논문은 COCO에서 softmax가 좋은 성능에 필요하지 않았다고 쓴다. 탐지 점수는 클래스마다 물체 여부 × 클래스 확률이다.</p>
+            </div>
+            <p class="source">출처: 논문 §2.1 Bounding Box Prediction, §2.2 Class Prediction · 정답을 맡을 앵커를 9개 전체에서 고르는 규칙과 탐지 점수는 저자 코드(yolo_layer.c)</p>
+        </section>
+
+        <section id="summary" class="wrap step" aria-labelledby="summary-title">
+            <p class="step-no">정리</p>
+            <h2 id="summary-title">YOLOv2에서 YOLOv3로</h2>
+            <ol class="limits">
+                <li><b>13 × 13 하나 → 세 격자.</b> 13 × 13 × 앵커 5 = 845개였던 박스가 13 × 13 × 3 + 26 × 26 × 3 + 52 × 52 × 3 = 10,647개가 된다. 앵커 9개를 크기순으로 셋씩 나눠, 작은 물체는 칸이 8픽셀인 52 × 52에서 예측한다.</li>
+                <li><b>접어 내리기 → 펼쳐 올리기.</b> YOLOv2는 26 × 26을 접어 13 × 13에 붙였다. YOLOv3는 13 × 13의 깊은 특징을 2배씩 펼쳐 26 × 26, 52 × 52의 앞쪽 지도와 이어 붙이고, 거기서도 예측한다.</li>
+                <li><b>IOU 맞히기, softmax → 1·무시·0, 클래스마다 로지스틱.</b> 정답마다 앵커 하나의 박스만 물체 여부 1을 배우고, 0.5보다 많이 겹친 다른 앵커의 박스는 무시하고, 나머지는 0을 배운다. 클래스는 서로 독립인 확률이다.</li>
+            </ol>
+            <p class="hint">그래도 박스를 딱 맞추는 데는 약하다. COCO에서 IOU 0.5 기준의 AP50은 57.9로 높지만, IOU 0.5~0.95로 평균한 AP는 33.0이다. 작은 물체(AP<sub>S</sub> 18.3)는 좋아졌지만 중간·큰 물체에서는 같은 표의 다른 탐지기보다 비교적 낮고, 논문도 원인은 더 조사해야 한다고 쓴다(§3, 표 3).</p>
+            <div class="note">
+                <p><strong>오해</strong>큰 물체는 13 × 13, 작은 물체는 52 × 52로 보내는 크기 기준이 있다.</p>
+                <p class="fact"><strong>실제로는</strong>그런 기준은 없다. 앵커 9개 중 모양(중심을 맞춘 IOU)이 가장 잘 맞는 앵커가 정해지면 그 앵커의 격자가 따라 정해진다. 그래서 넓이가 같은 1,000픽셀이라도 50 × 20 박스는 52 × 52, 20 × 50 박스는 26 × 26으로 간다.</p>
+            </div>
+            <div class="note">
+                <p><strong>오해</strong>업샘플링이 거친 특징에서 세밀한 정보를 되살린다.</p>
+                <p class="fact"><strong>실제로는</strong>업샘플링은 값 하나를 2 × 2 네 칸에 복사할 뿐, 새 정보를 만들지 않는다(학습하는 가중치도 없다). 세밀한 정보는 이어 붙이는 앞쪽 지도(61번, 36번 층)에서 온다.</p>
+            </div>
+            <p class="source">출처: 논문 §2.1, §2.2, §2.3, §3, 표 3 · 저자 Darknet 설정 cfg/yolov3.cfg와 코드(yolo_layer.c, upsample_layer.c) · 50 × 20과 20 × 50의 격자는 이 페이지의 계산</p>
+        </section>
+
+        <section id="faq" class="wrap step" aria-labelledby="faq-title">
+            <p class="step-no">질문</p>
+            <h2 id="faq-title">자주 묻는 질문</h2>
+            <div class="faq" id="faq-list">
+                <details>
+                    <summary>YOLOv3는 YOLOv2와 무엇이 다른가?</summary>
+                    <p>세 크기의 격자(13 × 13, 26 × 26, 52 × 52)에서 예측하고, 앵커를 9개로 늘려 격자마다 3개씩 나눈다. 물체 여부는 로지스틱 회귀로 정답마다 앵커 하나의 박스만 1을 배우고, 클래스는 softmax 대신 서로 독립인 로지스틱으로 예측한다. 백본은 Darknet-19에서 잔차 연결이 있는 Darknet-53으로 바뀌었다. COCO에서 AP는 21.6에서 33.0으로, 작은 물체의 AP는 5.0에서 18.3으로 올랐다(논문 표 3).</p>
+                </details>
+                <details>
+                    <summary>YOLOv3의 멀티 스케일 예측(multi-scale prediction)이란?</summary>
+                    <p>한 사진을 크기가 다른 세 격자에서 예측하는 것이다. 416 × 416 입력에서 13 × 13(칸 32픽셀), 26 × 26(16픽셀), 52 × 52(8픽셀) 격자가 각각 칸마다 앵커 3개로 박스를 낸다. 큰 앵커는 거친 격자, 작은 앵커는 촘촘한 격자에 두어 작은 물체도 맡는다.</p>
+                </details>
+                <details>
+                    <summary>YOLOv3의 출력 크기와 박스 수는?</summary>
+                    <p>416 × 416 입력에서 13 × 13 × 255, 26 × 26 × 255, 52 × 52 × 255다. 255는 앵커 3개 × (좌표 4 + 물체 여부 1 + COCO 클래스 80)이다. 박스는 507 + 2,028 + 8,112 = 10,647개이고, 608 × 608 입력이면 22,743개다.</p>
+                </details>
+                <details>
+                    <summary>YOLOv3의 앵커 9개는 무엇이고 어떻게 나누나?</summary>
+                    <p>COCO 정답 박스에 k-평균을 돌려 고른 (10 × 13), (16 × 30), (33 × 23), (30 × 61), (62 × 45), (59 × 119), (116 × 90), (156 × 198), (373 × 326)픽셀이다. 작은 셋은 52 × 52, 가운데 셋은 26 × 26, 큰 셋은 13 × 13 격자가 쓴다. 논문은 9개와 3크기를 임의로 골랐다고 쓴다.</p>
+                </details>
+                <details>
+                    <summary>물체는 YOLOv3의 어느 격자에서 예측되나?</summary>
+                    <p>앵커 9개 중 물체와 모양이 가장 잘 맞는(중심을 맞춘 IOU가 가장 큰) 앵커가 물체를 맡고, 그 앵커가 속한 격자에서 물체 중심이 든 칸이 예측한다. 크기로 격자를 정하는 기준이 따로 있지는 않다.</p>
+                </details>
+                <details>
+                    <summary>YOLOv3의 업샘플링과 이어 붙이기(concatenation)는 무엇을 하나?</summary>
+                    <p>넥의 13 × 13 줄 마지막 층(79번) 특징을 1 × 1 합성곱으로 256채널로 줄이고 2배로 업샘플링해 26 × 26으로 만든 뒤, Darknet-53 앞쪽의 26 × 26 × 512 지도(61번 층)와 채널 방향으로 이어 붙여 768채널을 만든다. 같은 일을 한 번 더 해 52 × 52 지도(384채널)를 만든다. 논문은 업샘플한 특징에서 의미 있는 정보를, 앞쪽 지도에서 세밀한 정보를 얻는다고 쓴다.</p>
+                </details>
+                <details>
+                    <summary>YOLOv3의 물체 여부(objectness)는 어떻게 학습하나?</summary>
+                    <p>로지스틱 회귀로 학습한다. 정답마다 앵커 9개 중 가장 잘 맞는 앵커의 박스 하나만 목표가 1이고, 그 박스만 좌표와 클래스도 배운다. 가장 잘 맞지는 않지만 정답과 0.5보다 많이 겹치는 앵커의 박스는 무시하고(벌점 없음), 나머지는 목표가 0이다.</p>
+                </details>
+                <details>
+                    <summary>YOLOv3는 왜 softmax 대신 로지스틱 분류기를 쓰나?</summary>
+                    <p>softmax는 박스마다 클래스가 정확히 하나라고 가정한다. Open Images처럼 '여성'과 '사람' 같은 레이블이 겹치는 데이터에서는 맞지 않아, 클래스마다 독립인 로지스틱 분류기와 이진 교차 엔트로피를 쓴다. 논문은 COCO에서 softmax가 좋은 성능에 필요하지 않았다고 쓴다.</p>
+                </details>
+            </div>
+            <p class="source">출처: 논문 §2.1, §2.2, §2.3, §2.4, 표 3 · 저자 Darknet 설정 cfg/yolov3.cfg · 박스 수는 이 페이지의 계산</p>
+        </section>
+
+        <section class="wrap step" aria-labelledby="more-title">
+            <h2 id="more-title">더 보기</h2>
+            <ul class="links">
+                <li><a href="https://arxiv.org/abs/1804.02767">Redmon &amp; Farhadi, YOLOv3: An Incremental Improvement (arXiv 2018)</a></li>
+                <li><a href="https://github.com/pjreddie/darknet/blob/master/cfg/yolov3.cfg">저자의 Darknet 설정 yolov3.cfg</a></li>
+                <li><a href="https://arxiv.org/abs/1612.03144">Lin et al., Feature Pyramid Networks for Object Detection (CVPR 2017)</a></li>
+                <li><a href="https://arxiv.org/abs/2004.10934">Bochkovskiy et al., YOLOv4: Optimal Speed and Accuracy of Object Detection (arXiv 2020)</a></li>
+                <li><a href="https://github.com/open-mmlab/mmdetection/blob/main/configs/yolo/yolov3_d53_8xb8-ms-608-273e_coco.py">MMDetection의 YOLOv3 설정(백본 · 넥 · 헤드)</a></li>
+                <li><a href="../yolo-v2/">YOLOv2, 앵커 박스와 패스스루</a> · <a href="../yolo-v1/">YOLOv1, 한 번 보고 모두 찾기</a> · <a href="../iou-nms/">IOU와 NMS</a></li>
+                <!-- 영상이 나오면 추가: <li><a href="https://www.youtube.com/watch?v=...">영상으로 보기</a></li> -->
+            </ul>
+            <p class="hint" style="margin-top: 12px;">이 페이지의 숫자는 논문과 저자 설정 파일에서 왔고, 그림 속 격자와 겹침은 페이지가 직접 계산한다. 사진과 데이터셋은 쓰지 않았다.</p>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        마지막 업데이트 <time datetime="2026-10-06">2026-10-06</time> · <a href="/">Hugh Q Lee</a>
+    </footer>
+
+    <script>
+        (function () {
+            "use strict";
+
+            var root = document.documentElement;
+            var redraws = [];
+            // what the figures of a section say to each other (02: the layer pyramid and the 13 -> 26 steps)
+            var links = {};
+            var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            function css(name) {
+                return getComputedStyle(root).getPropertyValue(name).trim();
+            }
+            function rgb(hex) {
+                var v = parseInt(hex.replace("#", ""), 16);
+                return [v >> 16 & 255, v >> 8 & 255, v & 255];
+            }
+            function alpha(hex, a) {
+                var c = rgb(hex);
+                return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")";
+            }
+            function clamp(v, lo, hi) {
+                return Math.min(hi, Math.max(lo, v));
+            }
+            function fixed(v, d) {
+                return Number(v).toFixed(d).replace("-", "−");
+            }
+            function num(v) {
+                return Number(v).toLocaleString("ko-KR");
+            }
+            function sigmoid(t) {
+                return 1 / (1 + Math.exp(-t));
+            }
+            // Fill {name} slots of a sentence. Every sentence the scripts put on screen is one template, so the English
+            // version translates whole sentences.
+            function fill(template, values) {
+                return template.replace(/\{(\w+)\}/g, function (m, k) { return values[k] != null ? values[k] : m; });
+            }
+            // Canvas drawn in logical size x size coordinates, scaled to device pixels.
+            function stage(canvas, logical, draw) {
+                var ctx = canvas.getContext("2d");
+                function render() {
+                    var rect = canvas.getBoundingClientRect();
+                    var px = Math.max(1, Math.round(rect.width * (window.devicePixelRatio || 1)));
+                    if (canvas.width !== px) {
+                        canvas.width = px;
+                        canvas.height = px;
+                    }
+                    ctx.setTransform(px / logical, 0, 0, px / logical, 0, 0);
+                    draw(ctx);
+                }
+                if ("ResizeObserver" in window) new ResizeObserver(render).observe(canvas);
+                else window.addEventListener("resize", render);
+                redraws.push(render);
+                return render;
+            }
+            var EMOJI_FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+            // The painted pixels of an emoji at 100 px, measured once on a scratch canvas. Text metrics give the glyph's
+            // square, not its ink.
+            var inkCache = {};
+            function ink(ch) {
+                if (inkCache[ch]) return inkCache[ch];
+                var box = { x: -50, y: -50, w: 100, h: 100 };
+                try {
+                    var c = document.createElement("canvas");
+                    c.width = 160;
+                    c.height = 160;
+                    var g = c.getContext("2d");
+                    g.font = "100px " + EMOJI_FONT;
+                    g.textAlign = "center";
+                    g.textBaseline = "middle";
+                    g.fillText(ch, 80, 80);
+                    var px = g.getImageData(0, 0, 160, 160).data, x0 = 160, y0 = 160, x1 = -1, y1 = -1;
+                    for (var yy = 0; yy < 160; yy++) {
+                        for (var xx = 0; xx < 160; xx++) {
+                            if (px[(yy * 160 + xx) * 4 + 3] > 24) {
+                                if (xx < x0) x0 = xx;
+                                if (xx > x1) x1 = xx;
+                                if (yy < y0) y0 = yy;
+                                if (yy > y1) y1 = yy;
+                            }
+                        }
+                    }
+                    if (x1 > x0 && y1 > y0) box = { x: x0 - 80, y: y0 - 80, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+                } catch (error) {
+                    // keep the square
+                }
+                inkCache[ch] = box;
+                return box;
+            }
+            // An emoji whose painted pixels fill the box (keeping its proportions) and are centered in it.
+            function drawEmoji(ctx, ch, x, y, w, h) {
+                var b = ink(ch), s = Math.min(w / b.w, h / b.h) * 0.96;
+                ctx.save();
+                ctx.font = (100 * s) + "px " + EMOJI_FONT;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(ch, x + w / 2 - (b.x + b.w / 2) * s, y + h / 2 - (b.y + b.h / 2) * s);
+                ctx.restore();
+            }
+            // Point in a convex polygon, for picking what was drawn under the pointer.
+            function insidePoly(pt, poly) {
+                var sign = 0;
+                for (var i = 0; i < poly.length; i++) {
+                    var a = poly[i], b = poly[(i + 1) % poly.length];
+                    var cross = (b[0] - a[0]) * (pt[1] - a[1]) - (b[1] - a[1]) * (pt[0] - a[0]);
+                    if (cross !== 0) {
+                        if (!sign) sign = cross > 0 ? 1 : -1;
+                        else if ((cross > 0 ? 1 : -1) !== sign) return false;
+                    }
+                }
+                return true;
+            }
+            // Step tabs (WAI-ARIA tab pattern, as on the IOU·NMS and YOLOv2 pages).
+            function stepTabs(el, steps, current, go) {
+                el.innerHTML = "";
+                steps.forEach(function (st, i) {
+                    var b = document.createElement("button");
+                    b.type = "button";
+                    b.setAttribute("role", "tab");
+                    b.className = "tab" + (i < current ? " done" : "") + (i === current ? " current" : "");
+                    b.setAttribute("aria-selected", String(i === current));
+                    b.tabIndex = i === current ? 0 : -1;
+                    b.innerHTML = "<b>" + (i + 1) + "</b>" + st.tab + (st.small ? "<small>" + st.small + "</small>" : "");
+                    b.addEventListener("click", function () { go(i); });
+                    b.addEventListener("keydown", function (e) {
+                        var to = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? steps.length - 1 : null;
+                        if (to === null) return;
+                        e.preventDefault();
+                        go(clamp(to, 0, steps.length - 1));
+                        var next = el.children[clamp(to, 0, steps.length - 1)];
+                        if (next) next.focus();
+                    });
+                    el.appendChild(b);
+                });
+            }
+
+            // Theme toggle (shared with the homepage through localStorage "theme").
+            (function () {
+                var toggle = document.getElementById("theme-toggle");
+                function label() {
+                    var dark = root.dataset.theme !== "light";
+                    toggle.textContent = dark ? "light" : "dark";
+                    toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+                }
+                toggle.addEventListener("click", function () {
+                    var next = root.dataset.theme === "light" ? "dark" : "light";
+                    root.dataset.theme = next;
+                    try {
+                        localStorage.setItem("theme", next);
+                    } catch (error) {
+                        // 저장할 수 없어도 이번 방문에서는 전환된다.
+                    }
+                    label();
+                    redraws.forEach(function (fn) { fn(); });
+                });
+                label();
+            })();
+
+            // The nine COCO anchors (§2.3), width x height in pixels of the 416 x 416 input, and the [yolo] layers that
+            // use them (cfg/yolov3.cfg: mask = 6,7,8 for 13 x 13, 3,4,5 for 26 x 26, 0,1,2 for 52 x 52).
+            var ANCHORS = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45], [59, 119], [116, 90], [156, 198], [373, 326]];
+            var GRIDS = [
+                { S: 13, stride: 32, mask: [6, 7, 8], color: "--accent" },
+                { S: 26, stride: 16, mask: [3, 4, 5], color: "--accent-green" },
+                { S: 52, stride: 8, mask: [0, 1, 2], color: "--accent-warn" }
+            ];
+            var Z = 416;
+            var T = {
+                grid: "{S} × {S}",
+                gridHead: "{S} × {S} · 칸 {px}픽셀",
+                cell: "{r}행 {c}열",
+                anchor: "{w} × {h}",
+                px: "{w} × {h}픽셀",
+                result: "{name} → {S} × {S} 격자 · {r}행 {c}열 칸 · 앵커 {w} × {h}",
+                live: "{name}: {S} × {S} 격자, {r}행 {c}열 칸, 앵커 {w} × {h}",
+                tagObj: "{name} · {S} × {S}"
+            };
+            function gridOf(n) {
+                return n >= 6 ? 0 : n >= 3 ? 1 : 2;
+            }
+            function shapeIou(w1, h1, w2, h2) {
+                var inter = Math.min(w1, w2) * Math.min(h1, h2);
+                return inter / (w1 * h1 + w2 * h2 - inter);
+            }
+            function ious9(w, h) {
+                return ANCHORS.map(function (a) { return shapeIou(w, h, a[0], a[1]); });
+            }
+            // yolo_layer.c: the best of all nine anchors by the IOU of shapes on a common center; ties keep the first.
+            function best9(w, h) {
+                var v = ious9(w, h), b = 0;
+                for (var i = 1; i < v.length; i++) if (v[i] > v[b]) b = i;
+                return b;
+            }
+            function cellOf(o, g) {
+                var st = GRIDS[g].stride, S = GRIDS[g].S;
+                return [Math.min(S - 1, Math.floor(o.cy / st)), Math.min(S - 1, Math.floor(o.cx / st))];
+            }
+            function boxIou(a, b) {
+                var iw = Math.max(0, Math.min(a.cx + a.w / 2, b.cx + b.w / 2) - Math.max(a.cx - a.w / 2, b.cx - b.w / 2));
+                var ih = Math.max(0, Math.min(a.cy + a.h / 2, b.cy + b.h / 2) - Math.max(a.cy - a.h / 2, b.cy - b.h / 2));
+                var inter = iw * ih;
+                return inter / (a.w * a.h + b.w * b.h - inter);
+            }
+            // Size sliders: 0..100 on a log scale from 8 to 400 pixels on the long side.
+            function sideOf(v) {
+                return 8 * Math.pow(50, v / 100);
+            }
+            function valueOf(side) {
+                return Math.round(100 * Math.log(side / 8) / Math.log(50));
+            }
+            function resize(o, side) {
+                var k = side / Math.max(o.base[0], o.base[1]);
+                o.w = clamp(o.base[0] * k, 4, Z);
+                o.h = clamp(o.base[1] * k, 4, Z);
+                o.cx = clamp(o.cx, o.w / 2, Z - o.w / 2);
+                o.cy = clamp(o.cy, o.h / 2, Z - o.h / 2);
+            }
+            function gridLines(ctx, S, size, color) {
+                var cell = size / S;
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                for (var i = 1; i < S; i++) {
+                    ctx.moveTo(i * cell, 0); ctx.lineTo(i * cell, size);
+                    ctx.moveTo(0, i * cell); ctx.lineTo(size, i * cell);
+                }
+                ctx.stroke();
+            }
+            function labelChip(ctx, text, x, y, h, color) {
+                ctx.font = "600 13px " + css("--sans");
+                ctx.textAlign = "left";
+                ctx.textBaseline = "top";
+                var tw = ctx.measureText(text).width + 10;
+                var ty = y - 21 >= 0 ? y - 21 : y + h + 1;
+                var tx = clamp(x, 0, Z - tw);
+                ctx.fillStyle = color;
+                ctx.fillRect(tx, ty, tw, 20);
+                ctx.fillStyle = css("--bg");
+                ctx.fillText(text, tx + 5, ty + 3);
+            }
+            function dot(ctx, x, y, color) {
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.lineWidth = 2.5;
+                ctx.strokeStyle = css("--bg");
+                ctx.stroke();
+            }
+            // Nine bars, one group per grid, for the IOU of an object's shape with each anchor.
+            function anchorBars(container) {
+                var rows = [], heads = [];
+                GRIDS.forEach(function (G, g) {
+                    var head = document.createElement("p");
+                    head.className = "grp-head";
+                    head.innerHTML = '<i style="background: var(' + G.color + ');"></i>' + fill(T.gridHead, { S: G.S, px: G.stride });
+                    container.appendChild(head);
+                    heads.push(head);
+                    var bars = document.createElement("div");
+                    bars.className = "bars";
+                    bars.style.margin = "4px 0 0";
+                    G.mask.slice().reverse().forEach(function (n) {
+                        var row = document.createElement("div");
+                        row.className = "bar";
+                        row.innerHTML = '<span class="name">' + fill(T.anchor, { w: ANCHORS[n][0], h: ANCHORS[n][1] }) + '</span><span class="track"><span class="fill"></span></span><output>0.00</output>';
+                        bars.appendChild(row);
+                        rows[n] = row;
+                    });
+                    container.appendChild(bars);
+                });
+                return function (w, h) {
+                    var v = ious9(w, h), b = best9(w, h), g = gridOf(b);
+                    rows.forEach(function (row, n) {
+                        row.className = "bar" + (n === b ? " on" : "");
+                        var f = row.querySelector(".fill");
+                        f.style.width = (v[n] * 100) + "%";
+                        f.style.background = n === b ? "var(" + GRIDS[g].color + ")" : "";
+                        row.querySelector("output").textContent = fixed(v[n], 2);
+                    });
+                    heads.forEach(function (hd, k) { hd.className = "grp-head" + (k === g ? " on" : ""); });
+                    return b;
+                };
+            }
+
+            // 01 Three grids: which anchor, grid and cell take each object (§2.3; yolo_layer.c picks the best of all nine).
+            (function () {
+                var objects = [
+                    { name: "버스", emoji: "🚌", cx: 268, cy: 214, base: [250, 170] },
+                    { name: "개", emoji: "🐕", cx: 96, cy: 330, base: [80, 60] },
+                    { name: "새", emoji: "🐦", cx: 330, cy: 66, base: [22, 18] }
+                ];
+                objects.forEach(function (o) { o.w = o.base[0]; o.h = o.base[1]; });
+                var selected = 0, drag = null, liveTimer = null;
+                var canvas = document.getElementById("scale-canvas");
+                var slider = document.getElementById("s-size");
+                var live = document.getElementById("s-live");
+                var minis = [0, 1, 2].map(function (g) { return document.getElementById("mini-" + g); });
+                var setBars = anchorBars(document.getElementById("s-ious"));
+
+                function where(o) {
+                    var n = best9(o.w, o.h), g = gridOf(n);
+                    return { n: n, g: g, cell: cellOf(o, g) };
+                }
+
+                var render = stage(canvas, Z, function (ctx) {
+                    ctx.clearRect(0, 0, Z, Z);
+                    ctx.fillStyle = css("--panel-soft");
+                    ctx.fillRect(0, 0, Z, Z);
+                    var sel = objects[selected], ws = where(sel), G = GRIDS[ws.g];
+                    // every object's cell, in the grid that predicts it
+                    objects.forEach(function (o, i) {
+                        var w = where(o), st = GRIDS[w.g].stride;
+                        ctx.fillStyle = alpha(css(GRIDS[w.g].color), i === selected ? 0.3 : 0.18);
+                        ctx.fillRect(w.cell[1] * st, w.cell[0] * st, st, st);
+                    });
+                    gridLines(ctx, G.S, Z, alpha(css("--line-strong"), G.S === 52 ? 0.45 : 0.7));
+                    // the selected object's three anchors of its grid, centered on its cell; the one that takes it in bold
+                    var ccx = (ws.cell[1] + 0.5) * G.stride, ccy = (ws.cell[0] + 0.5) * G.stride;
+                    G.mask.forEach(function (n) {
+                        var a = ANCHORS[n], on = n === ws.n;
+                        ctx.setLineDash(on ? [7, 4] : [3, 4]);
+                        ctx.strokeStyle = on ? css(G.color) : alpha(css("--muted"), 0.8);
+                        ctx.lineWidth = on ? 2.4 : 1.1;
+                        ctx.strokeRect(ccx - a[0] / 2, ccy - a[1] / 2, a[0], a[1]);
+                    });
+                    ctx.setLineDash([]);
+                    objects.forEach(function (o) {
+                        drawEmoji(ctx, o.emoji, o.cx - o.w / 2, o.cy - o.h / 2, o.w, o.h);
+                    });
+                    objects.forEach(function (o, i) {
+                        var w = where(o), color = css(GRIDS[w.g].color);
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = i === selected ? 3 : 1.8;
+                        ctx.setLineDash(i === selected ? [] : [6, 4]);
+                        ctx.strokeRect(o.cx - o.w / 2, o.cy - o.h / 2, o.w, o.h);
+                        ctx.setLineDash([]);
+                        labelChip(ctx, fill(T.tagObj, { name: o.name, S: GRIDS[w.g].S }), o.cx - o.w / 2, o.cy - o.h / 2, o.h, color);
+                        dot(ctx, o.cx, o.cy, color);
+                    });
+                    if (document.activeElement === canvas) {
+                        ctx.strokeStyle = css("--accent");
+                        ctx.lineWidth = 3;
+                        ctx.strokeRect(1.5, 1.5, Z - 3, Z - 3);
+                    }
+                });
+                // The three grids side by side: each object lights one cell in exactly one of them.
+                var miniRenders = minis.map(function (cv, g) {
+                    var G = GRIDS[g];
+                    return stage(cv, Z, function (ctx) {
+                        ctx.clearRect(0, 0, Z, Z);
+                        ctx.fillStyle = css("--panel-soft");
+                        ctx.fillRect(0, 0, Z, Z);
+                        gridLines(ctx, G.S, Z, alpha(css("--line-strong"), G.S === 52 ? 0.35 : G.S === 26 ? 0.55 : 0.8));
+                        objects.forEach(function (o) {
+                            ctx.strokeStyle = alpha(css("--muted"), 0.45);
+                            ctx.lineWidth = 3;
+                            ctx.strokeRect(o.cx - o.w / 2, o.cy - o.h / 2, o.w, o.h);
+                        });
+                        objects.forEach(function (o, i) {
+                            var w = where(o);
+                            if (w.g !== g) return;
+                            var st = G.stride, x = w.cell[1] * st, y = w.cell[0] * st;
+                            ctx.fillStyle = css(G.color);
+                            ctx.fillRect(x, y, st, st);
+                            ctx.beginPath();
+                            ctx.arc(x + st / 2, y + st / 2, Math.max(26, st), 0, Math.PI * 2);
+                            ctx.strokeStyle = css(G.color);
+                            ctx.lineWidth = i === selected ? 9 : 5;
+                            ctx.stroke();
+                        });
+                    });
+                });
+
+                function update(announce) {
+                    render();
+                    miniRenders.forEach(function (fn) { fn(); });
+                    var o = objects[selected], w = where(o), G = GRIDS[w.g], a = ANCHORS[w.n];
+                    setBars(o.w, o.h);
+                    var values = { name: o.name, S: G.S, r: w.cell[0] + 1, c: w.cell[1] + 1, w: a[0], h: a[1] };
+                    document.getElementById("s-result").textContent = fill(T.result, values);
+                    document.getElementById("s-size-out").textContent = fill(T.px, { w: Math.round(o.w), h: Math.round(o.h) });
+                    slider.value = String(valueOf(Math.max(o.w, o.h)));
+                    if (announce) {
+                        clearTimeout(liveTimer);
+                        liveTimer = setTimeout(function () { live.textContent = fill(T.live, values); }, 250);
+                    }
+                }
+                function point(e) {
+                    var rect = canvas.getBoundingClientRect();
+                    return { x: (e.clientX - rect.left) / rect.width * Z, y: (e.clientY - rect.top) / rect.height * Z };
+                }
+                function hitTest(p) {
+                    // smallest first, so a bird on a bus can still be picked
+                    var order = objects.map(function (_, i) { return i; }).sort(function (i, j) { return objects[i].w * objects[i].h - objects[j].w * objects[j].h; });
+                    for (var k = 0; k < order.length; k++) {
+                        var o = objects[order[k]], pad = Math.max(0, 14 - Math.min(o.w, o.h) / 2);
+                        if (Math.abs(p.x - o.cx) <= o.w / 2 + pad && Math.abs(p.y - o.cy) <= o.h / 2 + pad) return order[k];
+                    }
+                    return -1;
+                }
+                function place(o, cx, cy) {
+                    o.cx = clamp(cx, o.w / 2, Z - o.w / 2);
+                    o.cy = clamp(cy, o.h / 2, Z - o.h / 2);
+                }
+                canvas.addEventListener("pointerdown", function (e) {
+                    var p = point(e), hit = hitTest(p);
+                    if (hit < 0) return;
+                    selected = hit;
+                    drag = { id: e.pointerId, dx: p.x - objects[hit].cx, dy: p.y - objects[hit].cy };
+                    try { canvas.setPointerCapture(e.pointerId); } catch (error) { /* pointer already gone */ }
+                    canvas.style.cursor = "grabbing";
+                    update(true);
+                    e.preventDefault();
+                });
+                canvas.addEventListener("pointermove", function (e) {
+                    if (!drag || e.pointerId !== drag.id) return;
+                    var p = point(e);
+                    place(objects[selected], p.x - drag.dx, p.y - drag.dy);
+                    update(true);
+                });
+                function stop() {
+                    drag = null;
+                    canvas.style.cursor = "";
+                }
+                canvas.addEventListener("pointerup", stop);
+                canvas.addEventListener("pointercancel", stop);
+                canvas.addEventListener("keydown", function (e) {
+                    var o = objects[selected], stepSize = e.shiftKey ? 32 : 4;
+                    if (e.key === "ArrowLeft") place(o, o.cx - stepSize, o.cy);
+                    else if (e.key === "ArrowRight") place(o, o.cx + stepSize, o.cy);
+                    else if (e.key === "ArrowUp") place(o, o.cx, o.cy - stepSize);
+                    else if (e.key === "ArrowDown") place(o, o.cx, o.cy + stepSize);
+                    else if (e.key === "+" || e.key === "=") resize(o, sideOf(clamp(valueOf(Math.max(o.w, o.h)) + 3, 0, 100)));
+                    else if (e.key === "-" || e.key === "_") resize(o, sideOf(clamp(valueOf(Math.max(o.w, o.h)) - 3, 0, 100)));
+                    else if (e.key === " " || e.key === "Enter") selected = (selected + 1) % objects.length;
+                    else return;
+                    e.preventDefault();
+                    update(true);
+                });
+                canvas.addEventListener("focus", render);
+                canvas.addEventListener("blur", render);
+                slider.addEventListener("input", function () {
+                    resize(objects[selected], sideOf(Number(slider.value)));
+                    update(true);
+                });
+                update(false);
+            })();
+
+            // 02 How the features are unfolded and joined: the 3D path from layer 79 (13 x 13 x 512) through the 1 x 1
+            // convolution, the 2x upsampling and the concatenation with layer 61 to the 26 x 26 prediction (§2.3).
+            (function () {
+                // The steps here light the same path in the layer pyramid above (79, 84, 85, then 61 and 86, then 87-94 and the
+                // repeat to 52 x 52), and the pyramid's ①-⑤ and its plates on the path move these steps (links).
+                var STEP_BLOCK = ["L79", "L84", "L85", "r26", "L86", "L93"];
+                var LIGHTS = [["p1"], ["p1", "p2"], ["p3"], ["p4"], ["p4"], ["p5", "p52"]];
+                var linked = false;   // the first step at load lights nothing yet
+                function netLight() {
+                    links.lit = { parts: LIGHTS[step], block: STEP_BLOCK[step] };
+                    if (linked && links.light) links.light();
+                }
+
+                // 3D: world axes x along the channels, y up, z along the map's width. One unit is one 26 x 26 cell; a 13 x 13
+                // cell is 2 x 2 units. 256 channels are 1.2 units thick. The colors are a concept picture: the deep features
+                // know roughly where a dog is (13 x 13), layer 61 has its outline at 26 x 26.
+                var canvas = document.getElementById("pyr3d");
+                var ctx = canvas.getContext("2d");
+                var K = 1.2 / 256;
+                var STEPS = [
+                    { tab: "13 × 13 × 512", small: "① 79번", text: "① 넥의 13 × 13 줄 마지막 층(79번)이 낸 13 × 13 × 512 특징이다. 헤드의 출력 합성곱(81번)보다 2층 앞이다. 칸 하나가 사진의 32 × 32픽셀을 맡는다." },
+                    { tab: "1 × 1 합성곱", small: "② 13 × 13 × 256", text: "② 1 × 1 합성곱 256개(84번)로 채널을 512에서 256으로 줄인다. 칸의 수는 그대로 13 × 13이다." },
+                    { tab: "2배 업샘플", small: "③ 26 × 26 × 256", text: "③ 칸마다 값을 2 × 2 네 칸에 그대로 복사해 26 × 26 × 256을 만든다(85번, 최근접 이웃). 새 값은 생기지 않는다. 같은 색 2 × 2 묶음은 한 칸에서 온 것이다." },
+                    { tab: "61번 지도", small: "④ 26 × 26 × 512", text: "④ 이어 붙일 짝은 Darknet-53의 61번 층(26 × 26 해상도의 마지막 잔차 블록)이 낸 26 × 26 × 512 지도다. 사진을 16배만 줄인 앞쪽 지도라 칸마다 값이 다르다. 그림에서 업샘플한 지도의 윤곽은 2 × 2 계단이고, 61번 지도의 윤곽은 칸 하나 단위로 세밀하다." },
+                    { tab: "이어 붙이기", small: "④ 86번 · 768", text: "④ 두 지도를 채널 방향으로 이어 붙인다(86번). 256 + 512 = 768채널이다. 칸마다 업샘플한 256개 뒤에 61번의 512개가 붙는다. 옆면의 두 띠가 두 지도다." },
+                    { tab: "합성곱 → 예측", small: "⑤ 26 × 26 × 255", text: "⑤ 넥의 합성곱 5층(87~91번)과 헤드의 두 층(92, 93번)을 지나 26 × 26 × 255가 된다. 칸마다 앵커 3개 × (좌표 4 + 물체 여부 1 + 클래스 80)이다. 같은 설계를 한 번 더 하면 52 × 52의 예측이 나온다." }
+                ];
+                var PT = {
+                    pick0: "고른 칸: 13 × 13의 {R}행 {C}열 · 값 512개",
+                    pick1: "고른 칸: 13 × 13의 {R}행 {C}열 · 값 256개",
+                    pick2: "13 × 13의 {R}행 {C}열 → 26 × 26의 {r0}–{r1}행 {c0}–{c1}열 네 칸 · 같은 값 256개가 네 번 복사된다",
+                    pick3: "26 × 26의 {r}행 {c}열 · 업샘플한 256개와 61번의 512개가 이 칸에서 만난다",
+                    pick4: "26 × 26의 {r}행 {c}열 한 칸 · 업샘플한 256개(13 × 13의 {R}행 {C}열과 같은 값) + 61번의 512개 = 768개",
+                    pick5: "26 × 26의 {r}행 {c}열 한 칸 · 앵커 3개 × (좌표 4 + 물체 여부 1 + 클래스 80) = 255개",
+                    count0: "값의 수: 13 × 13 × 512 = <b>86,528</b>",
+                    count1: "값의 수: 13 × 13 × 512 = 86,528 → 13 × 13 × 256 = <b>43,264</b>",
+                    count2: "값의 수: 13 × 13 × 256 = 43,264 → 26 × 26 × 256 = <b>173,056</b> (같은 값이 네 번씩)",
+                    count3: "값의 수: 26 × 26 × 256 = 173,056 · 26 × 26 × 512 = <b>346,112</b>",
+                    count4: "값의 수: 26 × 26 × 256 = 173,056 + 26 × 26 × 512 = 346,112 → 26 × 26 × 768 = <b>519,168</b>",
+                    count5: "값의 수: 26 × 26 × 255 = <b>172,380</b>",
+                    tag0: "13 × 13 × 512 · 79번",
+                    tag1: "13 × 13 × 256 · 84번",
+                    tag2: "26 × 26 × 256 · 85번",
+                    tag3a: "26 × 26 × 256 · 85번",
+                    tag3b: "26 × 26 × 512 · 61번",
+                    tag4: "26 × 26 × 768 · 86번",
+                    tag5: "26 × 26 × 255 · 예측",
+                    band256: "256 업샘플",
+                    band512: "512 · 61번"
+                };
+                // A dog on the 26 x 26 grid: the deep features see it per 13 x 13 cell, layer 61 sees its outline per 26 x 26 cell.
+                function inDog(r, c) {
+                    var body = Math.pow((r - 15.5) / 4.4, 2) + Math.pow((c - 11) / 7.4, 2) <= 1;
+                    var headR = Math.pow(r - 9.8, 2) + Math.pow(c - 18.2, 2) <= 10.2;
+                    var legs = (r >= 18 && r <= 22) && ((c >= 6 && c <= 7) || (c >= 14 && c <= 15));
+                    return body || headR || legs;
+                }
+                var mask = [];
+                for (var r = 0; r < 26; r++) { mask.push([]); for (var c = 0; c < 26; c++) mask[r].push(inDog(r, c)); }
+                function m(r, c) { return r >= 0 && r < 26 && c >= 0 && c < 26 && mask[r][c]; }
+                var ups = [], fines = [];
+                for (var rr = 0; rr < 26; rr++) {
+                    for (var cc = 0; cc < 26; cc++) {
+                        var R = rr >> 1, C = cc >> 1;
+                        var votes = (m(2 * R, 2 * C) ? 1 : 0) + (m(2 * R + 1, 2 * C) ? 1 : 0) + (m(2 * R, 2 * C + 1) ? 1 : 0) + (m(2 * R + 1, 2 * C + 1) ? 1 : 0);
+                        ups.push({ r: rr, c: cc, R: R, C: C, kind: "up", dog: votes >= 2, rep: rr % 2 === 0 && cc % 2 === 0 });
+                        var edge = m(rr, cc) && (!m(rr - 1, cc) || !m(rr + 1, cc) || !m(rr, cc - 1) || !m(rr, cc + 1));
+                        fines.push({ r: rr, c: cc, R: R, C: C, kind: "fine", dog: m(rr, cc), edge: edge });
+                    }
+                }
+                var step = 0, shown = 0, anim = null, pick = { r: 12, c: 12 };
+                var HOME = { yaw: 1.02, pitch: 0.36 };
+                var cam = { yaw: HOME.yaw, pitch: HOME.pitch, zoom: 1, cx: 0, cy: 0, cz: 0 };
+                var W = 1, H = 1, dpr = 1, hits = [];
+                function turn(p) {
+                    var cy = Math.cos(cam.yaw), sy = Math.sin(cam.yaw), cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+                    var x = cy * p[0] + sy * p[2], z = -sy * p[0] + cy * p[2];
+                    return [x, cp * p[1] - sp * z, sp * p[1] + cp * z];
+                }
+                function project(p) {
+                    var q = turn([p[0] - cam.cx, p[1] - cam.cy, p[2] - cam.cz]);
+                    return [W / 2 + q[0] * cam.zoom, H / 2 - q[1] * cam.zoom, q[2]];
+                }
+                var FACES = [
+                    { n: [1, 0, 0], v: [[1, -1, -1], [1, 1, -1], [1, 1, 1], [1, -1, 1]] },
+                    { n: [-1, 0, 0], v: [[-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1]] },
+                    { n: [0, 1, 0], v: [[-1, 1, -1], [-1, 1, 1], [1, 1, 1], [1, 1, -1]] },
+                    { n: [0, -1, 0], v: [[-1, -1, -1], [1, -1, -1], [1, -1, 1], [-1, -1, 1]] },
+                    { n: [0, 0, 1], v: [[-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]] },
+                    { n: [0, 0, -1], v: [[-1, -1, -1], [-1, 1, -1], [1, 1, -1], [1, -1, -1]] }
+                ];
+                var LIGHT = [-0.35, 0.8, 0.5].map(function (v, i, a) { return v / Math.hypot(a[0], a[1], a[2]); });
+                function cuboid(c, h) {
+                    var out = [];
+                    FACES.forEach(function (f) {
+                        if (turn(f.n)[2] <= 1e-6) return;
+                        out.push({
+                            pts: f.v.map(function (s) { return project([c[0] + s[0] * h[0], c[1] + s[1] * h[1], c[2] + s[2] * h[2]]); }),
+                            lit: 0.62 + 0.38 * Math.max(0, f.n[0] * LIGHT[0] + f.n[1] * LIGHT[1] + f.n[2] * LIGHT[2])
+                        });
+                    });
+                    return out;
+                }
+                function ease(u) { return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
+                function mix(a, b, u) { return a + (b - a) * u; }
+                function lerp(a, b, u) { return [mix(a[0], b[0], u), mix(a[1], b[1], u), mix(a[2], b[2], u)]; }
+                var X_FINE = 0.6 + 0.15 + 1.2;           // layer 61's 512 channels sit right after the upsampled 256
+                var SIDE = 14.5;                         // steps 3 and 5 show two blocks side by side
+                // An upsampled tile at a whole step: the four copies of a 13 x 13 cell sit on top of each other (steps 0, 1),
+                // then spread to their own 26 x 26 places (step 2 on).
+                function upAt(t, s) {
+                    if (s <= 1) return { p: [0, 12 - 2 * t.R, 2 * t.C - 12], h: [K * (s === 0 ? 512 : 256) / 2, 0.92, 0.92] };
+                    return { p: [0, 12.5 - t.r, t.c - 12.5 - (s === 3 || s === 5 ? SIDE : 0)], h: [K * 128, 0.46, 0.46] };
+                }
+                function fineAt(t, s) {
+                    if (s <= 2) return { p: [0, 12.5 - t.r, t.c - 12.5 + SIDE + 18], a: 0 };
+                    if (s === 3) return { p: [0, 12.5 - t.r, t.c - 12.5 + SIDE], a: 1 };
+                    return { p: [X_FINE, 12.5 - t.r, t.c - 12.5 - (s === 5 ? SIDE : 0)], a: 1 };
+                }
+                function frameAt(s) {
+                    if (s <= 2) return { c: [0, 0, 0], r: 15 };
+                    if (s === 4) return { c: [1.0, 0, 0], r: 16 };
+                    return { c: [0.6, 0, 0], r: 22 };
+                }
+                function frame() {
+                    var s0 = Math.floor(shown), s1 = Math.min(s0 + 1, STEPS.length - 1), u = ease(shown - s0);
+                    var a = frameAt(s0), b = frameAt(s1);
+                    var c = lerp(a.c, b.c, u);
+                    cam.cx = c[0]; cam.cy = c[1]; cam.cz = c[2];
+                    cam.zoom = Math.min(W, H) / (2.25 * mix(a.r, b.r, u));
+                }
+                function picked(t) {
+                    var s = Math.round(shown);
+                    if (s <= 2) return t.kind === "up" && t.R === pick.r >> 1 && t.C === pick.c >> 1;
+                    return t.r === pick.r && t.c === pick.c;
+                }
+                function draw() {
+                    frame();
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                    ctx.clearRect(0, 0, W, H);
+                    var s0 = Math.floor(shown), s1 = Math.min(s0 + 1, STEPS.length - 1), u = ease(shown - s0);
+                    var items = [];
+                    var spread = s0 >= 2 || (s0 === 1 && u > 0);  // the four copies are apart
+                    var fade = shown > 4 ? 1 - 0.4 * ease(clamp(shown - 4, 0, 1)) : 1;
+                    ups.forEach(function (t) {
+                        if (!spread && !t.rep) return;
+                        var a = upAt(t, s0), b = upAt(t, s1);
+                        items.push({ t: t, c: lerp(a.p, b.p, u), h: lerp(a.h, b.h, u), a: fade });
+                    });
+                    if (shown > 2) {
+                        fines.forEach(function (t) {
+                            var a = fineAt(t, s0), b = fineAt(t, s1);
+                            var op = mix(a.a, b.a, u) * fade;
+                            if (op > 0.02) items.push({ t: t, c: lerp(a.p, b.p, u), h: [K * 256, 0.46, 0.46], a: op });
+                        });
+                    }
+                    var outIn = ease(clamp(shown - 4, 0, 1));
+                    items.forEach(function (it) { it.depth = project(it.c)[2]; });
+                    items.sort(function (a, b) { return a.depth - b.depth; });
+                    var cDeep = rgb(css("--accent")), cLine = rgb(css("--line-strong")), cViolet = rgb(css("--violet"));
+                    var edgeColor = css("--bg"), textColor = css("--text");
+                    hits = [];
+                    items.forEach(function (it) {
+                        var t = it.t, on = picked(t);
+                        var col, k0 = 1;
+                        if (t.kind === "up") col = t.dog ? cDeep : cLine;
+                        else if (t.edge) col = cViolet;
+                        else if (t.dog) { col = cViolet; k0 = 0.62; }
+                        else { col = cViolet; k0 = 0.3; }  // all of layer 61 in violet, so its band shows on the stacked side
+                        var faces = cuboid(it.c, it.h);
+                        faces.forEach(function (f) {
+                            ctx.beginPath();
+                            f.pts.forEach(function (p, i) { if (i) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
+                            ctx.closePath();
+                            var k = (on ? Math.min(1.3, f.lit + 0.2) : f.lit) * k0;
+                            ctx.fillStyle = "rgba(" + Math.round(Math.min(255, col[0] * k)) + "," + Math.round(Math.min(255, col[1] * k)) + "," + Math.round(Math.min(255, col[2] * k)) + "," + (it.a * (on ? 1 : 0.88)) + ")";
+                            ctx.fill();
+                            ctx.strokeStyle = on ? textColor : alpha(edgeColor, 0.5 * it.a);
+                            ctx.lineWidth = on ? 1.4 : 0.6;
+                            ctx.stroke();
+                        });
+                        hits.push({ t: t, faces: faces });
+                    });
+                    if (outIn > 0) drawOutput(outIn);
+                    drawColumn();
+                    drawLabels();
+                    if (document.activeElement === canvas) {
+                        ctx.strokeStyle = css("--accent");
+                        ctx.lineWidth = 3;
+                        ctx.strokeRect(1.5, 1.5, W - 3, H - 3);
+                    }
+                }
+                // The prediction: one 26 x 26 x 255 slab beside the 768-channel block it is computed from, drawn as a single
+                // block with the picked cell marked on it.
+                function drawOutput(a) {
+                    var g = rgb(css("--accent-green"));
+                    var c = [0, 0, SIDE + (1 - a) * 18], h = [K * 255 / 2, 13, 13];
+                    cuboid(c, h).forEach(function (f) {
+                        ctx.beginPath();
+                        f.pts.forEach(function (p, i) { if (i) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
+                        ctx.closePath();
+                        ctx.fillStyle = "rgba(" + Math.round(g[0] * f.lit) + "," + Math.round(g[1] * f.lit) + "," + Math.round(g[2] * f.lit) + "," + (0.55 * a) + ")";
+                        ctx.fill();
+                        ctx.strokeStyle = alpha(css("--accent-green"), a);
+                        ctx.lineWidth = 1.2;
+                        ctx.stroke();
+                    });
+                    var cell = cuboid([c[0], 12.5 - pick.r, pick.c - 12.5 + c[2]], [h[0] + 0.02, 0.5, 0.5]);
+                    cell.forEach(function (f) {
+                        ctx.beginPath();
+                        f.pts.forEach(function (p, i) { if (i) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
+                        ctx.closePath();
+                        ctx.fillStyle = alpha(css("--text"), 0.85 * a);
+                        ctx.fill();
+                    });
+                }
+                // Once the maps are stacked (step 4) the picked cell is one 26 x 26 position that runs through every channel:
+                // outline that column.
+                function drawColumn() {
+                    if (shown < 3.9) return;
+                    var u = clamp((shown - 3.9) / 0.1, 0, 1);
+                    var x0 = -0.6, x1 = X_FINE + 1.2;
+                    var y = 12.5 - pick.r, z = pick.c - 12.5 - SIDE * ease(clamp(shown - 4, 0, 1)), e = 0.5;
+                    var corners = [];
+                    [x0, x1].forEach(function (x) { [y - e, y + e].forEach(function (yy) { [z - e, z + e].forEach(function (zz) { corners.push(project([x, yy, zz])); }); }); });
+                    var lines = [[0, 1], [0, 2], [1, 3], [2, 3], [4, 5], [4, 6], [5, 7], [6, 7], [0, 4], [1, 5], [2, 6], [3, 7]];
+                    ctx.strokeStyle = alpha(css("--text"), 0.9 * u);
+                    ctx.lineWidth = 1.6;
+                    ctx.setLineDash([4, 3]);
+                    lines.forEach(function (l) {
+                        ctx.beginPath();
+                        ctx.moveTo(corners[l[0]][0], corners[l[0]][1]);
+                        ctx.lineTo(corners[l[1]][0], corners[l[1]][1]);
+                        ctx.stroke();
+                    });
+                    ctx.setLineDash([]);
+                }
+                function tag(text, p, strong) {
+                    ctx.font = (strong ? "600 12px " : "11px ") + css("--mono");
+                    var w = ctx.measureText(text).width + 12;
+                    var x = clamp(p[0], w / 2 + 2, W - w / 2 - 2), y = clamp(p[1], 2, H - 22);
+                    ctx.fillStyle = alpha(css("--panel"), 0.9);
+                    ctx.fillRect(x - w / 2, y, w, 20);
+                    ctx.strokeStyle = strong ? css("--text") : css("--line-strong");
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(x - w / 2 + 0.5, y + 0.5, w - 1, 19);
+                    ctx.fillStyle = css("--text");
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(text, x, y + 10.5);
+                }
+                function drawLabels() {
+                    var s = Math.round(shown);
+                    if (Math.abs(shown - s) > 0.08) return;
+                    if (s <= 2) tag(PT["tag" + s], project([0, 14.4, 0]), true);
+                    if (s === 3) {
+                        tag(PT.tag3a, project([0, 14.4, -SIDE]), true);
+                        tag(PT.tag3b, project([0, 14.4, SIDE]), true);
+                    }
+                    if (s === 4) tag(PT.tag4, project([1.0, 14.4, 0]), true);
+                    if (s === 5) {
+                        tag(PT.tag4, project([1.0, 14.4, -SIDE]), true);
+                        tag(PT.tag5, project([0, 14.4, SIDE]), true);
+                    }
+                    if (s === 4) {
+                        var zs = turn([0, 0, 1])[2] > 0 ? 13.6 : -13.6;  // the side the viewer can see
+                        tag(PT.band256, project([0, 13.6, zs]), false);
+                        tag(PT.band512, project([X_FINE, -13.6, zs]), false);
+                    }
+                }
+                function measure() {
+                    var rect = canvas.getBoundingClientRect();
+                    if (!rect.width) return;
+                    dpr = window.devicePixelRatio || 1;
+                    W = rect.width;
+                    H = rect.height;
+                    canvas.width = Math.round(W * dpr);
+                    canvas.height = Math.round(H * dpr);
+                }
+                function describe() {
+                    var v = { R: (pick.r >> 1) + 1, C: (pick.c >> 1) + 1, r: pick.r + 1, c: pick.c + 1, r0: (pick.r >> 1) * 2 + 1, r1: (pick.r >> 1) * 2 + 2, c0: (pick.c >> 1) * 2 + 1, c1: (pick.c >> 1) * 2 + 2 };
+                    document.getElementById("pyr-pick").textContent = fill(PT["pick" + step], v);
+                    document.getElementById("pyr-count").innerHTML = PT["count" + step];
+                }
+                var tabsEl = document.getElementById("pyr-tabs");
+                function goTo(target) {
+                    step = clamp(target, 0, STEPS.length - 1);
+                    stepTabs(tabsEl, STEPS, step, goTo);
+                    document.getElementById("pyr-pos").textContent = (step + 1) + " / " + STEPS.length;
+                    document.getElementById("pyr-prev").disabled = step === 0;
+                    document.getElementById("pyr-next").disabled = step === STEPS.length - 1;
+                    document.getElementById("pyr-text").textContent = STEPS[step].text;
+                    describe();
+                    netLight();
+                    if (anim) cancelAnimationFrame(anim);
+                    anim = null;
+                    if (reduceMotion) {
+                        shown = step;
+                        draw();
+                        return;
+                    }
+                    var lastT = performance.now();
+                    (function frameStep(now) {
+                        var dt = Math.min(64, now - lastT);
+                        lastT = now;
+                        var dir = step > shown ? 1 : -1;
+                        shown += dir * dt / 650;
+                        if ((dir > 0 && shown >= step) || (dir < 0 && shown <= step)) shown = step;
+                        draw();
+                        anim = shown !== step ? requestAnimationFrame(frameStep) : null;
+                    })(lastT);
+                }
+                document.getElementById("pyr-prev").addEventListener("click", function () { goTo(step - 1); });
+                document.getElementById("pyr-next").addEventListener("click", function () { goTo(step + 1); });
+                document.getElementById("pyr-front").addEventListener("click", function () {
+                    cam.yaw = Math.PI / 2;
+                    cam.pitch = 0;
+                    draw();
+                });
+                document.getElementById("pyr-reset").addEventListener("click", function () {
+                    cam.yaw = HOME.yaw;
+                    cam.pitch = HOME.pitch;
+                    draw();
+                });
+                function pickAt(x, y) {
+                    for (var i = hits.length - 1; i >= 0; i--) {
+                        if (hits[i].faces.some(function (f) { return insidePoly([x, y], f.pts); })) return hits[i].t;
+                    }
+                    return null;
+                }
+                var drag = null;
+                canvas.addEventListener("pointerdown", function (e) {
+                    canvas.focus({ preventScroll: true });
+                    try { canvas.setPointerCapture(e.pointerId); } catch (error) { /* pointer already gone */ }
+                    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, yaw: cam.yaw, pitch: cam.pitch, moved: false };
+                    e.preventDefault();
+                });
+                canvas.addEventListener("pointermove", function (e) {
+                    if (!drag || e.pointerId !== drag.id) return;
+                    var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+                    if (Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
+                    if (!drag.moved) return;
+                    cam.yaw = drag.yaw + dx * 0.008;
+                    cam.pitch = clamp(drag.pitch + dy * 0.008, -1.3, 1.3);
+                    draw();
+                });
+                canvas.addEventListener("pointerup", function (e) {
+                    if (!drag || e.pointerId !== drag.id) return;
+                    if (!drag.moved) {
+                        var rect = canvas.getBoundingClientRect();
+                        var t = pickAt(e.clientX - rect.left, e.clientY - rect.top);
+                        if (t) {
+                            pick = { r: t.r, c: t.c };
+                            describe();
+                            draw();
+                        }
+                    }
+                    drag = null;
+                });
+                canvas.addEventListener("pointercancel", function () { drag = null; });
+                canvas.addEventListener("keydown", function (e) {
+                    var k = e.key, unit = Math.round(shown) <= 1 ? 2 : 1;
+                    if (e.shiftKey && k.indexOf("Arrow") === 0) {
+                        if (k === "ArrowLeft") pick.c = Math.max(0, pick.c - unit);
+                        else if (k === "ArrowRight") pick.c = Math.min(25, pick.c + unit);
+                        else if (k === "ArrowUp") pick.r = Math.max(0, pick.r - unit);
+                        else if (k === "ArrowDown") pick.r = Math.min(25, pick.r + unit);
+                        describe();
+                    } else if (k === "ArrowLeft") cam.yaw -= 0.1;
+                    else if (k === "ArrowRight") cam.yaw += 0.1;
+                    else if (k === "ArrowUp") cam.pitch = clamp(cam.pitch - 0.1, -1.3, 1.3);
+                    else if (k === "ArrowDown") cam.pitch = clamp(cam.pitch + 0.1, -1.3, 1.3);
+                    else return;
+                    e.preventDefault();
+                    draw();
+                });
+                canvas.addEventListener("focus", draw);
+                canvas.addEventListener("blur", draw);
+                if ("ResizeObserver" in window) new ResizeObserver(function () { measure(); draw(); }).observe(canvas);
+                else window.addEventListener("resize", function () { measure(); draw(); });
+                redraws.push(draw);
+                links.pyrGoTo = goTo;
+                measure();
+                goTo(0);
+                linked = true;
+            })();
+            // 02 Every layer of YOLOv3 as a plate, stacked into a pyramid (§2.3 and cfg/yolov3.cfg; backbone, neck and head
+            // as in YOLOv4 §2.1, the neck/head boundary as in MMDetection's YOLOv3). A plate's side stands for its resolution,
+            // one step per halving (not to scale); its thickness is its channels (to scale, 1024 channels = 0.5 units).
+            // Levels are resolutions. The backbone climbs from the image to 13 x 13, a stride-2 convolution and its residual
+            // blocks per level (bottom-up). The neck starts at the top, hands the features of layers 79 and 91 down a level
+            // (top-down) and concatenates them with the backbone map of that level (lateral: 86, 98); the head predicts on
+            // every level. From the front it reads as a layer map, with the layer numbers and the 13 -> 26 path ①-⑤ that the
+            // figure below takes step by step (links).
+            (function () {
+                var canvas = document.getElementById("fpn3d");
+                var ctx = canvas.getContext("2d");
+                var NT = {
+                    input: "입력 · 416 × 416 × 3",
+                    conv: "{no}번 · {k} × {k} × {C} · 출력 {S} × {S} × {C}",
+                    down: "{no}번 · 3 × 3 × {C}, 보폭 2 · 출력 {S} × {S} × {C} · 가로세로를 반으로 줄인다",
+                    res: "{no}번 · 잔차 블록 × {n}(1 × 1 × {h}, 3 × 3 × {C}, 지름길) · 출력 {S} × {S} × {C}",
+                    up: "{no}번 · 2배 업샘플 · {s} × {s} × {C} → {S} × {S} × {C} · 값마다 2 × 2 네 칸에 복사한다(학습하는 가중치 없음)",
+                    cat: "{no}번 · 이어 붙이기 · 업샘플한 {S} × {S} × {a} + {tap}번의 {S} × {S} × {b} = {S} × {S} × {C}",
+                    out: "{no}번 · 1 × 1 × 255 · 출력 {S} × {S} × 255 = 앵커 3 × (좌표 4 + 물체 여부 1 + 클래스 80) · 다음 층({next}번)이 이것을 {S} × {S} 격자의 예측으로 읽는다",
+                    n79: " · 넥의 13 × 13 줄 마지막 층. 헤드의 출력 합성곱(81번)보다 2층 앞. 26 × 26으로 가는 길이 여기서 갈라진다",
+                    n91: " · 넥의 26 × 26 줄 마지막 층. 헤드의 출력 합성곱(93번)보다 2층 앞. 52 × 52로 가는 길이 여기서 갈라진다",
+                    n84: " · 채널을 512에서 256으로 줄인다",
+                    n96: " · 채널을 256에서 128로 줄인다",
+                    r52: " · 마지막 36번이 52 × 52 예측 쪽에 이어 붙는다",
+                    r26: " · 마지막 61번이 26 × 26 예측 쪽에 이어 붙는다",
+                    r13: " · 마지막 74번이 Darknet-53의 끝이다",
+                    p1: "① 79번",
+                    p2: "② 1 × 1 × 256",
+                    p3: "③ 2배 업샘플",
+                    p4: "④ 61번과 이어 붙이기",
+                    p5: "⑤ 예측 26 × 26 × 255",
+                    lat36: "36번과 이어 붙이기",
+                    d96: "1 × 1 × 128",
+                    d97: "2배 업샘플",
+                    pred13: "예측 13 × 13 × 255",
+                    pred52: "예측 52 × 52 × 255",
+                    colBack: "백본 · Darknet-53",
+                    colBackNo: "0–74번",
+                    colNeck: "넥",
+                    colNeckNo: "75–79 · 83–91 · 95–103번",
+                    colHead: "헤드",
+                    colHeadNo: "80–82 · 92–94 · 104–106번",
+                    all: "넥이 받는 백본 지도: 74번(13 × 13 × 1024), 61번(26 × 26 × 512), 36번(52 × 52 × 256) · 헤드의 예측: 13 × 13, 26 × 26, 52 × 52 × 255",
+                    lvl13: "넥의 13 × 13 층(75~79번) · 74번(13 × 13 × 1024)을 받아 합성곱 5층으로 다듬는다 → 79번 13 × 13 × 512 · 여기서 헤드로, 그리고 26 × 26으로 가는 길이 갈라진다",
+                    lvl26: "넥의 26 × 26 층(83~91번) · 79번을 1 × 1 × 256과 2배 업샘플로 펼친 26 × 26 × 256(파랑)에 61번의 26 × 26 × 512(보라)를 이어 붙여 768채널(86번) → 합성곱 5층 → 91번 26 × 26 × 256",
+                    lvl52: "넥의 52 × 52 층(95~103번) · 91번을 1 × 1 × 128과 2배 업샘플로 펼친 52 × 52 × 128(초록)에 36번의 52 × 52 × 256(보라)을 이어 붙여 384채널(98번) → 합성곱 5층 → 103번 52 × 52 × 128",
+                    stack: "백본: 사진 416 × 416 × 3 → 0번 416 × 416 × 32 → 208 × 208 × 64 → 104 × 104 × 128 → 52 × 52 × 256 → 26 × 26 × 512 → 13 × 13 × 1024 · 해상도마다 보폭 2 합성곱(왼쪽 판)과 잔차 블록 묶음(오른쪽 판)",
+                    map: "{no}번 · {S} × {S} × {C}"
+                };
+                var STEPS = [
+                    { tab: "전체", small: "백본 · 넥 · 헤드", text: "층 하나를 판 하나로 그려 해상도 순서로 쌓은 YOLOv3 전체다. 왼쪽 백본은 사진에서 13 × 13까지 좁아지는 피라미드, 가운데 넥은 13 × 13에서 52 × 52로 넓어지며 내려오는 거꾸로 된 피라미드, 오른쪽 헤드는 세 높이의 예측이다. ‘층 지도’로 돌리면 정면에서 층 번호와 함께 본다." },
+                    { tab: "아래에서 위로", small: "0~74번", text: "백본(Darknet-53, 0~74번)이 사진을 반씩 다섯 번 줄인다. 해상도마다 보폭 2 합성곱 하나(왼쪽 판)와 잔차 블록 묶음(오른쪽 판)이고, 맨 아래는 사진과 0번 합성곱이다. 416 × 416이 13 × 13이 되는 동안 채널은 32에서 1024까지 늘어 판이 두꺼워진다. 넥이 받는 것은 위 세 묶음의 끝(보라: 36번, 61번, 74번)이다." },
+                    { tab: "13 × 13", small: "75~82번", text: "넥은 꼭대기에서 시작한다. 74번(13 × 13 × 1024)을 받아 합성곱 5층(75~79번, 1 × 1과 3 × 3을 번갈아)으로 다듬고, 헤드의 3 × 3과 1 × 1(80, 81번)이 13 × 13 × 255를 예측한다(파랑). 칸 하나가 사진의 32 × 32픽셀을 맡는다." },
+                    { tab: "26 × 26", small: "83~94번", text: "79번을 1 × 1 합성곱(84번)으로 256채널로 줄이고 2배로 펼쳐(85번) 26 × 26으로 내려 보낸다(위에서 아래로). 같은 높이의 61번(26 × 26 × 512, 보라)을 옆에서 받아 이어 붙이면 768채널이다(86번, 옆 연결). 합성곱 5층(87~91번)과 헤드(92, 93번)를 지나 26 × 26 × 255를 예측한다(초록)." },
+                    { tab: "52 × 52", small: "95~106번", text: "같은 설계를 한 번 더 한다. 91번을 1 × 1 합성곱(96번)으로 128채널로 줄이고 2배로 펼쳐(97번) 내려 보내고, 36번(52 × 52 × 256, 보라)과 이어 붙인다(384채널, 98번). 합성곱 5층(99~103번)과 헤드(104, 105번)를 지나 52 × 52 × 255를 예측한다(노랑). 칸 하나가 사진의 8 × 8픽셀이라 작은 물체를 맡는다." }
+                ];
+                // the layers, as in the cfg; a group of residual blocks is one plate
+                var LAYERS = {};
+                function layer(id, o) { LAYERS[id] = o; }
+                layer("in", { t: "in", S: 416, C: 3 });
+                layer("c0", { t: "conv", S: 416, C: 32, k: 3, no: "0" });
+                [[64, 1, 208, "1", "2–4"], [128, 2, 104, "5", "6–11"], [256, 8, 52, "12", "13–36"], [512, 8, 26, "37", "38–61"], [1024, 4, 13, "62", "63–74"]].forEach(function (s) {
+                    layer("d" + s[2], { t: "down", S: s[2], C: s[0], no: s[3] });
+                    layer("r" + s[2], { t: "res", S: s[2], C: s[0], n: s[1], no: s[4] });
+                });
+                // each level of the neck: five convolutions (1 x 1, 3 x 3, 1 x 1, 3 x 3, 1 x 1), then in the head a 3 x 3
+                // and the 1 x 1 output
+                function branch(S, c, first) {
+                    for (var j = 0; j < 6; j++) layer("L" + (first + j), { t: "conv", S: S, C: j % 2 ? 2 * c : c, k: j % 2 ? 3 : 1, no: String(first + j) });
+                    layer("L" + (first + 6), { t: "out", S: S, C: 255, k: 1, no: String(first + 6) });
+                }
+                branch(13, 512, 75);
+                layer("L84", { t: "conv", S: 13, C: 256, k: 1, no: "84" });
+                layer("L85", { t: "up", S: 26, C: 256, no: "85" });
+                layer("L86", { t: "cat", S: 26, C: 768, no: "86", a: 256, b: 512, tap: 61 });
+                branch(26, 256, 87);
+                layer("L96", { t: "conv", S: 26, C: 128, k: 1, no: "96" });
+                layer("L97", { t: "up", S: 52, C: 128, no: "97" });
+                layer("L98", { t: "cat", S: 52, C: 384, no: "98", a: 128, b: 256, tap: 36 });
+                branch(52, 128, 99);
+                function blockText(id) {
+                    var L = LAYERS[id];
+                    var v = { no: L.no, k: L.k, C: L.C, S: L.S, n: L.n, h: L.C / 2, s: L.S / 2, a: L.a, b: L.b, tap: L.tap, next: Number(L.no) + 1 };
+                    if (L.t === "in") return NT.input;
+                    if (L.t === "down") return fill(NT.down, v);
+                    if (L.t === "res") return fill(NT.res, v) + (NT["r" + L.S] || "");
+                    if (L.t === "up") return fill(NT.up, v);
+                    if (L.t === "cat") return fill(NT.cat, v);
+                    if (L.t === "out") return fill(NT.out, v);
+                    return fill(NT.conv, v) + (NT["n" + L.no] || "");
+                }
+                // the part of the 13 -> 26 path (or of its repeat to 52) a layer is on; the figure below lights these
+                function partOf(id) {
+                    if (id === "L79") return "p1";
+                    if (id === "L84") return "p2";
+                    if (id === "L85") return "p3";
+                    if (id === "L86" || id === "r26") return "p4";
+                    if (/^L(8[7-9]|9[0-3])$/.test(id)) return "p5";
+                    if (/^L(9[6-8]|99|10[0-5])$/.test(id) || id === "r52") return "p52";
+                    return "";
+                }
+
+                // plates: side per resolution (one step per halving), thickness per channel (1024 channels = 0.5)
+                function side(S) { return 0.5 + 0.22 * Math.log2(S / 13); }
+                function thick(C) { return Math.max(0.035, C / 2048); }
+                var FLOOR = { 416: 0, 208: 0.6, 104: 1.3, 52: 2.1, 26: 3.95, 13: 6.1 };
+                var ZN = 8.9, ZH = 14.7;
+                function slab(S, C, z, y0) { var s = side(S) / 2; return { c: [0, y0 + thick(C) / 2, z], h: [s, thick(C) / 2, s] }; }
+                // a neck row's six slots: the five convolutions take slots 2-6, the concatenation slot 1
+                function slot(S, k) { return ZN + (k - 3.5) * (side(S) + 0.2); }
+                // between two rows: the 1 x 1 under the row's last layer, the 2x upsampling over the concatenation below
+                var Y85 = FLOOR[26] + thick(768) + 0.35, Y84 = Y85 + thick(256) + 0.85;
+                var Y97 = FLOOR[52] + thick(384) + 0.35, Y96 = Y97 + thick(128) + 0.85;
+                var LEVEL_COLOR = { 13: "--accent", 26: "--accent-green", 52: "--accent-warn" };
+                // Each plate: where it ends up (at), where it waits before its step (from), the step it arrives in, and when
+                // within that step it moves (win): what comes down from the row above first, the backbone map from the side,
+                // then the row's convolutions one by one, then the head.
+                var pieces = [], byId = {};
+                function add(p) {
+                    p.part = partOf(p.info);
+                    pieces.push(p);
+                    byId[p.id] = p;
+                    return p;
+                }
+                // backbone: per level a stride-2 convolution (left) and its residual blocks (right); at the bottom the image
+                // and layer 0. The three ends the neck takes are violet.
+                [[416, "in", "c0"], [208, "d208", "r208"], [104, "d104", "r104"], [52, "d52", "r52"], [26, "d26", "r26"], [13, "d13", "r13"]].forEach(function (b) {
+                    var S = b[0], o = side(S) / 2 + 0.06;
+                    add({ id: b[1], info: b[1], col: "b", level: S, color: "--line-strong", at: slab(S, LAYERS[b[1]].C, -o, FLOOR[S]) });
+                    add({ id: b[2], info: b[2], col: "b", level: S, color: S <= 52 ? "--violet" : "--line-strong", at: slab(S, LAYERS[b[2]].C, o, FLOOR[S]) });
+                });
+                [[13, 75, 2], [26, 87, 3], [52, 99, 4]].forEach(function (r) {
+                    var S = r[0], s = r[2], late = S !== 13;
+                    if (S === 26) {
+                        add({ id: "L84", info: "L84", col: "n", level: 19, arrive: s, win: [0, 0.2], color: "--accent", at: slab(13, 256, slot(13, 6), Y84), from: slab(13, 256, slot(13, 6), FLOOR[13]) });
+                        add({ id: "L85", info: "L85", col: "n", level: 19, arrive: s, win: [0.12, 0.34], color: "--accent", at: slab(26, 256, slot(26, 1), Y85), from: slab(13, 256, slot(13, 6), Y84) });
+                        add({ id: "L86l", info: "L86", col: "n", level: 26, arrive: s, win: [0.22, 0.46], color: "--violet", at: slab(26, 512, slot(26, 1), FLOOR[26]), from: byId.r26.at });
+                        add({ id: "L86u", info: "L86", col: "n", level: 26, arrive: s, win: [0.3, 0.48], color: "--accent", at: slab(26, 256, slot(26, 1), FLOOR[26] + thick(512)), from: slab(26, 256, slot(26, 1), Y85) });
+                    }
+                    if (S === 52) {
+                        add({ id: "L96", info: "L96", col: "n", level: 39, arrive: s, win: [0, 0.2], color: "--accent-green", at: slab(26, 128, slot(26, 6), Y96), from: slab(26, 128, slot(26, 6), FLOOR[26]) });
+                        add({ id: "L97", info: "L97", col: "n", level: 39, arrive: s, win: [0.12, 0.34], color: "--accent-green", at: slab(52, 128, slot(52, 1), Y97), from: slab(26, 128, slot(26, 6), Y96) });
+                        add({ id: "L98l", info: "L98", col: "n", level: 52, arrive: s, win: [0.22, 0.46], color: "--violet", at: slab(52, 256, slot(52, 1), FLOOR[52]), from: byId.r52.at });
+                        add({ id: "L98u", info: "L98", col: "n", level: 52, arrive: s, win: [0.3, 0.48], color: "--accent-green", at: slab(52, 128, slot(52, 1), FLOOR[52] + thick(256)), from: slab(52, 128, slot(52, 1), Y97) });
+                    }
+                    for (var j = 0; j < 5; j++) {
+                        var id = "L" + (r[1] + j), t0 = late ? 0.5 + 0.06 * j : 0.05 + 0.09 * j;
+                        add({ id: id, info: id, col: "n", level: S, arrive: s, win: [t0, t0 + 0.22], color: LEVEL_COLOR[S], at: slab(S, LAYERS[id].C, slot(S, j + 2), FLOOR[S]) });
+                    }
+                    // the head: a 3 x 3 and the 1 x 1 output, side by side
+                    [r[1] + 5, r[1] + 6].forEach(function (no, j) {
+                        var id = "L" + no, z = ZH + (j - 0.5) * (side(S) + 0.2);
+                        add({ id: id, info: id, col: "h", level: S, arrive: s, win: [0.76 + 0.1 * j, 0.92 + 0.08 * j], color: LEVEL_COLOR[S], at: slab(S, LAYERS[id].C, z, FLOOR[S]), from: slab(S, LAYERS[id].C, z - 0.8, FLOOR[S]) });
+                    });
+                });
+                var BUILD = [0, 0, 13, 26, 52];   // the level each step builds
+                function weight(p, s) {
+                    if (s === 0) return 1;
+                    if (p.col === "b") return s === 1 || p.level === BUILD[s] ? 1 : 0.35;
+                    if (s < p.arrive) return 0;
+                    if (s === p.arrive) return 1;
+                    return p.col === "n" && p.level === BUILD[s - 1] ? 0.7 : 0.35;   // the row above hands its features down
+                }
+                function stateAt(p, s) {
+                    var here = s === 0 || !p.arrive || s >= p.arrive;
+                    return { g: here ? p.at : p.from || p.at, a: weight(p, s), ghost: p.arrive && s > 0 && s < p.arrive ? 1 : 0 };
+                }
+
+                // Arrows, drawn over the plates, with how strongly each step shows them; a part lights with the figure
+                // below, and an arrow that comes with a step's plates follows their timing.
+                function top(g) { return g.c[1] + g.h[1]; }
+                function bot(g) { return g.c[1] - g.h[1]; }
+                function at(id) { return byId[id].at; }
+                var X = -0.15, ARROWS = [];
+                function arrow(o) { ARROWS.push(o); return o; }
+                // bottom-up: from the end of each level to the stride-2 convolution of the next (inner sides, clear of the
+                // layer numbers over the middle of the plates)
+                [["c0", "d208"], ["r208", "d104"], ["r104", "d52"], ["r52", "d26"], ["r26", "d13"]].forEach(function (q) {
+                    var a = at(q[0]), b = at(q[1]);
+                    arrow({ pts: [[X, top(a) + 0.02, a.c[2] - 0.6 * a.h[2]], [X, bot(b) - 0.04, b.c[2] + 0.6 * b.h[2]]], color: "--muted", w: [1, 1, 0.3, 0.3, 0.3] });
+                });
+                // across a level: from the backbone into the neck (lateral), from the neck into the head
+                function across(a, b, y, o) {
+                    o.pts = [[-0.2, y, at(a).c[2] + at(a).h[2] + 0.1], [-0.2, y, at(b).c[2] - at(b).h[2] - 0.1]];
+                    return arrow(o);
+                }
+                across("r13", "L75", FLOOR[13] + 0.12, { color: "--violet", w: [1, 0, 1, 0.35, 0.35], arrive: 2, win: [0, 0.3] });
+                var lat26 = across("r26", "L86l", FLOOR[26] + thick(512) / 2, { color: "--violet", dash: true, part: "p4", w: [1, 0, 0, 1, 0.35], arrive: 3, win: [0.2, 0.46] });
+                var lat52 = across("r52", "L98l", FLOOR[52] + thick(256) / 2, { color: "--violet", dash: true, part: "p52", w: [1, 0, 0, 0, 1], arrive: 4, win: [0.2, 0.46] });
+                across("L79", "L80", FLOOR[13] + 0.12, { color: "--accent", w: [1, 0, 1, 0.35, 0.35], arrive: 2, win: [0.62, 0.8] });
+                across("L91", "L92", FLOOR[26] + 0.06, { color: "--accent-green", part: "p5", w: [1, 0, 0, 1, 0.35], arrive: 3, win: [0.7, 0.88] });
+                across("L103", "L104", FLOOR[52] + 0.03, { color: "--accent-warn", part: "p52", w: [1, 0, 0, 0, 1], arrive: 4, win: [0.7, 0.88] });
+                // top-down: 79 -> 84, back to the start of the row below -> 85, 85 -> 86; the same from 91
+                var z79 = at("L79").c[2], z85 = at("L85").c[2], z91 = at("L91").c[2], z97 = at("L97").c[2];
+                var e1 = (Y84 + top(at("L85"))) / 2, e2 = (Y96 + top(at("L97"))) / 2;
+                arrow({ pts: [[X, FLOOR[13] - 0.03, z79], [X, top(at("L84")) + 0.05, z79]], color: "--accent", part: "p2", w: [1, 0, 0, 1, 0.35], arrive: 3, win: [0, 0.2] });
+                arrow({ pts: [[X, Y84 - 0.03, z79], [X, e1, z79], [X, e1, z85], [X, top(at("L85")) + 0.05, z85]], color: "--accent", part: "p3", w: [1, 0, 0, 1, 0.35], arrive: 3, win: [0.1, 0.34] });
+                arrow({ pts: [[X, Y85 - 0.03, z85], [X, FLOOR[26] + thick(768) + 0.05, z85]], color: "--accent", part: "p4", w: [1, 0, 0, 1, 0.35], arrive: 3, win: [0.3, 0.48] });
+                arrow({ pts: [[X, FLOOR[26] - 0.03, z91], [X, top(at("L96")) + 0.05, z91]], color: "--accent-green", part: "p52", w: [1, 0, 0, 0, 1], arrive: 4, win: [0, 0.2] });
+                arrow({ pts: [[X, Y96 - 0.03, z91], [X, e2, z91], [X, e2, z97], [X, top(at("L97")) + 0.05, z97]], color: "--accent-green", part: "p52", w: [1, 0, 0, 0, 1], arrive: 4, win: [0.1, 0.34] });
+                arrow({ pts: [[X, Y97 - 0.03, z97], [X, FLOOR[52] + thick(384) + 0.05, z97]], color: "--accent-green", part: "p52", w: [1, 0, 0, 0, 1], arrive: 4, win: [0.3, 0.48] });
+                // the backbone's outline: the edges between the pairs of plates of two levels, drawn under everything
+                var ENVELOPE = [416, 208, 104, 52, 26, 13].map(function (S) {
+                    var C = LAYERS[S === 416 ? "c0" : "r" + S].C;
+                    return { S: S, hx: side(S) / 2, hz: side(S) + 0.06, y0: FLOOR[S], y1: FLOOR[S] + thick(C) };
+                });
+
+                // Labels. Always: the column names and the three predictions. From the front (the layer map): the column
+                // ranges, the rows, the layer numbers and the 13 -> 26 path, ①-⑤ moving the figure below.
+                var LABELS = [];
+                function label(o) { LABELS.push(o); return o; }
+                // names and ranges start at each column's left edge, so the ranges never run into each other
+                var LEFT = [-(side(416) + 0.06), slot(52, 1) - side(52) / 2, ZH - side(52) - 0.1];
+                [[NT.colBack, NT.colBackNo, LEFT[0]], [NT.colNeck, NT.colNeckNo, LEFT[1]], [NT.colHead, NT.colHeadNo, LEFT[2]]].forEach(function (c) {
+                    label({ text: c[0], p: [0, FLOOR[13] + 1.75, c[2]], align: "left", kind: "name" });
+                    label({ text: c[1], p: [0, FLOOR[13] + 1.35, c[2]], align: "left", kind: "num", map: true });
+                });
+                label({ text: NT.pred13, of: "L81", side: "right", kind: "pred", color: "--accent" });
+                label({ text: NT.p5, of: "L93", side: "right", kind: "pred", color: "--accent-green", part: "p5", go: 5 });
+                label({ text: NT.pred52, of: "L105", side: "right", kind: "pred", color: "--accent-warn", part: "p52" });
+                [416, 208, 104, 52, 26, 13].forEach(function (S) {
+                    label({ text: S + " × " + S, p: [0, FLOOR[S] + 0.1, -2.0], align: "right", kind: "row", map: true });
+                });
+                [["r52", "36"], ["r26", "61"], ["r13", "74"], ["L75", "75"], ["L91", "91"], ["L103", "103"], ["L80", "80"], ["L81", "81"], ["L92", "92"], ["L93", "93"], ["L104", "104"], ["L105", "105"]].forEach(function (q) {
+                    label({ text: q[1], of: q[0], side: "above", kind: "num", map: true });
+                });
+                [["L86l", "86", "below"], ["L98l", "98", "below"], ["L84", "84", "right"], ["L85", "85", "left"], ["L96", "96", "right"], ["L97", "97", "left"]].forEach(function (q) {
+                    label({ text: q[1], of: q[0], side: q[2], kind: "num", map: true });
+                });
+                label({ text: NT.p1, of: "L79", side: "above", align: "left", dx: -8, kind: "lbl", map: true, part: "p1", go: 0 });
+                label({ text: NT.p2, of: "L84", side: "left", kind: "lbl", map: true, part: "p2", go: 1 });
+                label({ text: NT.p3, of: "L85", side: "right", kind: "lbl", map: true, part: "p3", go: 2 });
+                label({ text: NT.p4, along: lat26, kind: "lbl", map: true, part: "p4", go: 4 });
+                label({ text: NT.d96, of: "L96", side: "left", kind: "lbl", map: true, part: "p52" });
+                label({ text: NT.d97, of: "L97", side: "right", kind: "lbl", map: true, part: "p52" });
+                label({ text: NT.lat36, along: lat52, kind: "lbl", map: true, part: "p52" });
+
+                var DEF = ["all", "stack", "lvl13", "lvl26", "lvl52"];   // the line under the picture at each step
+                var GO = { p1: 0, p2: 1, p3: 2, p4: 4, p5: 5, p52: 5 };  // plates on the path move the figure below
+                var step = 0, shown = 0, anim = null, camAnim = null, hover = null, pinned = null, ext = null, extNewer = false;
+                var VIEWS = { pyramid: { yaw: 1.12, pitch: 0.34 }, map: { yaw: Math.PI / 2, pitch: 0.12 } };
+                var FONTS = { name: "700 13px ", num: "10px ", row: "11px ", lbl: "12.5px ", pred: "600 12px " };
+                var cam = { yaw: VIEWS.pyramid.yaw, pitch: VIEWS.pyramid.pitch, zoom: 1 };
+                var CENTER = [0, 3, 6], W = 1, H = 1, dpr = 1, hits = [], labelHits = [];
+                // the camera of the other 3D figures: turn by yaw about y, then tilt by pitch; orthographic
+                function turnBy(p, yaw, pitch) {
+                    var cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+                    var x = cy * p[0] + sy * p[2], z = -sy * p[0] + cy * p[2];
+                    return [x, cp * p[1] - sp * z, sp * p[1] + cp * z];
+                }
+                function turn(p) { return turnBy(p, cam.yaw, cam.pitch); }
+                function project(p) {
+                    var q = turn([p[0] - CENTER[0], p[1] - CENTER[1], p[2] - CENTER[2]]);
+                    return [W / 2 + q[0] * cam.zoom, H / 2 - q[1] * cam.zoom, q[2]];
+                }
+                // How far from the front a camera is: 1 from the front (labels shown), 0 at an angle.
+                function frontness(yaw, pitch) {
+                    return clamp(1 - Math.abs(yaw - Math.PI / 2) / 0.3 - Math.max(0, Math.abs(pitch) - 0.2) / 0.3, 0, 1);
+                }
+                // The zoom and the turning point that fit the figure with its labels at an angle (labels approximated by
+                // points where their text ends).
+                function fitFor(yaw, pitch) {
+                    var pts = [];
+                    pieces.forEach(function (p) {
+                        [-1, 1].forEach(function (a) { [-1, 1].forEach(function (b) { [-1, 1].forEach(function (c) {
+                            pts.push([p.at.c[0] + a * p.at.h[0], p.at.c[1] + b * p.at.h[1], p.at.c[2] + c * p.at.h[2]]);
+                        }); }); });
+                    });
+                    ARROWS.forEach(function (ar) { pts = pts.concat(ar.pts); });
+                    [0, ZN, ZH].forEach(function (z) { pts.push([0, FLOOR[13] + 2, z]); });
+                    var lo = [Infinity, Infinity], hi = [-Infinity, -Infinity];
+                    pts.forEach(function (p) {
+                        var q = turnBy(p, yaw, pitch);
+                        lo = [Math.min(lo[0], q[0]), Math.min(lo[1], q[1])];
+                        hi = [Math.max(hi[0], q[0]), Math.max(hi[1], q[1])];
+                    });
+                    // Text sticks out by its width in pixels: the prediction tags to the right of the heads, and from the front
+                    // the row names to the left of the backbone. Widen the box by it at the zoom it gives, a few times over.
+                    var out = [];
+                    ctx.font = FONTS.pred + css("--sans");
+                    [["L81", NT.pred13], ["L93", NT.p5], ["L105", NT.pred52]].forEach(function (q) {
+                        var g = byId[q[0]].at, r = -Infinity;
+                        [-1, 1].forEach(function (a) { [-1, 1].forEach(function (c) {
+                            r = Math.max(r, turnBy([g.c[0] + a * g.h[0], g.c[1], g.c[2] + c * g.h[2]], yaw, pitch)[0]);
+                        }); });
+                        out.push([r, ctx.measureText(q[1]).width + 20 + 16]);
+                    });
+                    if (frontness(yaw, pitch) > 0.5) {
+                        ctx.font = FONTS.row + css("--mono");
+                        [416, 13].forEach(function (S) {
+                            out.push([turnBy([0, FLOOR[S], -2.0], yaw, pitch)[0], -(ctx.measureText(S + " × " + S).width + 8)]);
+                        });
+                    }
+                    var gl = lo[0], gh = hi[0], zoom = 1;
+                    for (var it = 0; it < 4; it++) {
+                        zoom = Math.min(W / (hi[0] - lo[0] + 0.6), H / (hi[1] - lo[1] + 0.6));
+                        lo[0] = gl;
+                        hi[0] = gh;
+                        out.forEach(function (q) {
+                            if (q[1] > 0) hi[0] = Math.max(hi[0], q[0] + q[1] / zoom);
+                            else lo[0] = Math.min(lo[0], q[0] + q[1] / zoom);
+                        });
+                    }
+                    zoom = Math.min(W / (hi[0] - lo[0] + 0.6), H / (hi[1] - lo[1] + 0.6));
+                    var X0 = (lo[0] + hi[0]) / 2, Y0 = (lo[1] + hi[1]) / 2;
+                    var cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch), z1 = -sp * Y0;
+                    return { zoom: zoom, center: [cy * X0 - sy * z1, cp * Y0, sy * X0 + cy * z1] };
+                }
+                var FACES = [
+                    { n: [1, 0, 0], v: [[1, -1, -1], [1, 1, -1], [1, 1, 1], [1, -1, 1]] },
+                    { n: [-1, 0, 0], v: [[-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1]] },
+                    { n: [0, 1, 0], v: [[-1, 1, -1], [-1, 1, 1], [1, 1, 1], [1, 1, -1]] },
+                    { n: [0, -1, 0], v: [[-1, -1, -1], [1, -1, -1], [1, -1, 1], [-1, -1, 1]] },
+                    { n: [0, 0, 1], v: [[-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]] },
+                    { n: [0, 0, -1], v: [[-1, -1, -1], [-1, 1, -1], [1, 1, -1], [1, -1, -1]] }
+                ];
+                var LIGHT = [-0.35, 0.8, 0.5].map(function (v, i, a) { return v / Math.hypot(a[0], a[1], a[2]); });
+                function cuboid(c, h) {
+                    var out = [];
+                    FACES.forEach(function (f) {
+                        if (turn(f.n)[2] <= 1e-6) return;
+                        out.push({
+                            pts: f.v.map(function (s) { return project([c[0] + s[0] * h[0], c[1] + s[1] * h[1], c[2] + s[2] * h[2]]); }),
+                            lit: 0.62 + 0.38 * Math.max(0, f.n[0] * LIGHT[0] + f.n[1] * LIGHT[1] + f.n[2] * LIGHT[2])
+                        });
+                    });
+                    return out;
+                }
+                function ease(u) { return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
+                function mix(a, b, u) { return a + (b - a) * u; }
+                function lerp(a, b, u) { return [mix(a[0], b[0], u), mix(a[1], b[1], u), mix(a[2], b[2], u)]; }
+                function windowed(u, win) { return ease(clamp((u - win[0]) / (win[1] - win[0]), 0, 1)); }
+                function poly(pts) {
+                    ctx.beginPath();
+                    pts.forEach(function (p, i) { if (i) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
+                    ctx.closePath();
+                }
+                function isLit(part) { return !!(part && ext && ext.parts.indexOf(part) >= 0); }
+                // where every plate is now, between two steps
+                function settle(s0, s1, u) {
+                    pieces.forEach(function (p) {
+                        var a = stateAt(p, s0), b = stateAt(p, s1);
+                        var k = p.win && s1 === p.arrive ? windowed(u, p.win) : ease(u);
+                        p.now = { c: lerp(a.g.c, b.g.c, k), h: lerp(a.g.h, b.g.h, k), a: mix(a.a, b.a, k), ghost: mix(a.ghost, b.ghost, ease(u)) };
+                    });
+                }
+                function drawEnvelope(s0, s1, u) {
+                    ctx.beginPath();
+                    for (var i = 0; i + 1 < ENVELOPE.length; i++) {
+                        var lo = ENVELOPE[i], hi = ENVELOPE[i + 1];
+                        [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(function (k) {
+                            var p = project([k[0] * lo.hx, lo.y1, k[1] * lo.hz]), q = project([k[0] * hi.hx, hi.y0, k[1] * hi.hz]);
+                            ctx.moveTo(p[0], p[1]);
+                            ctx.lineTo(q[0], q[1]);
+                        });
+                    }
+                    ctx.strokeStyle = alpha(css("--line-strong"), mix([0.6, 0.8, 0.35, 0.35, 0.35][s0], [0.6, 0.8, 0.35, 0.35, 0.35][s1], ease(u)));
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+                function drawArrows(s0, s1, u) {
+                    var text = css("--text");
+                    ARROWS.forEach(function (ar) {
+                        var k = ar.win && s1 === ar.arrive ? windowed(u, ar.win) : ease(u);
+                        var a = mix(ar.w[s0], ar.w[s1], k);
+                        ar.now = a;
+                        if (a < 0.02) return;
+                        var pts = ar.pts.map(project), n = pts.length, q = pts[n - 1], p = pts[n - 2];
+                        var dx = q[0] - p[0], dy = q[1] - p[1], len = Math.hypot(dx, dy);
+                        if (len < 2) return;
+                        var ux = dx / len, uy = dy / len, on = isLit(ar.part);
+                        ctx.strokeStyle = ctx.fillStyle = on ? alpha(text, Math.max(a, 0.9)) : alpha(css(ar.color), a);
+                        ctx.lineWidth = on ? 2.6 : 1.8;
+                        ctx.setLineDash(ar.dash ? [6, 4] : []);
+                        ctx.beginPath();
+                        pts.forEach(function (pt, i) {
+                            var x = pt[0], y = pt[1];
+                            if (i === n - 1) { x -= ux * Math.min(7, len); y -= uy * Math.min(7, len); }
+                            if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+                        });
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.beginPath();
+                        ctx.moveTo(q[0], q[1]);
+                        ctx.lineTo(q[0] - ux * 9 - uy * 4.5, q[1] - uy * 9 + ux * 4.5);
+                        ctx.lineTo(q[0] - ux * 9 + uy * 4.5, q[1] - uy * 9 - ux * 4.5);
+                        ctx.closePath();
+                        ctx.fill();
+                    });
+                }
+                // a label's place on screen: beside its plate (now), on an arrow, or at a fixed point
+                function anchorOf(lb) {
+                    if (lb.p) return project(lb.p);
+                    if (lb.along) {   // under the arrow, ending short of its tip, so it never reaches the numbers by the plate
+                        var e = project(lb.along.pts[lb.along.pts.length - 1]);
+                        return [e[0] - 16, e[1] + 13];
+                    }
+                    var n = byId[lb.of].now, pts = [];
+                    [-1, 1].forEach(function (a) { [-1, 1].forEach(function (b) { [-1, 1].forEach(function (c) {
+                        pts.push(project([n.c[0] + a * n.h[0], n.c[1] + b * n.h[1], n.c[2] + c * n.h[2]]));
+                    }); }); });
+                    var xs = pts.map(function (q) { return q[0]; }), ys = pts.map(function (q) { return q[1]; });
+                    var cx = (Math.min.apply(null, xs) + Math.max.apply(null, xs)) / 2, cy = (Math.min.apply(null, ys) + Math.max.apply(null, ys)) / 2;
+                    if (lb.side === "above") return [cx, Math.min.apply(null, ys) - 9];
+                    if (lb.side === "below") return [cx, Math.max.apply(null, ys) + 9];
+                    if (lb.side === "left") return [Math.min.apply(null, xs) - 7, cy];
+                    return [Math.max.apply(null, xs) + 8, cy];
+                }
+                function drawLabels(s0, s1, u, f) {
+                    labelHits = [];
+                    var small = W < 560, settled = Math.abs(shown - Math.round(shown)) < 0.08;
+                    LABELS.forEach(function (lb) {
+                        var a = lb.map ? f : 1;
+                        if (lb.of) a *= clamp(byId[lb.of].now.a * 1.6, 0, 1);
+                        if (lb.along) a *= clamp(lb.along.now * 1.6, 0, 1);
+                        if (small && lb.kind !== "name") a = 0;
+                        if (a < 0.03) return;
+                        var on = isLit(lb.part) || (hover && byId[lb.of] && byId[lb.of].info === hover);
+                        var mono = lb.kind === "num" || lb.kind === "row";
+                        ctx.font = (on && lb.kind === "lbl" ? "700 " : "") + FONTS[lb.kind] + css(mono ? "--mono" : "--sans");
+                        var p = anchorOf(lb), w = ctx.measureText(lb.text).width;
+                        p = [p[0] + (lb.dx || 0), p[1]];
+                        var side = lb.side || "", align = lb.align || (side === "left" || lb.along ? "right" : side === "right" ? "left" : "center");
+                        if (lb.kind === "pred") w += 20;
+                        var x = align === "left" ? p[0] : align === "right" ? p[0] - w : p[0] - w / 2;
+                        ctx.globalAlpha = a;
+                        if (lb.kind === "pred") {
+                            var h = 22, y = p[1] - h / 2, r = h / 2;
+                            ctx.beginPath();
+                            ctx.moveTo(x + r, y);
+                            ctx.arcTo(x + w, y, x + w, y + h, r);
+                            ctx.arcTo(x + w, y + h, x, y + h, r);
+                            ctx.arcTo(x, y + h, x, y, r);
+                            ctx.arcTo(x, y, x + w, y, r);
+                            ctx.closePath();
+                            ctx.fillStyle = css("--panel");
+                            ctx.fill();
+                            ctx.strokeStyle = on ? css("--text") : css(lb.color);
+                            ctx.lineWidth = on ? 2.2 : 1.5;
+                            ctx.stroke();
+                            ctx.fillStyle = css(lb.color);
+                            ctx.textAlign = "center";
+                            ctx.textBaseline = "middle";
+                            ctx.fillText(lb.text, x + w / 2, y + h / 2 + 0.5);
+                        } else {
+                            ctx.fillStyle = on || lb.kind === "name" ? css("--text") : lb.kind === "num" ? css("--faint") : css("--muted");
+                            ctx.textAlign = "left";
+                            ctx.textBaseline = "middle";
+                            ctx.fillText(lb.text, x, p[1]);
+                        }
+                        ctx.globalAlpha = 1;
+                        if (lb.go != null && a > 0.5) labelHits.push({ lb: lb, box: [x - 3, p[1] - 11, w + 6, 22] });
+                    });
+                    // at rest on the bottom-up step, at an angle: the size of every backbone level
+                    if (!small && settled && Math.round(shown) === 1 && f < 0.5) {
+                        [[416, "c0"], [208, "r208"], [104, "r104"], [52, "r52"], [26, "r26"], [13, "r13"]].forEach(function (b) {
+                            var L = LAYERS[b[1]], q = null;
+                            [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(function (k) {
+                                var g = byId[b[1]].at, r = project([g.c[0] + k[0] * g.h[0], g.c[1], g.c[2] + k[1] * g.h[2]]);
+                                if (!q || r[0] > q[0]) q = r;
+                            });
+                            tag(fill(NT.map, { no: L.no, S: b[0], C: L.C }), [q[0] + 10, q[1]], b[0] <= 52 ? "--violet" : null);
+                        });
+                    }
+                }
+                function tag(text, p, color) {
+                    ctx.font = "12px " + css("--mono");
+                    var w = ctx.measureText(text).width + 12, h = 20;
+                    var x = clamp(p[0], 2, W - w - 2), y = clamp(p[1] - h / 2, 2, H - h - 2);
+                    ctx.fillStyle = alpha(css("--panel"), 0.92);
+                    ctx.fillRect(x, y, w, h);
+                    ctx.strokeStyle = css(color || "--line-strong");
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+                    ctx.fillStyle = css("--text");
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(text, x + w / 2, y + h / 2 + 0.5);
+                }
+                function draw() {
+                    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                    ctx.clearRect(0, 0, W, H);
+                    var s0 = Math.floor(shown), s1 = Math.min(s0 + 1, STEPS.length - 1), u = shown - s0;
+                    settle(s0, s1, u);
+                    drawEnvelope(s0, s1, u);
+                    var items = [];
+                    pieces.forEach(function (p) {
+                        var n = p.now;
+                        if (n.ghost > 0.01) items.push({ p: p, c: p.at.c, h: p.at.h, a: 0.1 * n.ghost, ghost: true });
+                        if (n.a > 0.01) items.push({ p: p, c: n.c, h: n.h, a: n.a });
+                    });
+                    items.forEach(function (it) { it.depth = project(it.c)[2]; });
+                    items.sort(function (x, y) { return x.depth - y.depth; });
+                    var edge = css("--bg"), text = css("--text"), sel = hover || pinned;
+                    hits = [];
+                    items.forEach(function (it) {
+                        var col = rgb(css(it.p.color)), on = !it.ghost && (sel === it.p.info || isLit(it.p.part));
+                        var faces = cuboid(it.c, it.h);
+                        faces.forEach(function (f) {
+                            poly(f.pts);
+                            var k = on ? Math.min(1.25, f.lit + 0.15) : f.lit;
+                            ctx.fillStyle = "rgba(" + Math.round(Math.min(255, col[0] * k)) + "," + Math.round(Math.min(255, col[1] * k)) + "," + Math.round(Math.min(255, col[2] * k)) + "," + (it.ghost ? it.a : 0.9 * it.a) + ")";
+                            ctx.fill();
+                            ctx.strokeStyle = on ? text : alpha(edge, 0.55 * it.a);
+                            ctx.lineWidth = on ? 1.8 : 0.7;
+                            ctx.stroke();
+                        });
+                        if (!it.ghost && it.a > 0.2) hits.push({ p: it.p, faces: faces });
+                    });
+                    drawArrows(s0, s1, u);
+                    drawLabels(s0, s1, u, frontness(cam.yaw, cam.pitch));
+                    if (document.activeElement === canvas) {
+                        ctx.strokeStyle = css("--accent");
+                        ctx.lineWidth = 3;
+                        ctx.strokeRect(1.5, 1.5, W - 3, H - 3);
+                    }
+                }
+                function measure() {
+                    var rect = canvas.getBoundingClientRect();
+                    if (!rect.width) return;
+                    dpr = window.devicePixelRatio || 1;
+                    W = rect.width;
+                    H = rect.height;
+                    canvas.width = Math.round(W * dpr);
+                    canvas.height = Math.round(H * dpr);
+                    var t = fitFor(cam.yaw, cam.pitch);
+                    cam.zoom = t.zoom;
+                    CENTER = t.center;
+                }
+                var detail = document.getElementById("fpn-detail");
+                function describe() {
+                    var id = hover || pinned;
+                    detail.textContent = id ? blockText(id) : ext && extNewer ? blockText(ext.block) : NT[DEF[step]];
+                }
+                // the two views: at an angle (the pyramid) and from the front (the layer map)
+                var btnPyramid = document.getElementById("fpn-pyramid"), btnMap = document.getElementById("fpn-map");
+                function pressed(name) {
+                    btnPyramid.setAttribute("aria-pressed", String(name === "pyramid"));
+                    btnMap.setAttribute("aria-pressed", String(name === "map"));
+                }
+                function setView(name, instant) {
+                    pressed(name);
+                    var v = VIEWS[name], to = fitFor(v.yaw, v.pitch), from = { yaw: cam.yaw, pitch: cam.pitch, zoom: cam.zoom, center: CENTER.slice() };
+                    if (camAnim) cancelAnimationFrame(camAnim);
+                    camAnim = null;
+                    if (instant || reduceMotion) {
+                        cam.yaw = v.yaw;
+                        cam.pitch = v.pitch;
+                        cam.zoom = to.zoom;
+                        CENTER = to.center;
+                        draw();
+                        return;
+                    }
+                    var t0 = performance.now();
+                    (function frame(now) {
+                        var k = ease(clamp((now - t0) / 700, 0, 1));
+                        cam.yaw = mix(from.yaw, v.yaw, k);
+                        cam.pitch = mix(from.pitch, v.pitch, k);
+                        cam.zoom = mix(from.zoom, to.zoom, k);
+                        CENTER = lerp(from.center, to.center, k);
+                        draw();
+                        camAnim = k < 1 ? requestAnimationFrame(frame) : null;
+                    })(t0);
+                }
+                btnPyramid.addEventListener("click", function () { setView("pyramid"); });
+                btnMap.addEventListener("click", function () { setView("map"); });
+                var tabsEl = document.getElementById("fpn-tabs");
+                function goTo(target) {
+                    step = clamp(target, 0, STEPS.length - 1);
+                    stepTabs(tabsEl, STEPS, step, goTo);
+                    document.getElementById("fpn-pos").textContent = (step + 1) + " / " + STEPS.length;
+                    document.getElementById("fpn-prev").disabled = step === 0;
+                    document.getElementById("fpn-next").disabled = step === STEPS.length - 1;
+                    document.getElementById("fpn-text").textContent = STEPS[step].text;
+                    pinned = null;
+                    extNewer = false;
+                    describe();
+                    if (anim) cancelAnimationFrame(anim);
+                    anim = null;
+                    if (reduceMotion) {
+                        shown = step;
+                        draw();
+                        return;
+                    }
+                    var lastT = performance.now();
+                    (function frameStep(now) {
+                        var dt = Math.min(64, now - lastT);
+                        lastT = now;
+                        var dir = step > shown ? 1 : -1, span = Math.abs(step - shown);
+                        // a step that builds a level takes longer than one that only dims or shows; long jumps do not drag on
+                        var ms = dir > 0 && span <= 1 && step >= 2 ? 1500 : 800;
+                        shown += dir * dt / ms * Math.max(1, span);
+                        if ((dir > 0 && shown >= step) || (dir < 0 && shown <= step)) shown = step;
+                        draw();
+                        anim = shown !== step ? requestAnimationFrame(frameStep) : null;
+                    })(lastT);
+                }
+                document.getElementById("fpn-prev").addEventListener("click", function () { goTo(step - 1); });
+                document.getElementById("fpn-next").addEventListener("click", function () { goTo(step + 1); });
+                // the figure below lights its step here (links.lit) and moves when ①-⑤ or a plate on the path is pressed
+                links.light = function () {
+                    ext = links.lit;
+                    extNewer = true;
+                    pinned = null;
+                    describe();
+                    draw();
+                };
+                function pickAt(x, y) {
+                    for (var i = labelHits.length - 1; i >= 0; i--) {
+                        var b = labelHits[i].box;
+                        if (x >= b[0] && x <= b[0] + b[2] && y >= b[1] && y <= b[1] + b[3]) return { label: labelHits[i].lb };
+                    }
+                    for (var j = hits.length - 1; j >= 0; j--) {
+                        if (hits[j].faces.some(function (f) { return insidePoly([x, y], f.pts); })) return { piece: hits[j].p };
+                    }
+                    return null;
+                }
+                function pointAt(e) {
+                    var rect = canvas.getBoundingClientRect();
+                    return pickAt(e.clientX - rect.left, e.clientY - rect.top);
+                }
+                var drag = null;
+                canvas.addEventListener("pointerdown", function (e) {
+                    canvas.focus({ preventScroll: true });
+                    try { canvas.setPointerCapture(e.pointerId); } catch (error) { /* pointer already gone */ }
+                    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, yaw: cam.yaw, pitch: cam.pitch, moved: false };
+                    e.preventDefault();
+                });
+                canvas.addEventListener("pointermove", function (e) {
+                    if (!drag) {
+                        if (e.pointerType !== "mouse") return;
+                        var hit = pointAt(e), info = hit && hit.piece ? hit.piece.info : null;
+                        if (info !== hover) {
+                            hover = info;
+                            describe();
+                            draw();
+                        }
+                        return;
+                    }
+                    if (e.pointerId !== drag.id) return;
+                    var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+                    if (Math.abs(dx) + Math.abs(dy) > 4 && !drag.moved) {
+                        drag.moved = true;
+                        if (camAnim) cancelAnimationFrame(camAnim);
+                        camAnim = null;
+                        pressed(null);
+                    }
+                    if (!drag.moved) return;
+                    cam.yaw = drag.yaw + dx * 0.008;
+                    cam.pitch = clamp(drag.pitch + dy * 0.008, -1.3, 1.3);
+                    draw();
+                });
+                canvas.addEventListener("pointerup", function (e) {
+                    if (!drag || e.pointerId !== drag.id) return;
+                    if (!drag.moved) {
+                        var hit = pointAt(e);
+                        if (hit && hit.label) {
+                            if (links.pyrGoTo) links.pyrGoTo(hit.label.go);
+                        } else if (hit && hit.piece) {
+                            var p = hit.piece, to = p.info === "r26" ? 3 : GO[p.part];
+                            if (to != null && links.pyrGoTo) links.pyrGoTo(to);
+                            pinned = p.info;
+                        } else {
+                            pinned = null;
+                        }
+                        describe();
+                        draw();
+                    }
+                    drag = null;
+                });
+                canvas.addEventListener("pointercancel", function () { drag = null; });
+                canvas.addEventListener("pointerleave", function () {
+                    if (hover === null) return;
+                    hover = null;
+                    describe();
+                    draw();
+                });
+                canvas.addEventListener("keydown", function (e) {
+                    var k = e.key;
+                    if (k === "ArrowLeft") cam.yaw -= 0.1;
+                    else if (k === "ArrowRight") cam.yaw += 0.1;
+                    else if (k === "ArrowUp") cam.pitch = clamp(cam.pitch - 0.1, -1.3, 1.3);
+                    else if (k === "ArrowDown") cam.pitch = clamp(cam.pitch + 0.1, -1.3, 1.3);
+                    else return;
+                    e.preventDefault();
+                    if (camAnim) cancelAnimationFrame(camAnim);
+                    camAnim = null;
+                    pressed(null);
+                    draw();
+                });
+                canvas.addEventListener("focus", draw);
+                canvas.addEventListener("blur", draw);
+                if ("ResizeObserver" in window) new ResizeObserver(function () { measure(); draw(); }).observe(canvas);
+                else window.addEventListener("resize", function () { measure(); draw(); });
+                redraws.push(draw);
+                measure();
+                setView("pyramid", true);
+                goTo(0);
+            })();
+
+            // 03 What each of the 10,647 predictions learns from one ground truth (§2.1): the best of the nine anchors
+            // (yolo_layer.c compares shapes on a common center) learns objectness 1, the box and the class; a prediction whose
+            // prior overlaps the truth by more than .5 without being the best is ignored; every other one learns 0.
+            // Overlaps are measured with the boxes at the start of training: each anchor at the center of its cell.
+            (function () {
+                var dog = { name: "개", emoji: "🐕", cx: 205, cy: 228, base: [130, 84] };
+                dog.w = dog.base[0];
+                dog.h = dog.base[1];
+                var step = 0, drag = null, liveTimer = null;
+                var canvas = document.getElementById("tg-canvas");
+                var side = document.getElementById("tg-side");
+                var slider = document.getElementById("tg-size");
+                var live = document.getElementById("tg-live");
+                var IGNORE = 0.5, TOTAL = 10647;
+                var STEPS = [
+                    { tab: "앵커 9개와 견주기", small: "모양만 본다", text: "① 정답 박스와 앵커 9개를 중심을 맞춰 겹쳐 본다. 위치는 보지 않고 모양만 비교한다. 겹침(IOU)이 가장 큰 앵커 하나가 이 개를 맡는다." },
+                    { tab: "맡은 박스: 물체 여부 1", small: "좌표·클래스도 배운다", text: "② 맡은 앵커가 속한 격자에서 개의 중심이 든 칸, 그 칸의 그 앵커 박스 하나가 물체 여부 1을 배운다. 좌표와 클래스도 이 박스만 배운다." },
+                    { tab: "무시", small: "0.5보다 많이 겹친 앵커", text: "③ 가장 잘 맞지는 않지만 정답과 0.5보다 많이 겹치는 앵커의 박스는 무시한다. 물체 여부 벌점도, 좌표·클래스 벌점도 없다." },
+                    { tab: "나머지: 물체 여부 0", small: "좌표·클래스는 없다", text: "④ 나머지 박스는 모두 물체 여부 0을 배운다. 물체가 없다고 배울 뿐, 좌표와 클래스는 배우지 않는다." }
+                ];
+                var TT = {
+                    count2: " 지금 크기와 자리에서는 {k}개다.",
+                    count3: " 지금은 {n}개다.",
+                    none: "지금은 없다. 개를 키워 보자. 큰 물체일수록 이웃 칸의 앵커도 많이 겹친다.",
+                    igRow: "{S} × {S} · {r}행 {c}열 · 앵커 {w} × {h} · IOU {iou}",
+                    more: "외 {n}개",
+                    kvGrid: "격자",
+                    kvCell: "칸",
+                    kvAnchor: "앵커",
+                    kvObj: "물체 여부 목표",
+                    kvObjV: "1 (YOLOv2였다면 예측 박스와 정답의 IOU)",
+                    kvXY: "좌표 목표 σ(t<sub>x</sub>), σ(t<sub>y</sub>)",
+                    kvWH: "t<sub>w</sub>, t<sub>h</sub>",
+                    kvCls: "클래스 목표",
+                    kvClsV: "개 1, 나머지 79개 0",
+                    iouHead: "앵커 9개와 겹치는 정도(중심을 맞춘 IOU)",
+                    one: "물체 여부 1 · 좌표 · 클래스",
+                    ign: "무시 · 벌점 없음",
+                    zero: "물체 여부 0",
+                    tallyHead: "예측 박스 10,647개",
+                    igHead: "무시하는 박스: {k}개",
+                    live: "{S} × {S} 격자 {r}행 {c}열 칸의 앵커 {w} × {h}가 맡는다. 무시 {k}개, 물체 여부 0은 {z}개."
+                };
+                function priorsOver(o) {
+                    // every prediction's box at the start of training, with its IOU to the truth
+                    var out = [], gt = { cx: o.cx, cy: o.cy, w: o.w, h: o.h };
+                    GRIDS.forEach(function (G, g) {
+                        var st = G.stride;
+                        var r0 = Math.max(0, Math.floor((o.cy - o.h / 2 - 200) / st)), r1 = Math.min(G.S - 1, Math.floor((o.cy + o.h / 2 + 200) / st));
+                        var c0 = Math.max(0, Math.floor((o.cx - o.w / 2 - 200) / st)), c1 = Math.min(G.S - 1, Math.floor((o.cx + o.w / 2 + 200) / st));
+                        for (var r = r0; r <= r1; r++) {
+                            for (var c = c0; c <= c1; c++) {
+                                G.mask.forEach(function (n) {
+                                    var p = { cx: (c + 0.5) * st, cy: (r + 0.5) * st, w: ANCHORS[n][0], h: ANCHORS[n][1] };
+                                    var v = boxIou(p, gt);
+                                    if (v > 0) out.push({ g: g, r: r, c: c, n: n, iou: v, box: p });
+                                });
+                            }
+                        }
+                    });
+                    return out;
+                }
+                function analyse() {
+                    var n = best9(dog.w, dog.h), g = gridOf(n), cell = cellOf(dog, g), st = GRIDS[g].stride;
+                    var ignored = priorsOver(dog).filter(function (p) {
+                        return p.iou > IGNORE && !(p.g === g && p.r === cell[0] && p.c === cell[1] && p.n === n);
+                    }).sort(function (a, b) { return b.iou - a.iou; });
+                    return { n: n, g: g, cell: cell, st: st, ignored: ignored };
+                }
+                var A = analyse();
+                var render = stage(canvas, Z, function (ctx) {
+                    ctx.clearRect(0, 0, Z, Z);
+                    ctx.fillStyle = css("--panel-soft");
+                    ctx.fillRect(0, 0, Z, Z);
+                    // from step 2 on, colors tell the role: green learns 1, yellow is ignored (as in the tally beside)
+                    var G = GRIDS[A.g], col = css("--accent-green"), ign = css("--accent-warn");
+                    var x0 = dog.cx - dog.w / 2, y0 = dog.cy - dog.h / 2;
+                    if (step === 3) {
+                        // every grid's cell centers: the predictions that learn objectness 0
+                        GRIDS.forEach(function (Gq) {
+                            ctx.fillStyle = alpha(css("--muted"), Gq.S === 52 ? 0.28 : 0.45);
+                            for (var r = 0; r < Gq.S; r++) for (var c = 0; c < Gq.S; c++) ctx.fillRect((c + 0.5) * Gq.stride - 1, (r + 0.5) * Gq.stride - 1, 2, 2);
+                        });
+                    }
+                    if (step >= 1) {
+                        if (step === 1) gridLines(ctx, G.S, Z, alpha(css("--line-strong"), G.S === 52 ? 0.45 : 0.7));
+                        ctx.fillStyle = alpha(col, 0.3);
+                        ctx.fillRect(A.cell[1] * A.st, A.cell[0] * A.st, A.st, A.st);
+                    }
+                    drawEmoji(ctx, dog.emoji, x0, y0, dog.w, dog.h);
+                    if (step === 0) {
+                        // the nine anchors on the truth's center, colored by their grid
+                        ANCHORS.forEach(function (a, n) {
+                            var on = n === A.n;
+                            ctx.setLineDash(on ? [] : [4, 4]);
+                            ctx.strokeStyle = on ? css(GRIDS[gridOf(n)].color) : alpha(css(GRIDS[gridOf(n)].color), 0.75);
+                            ctx.lineWidth = on ? 3 : 1.2;
+                            ctx.strokeRect(dog.cx - a[0] / 2, dog.cy - a[1] / 2, a[0], a[1]);
+                        });
+                        ctx.setLineDash([]);
+                    }
+                    if (step >= 2) {
+                        A.ignored.forEach(function (p) {
+                            ctx.strokeStyle = alpha(ign, step === 2 ? 0.95 : 0.75);
+                            ctx.lineWidth = step === 2 ? 1.8 : 1.2;
+                            ctx.setLineDash([5, 3]);
+                            ctx.strokeRect(p.box.cx - p.box.w / 2, p.box.cy - p.box.h / 2, p.box.w, p.box.h);
+                            ctx.setLineDash([]);
+                            ctx.beginPath();
+                            ctx.arc(p.box.cx, p.box.cy, 3, 0, Math.PI * 2);
+                            ctx.fillStyle = ign;
+                            ctx.fill();
+                        });
+                    }
+                    if (step >= 1) {
+                        // the prior of the slot that learns objectness 1, at its cell center
+                        var a = ANCHORS[A.n], ccx = (A.cell[1] + 0.5) * A.st, ccy = (A.cell[0] + 0.5) * A.st;
+                        ctx.setLineDash([8, 4]);
+                        ctx.strokeStyle = col;
+                        ctx.lineWidth = 2.6;
+                        ctx.strokeRect(ccx - a[0] / 2, ccy - a[1] / 2, a[0], a[1]);
+                        ctx.setLineDash([]);
+                        dot(ctx, ccx, ccy, col);
+                    }
+                    ctx.strokeStyle = css("--text");
+                    ctx.lineWidth = 2.4;
+                    ctx.strokeRect(x0, y0, dog.w, dog.h);
+                    labelChip(ctx, dog.name, x0, y0, dog.h, css("--text"));
+                    dot(ctx, dog.cx, dog.cy, css("--text"));
+                    if (document.activeElement === canvas) {
+                        ctx.strokeStyle = css("--accent");
+                        ctx.lineWidth = 3;
+                        ctx.strokeRect(1.5, 1.5, Z - 3, Z - 3);
+                    }
+                });
+                // The side panel changes with the step; it is rebuilt from these pieces.
+                var barsBox = document.createElement("div");
+                var setBars = anchorBars(barsBox);
+                function kv(rows) {
+                    return '<dl class="kv">' + rows.map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + r[1] + "</dd>"; }).join("") + "</dl>";
+                }
+                function tally(k) {
+                    var z = TOTAL - 1 - k;
+                    var w1 = Math.max(2, 100 / TOTAL), wk = Math.max(k ? 2 : 0, 100 * k / TOTAL);
+                    return '<p class="muted small" style="margin: 0;">' + TT.tallyHead + "</p>" +
+                        '<div class="stack" aria-hidden="true"><i style="width: ' + w1 + '%; background: var(--accent-green);"></i><i style="width: ' + wk + '%; background: var(--accent-warn);"></i><i style="flex: 1; background: var(--line-strong);"></i></div>' +
+                        '<div class="tally">' +
+                        '<div class="one' + (step === 1 ? " now" : "") + '"><span>' + TT.one + "</span><b>1</b></div>" +
+                        '<div class="skip0' + (step === 2 ? " now" : "") + '"><span>' + TT.ign + "</span><b>" + num(k) + "</b></div>" +
+                        '<div class="' + (step === 3 ? "now" : "") + '"><span>' + TT.zero + "</span><b>" + num(z) + "</b></div>" +
+                        "</div>";
+                }
+                function updateSide() {
+                    var G = GRIDS[A.g], a = ANCHORS[A.n], k = A.ignored.length;
+                    if (step === 0) {
+                        if (barsBox.parentNode !== side) {
+                            side.innerHTML = '<p class="muted small" style="margin: 0;">' + TT.iouHead + "</p>";
+                            side.appendChild(barsBox);
+                        }
+                        setBars(dog.w, dog.h);
+                        return;
+                    }
+                    var html = "";
+                    if (step === 1) {
+                        var fx = dog.cx / A.st - A.cell[1], fy = dog.cy / A.st - A.cell[0];
+                        html += kv([
+                            [TT.kvGrid, fill(T.grid, { S: G.S })],
+                            [TT.kvCell, fill(T.cell, { r: A.cell[0] + 1, c: A.cell[1] + 1 })],
+                            [TT.kvAnchor, fill(T.anchor, { w: a[0], h: a[1] })],
+                            [TT.kvObj, TT.kvObjV],
+                            [TT.kvXY, fixed(fx, 2) + ", " + fixed(fy, 2)],
+                            [TT.kvWH, fixed(Math.log(dog.w / a[0]), 2) + ", " + fixed(Math.log(dog.h / a[1]), 2)],
+                            [TT.kvCls, TT.kvClsV]
+                        ]);
+                    }
+                    if (step === 2) {
+                        html += '<p class="big" style="margin: 0 0 4px;">' + fill(TT.igHead, { k: num(k) }) + "</p>";
+                        if (!k) html += '<p class="muted small">' + TT.none + "</p>";
+                        else {
+                            html += '<ul class="ignored">' + A.ignored.slice(0, 6).map(function (p) {
+                                var Gp = GRIDS[p.g];
+                                return '<li><i style="background: var(' + Gp.color + ');"></i>' + fill(TT.igRow, { S: Gp.S, r: p.r + 1, c: p.c + 1, w: ANCHORS[p.n][0], h: ANCHORS[p.n][1], iou: fixed(p.iou, 2) }) + "</li>";
+                            }).join("") + (k > 6 ? "<li>" + fill(TT.more, { n: k - 6 }) + "</li>" : "") + "</ul>";
+                        }
+                    }
+                    html += tally(k);
+                    side.innerHTML = html;
+                }
+                function update(announce) {
+                    A = analyse();
+                    render();
+                    updateSide();
+                    var k = A.ignored.length;
+                    var extra = step === 2 ? fill(TT.count2, { k: num(k) }) : step === 3 ? fill(TT.count3, { n: num(TOTAL - 1 - k) }) : "";
+                    document.getElementById("tg-text").textContent = STEPS[step].text + extra;
+                    document.getElementById("tg-size-out").textContent = fill(T.px, { w: Math.round(dog.w), h: Math.round(dog.h) });
+                    slider.value = String(valueOf(Math.max(dog.w, dog.h)));
+                    if (announce) {
+                        clearTimeout(liveTimer);
+                        var G = GRIDS[A.g], a = ANCHORS[A.n];
+                        liveTimer = setTimeout(function () {
+                            live.textContent = fill(TT.live, { S: G.S, r: A.cell[0] + 1, c: A.cell[1] + 1, w: a[0], h: a[1], k: num(k), z: num(TOTAL - 1 - k) });
+                        }, 250);
+                    }
+                }
+                var tabsEl = document.getElementById("tg-tabs");
+                function goTo(i) {
+                    step = clamp(i, 0, STEPS.length - 1);
+                    stepTabs(tabsEl, STEPS, step, goTo);
+                    document.getElementById("tg-pos").textContent = (step + 1) + " / " + STEPS.length;
+                    document.getElementById("tg-prev").disabled = step === 0;
+                    document.getElementById("tg-next").disabled = step === STEPS.length - 1;
+                    update(false);
+                }
+                document.getElementById("tg-prev").addEventListener("click", function () { goTo(step - 1); });
+                document.getElementById("tg-next").addEventListener("click", function () { goTo(step + 1); });
+                function point(e) {
+                    var rect = canvas.getBoundingClientRect();
+                    return { x: (e.clientX - rect.left) / rect.width * Z, y: (e.clientY - rect.top) / rect.height * Z };
+                }
+                function place(cx, cy) {
+                    dog.cx = clamp(cx, dog.w / 2, Z - dog.w / 2);
+                    dog.cy = clamp(cy, dog.h / 2, Z - dog.h / 2);
+                }
+                canvas.addEventListener("pointerdown", function (e) {
+                    var p = point(e);
+                    if (Math.abs(p.x - dog.cx) > dog.w / 2 + 10 || Math.abs(p.y - dog.cy) > dog.h / 2 + 10) return;
+                    drag = { id: e.pointerId, dx: p.x - dog.cx, dy: p.y - dog.cy };
+                    try { canvas.setPointerCapture(e.pointerId); } catch (error) { /* pointer already gone */ }
+                    canvas.style.cursor = "grabbing";
+                    e.preventDefault();
+                });
+                canvas.addEventListener("pointermove", function (e) {
+                    if (!drag || e.pointerId !== drag.id) return;
+                    var p = point(e);
+                    place(p.x - drag.dx, p.y - drag.dy);
+                    update(true);
+                });
+                function stop() {
+                    drag = null;
+                    canvas.style.cursor = "";
+                }
+                canvas.addEventListener("pointerup", stop);
+                canvas.addEventListener("pointercancel", stop);
+                canvas.addEventListener("keydown", function (e) {
+                    var stepSize = e.shiftKey ? 32 : 4;
+                    if (e.key === "ArrowLeft") place(dog.cx - stepSize, dog.cy);
+                    else if (e.key === "ArrowRight") place(dog.cx + stepSize, dog.cy);
+                    else if (e.key === "ArrowUp") place(dog.cx, dog.cy - stepSize);
+                    else if (e.key === "ArrowDown") place(dog.cx, dog.cy + stepSize);
+                    else if (e.key === "+" || e.key === "=") resize(dog, sideOf(clamp(valueOf(Math.max(dog.w, dog.h)) + 3, 0, 100)));
+                    else if (e.key === "-" || e.key === "_") resize(dog, sideOf(clamp(valueOf(Math.max(dog.w, dog.h)) - 3, 0, 100)));
+                    else return;
+                    e.preventDefault();
+                    update(true);
+                });
+                canvas.addEventListener("focus", render);
+                canvas.addEventListener("blur", render);
+                slider.addEventListener("input", function () {
+                    resize(dog, sideOf(Number(slider.value)));
+                    update(true);
+                });
+                goTo(0);
+            })();
+
+            // 03 Classes: softmax over the classes (YOLOv2) against one logistic per class (§2.2), for a box whose truth is
+            // both "person" and "woman".
+            (function () {
+                var NAMES = ["사람", "여성", "개"];
+                var CT = {
+                    sentence: "softmax: 사람 {s0}, 여성 {s1} · 로지스틱: 사람 {g0}, 여성 {g1}. ",
+                    soft: "softmax는 두 정답이 확률 1을 나눠 가져 둘 다 0.5를 넘을 수 없다.",
+                    both: "로지스틱에서는 사람과 여성이 둘 다 0.5를 넘는다. 둘 다 정답이라는 것을 그대로 나타낸다.",
+                    low: "두 점수를 함께 올려 보자. 로지스틱은 둘 다 1에 가까워질 수 있다."
+                };
+                var inputs = [0, 1, 2].map(function (i) { return document.getElementById("cls-" + i); });
+                function bars(id) {
+                    var box = document.getElementById(id);
+                    return NAMES.map(function (n) {
+                        var row = document.createElement("div");
+                        row.className = "bar";
+                        row.innerHTML = '<span class="name">' + n + '</span><span class="track"><span class="fill"></span></span><output>0.00</output>';
+                        box.appendChild(row);
+                        return row;
+                    });
+                }
+                var soft = bars("cls-soft"), sig = bars("cls-sig");
+                function setRow(row, v, on) {
+                    row.className = "bar" + (on ? " on" : "");
+                    row.querySelector(".fill").style.width = (v * 100) + "%";
+                    row.querySelector("output").textContent = fixed(v, 2);
+                }
+                function update() {
+                    var z = inputs.map(function (el) { return Number(el.value); });
+                    inputs.forEach(function (el, i) { document.getElementById("cls-" + i + "-out").textContent = fixed(z[i], 1); });
+                    var mx = Math.max.apply(null, z), ex = z.map(function (v) { return Math.exp(v - mx); });
+                    var sum = ex.reduce(function (a, b) { return a + b; }, 0);
+                    var p = ex.map(function (v) { return v / sum; }), q = z.map(sigmoid);
+                    soft.forEach(function (row, i) { setRow(row, p[i], i < 2); });
+                    sig.forEach(function (row, i) { setRow(row, q[i], i < 2); });
+                    var s = fill(CT.sentence, { s0: fixed(p[0], 2), s1: fixed(p[1], 2), g0: fixed(q[0], 2), g1: fixed(q[1], 2) });
+                    s += q[0] > 0.5 && q[1] > 0.5 ? CT.soft + " " + CT.both : CT.low;
+                    document.getElementById("cls-text").textContent = s;
+                }
+                inputs.forEach(function (el) { el.addEventListener("input", update); });
+                update();
+            })();
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-10-03","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 64 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (준비 중)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "준비 중";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "지금 이 글";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>

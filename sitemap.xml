@@ -23,25 +23,31 @@
     <!-- Knowledge: add each page when it is published, and update lastmod when it changes. -->
     <url>
         <loc>https://hughqlee.com/knowledge/</loc>
-        <lastmod>2026-10-02</lastmod>
+        <lastmod>2026-10-06</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://hughqlee.com/knowledge/yolo-v1/</loc>
-        <lastmod>2026-10-02</lastmod>
+        <lastmod>2026-10-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://hughqlee.com/knowledge/iou-nms/</loc>
-        <lastmod>2026-10-02</lastmod>
+        <lastmod>2026-10-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://hughqlee.com/knowledge/yolo-v2/</loc>
-        <lastmod>2026-10-02</lastmod>
+        <lastmod>2026-10-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://hughqlee.com/knowledge/yolo-v3/</loc>
+        <lastmod>2026-10-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -49,25 +55,31 @@
     <!-- Knowledge in English: generated from the Korean pages (System/build_en.py in the Knowledge vault). -->
     <url>
         <loc>https://hughqlee.com/knowledge/en/</loc>
-        <lastmod>2026-10-02</lastmod>
+        <lastmod>2026-10-06</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://hughqlee.com/knowledge/en/yolo-v1/</loc>
-        <lastmod>2026-10-02</lastmod>
+        <lastmod>2026-10-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://hughqlee.com/knowledge/en/iou-nms/</loc>
-        <lastmod>2026-10-02</lastmod>
+        <lastmod>2026-10-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://hughqlee.com/knowledge/en/yolo-v2/</loc>
-        <lastmod>2026-10-02</lastmod>
+        <lastmod>2026-10-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://hughqlee.com/knowledge/en/yolo-v3/</loc>
+        <lastmod>2026-10-06</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
