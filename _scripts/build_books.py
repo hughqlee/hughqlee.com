@@ -19,8 +19,12 @@ Ratings are out of three stars: 3 = recommended, 2 = pretty good but not quite s
     the English page shows the Korean review unless reviewEn is given.
   - readers: [{"nick", "read": "YYYY-MM", "stars": 1-3, "line" (optional), "for" (optional)}].
 
-The shelf is ordered like a library: by genre (in the order of the genres table), then by series
-and volume, then by title.
+Only books Hugh has rated appear on the pages: Hugh lends a book only after reading it, so a book whose
+hugh.stars is still null stays in books.json, unlisted, until it gets stars. The shelf shows the most stars
+first, and within the same stars the newest id first, so a newly added book (the next id, at the end of the
+file) comes first among its peers.
+Visitors can narrow it with a switch for available books only and with genre chips: all genres are on
+at first, any number can be switched on or off, and a book shows when any of its genres is on.
 
 The file holds public data only: names, contacts, refund accounts, and addresses stay in the
 private loan ledger, never in this repository, which is public. The script stops on a book that
@@ -57,7 +61,6 @@ ROBOTS_DRAFT = '<meta name="robots" content="noindex, follow">'
 
 STATUSES = ("available", "reserved", "on-loan", "not-lent")
 STARS = (3, 2, 1)  # best first, the order the tallies show them in
-VIEWS = ("all", "available", "pick", "consensus", "split")
 OPTIONAL_TEXT = ("subtitle", "original", "translator", "series", "isbn")
 PRIVATE = {"name", "realname", "phone", "tel", "mobile", "email", "account", "bank", "address", "contact"}
 LINE_MAX, FOR_MAX = 100, 30
@@ -73,16 +76,15 @@ UI = {
         "mood": {3: "추천도서", 2: "꽤 좋았지만 만족까진 아니야", 1: "별로 권하지 않아"},
         "stars": lambda n: f"별 3개 중 {n}개",
         "star_count": lambda n: f"별 {n}개",
-        "view": {"all": "전체", "available": "대여 가능", "pick": "Hugh 추천",
-                 "consensus": "독자 모두 추천", "split": "의견이 갈린 책"},
-        "view_group": "보기",
+        "available_only": "대여 가능한 책만",
+        "no_match": "조건에 맞는 책이 없다. 장르를 하나 이상 켜거나 '대여 가능한 책만'을 끄면 된다.",
         "genre_group": "장르",
         "count": "{shown}권 / 전체 {total}권",
         "deposit": lambda won: f"보증금 {won:,}원",
         "loans": lambda n: f"대여 {n}회",
         "waitlist": lambda n: f"대기 {n}명",
         "tally": lambda n, average: f"빌려 읽은 독자 {n}명 · 평균 {average:.1f}점",
-        "stats": lambda s: (f"장서 <b>{s['books']}</b>권 · 대여 가능 <b>{s['available']}</b>권 · "
+        "stats": lambda s: (f"책 <b>{s['books']}</b>권 · 대여 가능 <b>{s['available']}</b>권 · "
                             f"누적 대여 <b>{s['loans']}</b>회 · 감상 <b>{s['reviews']}</b>개"),
         "consensus": "독자 모두 추천",
         "split": "의견이 갈림 · 토론 후보",
@@ -96,9 +98,8 @@ UI = {
         "mood": {3: "Recommended", 2: "Pretty good, not quite satisfying", 1: "Not really recommended"},
         "stars": lambda n: f"{n} of 3 stars",
         "star_count": lambda n: plural(n, "star"),
-        "view": {"all": "All", "available": "Available", "pick": "Hugh recommends",
-                 "consensus": "Every reader recommends", "split": "Split verdicts"},
-        "view_group": "View",
+        "available_only": "Available only",
+        "no_match": "No books match. Switch on at least one genre, or turn off \"Available only\".",
         "genre_group": "Genre",
         "count": "{shown} of {total} books",
         "deposit": lambda won: f"Deposit ₩{won:,}",
@@ -147,7 +148,7 @@ def knowledge_titles():
 
 
 def load():
-    """books/books.json, checked against the shelf's rules and shelved by genre, series, and title."""
+    """books/books.json, checked against the shelf's rules; most stars first, then newest id."""
     try:
         data = json.loads(DATA.read_text(encoding="utf-8"))
     except json.JSONDecodeError as error:
@@ -211,8 +212,8 @@ def load():
             check(not found, f"remove {', '.join(sorted(found))}: personal data belongs in the private loan ledger, not in this public file")
     if problems:
         sys.exit("books/books.json:\n  " + "\n  ".join(problems))
-    order = {key: i for i, key in enumerate(genres)}
-    books.sort(key=lambda b: (order[b["genres"][0]], b.get("series", b["title"]), b.get("volume", 0), b["title"]))
+    books.sort(key=lambda b: b["id"], reverse=True)  # newest first within each star level (sorts are stable)
+    books.sort(key=lambda b: b["hugh"].get("stars") or 0, reverse=True)
     for book in books:
         book["readers"].sort(key=lambda r: r["read"])
     return data.get("draft", False), genres, books, titles
@@ -334,24 +335,26 @@ def shelf(lang, books, genres, titles):
 
 
 def filters(lang, books, genres):
-    """View and genre buttons, hidden until the page script runs. Views no book is in are left out."""
+    """The available-only switch and the genre chips (all on at first), hidden until the page script runs.
+    The page script keeps the counts in step with the switch."""
     if not books:
         return []
     ui = UI[lang]
+    available = sum(1 for b in books if "available" in views_of(b))
     lines = ['<div id="filters" class="filters" hidden>',
-             f'    <div class="filter-row" role="group" aria-label="{attr(ui["view_group"])}">']
-    for view in VIEWS:
-        n = sum(1 for b in books if view == "all" or view in views_of(b))
-        if n:
-            pressed = "true" if view == "all" else "false"
-            lines.append(f'        <button type="button" data-view="{view}" aria-pressed="{pressed}">{text(ui["view"][view])} <span class="n">{n}</span></button>')
-    lines += ['    </div>', f'    <div class="filter-row" role="group" aria-label="{attr(ui["genre_group"])}">']
+             '    <div class="filter-head">',
+             '        <button type="button" id="available-only" class="switch" role="switch" aria-checked="false">'
+             '<span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>'
+             f'{text(ui["available_only"])} <span class="n">{available}</span></button>',
+             f'        <p id="filter-count" class="filter-count" aria-live="polite" data-format="{attr(ui["count"])}"></p>',
+             '    </div>',
+             f'    <div class="filter-row" role="group" aria-label="{attr(ui["genre_group"])}">']
     for key, labels in genres.items():
         n = sum(1 for b in books if key in b["genres"])
         if n:
-            lines.append(f'        <button type="button" data-genre="{attr(key)}" aria-pressed="false">{text(labels[lang])} <span class="n">{n}</span></button>')
+            lines.append(f'        <button type="button" data-genre="{attr(key)}" aria-pressed="true">{text(labels[lang])} <span class="n">{n}</span></button>')
     lines += ['    </div>',
-              f'    <p id="filter-count" class="filter-count" aria-live="polite" data-format="{attr(ui["count"])}"></p>',
+              f'    <p id="filter-empty" class="filter-empty" hidden>{text(ui["no_match"])}</p>',
               '</div>']
     return lines
 
@@ -440,6 +443,8 @@ def replace_block(doc, name, lines, indent):
 
 def build():
     draft, genres, books, titles = load()
+    unread = [b for b in books if not b["hugh"].get("stars")]
+    books = [b for b in books if b["hugh"].get("stars")]  # not read yet: kept in the file, not listed or lent
     outputs = {}
     for lang, path in PAGE_FILE.items():
         doc = path.read_text(encoding="utf-8")
@@ -450,16 +455,18 @@ def build():
         doc = replace_block(doc, "filters", filters(lang, books, genres), "            ")
         doc = replace_block(doc, "shelf", shelf(lang, books, genres, titles), "            ")
         outputs[path] = doc
-    return outputs, draft
+    return outputs, draft, unread
 
 
 def main():
     check = "--check" in sys.argv[1:]
-    outputs, draft = build()
+    outputs, draft, unread = build()
     changed = [path for path, doc in outputs.items() if path.read_text(encoding="utf-8") != doc]
     names_changed = ", ".join(str(path.relative_to(ROOT)) for path in changed)
     if draft:
         print('note: books/books.json has "draft": true: both pages show a draft notice and stay noindex until it is false')
+    if unread:
+        print(f"note: {len(unread)} unrated book(s) are kept in books/books.json but not listed until they get stars")
     if check:
         print("up to date" if not changed else f"out of date: {names_changed} (run without --check)")
         sys.exit(1 if changed else 0)
