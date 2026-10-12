@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 not_found | Hugh Q Lee</title>
-    <meta name="description" content="The requested path is not part of this portfolio.">
+    <meta name="description" content="The requested path is not part of this site.">
     <meta name="robots" content="noindex, follow">
     <!-- Every path below is root-absolute on purpose: GitHub Pages serves this file
          for any missing URL while the address bar keeps the original deep path, so
@@ -423,7 +423,7 @@
                         </div>
                     </div>
                 </div>
-                <a class="home-link" href="/" id="homeLink">return to portfolio</a>
+                <a class="home-link" href="/" id="homeLink">return home</a>
             </div>
         </section>
     </main>
@@ -458,7 +458,7 @@
                 status: "exit status: not_found",
                 keys: { path: "requested_path", reason: "reason" },
                 reason: "No run is registered at this path. It may have moved, or it never existed.",
-                home: "return to portfolio"
+                home: "return home"
             },
             ko: {
                 documentTitle: "404 not_found | Hugh Q Lee",
@@ -472,7 +472,7 @@
                 status: "종료 상태: not_found",
                 keys: { path: "요청 경로", reason: "원인" },
                 reason: "이 경로에 등록된 실행이 없습니다. 이동되었거나, 처음부터 존재하지 않은 주소입니다.",
-                home: "포트폴리오로 돌아가기"
+                home: "홈으로 돌아가기"
             }
         };
 
@@ -512,7 +512,7 @@
             setText("keyReason", ui.keys.reason);
             setText("valueReason", ui.reason);
             setText("homeLink", ui.home);
-            // The portfolio has a page per language: / (Korean, the original) and /en/ (English).
+            // The home page has a page per language: / (Korean, the original) and /en/ (English).
             document.getElementById("homeLink").setAttribute("href", currentLang === "ko" ? "/" : "/en/");
 
             languageToggle.setAttribute("aria-pressed", currentLang === "ko" ? "true" : "false");

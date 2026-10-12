@@ -13,25 +13,37 @@
    "실행 리포트",
    "run report"
   ],
-  "copy.documentTitle": [
-   "Hugh Q Lee | 비전 AI 프로덕트 엔지니어",
-   "Hugh Q Lee | Vision AI Product Engineer"
+  "copy.crumbsAria": [
+   "위치",
+   "Breadcrumb"
   ],
-  "copy.experience.label": [
+  "copy.documentTitle": [
+   "Projects | Hugh Q Lee",
+   "Projects | Hugh Q Lee"
+  ],
+  "copy.introKeys.domain": [
+   "도메인",
+   "domain"
+  ],
+  "copy.introKeys.experience": [
    "경력",
    "experience"
   ],
-  "copy.experience.note": [
+  "copy.introOutputAria": [
+   "프로젝트 개요",
+   "Projects overview"
+  ],
+  "copy.introValues.domain": [
+   "제브라피쉬 이미징, 미세주사, 행동 분석, 현미경 자동화.",
+   "Zebrafish imaging, microinjection, behavior analytics, microscopy automation."
+  ],
+  "copy.introValues.experience": [
    "Zefit 랩 자동화 AI 엔지니어, 2021-현재.",
    "AI Engineer for Lab Automation at Zefit, 2021-Present."
   ],
   "copy.languageToggleAria": [
    "언어를 영어로 전환",
    "Switch language to Korean"
-  ],
-  "copy.location": [
-   "Daegu, KR",
-   "Daegu, KR"
   ],
   "copy.modalCloseAria": [
    "닫기",
@@ -69,45 +81,9 @@
    "포트폴리오 상태",
    "Portfolio status"
   ],
-  "copy.profileKeys.domain": [
-   "도메인",
-   "domain"
-  ],
-  "copy.profileKeys.name": [
-   "이름",
-   "name"
-  ],
-  "copy.profileKeys.principle": [
-   "문장",
-   "principle"
-  ],
-  "copy.profileKeys.role": [
-   "역할",
-   "role"
-  ],
-  "copy.profileOutputAria": [
-   "프로필 출력",
-   "Profile output"
-  ],
   "copy.profileRole": [
    "비전 AI 프로덕트 엔지니어",
    "Vision AI Product Engineer"
-  ],
-  "copy.profileValues.domain": [
-   "제브라피쉬 이미징, 미세주사, 행동 분석, 현미경 자동화.",
-   "Zebrafish imaging, microinjection, behavior analytics, microscopy automation."
-  ],
-  "copy.profileValues.name": [
-   "이현규 / Hugh Q Lee",
-   "이현규 / Hugh Q Lee"
-  ],
-  "copy.profileValues.principle": [
-   "\"본다는 것은 특별한 일입니다.\"",
-   "\"To see is something extraordinary.\""
-  ],
-  "copy.profileValues.role": [
-   "컴퓨터 비전, 모션 제어, 로보틱스 기반의 바이오 실험 자동화 시스템을 만듭니다.",
-   "Builds computer vision, motion control, and robotic assay systems for lab automation."
   ],
   "copy.promptAria": [
    "포트폴리오 명령",
@@ -124,10 +100,6 @@
   "copy.selectedWorkTitle": [
    "> 선택된 실행 목록",
    "> list selected_runs"
-  ],
-  "copy.socialAria": [
-   "소셜 링크",
-   "Social links"
   ],
   "copy.status.panel": [
    "현재 프로세스",
@@ -194,20 +166,20 @@
    "Switch to light theme"
   ],
   "head.description": [
-   "제브라피쉬 실험 자동화를 위한 컴퓨터 비전·로보틱스 시스템을 만드는 비전 AI 프로덕트 엔지니어 이현규(Hugh Q Lee)의 포트폴리오.",
-   "Portfolio of Hugh Q Lee, a Vision AI Product Engineer building computer vision and robotic automation systems for zebrafish lab workflows."
+   "비전 AI 프로덕트 엔지니어 이현규(Hugh Q Lee)가 제브라피쉬 실험 자동화를 위해 만든 컴퓨터 비전·로보틱스 시스템: 독성 평가 자동화, 미세주사 자동화, 행동·섭식 분석, 로보틱 3D 이미징.",
+   "Computer vision and robotics systems that Hugh Q Lee, a Vision AI Product Engineer, built for zebrafish lab automation: toxicity evaluation automation, microinjection, behavior and feeding analytics, and robotic 3D imaging."
   ],
   "head.keywords": [
-   "Hugh Q Lee, 이현규, 비전 AI, 프로덕트 엔지니어, 랩 자동화, 컴퓨터 비전, 로보틱스, 제브라피쉬, 평가 자동화, 현미경 자동화",
-   "Hugh Q Lee, Vision AI, Product Engineer, Lab Automation, Computer Vision, Robotics, Zebrafish, Assay Automation, Microscopy"
+   "Hugh Q Lee, 이현규, 프로젝트, 비전 AI, 프로덕트 엔지니어, 랩 자동화, 컴퓨터 비전, 로보틱스, 제브라피쉬, 평가 자동화, 현미경 자동화",
+   "Hugh Q Lee, Projects, Vision AI, Product Engineer, Lab Automation, Computer Vision, Robotics, Zebrafish, Assay Automation, Microscopy"
   ],
   "head.og:description": [
    "비전 AI, 로보틱스, 현미경 자동화, 제브라피쉬 평가 시스템에서 고른 작업.",
    "Selected work in vision AI, robotics, microscopy automation, and zebrafish assay systems."
   ],
   "head.og:image:alt": [
-   "비전 AI 프로덕트 엔지니어 이현규(Hugh Q Lee)의 터미널 스타일 포트폴리오.",
-   "Terminal-style portfolio of Hugh Q Lee, Vision AI Product Engineer."
+   "아스키아트로 쓴 hughqlee, “본다는 것은 특별한 일입니다.”, projects·knowledge·books 안내가 담긴 Hugh Q Lee의 터미널 스타일 홈 화면.",
+   "Terminal-style home page of Hugh Q Lee: hughqlee in ASCII art, “To see is something extraordinary.”, and links to projects, knowledge, and books."
   ],
   "projectData.behavior-feeding-analytics.category": [
    "영상 분석",

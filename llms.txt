@@ -1,6 +1,6 @@
 # Hugh Q Lee
 
-> Portfolio of Hugh Q Lee, a Vision AI Product Engineer building computer vision and robotic automation systems for zebrafish lab workflows. The Knowledge section holds interactive explanations of concepts Hugh Q Lee has studied, each checked against its original source. The site is written in Korean, and every page has an English version translated from the Korean original: the home page at https://hughqlee.com/en/ and the knowledge pages under https://hughqlee.com/knowledge/en/.
+> Personal site of Hugh Q Lee, a Vision AI Product Engineer building computer vision and robotic automation systems for zebrafish lab workflows, and an AI engineer with a strong interest in personal branding, entrepreneurship, and company culture. The home page is a short profile that leads to each section: Projects holds selected work, Knowledge holds interactive explanations of concepts Hugh Q Lee has studied, each checked against its original source, and Books is a shelf of the books he buys and lends, with reviews from the readers who borrowed them. The site is written in Korean, and every page has an English version translated from the Korean original: the home page at https://hughqlee.com/en/, the projects at https://hughqlee.com/projects/en/, the knowledge pages under https://hughqlee.com/knowledge/en/, and the bookshelf at https://hughqlee.com/books/en/.
 
 ## Knowledge (English)
 
@@ -20,13 +20,21 @@ Each page starts with a small knowledge map of the pages it builds on and leads 
 - [IOU와 NMS, 박스 하나만 남기기](https://hughqlee.com/knowledge/iou-nms/): 두 박스가 얼마나 겹치는지 재는 IOU(겹친 넓이 ÷ 합친 넓이)와, 한 물체에 겹친 박스를 하나만 남기는 NMS를, 박스를 직접 옮기고 단계를 따라가며 이해한다. YOLOv1의 선행 지식이다.
 - [YOLOv1, 한 번 보고 모두 찾기](https://hughqlee.com/knowledge/yolo-v1/): 사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾는 YOLOv1을, 직접 구현한 모델의 구조와 출력으로 만져 보며 이해한다. 먼저 읽으면 좋은 글: IOU와 NMS. 다음 글: YOLOv2.
 
-## Portfolio
+## Profile
 
-- [Home](https://hughqlee.com/en/): Selected work in vision AI, robotics, microscopy automation, and zebrafish assay systems. Korean original: [홈](https://hughqlee.com/).
+- [Home](https://hughqlee.com/en/): A short profile of Hugh Q Lee: an AI engineer with a strong interest in personal branding, entrepreneurship, and company culture, whose principle is "To see is something extraordinary." Name, role, and experience, and links to each section of the site. Korean original: [홈](https://hughqlee.com/).
 
-Selected work (each is a run report on the home page; client and lab details are proprietary):
+## Projects
 
-- [Automated Zebrafish Larva Toxicity Evaluation Platform](https://hughqlee.com/en/#toxicity-evaluation-automation): A microscope automation workflow for 96-well toxicity evaluation, combining plate navigation, autofocus, larva detection, condition classification, and result logging. Completed.
-- [Vision-Guided Zebrafish Egg and Larva Microinjection Platform](https://hughqlee.com/en/#microinjection-platform): Automated injection workflows for zebrafish egg and larval assays, connecting visual targeting, stage motion, needle actuation, reagent delivery, and post-run analysis. Published; [related publication](https://doi.org/10.1371/journal.pone.0333369).
-- [Zebrafish Larva Behavior Tracking and FL/IR Feeding Analytics](https://hughqlee.com/en/#behavior-feeding-analytics): An analysis system that turns recorded well-plate experiments into trajectories, behavior metrics, and fluorescence-based feeding and digestion readouts. Completed.
-- [Robot-Arm Microfluidic Zebrafish 3D Imaging Platform](https://hughqlee.com/en/#robotic-3d-imaging): A scale-up automation concept combining robot-arm handling, visual alignment, microfluidic transfer, rotational capillary imaging, and volumetric fluorescence analysis. In progress.
+- [Projects](https://hughqlee.com/projects/en/): Selected work in vision AI, robotics, microscopy automation, and zebrafish assay systems. Korean original: [프로젝트](https://hughqlee.com/projects/).
+
+Selected work (each is a run report on the projects page; client and lab details are proprietary):
+
+- [Automated Zebrafish Larva Toxicity Evaluation Platform](https://hughqlee.com/projects/en/#toxicity-evaluation-automation): A microscope automation workflow for 96-well toxicity evaluation, combining plate navigation, autofocus, larva detection, condition classification, and result logging. Completed.
+- [Vision-Guided Zebrafish Egg and Larva Microinjection Platform](https://hughqlee.com/projects/en/#microinjection-platform): Automated injection workflows for zebrafish egg and larval assays, connecting visual targeting, stage motion, needle actuation, reagent delivery, and post-run analysis. Published; [related publication](https://doi.org/10.1371/journal.pone.0333369).
+- [Zebrafish Larva Behavior Tracking and FL/IR Feeding Analytics](https://hughqlee.com/projects/en/#behavior-feeding-analytics): An analysis system that turns recorded well-plate experiments into trajectories, behavior metrics, and fluorescence-based feeding and digestion readouts. Completed.
+- [Robot-Arm Microfluidic Zebrafish 3D Imaging Platform](https://hughqlee.com/projects/en/#robotic-3d-imaging): A scale-up automation concept combining robot-arm handling, visual alignment, microfluidic transfer, rotational capillary imaging, and volumetric fluorescence analysis. In progress.
+
+## Books
+
+- [My Hobby Is Reading](https://hughqlee.com/books/en/): A lending shelf of books Hugh Q Lee bought, for friends and book-club members: no fees, a deposit equal to the price of a new copy refunded in full on return, and reviews from the readers who borrowed each book. Korean original: [HughQLee는 독서가 취미입니다](https://hughqlee.com/books/).
