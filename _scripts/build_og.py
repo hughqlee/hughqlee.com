@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Render the home page's share images (og:image, twitter:image) from the home page itself.
 
-  images/og-cover-ko.jpg   from index.html (Korean), for the Korean home and projects pages
-  images/og-cover.jpg      from en/index.html (English), for the English pages and the pages that
-                           share one image for both languages
+  images/og-cover-ko.jpg   from index.html (Korean), for the Korean home, projects, knowledge, and
+                           books pages
+  images/og-cover.jpg      from en/index.html (English), for the English pages
 
 Each is a 1200 x 630 picture of the home page's terminal window in the dark theme. The page is drawn
 as it is, with CARD_CSS below laid over it so that it fits the card: the name, role, and experience
-rows are left out, and the site map (ls ~) moves beside the banner. Run it after the home page changes,
-from the repository root (folders starting with "_" are not published by GitHub Pages):
+rows and the prompt's past commands are left out, and the site map (ls ~) moves beside the banner.
+Run it after the home page changes, from the repository root (folders starting with "_" are not
+published by GitHub Pages):
     python3 _scripts/build_og.py
 It needs Google Chrome (run headless; set CHROME to use another Chrome or Chromium binary) and macOS's
 sips, which scales the 2x render down to 1200 x 630 and writes the JPEG.
@@ -51,7 +52,8 @@ body { display: flex; align-items: center; justify-content: center; min-height: 
 .route { grid-template-columns: minmax(0, 1fr) auto; padding: 16px 18px; }
 .route-name { font-size: 18px; }
 .route-desc { display: none; }
-.routes-nav + .prompt-line { grid-column: 2; grid-row: 4; align-self: end; margin: 0 !important; }
+.shell-session { grid-column: 2; grid-row: 4; align-self: end; margin: 0 !important; }
+.shell-log { display: none; }
 """
 
 

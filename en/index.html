@@ -112,6 +112,7 @@
             --faint: #7b8b96;
             --accent: #69d2ff;
             --accent-green: #9ce37d;
+            --danger: #ff8c8c;
             --shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
             --grid-line: rgba(105, 210, 255, 0.025);
             --grid-line-alt: rgba(105, 210, 255, 0.02);
@@ -140,6 +141,7 @@
             --faint: #5f6d78;
             --accent: #0969a8;
             --accent-green: #25723f;
+            --danger: #b42323;
             --shadow: 0 24px 70px rgba(18, 31, 43, 0.14);
             --grid-line: rgba(9, 105, 168, 0.055);
             --grid-line-alt: rgba(9, 105, 168, 0.04);
@@ -192,6 +194,10 @@
 
         button {
             font: inherit;
+        }
+
+        [hidden] {
+            display: none !important;
         }
 
         .visually-hidden {
@@ -339,7 +345,7 @@
             gap: 10px;
             margin: 0;
             color: var(--text);
-            font-size: clamp(0.86rem, 1.8vw, 1rem);
+            font-size: 1rem;
             line-height: 1.5;
         }
 
@@ -456,7 +462,7 @@
         }
 
         .kv-list + .prompt-line,
-        .routes-nav + .prompt-line {
+        .routes-nav + .shell-session {
             margin-top: 30px;
         }
 
@@ -513,6 +519,94 @@
         .route:hover .route-arrow,
         .route:focus-visible .route-arrow {
             color: var(--accent-green);
+        }
+
+        /* The last prompt takes commands (the script at the end of the page). Without JavaScript only its
+           blinking cursor shows. */
+        .shell-session {
+            display: grid;
+            gap: 6px;
+        }
+
+        .shell-log {
+            display: grid;
+            gap: 6px;
+        }
+
+        .shell-log:empty {
+            display: none;
+        }
+
+        .shell-out {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        .shell-out.is-error {
+            color: var(--danger);
+        }
+
+        .shell {
+            position: relative;
+            cursor: text;
+        }
+
+        /* A taller target than the 24px line, for fingers: taps just above or below it count too. */
+        .shell::before {
+            content: "";
+            position: absolute;
+            inset: -10px 0;
+        }
+
+        .shell:focus-within {
+            border-radius: 4px;
+            background: var(--control-hover);
+            box-shadow: 0 0 0 6px var(--control-hover);
+        }
+
+        .shell-field {
+            position: relative;
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* The real input lies invisibly over the line; what shows is the typed text around a block cursor. */
+        .shell-input {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            outline: none;
+            background: transparent;
+            font: inherit;
+            opacity: 0;
+        }
+
+        .shell-view {
+            display: block;
+            min-height: 1.5em;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .shell-cursor {
+            width: auto;
+            min-width: 0.6em;
+            height: auto;
+            line-height: 1.15;
+            vertical-align: baseline;
+            color: var(--bg);
+        }
+
+        .cursor.is-typing {
+            animation: none;
         }
 
         @keyframes cursor-blink {
@@ -658,7 +752,18 @@
                         </li>
                     </ul>
                 </nav>
-                <p class="prompt-line" aria-hidden="true"><span class="prompt">&gt;</span><span class="cursor"></span></p>
+                <div class="shell-session">
+                    <p class="prompt-line shell-idle" aria-hidden="true"><span class="prompt">&gt;</span><span class="cursor"></span></p>
+                    <div class="shell-log" id="shellLog" role="log"></div>
+                    <form class="prompt-line shell" id="shell" hidden data-not-found="command not found: {input}" data-no-directory="cd: no such file or directory: {input}" data-help="Type cd projects to go there. Places you can go: {routes}">
+                        <span class="prompt" aria-hidden="true">&gt;</span>
+                        <span class="shell-field">
+                            <label class="visually-hidden" for="shellInput">Type where to go, for example: cd projects</label>
+                            <input class="shell-input" id="shellInput" type="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="go">
+                            <span class="shell-view" aria-hidden="true"><span class="shell-before"></span><span class="cursor shell-cursor"> </span><span class="shell-after"></span></span>
+                        </span>
+                    </form>
+                </div>
             </div>
         </section>
     </main>
@@ -692,6 +797,154 @@
         });
 
         renderThemeToggle();
+
+        // The last prompt takes commands, like a shell: cd projects, projects/ or ~/projects goes there;
+        // ls, whoami, help and clear answer; anything else prints an error and waits for the next line.
+        // The messages are on the form (data-*), so this script is the same on both language pages.
+        const shell = document.getElementById("shell");
+        const shellInput = document.getElementById("shellInput");
+        const shellLog = document.getElementById("shellLog");
+        const shellView = {
+            before: shell.querySelector(".shell-before"),
+            cursor: shell.querySelector(".shell-cursor"),
+            after: shell.querySelector(".shell-after")
+        };
+        const routes = [...document.querySelectorAll(".route")].map((link) => ({
+            name: link.querySelector(".route-name").textContent.trim().replace(/\/$/, ""),
+            href: link.getAttribute("href")
+        }));
+        const routeListing = routes.map((route) => `${route.name}/`).join("  ");
+        let typingTimer = null;
+        let hasHelped = false;
+
+        function shellMessage(key, value = "") {
+            return shell.dataset[key]
+                .replace("{input}", () => value)
+                .replace("{routes}", () => routeListing);
+        }
+
+        function printLine(text, className = "shell-out") {
+            const line = document.createElement("p");
+            line.className = className;
+            line.textContent = text;
+            shellLog.append(line);
+        }
+
+        function echoCommand(command) {
+            const line = document.createElement("p");
+            const prompt = document.createElement("span");
+            const text = document.createElement("span");
+            line.className = "prompt-line";
+            line.setAttribute("aria-hidden", "true");
+            prompt.className = "prompt";
+            prompt.textContent = ">";
+            text.textContent = command;
+            line.append(prompt, text);
+            shellLog.append(line);
+        }
+
+        function printError(message) {
+            printLine(message, "shell-out is-error");
+            // The first error also says how to move around.
+            if (!hasHelped) {
+                printLine(shellMessage("help"));
+                hasHelped = true;
+            }
+        }
+
+        function runCommand(command) {
+            const [name = "", ...args] = command.trim().split(/\s+/);
+            const word = name.toLowerCase();
+            if (!word) {
+                return;
+            }
+            if (word === "clear") {
+                shellLog.replaceChildren();
+            } else if (word === "help") {
+                printLine(shellMessage("help"));
+            } else if (word === "whoami") {
+                printLine("hughqlee");
+            } else if (word === "ls") {
+                printLine(routeListing);
+            } else if (word !== "cd" && args.length) {
+                printError(shellMessage("notFound", name));
+            } else {
+                const target = word === "cd" ? args.join(" ") : name;
+                // ~, ~/, ./ and / all start from home, which is where this page is.
+                const path = target.toLowerCase().replace(/^(~\/?|\.\/|\/)+/, "").replace(/\/+$/, "");
+                const route = routes.find((entry) => entry.name === path);
+                if (route) {
+                    location.assign(route.href);
+                } else if (!["", ".", ".."].includes(path)) {
+                    printError(word === "cd" ? shellMessage("noDirectory", target) : shellMessage("notFound", name));
+                }
+            }
+        }
+
+        function renderShell() {
+            const value = shellInput.value;
+            const caret = document.activeElement === shellInput ? (shellInput.selectionEnd ?? value.length) : value.length;
+            const rest = Array.from(value.slice(caret));
+            shellView.before.textContent = value.slice(0, caret);
+            shellView.cursor.textContent = rest[0] || " ";
+            shellView.after.textContent = rest.slice(1).join("");
+        }
+
+        function showTyping() {
+            // Like a terminal cursor: solid while keys come in, blinking again once they stop.
+            shellView.cursor.classList.add("is-typing");
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => shellView.cursor.classList.remove("is-typing"), 600);
+        }
+
+        shell.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const command = shellInput.value;
+            shellInput.value = "";
+            echoCommand(command);
+            runCommand(command);
+            while (shellLog.childElementCount > 40) {
+                shellLog.firstElementChild.remove();
+            }
+            renderShell();
+            shell.scrollIntoView({ block: "nearest" });
+        });
+
+        shell.addEventListener("click", () => shellInput.focus());
+
+        // No need to click first: typing anywhere on the page goes to the prompt, as in a terminal window.
+        // Shortcuts, keys that are not characters, the space bar (which scrolls the page), and typing in
+        // another field are left alone.
+        document.addEventListener("keydown", (event) => {
+            const shortcut = event.metaKey || ((event.ctrlKey || event.altKey) && !event.getModifierState("AltGraph"));
+            if (event.defaultPrevented || event.isComposing || shortcut || event.key.length !== 1 || event.key === " ") {
+                return;
+            }
+            if (event.target instanceof Element && event.target.closest("input, textarea, select, [contenteditable]")) {
+                return;
+            }
+            // Focused during keydown, the field also receives this key's character.
+            shellInput.focus();
+        });
+
+        shellInput.addEventListener("input", () => {
+            showTyping();
+            renderShell();
+        });
+
+        shellInput.addEventListener("keydown", () => {
+            showTyping();
+            requestAnimationFrame(renderShell);
+        });
+
+        ["keyup", "click", "focus", "blur", "select"].forEach((type) => {
+            shellInput.addEventListener(type, renderShell);
+        });
+
+        // Without JavaScript the static cursor line stays; with it, the prompt takes its place.
+        document.querySelector(".shell-idle")?.remove();
+        shell.hidden = false;
+        renderShell();
     </script>
 </body>
 </html>
