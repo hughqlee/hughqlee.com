@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>위상차 현미경, 투명한 것을 밝기로 보는 법 | Hugh Q Lee</title>
+    <meta name="description" content="명시야 현미경은 밝기만 보여 투명한 세포를 거의 보지 못한다. 위상차 현미경은 콘덴서에 링 조리개를, 대물렌즈 뒤 초점면에 위상판을 더해 그 늦음을 밝기로 바꾼다. 대물렌즈, 링 조리개 번호, 콘덴서 조리개, 중심, 초점, 웰 자리를 바꾸며 맞추는 법을 직접 익힌다.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="위상차 현미경, phase contrast microscopy, 위상차, 체르니커, Zernike, 위상판, phase plate, 위상 고리, phase ring, 링 조리개, condenser annulus, PhL, Ph1, Ph2, 위상 망원경, phase telescope, 정렬, alignment, 헤일로, halo, 메니스커스, meniscus effect, 96웰, well plate, 명시야, brightfield">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/phase-contrast-microscopy/">
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/phase-contrast-microscopy/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/phase-contrast-microscopy/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/phase-contrast-microscopy/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:title" content="위상차 현미경, 투명한 것을 밝기로 보는 법">
+    <meta property="og:description" content="명시야로는 안 보이는 투명한 세포를, 링 조리개와 위상판 두 고리로 보이게 하는 위상차 현미경. 번호·조리개·중심·초점을 직접 맞춰 본다.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/phase-contrast-microscopy/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/phase-contrast-microscopy/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="위상차 현미경: 같은 가상 세포를 위상판 없이(거의 보이지 않음)와 위상판으로(어두운 핵과 밝은 헤일로) 계산한 영상">
+    <meta property="article:published_time" content="2026-10-12">
+    <meta property="article:modified_time" content="2026-10-12">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta property="article:tag" content="위상차 현미경">
+    <meta property="article:tag" content="현미경 이미징">
+    <meta property="article:tag" content="푸리에 광학">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="위상차 현미경, 투명한 것을 밝기로 보는 법">
+    <meta name="twitter:description" content="명시야로는 안 보이는 투명한 세포를, 링 조리개와 위상판 두 고리로 보이게 하는 위상차 현미경. 번호·조리개·중심·초점을 직접 맞춰 본다.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/phase-contrast-microscopy/og.png">
+    <meta name="twitter:image:alt" content="위상차 현미경: 같은 가상 세포를 위상판 없이(거의 보이지 않음)와 위상판으로(어두운 핵과 밝은 헤일로) 계산한 영상">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage는 빌드 스크립트가 본문 "자주 묻는 질문"에서 글자 그대로 옮긴다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/phase-contrast-microscopy/#article",
+          "workTranslation": {
+            "@id": "https://hughqlee.com/knowledge/en/phase-contrast-microscopy/#article"
+          },
+          "headline": "위상차 현미경, 투명한 것을 밝기로 보는 법",
+          "alternativeHeadline": "투명해서 안 보이는 세포를, 위상차 현미경은 어떻게 보이게 할까?",
+          "description": "명시야 현미경은 밝기만 보여 투명한 세포를 거의 보지 못한다. 위상차 현미경은 콘덴서에 링 조리개를, 대물렌즈 뒤 초점면에 위상판을 더해 그 늦음을 밝기로 바꾼다. 대물렌즈, 링 조리개 번호, 콘덴서 조리개, 중심, 초점, 웰 자리를 바꾸며 맞추는 법을 직접 익힌다.",
+          "abstract": "위상차 현미경은 고리 두 개로 세포를 곧게 지난 빛과 세포에서 퍼진 빛을 다른 길로 보내고, 곧게 간 빛만 ¼파장 당기고 어둡게 해 상에서 둘이 서로 지우게 만들어 투명한 세포를 어둡게 보이게 한다.",
+          "inLanguage": "ko",
+          "datePublished": "2026-10-12",
+          "dateModified": "2026-10-12",
+          "url": "https://hughqlee.com/knowledge/phase-contrast-microscopy/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/phase-contrast-microscopy/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/phase-contrast-microscopy/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/#collection"
+          },
+          "isAccessibleForFree": true,
+          "about": [
+            "위상차 현미경"
+          ],
+          "citation": [
+            {
+              "@type": "CreativeWork",
+              "name": "Nikon MicroscopyU, Introduction to Phase Contrast Microscopy",
+              "url": "https://www.microscopyu.com/techniques/phase-contrast/introduction-to-phase-contrast-microscopy"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "Nikon MicroscopyU, Phase Contrast Microscope Configuration",
+              "url": "https://www.microscopyu.com/techniques/phase-contrast/phase-contrast-microscope-configuration"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "Nikon MicroscopyU, Phase Contrast Microscope Alignment",
+              "url": "https://www.microscopyu.com/tutorials/phase-contrast-microscope-alignment"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Nienhaus et al., Adaptive phase contrast microscopy to compensate for the meniscus effect (Scientific Reports 2023)",
+              "url": "https://doi.org/10.1038/s41598-023-32917-6"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Kurata et al., Quantitative phase retrieval for Zernike phase-contrast microscopy (arXiv 2023)",
+              "url": "https://arxiv.org/abs/2305.05156"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "Evident, Köhler Illumination (Abramowitz and Davidson)",
+              "url": "https://evidentscientific.com/en/microscope-resource/knowledge-hub/anatomy/kohler"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Webb, Condenser-free contrast methods for transmitted-light microscopy (Journal of Microscopy 2015)",
+              "url": "https://doi.org/10.1111/jmi.12181"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Schöll et al., Influence of the phase effect on gradient-based and statistics-based focus measures in bright field microscopy (Journal of Microscopy 2014)",
+              "url": "https://doi.org/10.1111/jmi.12118"
+            }
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "위상차 현미경, 투명한 것을 밝기로 보는 법",
+              "item": "https://hughqlee.com/knowledge/phase-contrast-microscopy/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/phase-contrast-microscopy/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "위상차 현미경이란?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "투명한 시료가 빛을 늦추는 정도(위상)의 차이를 밝기의 차이로 바꿔 보여 주는 광학 현미경이다. 염색하지 않은 살아 있는 세포를 보는 데 쓴다. 프리츠 체르니커가 1930년대에 만들었고, 그 공로로 1953년 노벨 물리학상을 받았다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "위상차 현미경의 원리는?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "부품은 고리 두 개다. 콘덴서의 링 조리개가 빛을 고리로만 들여보내고, 시료를 곧게 지난 빛(S)은 대물렌즈 안 위상판의 같은 크기 고리로 모인다. 세포에서 퍼진 빛(D)은 고리 밖을 지난다. 위상판의 고리 막이 S만 ¼파장 당기고 어둡게 하면, 원래 S보다 ¼파장 늦던 D와 반 파장 어긋나 상에서 서로 지워 세포가 어둡게 보인다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "위상차 현미경과 명시야 현미경은 구조가 무엇이 다른가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "다른 부품은 둘이다. 콘덴서 앞 초점면의 둥근 조리개 대신 고리 모양 구멍의 링 조리개를 쓰고, 뒤 초점면에 고리 막(위상판)이 든 위상차 대물렌즈를 쓴다. 두 고리는 짝이 되는 면에 있어 링 조리개의 상이 위상판의 고리 위에 맺힌다. 광원, 콜렉터 렌즈, 시야 조리개, 콘덴서, 튜브 렌즈, 카메라는 같고, 위상판에 맞춘 초록 필터를 권한다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "위상차 현미경의 헤일로와 셰이드오프는 왜 생기나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "위상판의 고리에 폭이 있어서, 크고 매끈한 구조에서 퍼진 빛 일부도 곧게 간 빛과 함께 고리를 지나 당겨지고 어두워지기 때문이다. 그 빛은 지우는 일을 하지 못해, 큰 물체는 안쪽이 배경 밝기로 돌아가고(셰이드오프) 경계 바깥에 밝은 테(헤일로)가 생긴다. 고리 옆에 ND 고리를 더한 아포다이즈 위상판이 헤일로를 줄인다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "위상차 현미경의 Ph1, Ph2, Ph3는 무엇이고 어떻게 맞추나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "대물렌즈의 위상 고리 크기에 맞춘 콘덴서 링 조리개의 번호다. 보통 PhL은 4×·5×, Ph1은 10×·20×, Ph2는 40×·60×, Ph3는 100× 대물렌즈에 쓴다. 대물렌즈에 적힌 번호와 같은 링 조리개를 넣고, 위상 망원경이나 버트런드 렌즈로 보며 두 고리를 겹치고, 콘덴서 조리개는 완전히 연다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "위상차 현미경을 직접 만들 수 있나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "위상판은 위상차 대물렌즈 안, 뒤 초점면에 붙어 있어서 보통 위상차 대물렌즈를 사서 쓴다. 나머지는 명시야 현미경 그대로다. 그 대물렌즈의 위상 고리에 맞는 링 조리개를 콘덴서 앞 초점면에 두거나(반지름 = NA × 콘덴서 초점 거리) 콘덴서 없이 LED 고리를 시료 위에 두고(Webb 2015), 위상 망원경으로 보며 크기와 중심을 맞춘다. 위상 고리가 없는 대물렌즈로 하려면 릴레이 렌즈로 만든 뒤 초점면의 짝이 되는 면에 위상판을 둔다(외부 위상차)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "96웰 플레이트에서 위상차가 잘 안 되는 이유는?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "웰 속 배지가 표면장력으로 벽 쪽으로 휘어 렌즈처럼 빛을 꺾고, 링 조리개의 고리 상이 위상판의 고리에서 비켜나기 때문이다(메니스커스 효과). 한 측정에서 보통의 위상차로 위상차가 되는 면적은 96웰(10×)에서 웰의 2.3%, 6웰(4×)에서 25%였다. 웰 가운데에서 찍고, 큰 웰이나 액면이 평평한 용기를 쓰면 낫다."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --danger: #ff8c8c;
+            --violet: #c9a7ff;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --green-soft: rgba(156, 227, 125, 0.18);
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            --wide: 980px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --danger: #b42323;
+            --violet: #6b3fb8;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --green-soft: rgba(37, 114, 63, 0.14);
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+        p { margin: 0 0 12px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+        .wide { width: min(var(--wide), 100% - 32px); margin-inline: auto; }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle, .btn {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-family: var(--mono);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover, .btn:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 8px; }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0 0 20px; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        .step { padding: 40px 0 8px; border-top: 1px solid var(--line); margin-top: 28px; }
+        .step-no { margin: 0 0 6px; color: var(--accent); font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; }
+        h2 { margin: 0 0 14px; font-size: clamp(22px, 4vw, 30px); line-height: 1.35; letter-spacing: -0.01em; }
+        h3 { margin: 24px 0 8px; font-size: 18px; line-height: 1.45; }
+        .hint { color: var(--muted); font-size: 15px; }
+        .source { margin-top: 12px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+        .panel {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .split {
+            display: grid;
+            grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+            gap: 20px;
+            align-items: start;
+            margin-top: 12px;
+        }
+        .fig-label { margin: 0 0 6px; color: var(--muted); font-size: 13px; font-family: var(--mono); }
+        canvas.micro { display: block; width: 100%; aspect-ratio: 1; border-radius: 6px; background: #808080; }
+        .control { display: grid; gap: 2px; margin-top: 10px; }
+        .control label, .control .label { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 14px; }
+        .control output { color: var(--text); font-family: var(--mono); }
+        input[type="range"] { width: 100%; min-height: 32px; margin: 0; accent-color: var(--accent); }
+        [hidden] { display: none !important; }
+        .seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+        .seg button {
+            min-height: 36px;
+            padding: 4px 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .seg button:hover { border-color: var(--line-strong); color: var(--text); }
+        .seg button[aria-pressed="true"] { border-color: var(--line-strong); color: var(--text); background: var(--panel-strong); }
+        .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 6px 0 0; font-size: 13px; color: var(--muted); }
+        .legend i { display: inline-block; width: 16px; height: 0; margin-right: 6px; border-top: 2px solid; vertical-align: 4px; }
+        .numbers { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 8px 0 0; font-family: var(--mono); font-size: 14px; color: var(--muted); }
+        .numbers b { color: var(--text); font-weight: 600; }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            margin: 24px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+        .toc a { display: block; height: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); text-decoration: none; font-size: 15px; line-height: 1.4; }
+        .toc a:hover { border-color: var(--line-strong); }
+        .toc span { display: block; color: var(--accent); font-family: var(--mono); font-size: 12px; }
+        .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+        .check { display: flex; align-items: center; gap: 8px; min-height: 36px; color: var(--muted); font-size: 14px; cursor: pointer; }
+        .check input { width: 18px; height: 18px; accent-color: var(--accent); }
+        canvas.bench { display: block; width: 100%; aspect-ratio: 680 / 230; margin-top: 10px; border-radius: 6px; background: var(--panel-soft); }
+
+        /* 01: the bench and the camera, the parts */
+        .bench-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 190px; gap: 18px; align-items: end; margin-top: 10px; }
+        .bench-wrap canvas.bench { margin-top: 0; }
+        .bench-cam .numbers { gap: 2px 10px; font-size: 13px; }
+        .diff-parts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        .part { padding: 12px 14px; border: 1px solid var(--accent); border-radius: var(--radius); background: var(--panel); font-size: 15px; line-height: 1.6; outline: none; }
+        .part.on { background: var(--accent-soft); }
+        .part p { margin: 0; }
+        .part dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 10px; margin: 6px 0 0; }
+        .part dt { padding-top: 3px; color: var(--faint); font-family: var(--mono); font-size: 12px; line-height: 1.6; }
+        .part dd { margin: 0; }
+        .part-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+        .pill { padding: 1px 8px; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+        .pill.diff { border-color: var(--accent); color: var(--accent); }
+        .parts-table tbody tr { outline: none; }
+        .parts-table tbody tr.on > * { background: var(--accent-soft); }
+
+        /* 02: practice. The controls, the back focal plane through a phase telescope, the camera */
+        .pr { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+        .pr-controls .control:first-child { margin-top: 0; }
+        .pr-controls .seg button { min-height: 34px; padding: 3px 10px; font-size: 13.5px; }
+        .pr-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+        canvas.bfp { display: block; width: 100%; aspect-ratio: 1; border-radius: 6px; background: #0b0c0d; cursor: grab; touch-action: none; }
+        canvas.bfp:active { cursor: grabbing; }
+        .pr-hint { margin: 4px 0 0; font-size: 13px; }
+        .checks { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 0; padding: 0; list-style: none; }
+        .checks li { padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 13px; }
+        .checks li b { margin-right: 6px; color: var(--faint); font-family: var(--mono); font-size: 12px; font-weight: 600; }
+        .checks li.ok { border-color: var(--accent-green); }
+        .checks li.ok b { color: var(--accent-green); }
+        .checks li.bad { border-color: var(--accent-warn); }
+        .checks li.bad b { color: var(--accent-warn); }
+        .diag { min-height: 3.4em; margin: 10px 0 0; padding-left: 12px; border-left: 3px solid var(--accent); }
+
+        /* 01: the parts that stay the same, folded */
+        .more { margin-top: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .more summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .more[open] summary { border-bottom: 1px solid var(--line); }
+        .more > table { width: calc(100% - 32px); margin: 0 16px 8px; }
+
+        /* tables (01: the parts that stay the same) */
+        .settings { width: 100%; margin-top: 12px; border-collapse: collapse; font-size: 15px; }
+        .settings th, .settings td { padding: 10px 10px; border-top: 1px solid var(--line); text-align: left; vertical-align: top; }
+        .settings thead th { border-top: 0; color: var(--muted); font-family: var(--mono); font-size: 13px; font-weight: 500; }
+        .settings tbody th { width: 16%; color: var(--text); font-weight: 600; }
+        .settings td:nth-child(2) { width: 36%; }
+        .settings .src { display: block; margin-top: 4px; color: var(--faint); font-family: var(--mono); font-size: 12px; }
+
+        .limits { margin: 0; padding-left: 1.2em; }
+        .limits li { margin: 8px 0; }
+        .note {
+            margin-top: 16px;
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+        .tag {
+            display: inline-block;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.guess { color: var(--accent-warn); }
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        footer {
+            margin-top: 48px;
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+            .pr { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+            .pr-controls { grid-column: 1 / -1; }
+        }
+
+        @media (max-width: 760px) {
+            .split { grid-template-columns: 1fr; }
+            .bench-wrap { grid-template-columns: 1fr; }
+            .bench-cam { width: min(100%, 240px); }
+            .diff-parts { grid-template-columns: 1fr; }
+            .settings tbody td[data-label] { padding-left: 52px; text-indent: -52px; }
+            .settings td[data-label]::before { content: attr(data-label); display: inline-block; width: 44px; margin-right: 8px; text-indent: 0; color: var(--faint); font-family: var(--mono); font-size: 12px; }
+            .settings thead { display: none; }
+            .settings, .settings tbody, .settings tr, .settings th, .settings td { display: block; width: 100% !important; }
+            .settings tr { padding: 10px 0; border-top: 1px solid var(--line); }
+            .settings th, .settings td { padding: 2px 0; border-top: 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+    <header class="wide topbar">
+        <nav class="crumbs" aria-label="위치">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/en/phase-contrast-microscopy/" hreflang="en" lang="en">English</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="wrap hero" aria-labelledby="page-title">
+            <nav class="kmap" aria-label="지식 지도" data-current="phase-contrast-microscopy">
+                <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">현미경 이미징</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">이 분야의 첫 글이다. 먼저 읽을 글과 이어서 읽을 글은 아직 없다.</p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE · 현미경 이미징</p>
+            <h1 id="page-title">투명해서 안 보이는 세포를, 위상차 현미경은 어떻게 보이게 할까?</h1>
+            <p class="answer">위상차 현미경은 고리 두 개로 세포를 곧게 지난 빛과 세포에서 퍼진 빛을 다른 길로 보내고, 곧게 간 빛만 ¼파장 당기고 어둡게 해 상에서 둘이 서로 지우게 만들어 투명한 세포를 어둡게 보이게 한다.</p>
+            <p>명시야 현미경에서 박테리아나 세포처럼 무색이고 투명한 것은 배경과 구별하기 어렵다. 명시야는 시료가 빛을 얼마나 흡수했는지, 곧 색과 밝기의 차이로 상을 만드는데, 이런 시료는 빛을 거의 흡수하지 않고 조금 늦추기만 하기 때문이다(위상). 염색은 살아 있는 시료에 맞지 않을 때가 많고, 암시야 조명은 미세한 구조를 잘못 읽게 하기 쉽다. 콘덴서 조리개를 좁히거나 초점을 흐리면 대비가 조금 생기지만 세부가 흐려진다. 프리츠 체르니커는 1930년대에 곧게 간 빛의 길에 위상판을 두어 이 늦음을 밝기의 차이로 바꾸는 방법을 만들었고, 1953년 노벨 물리학상은 이 위상차 방법, 특히 위상차 현미경의 발명에 주어졌다.</p>
+            <p class="source">출처: 무색·투명한 시료, 염색과 암시야의 한계, 위상판, 수상 근거: NobelPrize.org(시상 연설, Facts) · 빛을 늦추기만 하는 시료: Nikon MicroscopyU · 콘덴서 조리개: Evident, Köhler Illumination · 명시야의 초점: Schöll 외 2014</p>
+            <ol class="toc">
+                <li><a href="#structure"><span>01 구조</span>명시야에 고리 둘을 더한다</a></li>
+                <li><a href="#practice"><span>02 실무</span>번호·조리개·중심·초점 맞추기</a></li>
+            </ol>
+        </section>
+
+        <section id="structure" class="wide step" aria-labelledby="structure-title">
+            <div style="max-width: var(--measure);">
+                <p class="step-no">01 구조</p>
+                <h2 id="structure-title">콘덴서 조리개를 링으로 바꾸고, 대물렌즈에 위상판을 더한다</h2>
+                <p>명시야 현미경에서 바뀌는 자리는 둘이다. ⑤ 콘덴서의 둥근 조리개가 링 조리개가 되고, ⑧ 대물렌즈가 뒤 초점면에 위상판이 든 위상차 대물렌즈가 된다. 단추로 둘을 번갈아 보면 빛의 길과 카메라 영상이 함께 바뀐다.</p>
+            </div>
+            <div class="panel">
+                <div class="row">
+                    <div class="seg" role="group" aria-label="현미경 종류" id="bench-mode"></div>
+                    <label class="check"><input type="checkbox" id="bench-planes" checked> 짝이 되는 면 보기</label>
+                </div>
+                <div class="bench-wrap">
+                    <canvas id="bench" class="bench" role="img" aria-label="투과 조명 현미경의 빛의 길. 광원, 콜렉터 렌즈, 시야 조리개, 필터, 콘덴서 조리개 또는 링 조리개, 콘덴서 렌즈, 시료, 대물렌즈와 뒤 초점면, 튜브 렌즈, 카메라가 왼쪽에서 오른쪽으로 놓여 있다."></canvas>
+                    <div class="bench-cam">
+                        <p class="fig-label">⑩ 카메라 영상 (계산)</p>
+                        <canvas id="bench-image" class="micro" width="256" height="256" role="img" aria-label="지금 고른 현미경으로 찍은 가상 세포의 영상"></canvas>
+                        <p class="numbers" id="bench-numbers" aria-live="polite"><span>세포 <b>0.02~1.80배</b></span><span>보인다</span></p>
+                    </div>
+                </div>
+                <p class="legend"><span><i style="border-color: var(--accent);"></i>곧게 간 빛 S</span><span><i style="border-color: var(--accent-warn); border-top-style: dashed;"></i>시료에서 퍼진 빛 D</span><span><i style="border-color: var(--violet); border-top-style: dashed;"></i>빛이 모이는 면 (①⑤⑧)</span><span><i style="border-color: var(--accent-green); border-top-style: dashed;"></i>상이 맺히는 면 (③⑦⑩)</span></p>
+                <p class="hint" id="bench-note" aria-live="polite" style="margin: 8px 0 0;">위상차: ⑤ 링 조리개가 빛을 고리로만 들여보내고, 그 고리가 ⑧ 대물렌즈 뒤 초점면의 위상판 고리 위에 맺힌다. 다른 부품은 명시야와 같다.</p>
+            </div>
+            <div id="parts">
+                <div class="diff-parts">
+                    <div class="part" data-part="5" tabindex="0">
+                        <p class="part-head"><b>⑤ 콘덴서 조리개 → 링 조리개</b><span class="pill diff">바꾼다</span></p>
+                        <dl><dt>명시야</dt><dd>둥근 구멍. 꽉 찬 원뿔로 비춘다. 좁히면 대비가 오르는 대신 해상도가 떨어진다.</dd><dt>위상차</dt><dd>고리 모양 구멍. 속이 빈 원뿔로 비춰, 곧게 간 빛 S가 ⑧ 뒤 초점면에서 고리로 모이게 한다. 둥근 조리개는 끝까지 연다.</dd></dl>
+                    </div>
+                    <div class="part" data-part="8" tabindex="0">
+                        <p class="part-head"><b>⑧ 대물렌즈 → 위상차 대물렌즈</b><span class="pill diff">더한다</span></p>
+                        <dl><dt>명시야</dt><dd>시료의 빛을 모아 상을 만든다. 뒤 초점면에는 아무것도 없다.</dd><dt>위상차</dt><dd>뒤 초점면의 그 고리 자리에 위상판(얇은 고리 막)이 붙어 있어, S만 ¼파장 당기고 25%로 어둡게 한다. 위상판은 따로 끼우지 않고, 몸통의 Ph 번호가 맞는 링 조리개 번호다.</dd></dl>
+                    </div>
+                </div>
+                <h3>어떻게 보이게 하나</h3>
+                <ol class="limits">
+                    <li><b>빛을 두 길로 나눈다.</b> ⑤와 ⑧의 뒤 초점면은 짝이 되는 면이라 링 조리개의 고리가 위상판의 고리 위에 맺힌다. 시료를 곧게 지난 빛(S)은 이 고리로 모이고, 세포에서 퍼진 빛(D)은 고리 밖을 지난다.</li>
+                    <li><b>S만 당기고 어둡게 한다.</b> 위상판의 고리 막이 S만 ¼파장 당기고 세기를 25%로 줄인다. D는 그대로다.</li>
+                    <li><b>상에서 지운다.</b> D는 원래 S보다 ¼파장 늦어서, 당겨진 S와 반 파장 어긋나 서로 지운다. 세포 자리가 어두워지고, 카메라는 그 밝기만 잰다.</li>
+                </ol>
+                <details class="more">
+                    <summary>나머지 부품 여덟은 명시야와 같다</summary>
+                    <table class="settings parts-table">
+                        <thead>
+                            <tr><th scope="col">부품</th><th scope="col">역할</th><th scope="col">작동</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr data-part="1" tabindex="0"><th scope="row">① 광원</th><td data-label="역할">시료를 비출 빛을 낸다(LED, 할로겐 램프)</td><td data-label="작동">밝기는 전압이나 ND 필터로 맞추고, 조리개로 맞추지 않는다</td></tr>
+                            <tr data-part="2" tabindex="0"><th scope="row">② 콜렉터 렌즈</th><td data-label="역할">광원의 빛을 모은다</td><td data-label="작동">광원의 상을 ⑤ 자리에 맺어 그 자리를 빛으로 채운다</td></tr>
+                            <tr data-part="3" tabindex="0"><th scope="row">③ 시야 조리개</th><td data-label="역할">비추는 넓이를 정해 눈부심을 줄인다</td><td data-label="작동">콘덴서가 그 상을 시료 면에 맺는다. 시야 바로 바깥까지 연다</td></tr>
+                            <tr data-part="4" tabindex="0"><th scope="row">④ 필터</th><td data-label="역할">빛의 색을 고른다</td><td data-label="작동">위상차는 초록(550 nm). 위상판이 이 파장에서 ¼파장이 되게 만들어져 있다</td></tr>
+                            <tr data-part="6" tabindex="0"><th scope="row">⑥ 콘덴서 렌즈</th><td data-label="역할">시료를 비춘다</td><td data-label="작동">⑤의 한 점에서 온 빛을 한 방향의 평행한 빛으로 바꾸고, ③의 상을 시료 면에 맺는다. 높이로 쾰러 조명을 맞춘다</td></tr>
+                            <tr data-part="7" tabindex="0"><th scope="row">⑦ 시료</th><td data-label="역할">빛을 흡수하지 않고 늦추기만 한다</td><td data-label="작동">빛 대부분은 곧게 가고(S), 구조가 일부를 여러 방향으로 퍼뜨린다(D)</td></tr>
+                            <tr data-part="9" tabindex="0"><th scope="row">⑨ 튜브 렌즈</th><td data-label="역할">상을 맺는다</td><td data-label="작동">대물렌즈에서 평행하게 나온 빛을 모은다. 배율 = 튜브 렌즈 ÷ 대물렌즈 초점 거리(Nikon·Leica 200 mm, Olympus 180 mm, Zeiss 165 mm)</td></tr>
+                            <tr data-part="10" tabindex="0"><th scope="row">⑩ 카메라(또는 눈)</th><td data-label="역할">상의 밝기만 잰다</td><td data-label="작동">위상차를 위한 계산은 없다. S와 D가 센서 위에서 간섭한 결과를 그대로 기록한다</td></tr>
+                        </tbody>
+                    </table>
+                </details>
+            </div>
+            <p class="source" style="max-width: var(--measure);">출처: 링 조리개와 위상판, 짝이 되는 면, S와 D, ¼파장과 25%, 초록 필터, 콘덴서 조리개를 끝까지 연다: Nikon MicroscopyU · 나머지 부품의 역할: Evident, Köhler Illumination(Abramowitz·Davidson), Infinity Optical Systems(Spring·Davidson) · 영상은 이 페이지의 계산(가상 세포, 10×/0.25, 초록 550 nm) · 그림은 빛의 길을 단순하게 그린 개념도</p>
+        </section>
+
+        <section id="practice" class="wide step" aria-labelledby="practice-title">
+            <div style="max-width: var(--measure);">
+                <p class="step-no">02 실무</p>
+                <h2 id="practice-title">번호, 조리개, 중심, 초점을 맞춘다</h2>
+                <p>위상차는 링 조리개의 상이 위상판의 고리 위에 겹칠 때만 된다. 아래 현미경은 명시야로 쓰던 그대로다. 하나씩 바꾸며 위상 망원경으로 본 대물렌즈 뒤 초점면과 카메라 영상이 어떻게 바뀌는지 보자.</p>
+            </div>
+            <div class="panel">
+                <div class="pr">
+                    <div class="pr-controls">
+                        <div class="control"><span class="label">대물렌즈</span><div class="seg" role="group" aria-label="대물렌즈" id="pr-obj"></div></div>
+                        <div class="control"><span class="label">콘덴서 터릿</span><div class="seg" role="group" aria-label="콘덴서 터릿" id="pr-ring"></div></div>
+                        <div class="control"><label for="pr-ap"><span>콘덴서 조리개 (대물렌즈 NA에 대해)</span><output id="pr-ap-out" for="pr-ap"></output></label><input type="range" id="pr-ap" min="10" max="100" step="5" value="40"></div>
+                        <div class="control"><label for="pr-focus"><span>초점</span><output id="pr-focus-out" for="pr-focus"></output></label><input type="range" id="pr-focus" min="-20" max="20" step="1" value="6"></div>
+                        <div class="control"><span class="label">용기와 자리</span><div class="seg" role="group" aria-label="용기와 자리" id="pr-well"></div></div>
+                        <div class="pr-buttons"><button class="btn" type="button" id="pr-reset">처음 상태로</button><button class="btn" type="button" id="pr-fix">모두 맞추기</button></div>
+                    </div>
+                    <div>
+                        <p class="fig-label">뒤 초점면 (위상 망원경)</p>
+                        <canvas id="pr-bfp" class="bfp" tabindex="0" role="img" aria-label="위상 망원경으로 본 대물렌즈 뒤 초점면. 밝은 고리는 링 조리개의 상, 보라 테두리의 어두운 고리는 위상판의 고리다. 끌거나 화살표 키로 밝은 고리를 옮긴다."></canvas>
+                        <p class="numbers" id="pr-bfp-numbers"></p>
+                        <p class="legend"><span><i style="border-color: var(--accent-warn);"></i>밝은 고리: 링 조리개</span><span><i style="border-color: var(--violet);"></i>어두운 고리: 위상판</span></p>
+                        <p class="hint pr-hint">밝은 고리를 끌거나, 그림을 고르고 화살표 키로 옮긴다(링 조리개의 중심 나사).</p>
+                    </div>
+                    <div>
+                        <p class="fig-label">⑩ 카메라 영상 (계산)</p>
+                        <canvas id="pr-image" class="micro" width="256" height="256" role="img" aria-label="지금 설정으로 찍은 가상 세포의 영상"></canvas>
+                        <p class="numbers" id="pr-numbers" aria-live="polite"></p>
+                    </div>
+                </div>
+                <ul class="checks" id="pr-checks" aria-label="맞춘 것"></ul>
+                <p class="diag" id="pr-note" aria-live="polite"></p>
+            </div>
+            <p class="hint" style="max-width: var(--measure); margin-top: 12px;">명시야용 4×/0.10에는 위상판이 든 같은 사양이 없어 4×/0.13(PhL)으로 보인다. 10×/0.25와 20×/0.40은 Ph1 링 조리개 하나를 같이 쓴다. 영상은 노출을 맞춰 배경을 회색으로 보이고, 배경 숫자는 위상판 없이 빈 시야를 찍을 때를 100%로 센다.</p>
+            <p class="source" style="max-width: var(--measure);">출처: 대물렌즈와 같은 번호의 링 조리개(PhL 4×, Ph1 10·20×, Ph2 40·60×), 위상 망원경으로 겹치기, 콘덴서 조리개를 끝까지 연다: Nikon MicroscopyU · 위상판이 든 대물렌즈의 사양: Nikon, CFI Achromat Series for Phase Contrast · 웰의 휜 액면: Nienhaus 외 2023 · 명시야는 초점에서 대비가 가장 작다: Schöll 외 2014 · 영상과 고리 그림은 이 페이지의 계산(가상 세포, 초록 550 nm). 위상 고리의 NA(PhL 0.048, Ph1 0.114, Ph2 0.266)는 Webb 2015의 배치와 Kurata 외 2023의 측정에서 센 값이고, 고리의 폭, 대비가 절반이 되는 비켜남, 웰 액면의 기울기(접촉각 74°)는 이 페이지의 모델이다 <span class="tag guess">가설</span></p>
+        </section>
+
+        <section id="summary" class="wrap step" aria-labelledby="summary-title">
+            <p class="step-no">정리</p>
+            <h2 id="summary-title">밝기만 보는 한계를, 고리 둘을 겹쳐 넘는다</h2>
+            <ol class="limits">
+                <li><b>명시야는 밝기만 본다.</b> 투명한 세포는 빛을 늦추기만 해서 초점에서 배경과 밝기가 거의 같다.</li>
+                <li><b>고리 둘을 더한다.</b> 콘덴서의 링 조리개와 대물렌즈 뒤 초점면의 위상판은 짝이 되는 면에 있다. 위상판이 곧게 간 빛만 ¼파장 당기고 어둡게 해, 상에서 퍼진 빛과 지워 세포가 어둡게 보인다.</li>
+                <li><b>두 고리를 겹쳐 둔다.</b> 대물렌즈와 같은 번호의 링 조리개를 넣고, 콘덴서 조리개를 끝까지 열고, 위상 망원경으로 밝은 고리를 어두운 고리에 겹치고, 초점에서 본다. 웰은 가운데에서 찍는다.</li>
+            </ol>
+            <div class="note">
+                <p><strong>오해</strong>위상차 영상은 카메라나 소프트웨어가 계산해 만든다.</p>
+                <p class="fact"><strong>실제로는</strong>대물렌즈 안의 위상판(유리판)과 빛끼리의 간섭이 만든다. 카메라는 명시야와 같은 보통 카메라이고, 접안렌즈로 눈으로 봐도 같다. 소프트웨어로 위상차 비슷한 영상을 계산하는 방법은 따로 있다.</p>
+            </div>
+            <div class="note">
+                <p><strong>오해</strong>위상차 영상에서 어두울수록 두껍다.</p>
+                <p class="fact"><strong>실제로는</strong>큰 물체는 두꺼워도 안쪽이 배경 밝기로 돌아가고(셰이드오프), 늦음이 아주 크면 오히려 배경보다 밝아진다.</p>
+            </div>
+            <p class="source">출처: MicroscopyU · Evident · Nienhaus 외 2023(웰, 소프트웨어로 계산하는 방법) · Kurata 외 2023</p>
+        </section>
+
+        <section id="faq" class="wrap step" aria-labelledby="faq-title">
+            <p class="step-no">질문</p>
+            <h2 id="faq-title">자주 묻는 질문</h2>
+            <div class="faq" id="faq-list">
+                <details>
+                    <summary>위상차 현미경이란?</summary>
+                    <p>투명한 시료가 빛을 늦추는 정도(위상)의 차이를 밝기의 차이로 바꿔 보여 주는 광학 현미경이다. 염색하지 않은 살아 있는 세포를 보는 데 쓴다. 프리츠 체르니커가 1930년대에 만들었고, 그 공로로 1953년 노벨 물리학상을 받았다.</p>
+                </details>
+                <details>
+                    <summary>위상차 현미경의 원리는?</summary>
+                    <p>부품은 고리 두 개다. 콘덴서의 링 조리개가 빛을 고리로만 들여보내고, 시료를 곧게 지난 빛(S)은 대물렌즈 안 위상판의 같은 크기 고리로 모인다. 세포에서 퍼진 빛(D)은 고리 밖을 지난다. 위상판의 고리 막이 S만 ¼파장 당기고 어둡게 하면, 원래 S보다 ¼파장 늦던 D와 반 파장 어긋나 상에서 서로 지워 세포가 어둡게 보인다.</p>
+                </details>
+                <details>
+                    <summary>위상차 현미경과 명시야 현미경은 구조가 무엇이 다른가?</summary>
+                    <p>다른 부품은 둘이다. 콘덴서 앞 초점면의 둥근 조리개 대신 고리 모양 구멍의 링 조리개를 쓰고, 뒤 초점면에 고리 막(위상판)이 든 위상차 대물렌즈를 쓴다. 두 고리는 짝이 되는 면에 있어 링 조리개의 상이 위상판의 고리 위에 맺힌다. 광원, 콜렉터 렌즈, 시야 조리개, 콘덴서, 튜브 렌즈, 카메라는 같고, 위상판에 맞춘 초록 필터를 권한다.</p>
+                </details>
+                <details>
+                    <summary>위상차 현미경의 헤일로와 셰이드오프는 왜 생기나?</summary>
+                    <p>위상판의 고리에 폭이 있어서, 크고 매끈한 구조에서 퍼진 빛 일부도 곧게 간 빛과 함께 고리를 지나 당겨지고 어두워지기 때문이다. 그 빛은 지우는 일을 하지 못해, 큰 물체는 안쪽이 배경 밝기로 돌아가고(셰이드오프) 경계 바깥에 밝은 테(헤일로)가 생긴다. 고리 옆에 ND 고리를 더한 아포다이즈 위상판이 헤일로를 줄인다.</p>
+                </details>
+                <details>
+                    <summary>위상차 현미경의 Ph1, Ph2, Ph3는 무엇이고 어떻게 맞추나?</summary>
+                    <p>대물렌즈의 위상 고리 크기에 맞춘 콘덴서 링 조리개의 번호다. 보통 PhL은 4×·5×, Ph1은 10×·20×, Ph2는 40×·60×, Ph3는 100× 대물렌즈에 쓴다. 대물렌즈에 적힌 번호와 같은 링 조리개를 넣고, 위상 망원경이나 버트런드 렌즈로 보며 두 고리를 겹치고, 콘덴서 조리개는 완전히 연다.</p>
+                </details>
+                <details>
+                    <summary>위상차 현미경을 직접 만들 수 있나?</summary>
+                    <p>위상판은 위상차 대물렌즈 안, 뒤 초점면에 붙어 있어서 보통 위상차 대물렌즈를 사서 쓴다. 나머지는 명시야 현미경 그대로다. 그 대물렌즈의 위상 고리에 맞는 링 조리개를 콘덴서 앞 초점면에 두거나(반지름 = NA × 콘덴서 초점 거리) 콘덴서 없이 LED 고리를 시료 위에 두고(Webb 2015), 위상 망원경으로 보며 크기와 중심을 맞춘다. 위상 고리가 없는 대물렌즈로 하려면 릴레이 렌즈로 만든 뒤 초점면의 짝이 되는 면에 위상판을 둔다(외부 위상차).</p>
+                </details>
+                <details>
+                    <summary>96웰 플레이트에서 위상차가 잘 안 되는 이유는?</summary>
+                    <p>웰 속 배지가 표면장력으로 벽 쪽으로 휘어 렌즈처럼 빛을 꺾고, 링 조리개의 고리 상이 위상판의 고리에서 비켜나기 때문이다(메니스커스 효과). 한 측정에서 보통의 위상차로 위상차가 되는 면적은 96웰(10×)에서 웰의 2.3%, 6웰(4×)에서 25%였다. 웰 가운데에서 찍고, 큰 웰이나 액면이 평평한 용기를 쓰면 낫다.</p>
+                </details>
+            </div>
+            <p class="source">출처: MicroscopyU(원리, 구성, 헤일로, 정렬) · Evident(쾰러 조명) · NobelPrize.org · Webb 2015 · Nienhaus 외 2023 표 1</p>
+        </section>
+
+        <section class="wrap step" aria-labelledby="more-title">
+            <h2 id="more-title">더 보기</h2>
+            <ul class="links">
+                <li><a href="https://www.microscopyu.com/techniques/phase-contrast/introduction-to-phase-contrast-microscopy">Nikon MicroscopyU, Introduction to Phase Contrast Microscopy</a> · <a href="https://www.microscopyu.com/techniques/phase-contrast/phase-contrast-microscope-configuration">Configuration</a> · <a href="https://www.microscopyu.com/tutorials/phase-contrast-microscope-alignment">Alignment</a></li>
+                <li><a href="https://evidentscientific.com/en/microscope-resource/knowledge-hub/anatomy/kohler">Evident, Köhler Illumination</a> · <a href="https://evidentscientific.com/en/microscope-resource/knowledge-hub/anatomy/infinityintro">Infinity Optical Systems</a></li>
+                <li><a href="https://www.microscope.healthcare.nikon.com/products/optics/cfi-achromat-series-for-phase-contrast">Nikon, CFI Achromat Series for Phase Contrast</a></li>
+                <li><a href="https://doi.org/10.1111/jmi.12181">Webb, Condenser-free contrast methods for transmitted-light microscopy (Journal of Microscopy 2015)</a></li>
+                <li><a href="https://patents.google.com/patent/US8300308B2">Nikon (Tamura), Eyepiece base unit and microscope, US 8,300,308 B2 (2012)</a></li>
+                <li><a href="https://www.nobelprize.org/prizes/physics/1953/zernike/facts/">NobelPrize.org, Frits Zernike (1953)</a> · <a href="https://www.nobelprize.org/prizes/physics/1953/ceremony-speech/">Award ceremony speech</a></li>
+                <li><a href="https://arxiv.org/abs/2305.05156">Kurata et al., Quantitative phase retrieval for Zernike phase-contrast microscopy (arXiv 2023)</a></li>
+                <li><a href="https://doi.org/10.1038/s41598-023-32917-6">Nienhaus et al., Adaptive phase contrast microscopy to compensate for the meniscus effect (Scientific Reports 2023)</a></li>
+                <li><a href="https://doi.org/10.1111/jmi.12118">Schöll et al., Influence of the phase effect on focus measures in bright field microscopy (Journal of Microscopy 2014)</a></li>
+                <li><a href="https://ibidi.com/content/213-phase-contrast">ibidi, Phase Contrast Microscopy</a></li>
+                <!-- 영상이 나오면 추가: <li><a href="https://www.youtube.com/watch?v=...">영상으로 보기</a></li> -->
+            </ul>
+            <p class="hint" style="margin-top: 12px;">영상은 가상 시료를 이 페이지가 직접 계산한 것이다(푸리에 광학). 같은 계산을 파이썬으로 따로 짜서 숫자를 맞춰 보았다. 실제 현미경 사진은 쓰지 않았다.</p>
+        </section>
+    </main>
+
+
+    <footer class="wrap">
+        마지막 업데이트 <time datetime="2026-10-12">2026-10-12</time> · <a href="/">Hugh Q Lee</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+                document.dispatchEvent(new Event("themechange"));
+            });
+            render();
+        })();
+    </script>
+    <script id="pc-core">
+        // Zernike phase contrast as Fourier optics (Abbe's method): the condenser annulus is a set of mutually
+        // incoherent point sources; each one lights the specimen (a thin phase screen) with a tilted plane wave,
+        // the objective pupil (aperture, phase ring, defocus) filters the field, and the intensities add up.
+        // Convention: a wave is exp(i(kz - wt)); a specimen that slows light multiplies it by exp(+i phi);
+        // advancing light by a quarter wave is exp(-i pi/2). The same model in Python reproduces these numbers.
+        var PC = (function () {
+            "use strict";
+            var plans = {};
+            function plan(n) {
+                if (plans[n]) return plans[n];
+                var bits = Math.round(Math.log(n) / Math.LN2), rev = new Uint32Array(n);
+                var cos = new Float64Array(n / 2), sin = new Float64Array(n / 2), i;
+                for (i = 0; i < n; i++) {
+                    var r = 0, x = i;
+                    for (var b = 0; b < bits; b++) { r = (r << 1) | (x & 1); x >>= 1; }
+                    rev[i] = r;
+                }
+                for (i = 0; i < n / 2; i++) { cos[i] = Math.cos(2 * Math.PI * i / n); sin[i] = Math.sin(2 * Math.PI * i / n); }
+                plans[n] = { rev: rev, cos: cos, sin: sin, tr: new Float64Array(n), ti: new Float64Array(n) };
+                return plans[n];
+            }
+            function fft1(re, im, n, p, inv) {
+                var rev = p.rev, i, j, t;
+                for (i = 0; i < n; i++) {
+                    j = rev[i];
+                    if (j > i) { t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; }
+                }
+                for (var size = 2; size <= n; size <<= 1) {
+                    var half = size >> 1, step = n / size;
+                    for (var start = 0; start < n; start += size) {
+                        for (var k = 0; k < half; k++) {
+                            var wr = p.cos[k * step], wi = inv ? p.sin[k * step] : -p.sin[k * step];
+                            var a = start + k, b2 = a + half;
+                            var xr = re[b2] * wr - im[b2] * wi, xi = re[b2] * wi + im[b2] * wr;
+                            re[b2] = re[a] - xr; im[b2] = im[a] - xi;
+                            re[a] += xr; im[a] += xi;
+                        }
+                    }
+                }
+            }
+            // 2D FFT in place; forward = numpy fft2, inverse = numpy ifft2 (scaled by 1/n^2)
+            function fft2(re, im, n, inv) {
+                var p = plan(n), tr = p.tr, ti = p.ti, i, j, o;
+                for (i = 0; i < n; i++) {
+                    o = i * n;
+                    for (j = 0; j < n; j++) { tr[j] = re[o + j]; ti[j] = im[o + j]; }
+                    fft1(tr, ti, n, p, inv);
+                    for (j = 0; j < n; j++) { re[o + j] = tr[j]; im[o + j] = ti[j]; }
+                }
+                for (j = 0; j < n; j++) {
+                    for (i = 0; i < n; i++) { tr[i] = re[i * n + j]; ti[i] = im[i * n + j]; }
+                    fft1(tr, ti, n, p, inv);
+                    for (i = 0; i < n; i++) { re[i * n + j] = tr[i]; im[i * n + j] = ti[i]; }
+                }
+                if (inv) {
+                    var s = 1 / (n * n);
+                    for (i = 0; i < n * n; i++) { re[i] *= s; im[i] *= s; }
+                }
+            }
+
+            var DEFAULT = {
+                wavelength: 0.55,         // µm: phase plates are made for a quarter wave at green 550 nm
+                na: 0.25,                 // 10x Ph1 class objective
+                annulus: [0.31, 0.40],    // annulus image radii / NA (measured for a 40x/0.75 Ph2; assumed here)
+                ringWiden: 0.25,          // the phase ring is about 25 % wider than the annulus image
+                ringAmp: 0.5,             // amplitude transmittance of the ring: 25 % of the intensity
+                ringPhaseDeg: 90,         // +90: advance the surround light (positive), -90: negative
+                plate: true,
+                defocus: 0,
+                nMedium: 1.335,
+                shift: [0, 0],            // annulus image displacement, in units of NA
+                illum: "annulus",
+                sigma: 0.3,
+                srcRadial: 2,
+                srcAngular: 24,
+                ringRadii: null,          // fixed phase ring radii / NA (the objective's own ring); null: from the annulus
+                decenter: [0, 0],         // the annulus moved by its centring screws (units of NA), before the iris
+                clip: null                // the condenser iris radius / NA: light outside it is blocked; null: fully open
+            };
+            function scope(o) {
+                var s = {}, k;
+                for (k in DEFAULT) s[k] = DEFAULT[k];
+                for (k in (o || {})) s[k] = o[k];
+                return s;
+            }
+            function ring(s) {
+                if (s.ringRadii) return s.ringRadii;
+                var a0 = s.annulus[0], a1 = s.annulus[1], c = (a0 + a1) / 2, hw = (a1 - a0) / 2 * (1 + s.ringWiden);
+                return [c - hw, c + hw];
+            }
+            function tau(s) {
+                var t = -s.ringPhaseDeg * Math.PI / 180;
+                return [s.ringAmp * Math.cos(t), s.ringAmp * Math.sin(t)];
+            }
+            function pupilAt(fx, fy, s, rg, tr, out) {
+                var f = Math.sqrt(fx * fx + fy * fy), rho = f * s.wavelength / s.na;
+                if (rho > 1) { out[0] = 0; out[1] = 0; return; }
+                var re = 1, im = 0;
+                if (s.plate && rho >= rg[0] && rho <= rg[1]) { re = tr[0]; im = tr[1]; }
+                if (s.defocus) {
+                    var k = s.nMedium / s.wavelength, kz = Math.sqrt(Math.max(k * k - f * f, 0));
+                    var ph = 2 * Math.PI * s.defocus * (kz - k), c = Math.cos(ph), sn = Math.sin(ph);
+                    var r2 = re * c - im * sn;
+                    im = re * sn + im * c;
+                    re = r2;
+                }
+                out[0] = re; out[1] = im;
+            }
+            function sources(s) {
+                var pts = [], w = [], i, j, a0, a1, sum = 0;
+                if (s.illum === "axial") { pts.push([0, 0]); w.push(1); sum = 1; }
+                else {
+                    if (s.illum === "annulus") { a0 = s.annulus[0]; a1 = s.annulus[1]; } else { a0 = 0; a1 = s.sigma; }
+                    for (i = 0; i < s.srcRadial; i++) {
+                        var r = a0 + (a1 - a0) * (i + 0.5) / s.srcRadial;
+                        for (j = 0; j < s.srcAngular; j++) {
+                            var th = 2 * Math.PI * (j + 0.5) / s.srcAngular;
+                            pts.push([r * Math.cos(th), r * Math.sin(th)]);
+                            w.push(r);
+                            sum += r;
+                        }
+                    }
+                }
+                var kept = { pts: [], w: [] };
+                for (i = 0; i < pts.length; i++) {
+                    var x = pts[i][0] + s.decenter[0], y = pts[i][1] + s.decenter[1];
+                    // the iris blocks light; the weights are not renormalized, so the background drops
+                    if (s.clip !== null && Math.sqrt(x * x + y * y) > s.clip + 1e-12) continue;
+                    kept.pts.push([x + s.shift[0], y + s.shift[1]]);
+                    kept.w.push(w[i] / sum);
+                }
+                return kept;
+            }
+            function freqs(n, dx) {
+                var f = new Float64Array(n);
+                for (var i = 0; i < n; i++) f[i] = (i < n / 2 ? i : i - n) / (n * dx);
+                return f;
+            }
+            function spectrum(phase, n, minusOne) {
+                var N2 = n * n, Tr = new Float64Array(N2), Ti = new Float64Array(N2);
+                for (var i = 0; i < N2; i++) { Tr[i] = Math.cos(phase[i]) - (minusOne ? 1 : 0); Ti[i] = Math.sin(phase[i]); }
+                fft2(Tr, Ti, n, false);
+                return [Tr, Ti];
+            }
+            // Image intensity divided by the background (an empty field), that background (relative to an empty
+            // field without the phase plate), and the intensity itself (A). With no straight light (bg = 0), I = A.
+            function image(phase, n, dx, s, T) {
+                var N2 = n * n, i, j;
+                T = T || spectrum(phase, n, false);
+                var Tr = T[0], Ti = T[1], f = freqs(n, dx);
+                var src = sources(s), rg = ring(s), tr = tau(s), out = new Float64Array(N2), bg = 0, P = [0, 0];
+                var Ur = new Float64Array(N2), Ui = new Float64Array(N2), lim = s.na / s.wavelength;
+                for (var k = 0; k < src.pts.length; k++) {
+                    var ox = src.pts[k][0] * s.na / s.wavelength, oy = src.pts[k][1] * s.na / s.wavelength;
+                    for (i = 0; i < n; i++) {
+                        var fy = f[i] + oy, row = i * n;
+                        if (Math.abs(fy) > lim) { for (j = 0; j < n; j++) { Ur[row + j] = 0; Ui[row + j] = 0; } continue; }
+                        for (j = 0; j < n; j++) {
+                            var idx = row + j;
+                            pupilAt(f[j] + ox, fy, s, rg, tr, P);
+                            Ur[idx] = Tr[idx] * P[0] - Ti[idx] * P[1];
+                            Ui[idx] = Tr[idx] * P[1] + Ti[idx] * P[0];
+                        }
+                    }
+                    fft2(Ur, Ui, n, true);
+                    var wk = src.w[k];
+                    for (i = 0; i < N2; i++) out[i] += wk * (Ur[i] * Ur[i] + Ui[i] * Ui[i]);
+                    pupilAt(ox, oy, s, rg, tr, P);
+                    bg += wk * (P[0] * P[0] + P[1] * P[1]);
+                }
+                var I = new Float64Array(N2);
+                for (i = 0; i < N2; i++) I[i] = bg > 1e-12 ? out[i] / bg : out[i];
+                return { I: I, A: out, bg: bg };
+            }
+            // Specimens: phase maps (radians) on an n x n grid of pitch dx (µm), centred like numpy's (i - n/2) * dx.
+            function coords(n, dx) {
+                var x = new Float64Array(n);
+                for (var i = 0; i < n; i++) x[i] = (i - n / 2) * dx;
+                return x;
+            }
+            function disk(n, dx, d, phi, edge) {
+                edge = edge || 0.25;
+                var x = coords(n, dx), out = new Float64Array(n * n);
+                for (var i = 0; i < n; i++) for (var j = 0; j < n; j++) {
+                    var r = Math.sqrt(x[j] * x[j] + x[i] * x[i]);
+                    out[i * n + j] = phi * 0.5 * (1 - Math.tanh((r - d / 2) / edge));
+                }
+                return out;
+            }
+            function cellThickness(n, dx) {
+                var x = coords(n, dx), out = new Float64Array(n * n);
+                for (var i = 0; i < n; i++) for (var j = 0; j < n; j++) {
+                    var X = x[j], Y = x[i], th = Math.atan2(Y, X);
+                    var R = 18 + 4 * Math.cos(2 * th + 0.4) + 2.5 * Math.cos(3 * th - 1.0) + 1.5 * Math.sin(5 * th);
+                    var r = Math.sqrt(X * X + Y * Y);
+                    var inside = 0.5 * (1 - Math.tanh((r - R) / 0.6));
+                    var body = 2.6 * Math.exp(-((X + 1.5) * (X + 1.5) + (Y - 0.5) * (Y - 0.5)) / (2 * 49)) * inside;
+                    var q = 1 - ((X + 2) / 6.5) * ((X + 2) / 6.5) - ((Y - 1) / 5.0) * ((Y - 1) / 5.0);
+                    var nucleus = 2.0 * Math.sqrt(Math.max(q, 0));
+                    var nucleoli = 0.6 * (Math.exp(-((X + 3.5) * (X + 3.5) + Y * Y) / (2 * 0.64))
+                        + Math.exp(-((X - 0.2) * (X - 0.2) + (Y - 2.4) * (Y - 2.4)) / (2 * 0.49)));
+                    out[i * n + j] = 0.4 * inside + body + nucleus + nucleoli;
+                }
+                return out;
+            }
+            function cell(n, dx, wavelength, dn) {
+                wavelength = wavelength || 0.55;
+                dn = dn || 0.025;
+                var h = cellThickness(n, dx), out = new Float64Array(n * n);
+                for (var i = 0; i < n * n; i++) out[i] = 2 * Math.PI * dn * h[i] / wavelength;
+                return out;
+            }
+
+            // Two-wave picture (plate on the undiffracted light only): I / I_bg = |exp(i phi) - 1 + tau|^2 / |tau|^2
+            function twoWave(phi, a, advanceDeg) {
+                var t = -advanceDeg * Math.PI / 180, tr = a * Math.cos(t), ti = a * Math.sin(t);
+                var re = Math.cos(phi) - 1 + tr, im = Math.sin(phi) + ti;
+                return (re * re + im * im) / (a * a);
+            }
+
+            return {
+                scope: scope, ring: ring, image: image, spectrum: spectrum,
+                disk: disk, cell: cell, cellThickness: cellThickness, twoWave: twoWave
+            };
+        })();
+        if (typeof module !== "undefined") module.exports = PC;
+    </script>
+    <script type="application/json" id="practice-data">{"objectives": [{"key": "4x", "label": "4×/0.13", "na": 0.13, "code": "PhL", "ring": [0.04069, 0.05531], "kHalf": 0.7}, {"key": "10x", "label": "10×/0.25", "na": 0.25, "code": "Ph1", "ring": [0.09994, 0.12806], "kHalf": 0.86}, {"key": "20x", "label": "20×/0.40", "na": 0.4, "code": "Ph1", "ring": [0.09994, 0.12806], "kHalf": 0.86}], "annuli": {"PhL": [0.04215, 0.05385], "Ph1": [0.10275, 0.12525], "Ph2": [0.23225, 0.29975]}, "wells": [{"key": "slide", "label": "슬라이드", "shift": 0}, {"key": "w0", "label": "96웰 가운데", "shift": 0}, {"key": "w05", "label": "가운데에서 0.5 mm", "shift": 0.0112}, {"key": "w15", "label": "가운데에서 1.5 mm", "shift": 0.0348}], "start": {"obj": "10x", "ring": "BF", "aperture": 40, "center": [0.022, 0.013], "focus": 6, "well": "slide"}, "text": {"to": "~", "pupilNA": "동공 NA ", "ringNA": "위상 고리 NA ", "annNA": "링 조리개 NA ", "irisNA": "조리개 NA ", "bfLabel": "명시야(BF)", "bg": "배경 ", "cell": "세포 ", "times": "배", "noLight": "빛이 없다", "darkCell": "세포 가장자리만 빛난다", "ckCode": "번호", "ckAp": "조리개", "ckCenter": "중심", "ckFocus": "초점", "ckWell": "자리", "vBF": "명시야(링 없음)", "vCodeOk": "{ring} = 대물렌즈 {code}", "vCodeBad": "{ring} ≠ 대물렌즈 {code}", "vApOpen": "끝까지 열림", "vApFree": "{p}%, 링을 가리지 않음", "vApPart": "{p}%, 링 일부를 가림", "vApAll": "{p}%, 링을 다 가림", "vCenterOk": "겹침", "vCenterOff": "반폭의 {k}배 비켜남", "vFocusOk": "맞음", "vWellOk": "평평함", "vWellBad": "액면이 휘어 있음", "vWellComp": "휜 만큼 메움", "nBF": "명시야로 보고 있다. 둥근 조리개로 비추면 곧게 간 빛이 위상판의 고리로 모이지 않아, 위상판이 있어도 세포가 초점에서 거의 안 보인다. 콘덴서 터릿을 대물렌즈의 번호({code})로 돌린다.", "nNoLight": "빛이 없다. 콘덴서 조리개가 링 조리개를 다 가렸다. 위상차에서는 콘덴서 조리개를 끝까지 연다.", "nOutside": "링 조리개({ring})의 상이 이 대물렌즈의 동공 밖에 맺혀, 곧게 간 빛이 대물렌즈로 들어오지 못한다. 배경이 검고 세포의 가장자리만 빛난다(암시야). 번호를 {code}로 바꾼다.", "nEdge": "링 조리개({ring})가 이 대물렌즈({code})에 비해 커서 밝은 고리가 동공 가장자리에 걸친다. 곧게 간 빛이 위상판의 고리를 지나지 않아 위상차가 되지 않는다. 번호를 {code}로 바꾼다.", "nWrong": "번호가 다르다. 밝은 고리(링 조리개 {ring})와 어두운 고리(위상판 {code})의 크기가 달라, 곧게 간 빛이 위상판의 고리를 비켜 간다. 세포가 명시야처럼 흐리게 보인다. 번호를 {code}로 바꾼다.", "nClip": "콘덴서 조리개가 링 조리개 일부를 가린다. 위상차에서는 끝까지 연다.", "nCenter": "밝은 고리가 어두운 고리에서 반폭의 {k}배 비켜났다. 곧게 간 빛이 고리 밖으로 새어 대비가 절반 아래로 떨어지고 배경이 밝아진다. 밝은 고리를 끌어(링 조리개의 중심 나사) 어두운 고리 위에 겹친다.", "nWell": "웰의 휜 액면이 밝은 고리를 반폭의 {k}배 밀어냈다. 곧게 간 빛이 고리 밖으로 새어 대비가 절반 아래로 떨어진다. 웰 가운데에서 찍는다.", "nNear": "조금 비켜났다(반폭의 {k}배). 대비가 줄기 시작한다. 마저 겹친다.", "nFocus": "초점이 {d} µm 어긋났다. 위상차는 초점에서 대비가 가장 크다. 명시야는 반대로 초점에서 가장 작다.", "nOk": "맞았다. 밝은 고리가 어두운 고리 안에 겹쳐, 곧게 간 빛만 ¼파장 당겨지고 어두워진다. 배경이 고른 회색이고 세포가 어둡게 보인다.", "nOkWell": "맞았다. 웰 액면이 기울인 만큼 중심 나사로 메웠다. 웰 안에서 자리를 옮기면 다시 어긋난다."}}</script>
+    <script>
+        (function () {
+            "use strict";
+            if (typeof document === "undefined") return;
+            function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+            function fmt(x, d) { return (Math.round(x * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d); }
+            function setupCanvas(c) {
+                var r = c.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+                var w = Math.max(10, Math.round(r.width * dpr)), h = Math.max(10, Math.round(r.height * dpr));
+                if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+                var ctx = c.getContext("2d");
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                return { ctx: ctx, w: r.width, h: r.height };
+            }
+            // Gray image: the background (1) is mid gray, 0 black, 2 or more white.
+            function paint(canvas, I, n) {
+                var off = document.createElement("canvas");
+                off.width = n; off.height = n;
+                var octx = off.getContext("2d"), data = octx.createImageData(n, n);
+                for (var i = 0; i < n * n; i++) {
+                    var g = Math.max(0, Math.min(255, Math.round(I[i] / 2 * 255)));
+                    data.data[4 * i] = g; data.data[4 * i + 1] = g; data.data[4 * i + 2] = g; data.data[4 * i + 3] = 255;
+                }
+                octx.putImageData(data, 0, 0);
+                var ctx = canvas.getContext("2d");
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = "high";
+                ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
+            }
+            function scalebar(canvas, fieldUm, barUm, label) {
+                var ctx = canvas.getContext("2d"), W = canvas.width, H = canvas.height, px = barUm / fieldUm * W, s = W / 256;
+                ctx.save();
+                ctx.fillStyle = "rgba(0,0,0,0.55)";
+                ctx.fillRect(W - px - 20 * s, H - 30 * s, px + 12 * s, 22 * s);
+                ctx.fillStyle = "#fff";
+                ctx.fillRect(W - px - 14 * s, H - 14 * s, px, 3 * s);
+                ctx.font = (10 * s) + "px ui-monospace, Menlo, monospace";
+                ctx.textAlign = "center";
+                ctx.fillText(label, W - px / 2 - 14 * s, H - 18 * s);
+                ctx.restore();
+            }
+            // Run drawing once per frame with the latest settings (a hidden page gets no frames: use a timer).
+            function scheduler(fn) {
+                var pending = false;
+                return function () {
+                    if (pending) return;
+                    pending = true;
+                    var later = function () { pending = false; fn(); };
+                    if (document.hidden) setTimeout(later, 0); else requestAnimationFrame(later);
+                };
+            }
+            function segButtons(container, items, current, onPick) {
+                container.innerHTML = "";
+                items.forEach(function (it) {
+                    var b = document.createElement("button");
+                    b.type = "button";
+                    b.textContent = it.label;
+                    b.setAttribute("aria-pressed", it.key === current ? "true" : "false");
+                    b.addEventListener("click", function () {
+                        Array.prototype.forEach.call(container.children, function (x) { x.setAttribute("aria-pressed", "false"); });
+                        b.setAttribute("aria-pressed", "true");
+                        onPick(it.key);
+                    });
+                    container.appendChild(b);
+                });
+            }
+            function stats(I) {
+                var mn = Infinity, mx = -Infinity, s = 0, i;
+                for (i = 0; i < I.length; i++) { if (I[i] < mn) mn = I[i]; if (I[i] > mx) mx = I[i]; s += I[i]; }
+                var m = s / I.length, v = 0;
+                for (i = 0; i < I.length; i++) v += (I[i] - m) * (I[i] - m);
+                return { min: mn, max: mx, std: Math.sqrt(v / I.length) };
+            }
+            // A row of numbers: [label, value] pairs, the value in bold.
+            function numbers(el, pairs) {
+                el.innerHTML = "";
+                pairs.forEach(function (p) {
+                    var sp = document.createElement("span");
+                    sp.textContent = p[0];
+                    if (p[1]) { var b = document.createElement("b"); b.textContent = p[1]; sp.appendChild(b); }
+                    el.appendChild(sp);
+                });
+            }
+
+            var redraws = [];
+            document.addEventListener("themechange", function () { redraws.forEach(function (f) { f(); }); });
+            if ("ResizeObserver" in window) {
+                var lastW = 0;
+                new ResizeObserver(function () {
+                    var w = document.documentElement.clientWidth;
+                    if (w !== lastW) { lastW = w; redraws.forEach(function (f) { f(); }); }
+                }).observe(document.body);
+            }
+
+            // The virtual cell (green 550 nm). 01 shows it in brightfield (a round iris at 0.7 of the NA, no phase plate)
+            // and in phase contrast (10x/0.25 with its Ph1 annulus and phase ring: 02 with everything set right).
+            var PD = JSON.parse(document.getElementById("practice-data").textContent);
+            var N = 128, DX = 0.5, CELL = PC.cell(N, DX), T = PC.spectrum(CELL, N, false), images = {};
+            function img(key) {
+                if (images[key]) return images[key];
+                var o = PD.objectives[1], a = PD.annuli[o.code], sc = key === "bf"
+                    ? PC.scope({ plate: false, illum: "disk", sigma: 0.7, srcRadial: 6 })
+                    : PC.scope({ annulus: [a[0] / o.na, a[1] / o.na], ringRadii: [o.ring[0] / o.na, o.ring[1] / o.na], srcRadial: 4 });
+                var out = { I: PC.image(CELL, N, DX, sc, T).I, n: N, dx: DX };
+                out.st = stats(out.I);
+                images[key] = out;
+                return out;
+            }
+            function show(canvas, im) {
+                paint(canvas, im.I, im.n);
+                scalebar(canvas, im.n * im.dx, 10, "10 µm");
+            }
+
+            // ---------- 01: brightfield and phase contrast, part by part
+            (function () {
+                var cv = document.getElementById("bench");
+                if (!cv) return;
+                var state = { mode: "pc", planes: true, focus: 0 };
+                // x of each part in a 680-wide drawing (the optical axis at y = 115)
+                var PX = { 1: 28, 2: 82, 3: 130, 4: 172, 5: 220, 6: 270, 7: 340, 8: 420, 9: 540, 10: 640 };
+                var NAMES = { 1: "광원", 2: "콜렉터 렌즈", 3: "시야 조리개", 4: "필터", 6: "콘덴서", 7: "시료", 9: "튜브 렌즈", 10: "카메라" };
+                var NAMES_BF = { 5: "조리개", 8: "대물렌즈" }, NAMES_PC = { 5: "링 조리개", 8: "위상차 대물렌즈" };
+                function draw() {
+                    // wide screens get the names of the parts in two staggered rows under the numbers
+                    var w = cv.getBoundingClientRect().width, wide = w >= 520;
+                    cv.style.height = Math.round(w * (wide ? 262 : 226) / 680) + "px";
+                    var g = setupCanvas(cv), ctx = g.ctx, k = g.w / 680;
+                    function X(x) { return x * k; }
+                    function Y(y) { return y * k; }
+                    function poly(pts) {
+                        ctx.beginPath();
+                        pts.forEach(function (p, i) { if (i) ctx.lineTo(X(p[0]), Y(p[1])); else ctx.moveTo(X(p[0]), Y(p[1])); });
+                        ctx.stroke();
+                    }
+                    function lens(x, ry) {
+                        ctx.strokeStyle = css("--faint");
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.ellipse(X(x), Y(115), X(7), Y(ry), 0, 0, 2 * Math.PI);
+                        ctx.stroke();
+                    }
+                    ctx.clearRect(0, 0, g.w, g.h);
+                    var pc = state.mode === "pc";
+                    var blue = css("--accent"), amber = css("--accent-warn"), green = css("--accent-green"), violet = css("--violet");
+                    var faint = css("--faint"), strong = css("--line-strong"), text = css("--text"), muted = css("--muted");
+                    if (state.focus) {
+                        ctx.fillStyle = css("--accent-soft");
+                        ctx.beginPath();
+                        ctx.ellipse(X(PX[state.focus] + (state.focus === 8 ? 10 : 0)), Y(115), X(state.focus === 8 ? 44 : 26), Y(96), 0, 0, 2 * Math.PI);
+                        ctx.fill();
+                    }
+                    if (state.planes) {
+                        ctx.setLineDash([5, 4]);
+                        ctx.lineWidth = 1.4;
+                        [[28, violet], [220, violet], [450, violet], [130, green], [340, green], [640, green]].forEach(function (p) {
+                            ctx.strokeStyle = p[1];
+                            poly([[p[0], 12], [p[0], 196]]);
+                        });
+                        ctx.setLineDash([]);
+                    }
+                    // light from the source fills the condenser aperture plane
+                    ctx.fillStyle = css("--panel-strong");
+                    ctx.beginPath();
+                    ctx.moveTo(X(36), Y(100)); ctx.lineTo(X(82), Y(64)); ctx.lineTo(X(216), Y(64));
+                    ctx.lineTo(X(216), Y(166)); ctx.lineTo(X(82), Y(166)); ctx.lineTo(X(36), Y(130));
+                    ctx.closePath();
+                    ctx.fill();
+                    // 1 light source
+                    ctx.fillStyle = amber;
+                    ctx.fillRect(X(20), Y(100), X(14), Y(30));
+                    // 2 collector, 6 condenser, 8 objective, 9 tube lens
+                    lens(82, 56); lens(270, 72); lens(405, 62); lens(540, 56);
+                    // 3 field diaphragm: blades at the edge of the beam
+                    ctx.fillStyle = strong;
+                    ctx.fillRect(X(127), Y(54), X(6), Y(26));
+                    ctx.fillRect(X(127), Y(150), X(6), Y(26));
+                    // 4 filter (green for phase contrast)
+                    if (pc) {
+                        ctx.fillStyle = css("--green-soft");
+                        ctx.fillRect(X(169), Y(64), X(7), Y(102));
+                        ctx.strokeStyle = green;
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(X(169), Y(64), X(7), Y(102));
+                    } else {
+                        ctx.strokeStyle = faint;
+                        ctx.setLineDash([3, 3]);
+                        ctx.strokeRect(X(169), Y(64), X(7), Y(102));
+                        ctx.setLineDash([]);
+                    }
+                    // 5 condenser aperture: a round iris (brightfield) or an annulus (phase contrast); dark = opaque
+                    ctx.fillStyle = strong;
+                    (pc ? [[40, 70], [80, 150], [160, 190]] : [[40, 97], [133, 190]]).forEach(function (a) {
+                        ctx.fillRect(X(217), Y(a[0]), X(6), Y(a[1] - a[0]));
+                    });
+                    // 7 specimen: a slide with a cell
+                    ctx.strokeStyle = faint;
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(X(337), Y(52), X(6), Y(126));
+                    ctx.fillStyle = css("--green-soft");
+                    ctx.strokeStyle = green;
+                    ctx.beginPath();
+                    ctx.ellipse(X(340), Y(115), X(9), Y(6), 0, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.stroke();
+                    // 8 the objective's back focal plane: a phase plate in a phase objective
+                    if (pc) {
+                        ctx.strokeStyle = strong;
+                        ctx.strokeRect(X(447), Y(58), X(6), Y(114));
+                        ctx.fillStyle = violet;
+                        ctx.fillRect(X(446), Y(72), X(8), Y(12));
+                        ctx.fillRect(X(446), Y(146), X(8), Y(12));
+                    } else {
+                        ctx.strokeStyle = faint;
+                        ctx.setLineDash([3, 3]);
+                        poly([[450, 58], [450, 172]]);
+                        ctx.setLineDash([]);
+                    }
+                    // 10 camera sensor
+                    ctx.fillStyle = text;
+                    ctx.fillRect(X(636), Y(80), X(8), Y(70));
+                    // D: spread by the cell, it fills the pupil and mostly misses the ring
+                    ctx.strokeStyle = amber;
+                    ctx.lineWidth = 1.3;
+                    ctx.setLineDash([5, 4]);
+                    [[100, 104], [130, 126]].forEach(function (m) { poly([[340, 115], [405, m[0]], [450, m[1]], [540, m[1]], [632, 115]]); });
+                    ctx.setLineDash([]);
+                    // S: from the openings at 5, through the specimen, to the back focal plane and on to the camera
+                    (pc ? [75, 155] : [100, 115, 130]).forEach(function (y0) {
+                        var yo = 115 + (115 - y0) * 65 / 70;
+                        ctx.strokeStyle = blue;
+                        ctx.lineWidth = 2;
+                        poly([[223, y0], [270, y0], [340, 115], [405, yo], [450, yo]]);
+                        ctx.globalAlpha = pc ? 0.45 : 1;
+                        ctx.lineWidth = pc ? 1.2 : 2;
+                        poly([[453, yo], [540, yo], [632, 115]]);
+                        ctx.globalAlpha = 1;
+                    });
+                    // numbers under the parts; the two that differ (and the filter) stand out in phase contrast
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    var small = k < 0.7;
+                    for (var n = 1; n <= 10; n++) {
+                        var key = n === 5 || n === 8 || (n === 4 && pc);
+                        ctx.font = (state.focus === n || key ? "700 " : "") + (small ? 11 : 13) + "px " + css("--sans");
+                        ctx.fillStyle = state.focus === n ? blue : (key ? text : muted);
+                        ctx.fillText("①②③④⑤⑥⑦⑧⑨⑩".charAt(n - 1), X(PX[n]), Y(212));
+                        if (wide) {
+                            var name = n === 5 || n === 8 ? (pc ? NAMES_PC : NAMES_BF)[n] : NAMES[n];
+                            ctx.font = (state.focus === n || key ? "600 " : "") + "12px " + css("--sans");
+                            ctx.fillText(name, X(PX[n]), Y(n % 2 ? 233 : 251));
+                        }
+                    }
+                    ctx.textAlign = "start";
+                    ctx.textBaseline = "alphabetic";
+                }
+                function camera() {
+                    var im = img(state.mode === "pc" ? "pc" : "bf");
+                    show(document.getElementById("bench-image"), im);
+                    numbers(document.getElementById("bench-numbers"), [["세포 ", fmt(im.st.min, 2) + "~" + fmt(im.st.max, 2) + "배"],
+                        [state.mode === "pc" ? "보인다" : "거의 안 보인다", ""]]);
+                }
+                function note() {
+                    document.getElementById("bench-note").textContent = state.mode === "pc"
+                        ? "위상차: ⑤ 링 조리개가 빛을 고리로만 들여보내고, 그 고리가 ⑧ 대물렌즈 뒤 초점면의 위상판 고리 위에 맺힌다. 다른 부품은 명시야와 같다."
+                        : "명시야: ⑤ 둥근 조리개가 꽉 찬 원뿔로 비추고, ⑧ 뒤 초점면에는 둥근 판 모양으로 빛이 모인다. 위상판이 없어 투명한 시료는 거의 보이지 않는다.";
+                }
+                segButtons(document.getElementById("bench-mode"), [{ key: "bf", label: "명시야" }, { key: "pc", label: "위상차" }], state.mode, function (k) {
+                    state.mode = k;
+                    note();
+                    draw();
+                    camera();
+                });
+                var planes = document.getElementById("bench-planes");
+                planes.addEventListener("change", function () { state.planes = planes.checked; draw(); });
+                Array.prototype.forEach.call(document.querySelectorAll("#parts [data-part]"), function (el) {
+                    var n = Number(el.getAttribute("data-part"));
+                    function on() { state.focus = n; el.classList.add("on"); draw(); }
+                    function off() { el.classList.remove("on"); if (state.focus === n) { state.focus = 0; draw(); } }
+                    el.addEventListener("mouseenter", on);
+                    el.addEventListener("mouseleave", off);
+                    el.addEventListener("focus", on);
+                    el.addEventListener("blur", off);
+                });
+                redraws.push(draw);
+                note();
+                draw();
+                camera();
+            })();
+
+            // ---------- 02: practice. Change one setting at a time; watch the back focal plane and the camera.
+            (function () {
+                var cam = document.getElementById("pr-image"), bfp = document.getElementById("pr-bfp");
+                if (!cam || !bfp) return;
+                var W = PD.text, OBJ = {}, WELL = {};
+                PD.objectives.forEach(function (o) { OBJ[o.key] = o; });
+                PD.wells.forEach(function (w) { WELL[w.key] = w; });
+                function copy(s) { return { obj: s.obj, ring: s.ring, aperture: s.aperture, center: s.center.slice(), focus: s.focus, well: s.well }; }
+                var state = copy(PD.start), drag = null, sliding = false;
+                var ap = document.getElementById("pr-ap"), fc = document.getElementById("pr-focus");
+                function obj() { return OBJ[state.obj]; }
+                function half(o) { return (o.ring[1] - o.ring[0]) / 2; }
+                function fill(t, v) { return t.replace(/\{(\w+)\}/g, function (m, k) { return v[k] !== undefined ? v[k] : m; }); }
+                function signed(x) { return (x > 0 ? "+" : "") + x; }
+
+                // the settings as PC.image options, in fractions of the objective NA. The centring screws move the
+                // annulus inside the condenser (before the iris), the well's liquid surface tilts everything (after).
+                function scopeOf(st, fast) {
+                    var o = OBJ[st.obj], na = o.na;
+                    var s = { na: na, ringRadii: [o.ring[0] / na, o.ring[1] / na], defocus: st.focus,
+                        shift: [WELL[st.well].shift / na, 0], srcAngular: fast ? 16 : 24 };
+                    if (st.ring === "BF") {
+                        s.illum = "disk";
+                        s.sigma = st.aperture / 100;
+                        s.srcRadial = fast ? 3 : 6;
+                    } else {
+                        var a = PD.annuli[st.ring];
+                        s.annulus = [a[0] / na, a[1] / na];
+                        s.decenter = [st.center[0] / na, st.center[1] / na];
+                        if (st.aperture < 100) s.clip = st.aperture / 100;
+                        s.srcRadial = fast ? 2 : 4;
+                    }
+                    return PC.scope(s);
+                }
+                var cache = {}, order = [];
+                function compute(st, fast) {
+                    var key = [st.obj, st.ring, st.aperture, st.center[0].toFixed(4), st.center[1].toFixed(4), st.focus, st.well, fast ? 1 : 0].join("|");
+                    if (cache[key]) return cache[key];
+                    var r = PC.image(CELL, N, DX, scopeOf(st, fast), T), A = r.A, mx = 0, i, disp, kind;
+                    for (i = 0; i < A.length; i++) if (A[i] > mx) mx = A[i];
+                    if (r.bg > 0.02) { disp = r.I; kind = "lit"; }
+                    else {
+                        // no straight light: the camera's auto exposure brings up whatever light is left
+                        disp = new Float64Array(A.length);
+                        kind = mx > 1e-4 ? "dark" : "none";
+                        if (kind === "dark") for (i = 0; i < A.length; i++) disp[i] = A[i] / mx * 1.7;
+                    }
+                    var out = { I: disp, n: N, dx: DX, bg: r.bg, kind: kind, st: stats(disp) };
+                    cache[key] = out;
+                    order.push(key);
+                    if (order.length > 40) delete cache[order.shift()];
+                    return out;
+                }
+                function readout(im) {
+                    if (im.kind === "none") return [[W.noLight, ""]];
+                    if (im.kind === "dark") return [[W.bg, "0%"], [W.darkCell, ""]];
+                    return [[W.bg, Math.round(im.bg * 100) + "%"], [W.cell, fmt(im.st.min, 2) + W.to + fmt(im.st.max, 2) + W.times]];
+                }
+
+                // what is set right, and the first thing to fix
+                function passing(st) {
+                    if (st.ring === "BF" || st.aperture >= 100) return 1;
+                    var a = PD.annuli[st.ring], lim = st.aperture / 100 * OBJ[st.obj].na, n = 0, inside = 0;
+                    for (var i = 0; i < 4; i++) {
+                        var r = a[0] + (a[1] - a[0]) * (i + 0.5) / 4;
+                        for (var j = 0; j < 48; j++) {
+                            var t = 2 * Math.PI * (j + 0.5) / 48, x = r * Math.cos(t) + st.center[0], y = r * Math.sin(t) + st.center[1];
+                            n++;
+                            if (Math.sqrt(x * x + y * y) <= lim) inside++;
+                        }
+                    }
+                    return inside / n;
+                }
+                function assess(st) {
+                    var o = OBJ[st.obj], m = WELL[st.well].shift, bf = st.ring === "BF", match = st.ring === o.code;
+                    var a = bf ? null : PD.annuli[st.ring], outside = a && a[0] >= o.na, edge = a && !outside && a[1] > o.na;
+                    var through = passing(st), tx = st.center[0] + m, ty = st.center[1], off = Math.sqrt(tx * tx + ty * ty), k = off / half(o);
+                    var v = { ring: st.ring, code: o.code, p: st.aperture, k: fmt(k, 1), d: Math.abs(st.focus) }, checks = [];
+                    checks.push(bf ? [false, W.ckCode, W.vBF] : [match, W.ckCode, fill(match ? W.vCodeOk : W.vCodeBad, v)]);
+                    checks.push(bf ? [null, W.ckAp, st.aperture + "%"] : [through >= 0.999, W.ckAp,
+                        st.aperture >= 100 ? W.vApOpen : fill(through <= 0 ? W.vApAll : through < 0.999 ? W.vApPart : W.vApFree, v)]);
+                    checks.push(bf || !match ? [null, W.ckCenter, "–"] : [k <= 0.3, W.ckCenter, k <= 0.3 ? W.vCenterOk : fill(W.vCenterOff, v)]);
+                    checks.push([Math.abs(st.focus) < 3, W.ckFocus, st.focus === 0 ? W.vFocusOk : signed(st.focus) + " µm"]);
+                    checks.push(m === 0 ? [true, W.ckWell, W.vWellOk] : (!bf && match && k <= 0.3 ? [null, W.ckWell, W.vWellComp] : [false, W.ckWell, W.vWellBad]));
+                    var note;
+                    if (bf) note = W.nBF;
+                    else if (through <= 0) note = W.nNoLight;
+                    else if (!match) note = outside ? W.nOutside : edge ? W.nEdge : W.nWrong;
+                    else if (through < 0.999) note = W.nClip;
+                    else if (k > o.kHalf) note = Math.abs(m) >= 0.5 * off ? W.nWell : W.nCenter;
+                    else if (k > 0.3) note = W.nNear;
+                    else if (Math.abs(st.focus) >= 3) note = W.nFocus;
+                    else note = m !== 0 ? W.nOkWell : W.nOk;
+                    return { checks: checks, note: fill(note, v) };
+                }
+                function renderChecks(list) {
+                    var ul = document.getElementById("pr-checks");
+                    ul.innerHTML = "";
+                    list.forEach(function (c) {
+                        var li = document.createElement("li"), b = document.createElement("b");
+                        li.className = c[0] === true ? "ok" : c[0] === false ? "bad" : "";
+                        b.textContent = (c[0] === true ? "✓ " : c[0] === false ? "✗ " : "· ") + c[1];
+                        li.appendChild(b);
+                        li.appendChild(document.createTextNode(c[2]));
+                        ul.appendChild(li);
+                    });
+                }
+
+                // The back focal plane through a phase telescope: the pupil, the phase ring (a film that passes a
+                // quarter of the light), and the light the condenser sends: a disk or the annulus, cut by the iris.
+                function drawBFP() {
+                    var g = setupCanvas(bfp), ctx = g.ctx, w = g.w, h = g.h, o = obj(), na = o.na;
+                    var cx = w / 2, cy = h / 2, R = w * 0.42, k = R / na, m = WELL[state.well].shift;
+                    var ax = cx + m * k, ay = cy, apR = state.aperture >= 100 ? 0 : state.aperture / 100 * na * k;
+                    function band(x, y, r0, r1) {
+                        ctx.beginPath();
+                        ctx.arc(x, y, r1, 0, 2 * Math.PI);
+                        ctx.arc(x, y, r0, 0, 2 * Math.PI, true);
+                    }
+                    function circle(x, y, r) { ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); }
+                    ctx.fillStyle = "#0b0c0d";
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.save();
+                    circle(cx, cy, R);
+                    ctx.clip();
+                    ctx.fillStyle = "#1d2125";
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.save();
+                    if (apR) { circle(ax, ay, apR); ctx.clip(); }
+                    ctx.fillStyle = "#f6dfa0";
+                    var ex = ax + state.center[0] * k, ey = ay + state.center[1] * k, a = PD.annuli[state.ring];
+                    if (state.ring === "BF") { circle(ax, ay, apR || 2 * R); ctx.fill(); }
+                    else { band(ex, ey, a[0] * k, a[1] * k); ctx.fill("evenodd"); }
+                    ctx.restore();
+                    ctx.fillStyle = "rgba(11, 12, 13, 0.75)";
+                    band(cx, cy, o.ring[0] * k, o.ring[1] * k);
+                    ctx.fill("evenodd");
+                    ctx.restore();
+                    ctx.strokeStyle = "#c9a7ff";
+                    ctx.lineWidth = 1.2;
+                    circle(cx, cy, o.ring[0] * k); ctx.stroke();
+                    circle(cx, cy, o.ring[1] * k); ctx.stroke();
+                    ctx.strokeStyle = "#5c666f";
+                    ctx.lineWidth = 1.5;
+                    circle(cx, cy, R); ctx.stroke();
+                    ctx.setLineDash([4, 3]);
+                    if (apR) { ctx.strokeStyle = "#9aa6b0"; circle(ax, ay, apR); ctx.stroke(); }
+                    // light that lands outside the objective's pupil never reaches the camera
+                    if (a && Math.sqrt((ex - cx) * (ex - cx) + (ey - cy) * (ey - cy)) + a[1] * k > R) {
+                        ctx.strokeStyle = "rgba(246, 223, 160, 0.55)";
+                        circle(ex, ey, a[0] * k); ctx.stroke();
+                        circle(ex, ey, a[1] * k); ctx.stroke();
+                    }
+                    ctx.setLineDash([]);
+                    var a2 = PD.annuli[state.ring];
+                    numbers(document.getElementById("pr-bfp-numbers"), [[W.pupilNA, na.toFixed(2)], [W.ringNA, ((o.ring[0] + o.ring[1]) / 2).toFixed(3)],
+                        a2 ? [W.annNA, ((a2[0] + a2[1]) / 2).toFixed(3)] : [W.irisNA, (state.aperture / 100 * na).toFixed(3)]]);
+                }
+                var drawImage = scheduler(function () {
+                    var im = compute(state, drag !== null || sliding);
+                    paint(cam, im.I, im.n);
+                    if (im.kind !== "none") scalebar(cam, im.n * im.dx, 10, "10 µm");
+                    numbers(document.getElementById("pr-numbers"), readout(im));
+                });
+
+                // controls: built once, synced to the state
+                function makeSeg(id, items, field) {
+                    var el = document.getElementById(id), btns = [];
+                    items.forEach(function (it) {
+                        var b = document.createElement("button");
+                        b.type = "button";
+                        b.textContent = it.label;
+                        b.addEventListener("click", function () { state[field] = it.key; update(); });
+                        el.appendChild(b);
+                        btns.push([it.key, b]);
+                    });
+                    return function () { btns.forEach(function (x) { x[1].setAttribute("aria-pressed", x[0] === state[field] ? "true" : "false"); }); };
+                }
+                var syncs = [
+                    makeSeg("pr-obj", PD.objectives.map(function (o) { return { key: o.key, label: o.label + " " + o.code }; }), "obj"),
+                    makeSeg("pr-ring", [{ key: "BF", label: W.bfLabel }, { key: "PhL", label: "PhL" }, { key: "Ph1", label: "Ph1" }, { key: "Ph2", label: "Ph2" }], "ring"),
+                    makeSeg("pr-well", PD.wells.map(function (x) { return { key: x.key, label: x.label }; }), "well")
+                ];
+                function syncAll() {
+                    syncs.forEach(function (f) { f(); });
+                    ap.value = state.aperture;
+                    fc.value = state.focus;
+                    document.getElementById("pr-ap-out").textContent = state.aperture + "%";
+                    document.getElementById("pr-focus-out").textContent = signed(state.focus) + " µm";
+                }
+                [[ap, "aperture"], [fc, "focus"]].forEach(function (p) {
+                    p[0].addEventListener("input", function () { sliding = true; state[p[1]] = Number(p[0].value); update(); });
+                    p[0].addEventListener("change", function () { sliding = false; update(); });
+                });
+                document.getElementById("pr-reset").addEventListener("click", function () { state = copy(PD.start); update(); });
+                document.getElementById("pr-fix").addEventListener("click", function () {
+                    state.ring = obj().code;
+                    state.aperture = 100;
+                    state.center = [0, 0];
+                    state.focus = 0;
+                    if (WELL[state.well].shift) state.well = PD.wells[1].key;
+                    update();
+                });
+                // the centring screws: drag the bright ring, or move it with the arrow keys
+                function clamp(x) { return Math.max(-0.06, Math.min(0.06, x)); }
+                bfp.addEventListener("pointerdown", function (e) {
+                    if (state.ring === "BF") return;
+                    drag = { x: e.clientX, y: e.clientY, c: state.center.slice(), k: bfp.getBoundingClientRect().width * 0.42 / obj().na };
+                    bfp.setPointerCapture(e.pointerId);
+                    e.preventDefault();
+                });
+                bfp.addEventListener("pointermove", function (e) {
+                    if (!drag) return;
+                    state.center = [clamp(drag.c[0] + (e.clientX - drag.x) / drag.k), clamp(drag.c[1] + (e.clientY - drag.y) / drag.k)];
+                    update();
+                });
+                function release() { if (drag) { drag = null; update(); } }
+                bfp.addEventListener("pointerup", release);
+                bfp.addEventListener("pointercancel", release);
+                bfp.addEventListener("keydown", function (e) {
+                    var d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+                    if (!d || state.ring === "BF") return;
+                    var step = half(obj()) * (e.shiftKey ? 1 : 0.25);
+                    state.center = [clamp(state.center[0] + d[0] * step), clamp(state.center[1] + d[1] * step)];
+                    e.preventDefault();
+                    update();
+                });
+                function update() {
+                    syncAll();
+                    drawBFP();
+                    var a = assess(state);
+                    renderChecks(a.checks);
+                    document.getElementById("pr-note").textContent = a.note;
+                    drawImage();
+                }
+                redraws.push(drawBFP);
+                update();
+            })();
+
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-10-08","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 64 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (준비 중)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "준비 중";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "지금 이 글";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
