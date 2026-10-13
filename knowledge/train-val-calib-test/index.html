@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>train-val-calib-test, calib은 무엇을 정하나 | Hugh Q Lee</title>
+    <meta name="description" content="train-val-test는 레거시가 아니다. calib은 학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold(임계값)를 위해 하나 더 두는 칸이다. 두 값을 정할 칸을 바꿔 보며 test가 보고한 성적과 배포 뒤 실제 성적을 견준다.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="train val test, train val calib test, 데이터 분할, 검증 세트, 보정 세트, calibration set, 온도 보정, temperature scaling, threshold, 임계값, 문턱값, 신뢰도 보정, ECE, 컨포멀 예측, conformal prediction">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/train-val-calib-test/">
+    <!-- 영문판(/knowledge/en/train-val-calib-test/)은 System/build_en.py가 이 페이지에서 만든다. 두 판이 서로를 가리킨다. -->
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/train-val-calib-test/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/train-val-calib-test/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/train-val-calib-test/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:title" content="train-val-calib-test, calib은 무엇을 정하나">
+    <meta property="og:description" content="train-val-test는 레거시가 아니다. calib은 학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold(임계값)를 위해 하나 더 두는 칸이다. 두 값을 정할 칸을 바꿔 보며 test가 보고한 성적과 배포 뒤 실제 성적을 견준다.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/train-val-calib-test/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/train-val-calib-test/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="train, val, calib, test, 배포 뒤 다섯 칸과 각 칸이 정하는 것: 가중치, 모델 고르기, 온도 T와 threshold, 성적 보고, 실제 성적">
+    <meta property="article:published_time" content="2026-10-13">
+    <meta property="article:modified_time" content="2026-10-13">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta property="article:tag" content="데이터 분할">
+    <meta property="article:tag" content="온도 보정">
+    <meta property="article:tag" content="threshold">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="train-val-calib-test, calib은 무엇을 정하나">
+    <meta name="twitter:description" content="train-val-test는 레거시가 아니다. calib은 학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold(임계값)를 위해 하나 더 두는 칸이다. 두 값을 정할 칸을 바꿔 보며 test가 보고한 성적과 배포 뒤 실제 성적을 견준다.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/train-val-calib-test/og.png">
+    <meta name="twitter:image:alt" content="train, val, calib, test, 배포 뒤 다섯 칸과 각 칸이 정하는 것: 가중치, 모델 고르기, 온도 T와 threshold, 성적 보고, 실제 성적">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage는 빌드 스크립트가 본문 "자주 묻는 질문"에서 글자 그대로 옮긴다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/train-val-calib-test/#article",
+          "workTranslation": {
+            "@id": "https://hughqlee.com/knowledge/en/train-val-calib-test/#article"
+          },
+          "headline": "train-val-calib-test, calib은 무엇을 정하나",
+          "alternativeHeadline": "train-val-test는 레거시인가?",
+          "description": "train-val-test는 레거시가 아니다. calib은 학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold(임계값)를 위해 하나 더 두는 칸이다. 두 값을 정할 칸을 바꿔 보며 test가 보고한 성적과 배포 뒤 실제 성적을 견준다.",
+          "abstract": "아니다. calib은 학습이 끝난 뒤 데이터로 정하는 값, 곧 확신의 크기를 고치는 온도 T와 확률을 판정으로 바꾸는 threshold(임계값)를 위해 하나 더 두는 칸이다. 원리는 train-val-test와 같다. 무언가를 정한 데이터로는 그 결정을 공정하게 잴 수 없다.",
+          "inLanguage": "ko",
+          "datePublished": "2026-10-13",
+          "dateModified": "2026-10-13",
+          "url": "https://hughqlee.com/knowledge/train-val-calib-test/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/train-val-calib-test/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/train-val-calib-test/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/#collection"
+          },
+          "isAccessibleForFree": true,
+          "about": [
+            "데이터 분할",
+            "온도 보정",
+            "threshold"
+          ],
+          "citation": [
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Guo, Pleiss, Sun, Weinberger, On Calibration of Modern Neural Networks (ICML 2017)",
+              "url": "https://arxiv.org/abs/1706.04599"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Angelopoulos, Bates, A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification",
+              "url": "https://arxiv.org/abs/2107.07511"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Niculescu-Mizil, Caruana, Predicting Good Probabilities With Supervised Learning (ICML 2005)",
+              "url": "https://www.cs.cornell.edu/~alexn/papers/calibration.icml05.crc.rev3.pdf"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Elkan, The Foundations of Cost-Sensitive Learning (IJCAI 2001)",
+              "url": "https://cseweb.ucsd.edu/~elkan/rescale.pdf"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Ovadia et al., Can You Trust Your Model's Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift (NeurIPS 2019)",
+              "url": "https://arxiv.org/abs/1906.02530"
+            }
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "train-val-calib-test, calib은 무엇을 정하나",
+              "item": "https://hughqlee.com/knowledge/train-val-calib-test/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/train-val-calib-test/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "train-val-test 분할은 이제 레거시인가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "아니다. train은 가중치를, val은 하이퍼파라미터와 모델을 정하고, test는 아무것도 정하지 않고 성적만 잰다. calib은 학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold가 있을 때 하나 더 두는 칸이다. 온도 보정 논문(Guo 외 2017 §4)은 하이퍼파라미터를 고른 검증 세트로 보정해도 된다고 적었다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "보정 세트(calibration set)와 검증 세트(validation set)는 무엇이 다른가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "검증 세트는 모델과 하이퍼파라미터를 고르고, 보정 세트는 고른 모델의 출력을 읽는 법(온도 T, threshold, 컨포멀 예측의 q̂)을 정한다. 데이터가 적으면 검증 세트에서 함께 정하기도 한다(Guo 외 2017 §4, Niculescu-Mizil·Caruana 2005 §2.1). 보정을 학습 데이터로 하면 치우친다(같은 §2.1)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "온도 보정(temperature scaling)이란?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "로짓을 온도 T로 나눈 뒤 softmax를 하는 보정이다. T가 1보다 크면 확률이 평평해져 자신감이 줄고, 작으면 뾰족해진다. T는 보정 세트에서 NLL(교차 엔트로피)이 가장 작아지는 값 하나로 정한다(Guo 외 2017 §4.2)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "온도 보정을 하면 정확도가 오르나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "아니다. 모든 로짓을 같은 양수로 나누므로 가장 높은 클래스가 바뀌지 않아 정확도는 그대로다(Guo 외 2017 §4.2). 바뀌는 것은 확신의 크기다. CIFAR-100의 110층 ResNet은 ECE가 16.53%에서 1.26%로 줄었다(같은 논문 표 1)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "분류 threshold(임계값)는 0.5로 두면 안 되나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "0.5는 두 틀림의 비용이 같고 확률이 참일 때만 맞는다. 비용으로 정하면 threshold는 헛경보 비용 ÷ (헛경보 비용 + 놓침 비용)이고, 놓침이 9배 비싸면 0.1이다(Elkan 2001 식 2). “불량의 95%를 잡는다” 같은 목표라면 보정 세트의 점수에서 그 자리를 읽고, 성적은 test에서 따로 잰다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "컨포멀 예측(conformal prediction)도 보정 세트를 쓰나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "쓴다. 보정 세트 n개의 점수 1 − (정답 클래스의 확률)에서 ⌈(n+1)(1−α)⌉번째 값을 threshold로 하고 그 threshold를 넘는 클래스를 모두 답 후보로 내면, 같은 분포의 새 데이터에서 정답이 후보에 들 확률이 1 − α 이상이다. 보정 세트가 1,000개면 포함률이 대개 0.88~0.92다(Angelopoulos·Bates §1, §3.2)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "장비나 데이터가 바뀌면 보정을 다시 해야 하나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "그렇다. i.i.d. 검증 데이터에서 한 보정은 분포가 바뀐 데이터에서의 보정을 보장하지 않는다(Ovadia 외 2019 §4.2). 모델은 그대로 두고 새 환경의 데이터로 보정 세트를 새로 모아 T와 threshold를 다시 정할 수 있다. 이 페이지의 합성 실험에서는 잡음이 1.3배인 데이터에서 옛 값의 재현율이 83.8%였고, 새 데이터 1,000개로 다시 정하자 95.4%가 되었다."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --warn-soft: rgba(240, 198, 116, 0.13);
+            --danger: #ff8c8c;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            --wide: 980px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --warn-soft: rgba(150, 106, 16, 0.12);
+            --danger: #b42323;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+        .wide { width: min(var(--wide), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle, .btn {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-family: var(--mono);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover, .btn:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 8px; }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0 0 20px; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        .step { padding: 40px 0 8px; border-top: 1px solid var(--line); margin-top: 28px; }
+        .step-no { margin: 0 0 6px; color: var(--accent); font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; }
+        h2 { margin: 0 0 14px; font-size: clamp(22px, 4vw, 30px); line-height: 1.35; letter-spacing: -0.01em; }
+        h3 { margin: 24px 0 8px; font-size: 18px; line-height: 1.45; }
+        .hint { color: var(--muted); font-size: 15px; }
+        .source { margin-top: 12px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+        .panel {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .fig-label { margin: 0 0 6px; color: var(--muted); font-size: 13px; font-family: var(--mono); }
+        .control { display: grid; gap: 4px; margin-top: 12px; }
+        .control .label, .control label { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 14px; }
+        .control output { color: var(--text); font-family: var(--mono); }
+        .control input[type="range"] { width: 100%; min-height: 40px; margin: 0; accent-color: var(--accent); }
+        .seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+        .seg button {
+            min-height: 36px;
+            padding: 4px 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-family: var(--mono);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .seg button:hover { border-color: var(--line-strong); color: var(--text); }
+        .seg button[aria-pressed="true"] { border-color: var(--accent); color: var(--text); background: var(--accent-soft); }
+        .numbers { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 8px 0 0; font-family: var(--mono); font-size: 14px; color: var(--muted); }
+        .numbers b { color: var(--text); font-weight: 600; }
+        .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            margin: 24px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+        .toc a { display: block; height: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); text-decoration: none; font-size: 15px; line-height: 1.5; }
+        .toc a:hover { border-color: var(--line-strong); }
+        .toc span { display: block; color: var(--accent); font-family: var(--mono); font-size: 12px; }
+
+        /* 01: five splits and what each one decides */
+        .lanes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.15fr); gap: 6px; }
+        .lane { min-height: 116px; padding: 8px 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); transition: border-color 0.2s ease, background 0.2s ease; }
+        .lane b { display: block; font-family: var(--mono); font-size: 15px; }
+        .lane .n { display: block; color: var(--faint); font-family: var(--mono); font-size: 12px; }
+        .lane.after { border-style: dashed; }
+        .lane.misused { border-color: var(--accent-warn); background: var(--warn-soft); }
+        .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+        .chip { padding: 1px 8px; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--muted); font-size: 12.5px; line-height: 1.6; white-space: nowrap; }
+        .chip.move { border-color: var(--accent); color: var(--text); background: var(--accent-soft); font-weight: 600; }
+        .chip.judge { border-color: var(--accent-green); color: var(--accent-green); }
+        .controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 20px; }
+        .score { width: 100%; margin-top: 16px; border-collapse: collapse; font-size: 15px; }
+        .score th, .score td { padding: 8px 10px; border-top: 1px solid var(--line); text-align: left; vertical-align: top; }
+        .score thead th { border-top: 0; color: var(--muted); font-family: var(--mono); font-size: 13px; font-weight: 500; }
+        .score thead td { border-top: 0; }
+        .score tbody th { font-weight: 600; }
+        .score .sub { display: block; color: var(--faint); font-size: 12.5px; font-weight: 400; }
+        .score td { width: 26%; font-family: var(--mono); font-size: 17px; }
+        .score td.bad { color: var(--accent-warn); }
+        .score td.ok { color: var(--accent-green); }
+        .verdict { min-height: 4.8em; margin: 12px 0 0; padding-left: 12px; border-left: 3px solid var(--accent); }
+        .scatter-wrap { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 18px; align-items: start; margin-top: 16px; }
+        svg.chart { display: block; width: 100%; height: auto; overflow: visible; }
+        .sc-axis { stroke: var(--line-strong); stroke-width: 1; }
+        .sc-target { stroke: var(--accent-warn); stroke-width: 1; stroke-dasharray: 4 3; }
+        .sc-diag { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+        .sc-warn { fill: var(--warn-soft); }
+        .sc-warn-label { fill: var(--accent-warn); font-family: var(--sans); font-size: 12px; }
+        .sc-tick { fill: var(--faint); font-family: var(--mono); font-size: 10.5px; }
+        .sc-title { fill: var(--muted); font-family: var(--sans); font-size: 12px; }
+        .sc-dot { fill: var(--muted); fill-opacity: 0.55; }
+        .sc-dot.now { fill: var(--accent); fill-opacity: 1; stroke: var(--bg); stroke-width: 1.5; }
+        .rel-bar { fill: var(--accent); fill-opacity: 0.75; }
+        .spread-bar { fill: var(--accent-green); fill-opacity: 0.55; }
+        .spread-mean { stroke: var(--text); stroke-width: 2; }
+        .spread-label { fill: var(--text); font-family: var(--sans); font-size: 12.5px; }
+        .spread-sub { fill: var(--faint); font-family: var(--mono); font-size: 10.5px; }
+
+        /* 03: the threshold simulator */
+        .sim-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 20px; }
+        svg.sim-chart { display: block; width: 100%; height: 236px; margin-top: 12px; overflow: visible; touch-action: pan-y; cursor: ew-resize; }
+        .sim-zone { fill: var(--accent-soft); }
+        .sim-line { stroke: var(--accent); stroke-width: 2; }
+        .sim-line-text { fill: var(--accent); font-family: var(--mono); font-size: 12px; }
+        .sim-row { fill: var(--text); font-family: var(--sans); font-size: 12.5px; }
+        .sim-tstar { fill: var(--accent-warn); }
+        .sim-tstar-text { fill: var(--accent-warn); font-family: var(--mono); font-size: 11px; }
+        .dot-hit, .key-hit { fill: var(--accent-green); background: var(--accent-green); }
+        .dot-miss, .key-miss { fill: var(--accent-warn); background: var(--accent-warn); }
+        .dot-alarm, .key-alarm { fill: var(--danger); background: var(--danger); }
+        .dot-quiet { fill: var(--muted); fill-opacity: 0.32; }
+        .key-quiet { background: var(--muted); opacity: 0.45; }
+        .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 6px 0 0; font-size: 13px; color: var(--muted); }
+        .legend i { display: inline-block; width: 9px; height: 9px; margin-right: 6px; border-radius: 50%; }
+
+        .limits { margin: 0; padding-left: 1.2em; }
+        .limits li { margin: 8px 0; }
+        .note {
+            margin-top: 16px;
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+        .tag {
+            display: inline-block;
+            margin-right: 6px;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.known { color: var(--accent-green); }
+        .tag.guess { color: var(--accent-warn); }
+        .tag.unknown { color: var(--muted); }
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        footer {
+            padding: 24px 0 48px;
+            margin-top: 40px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (max-width: 760px) {
+            .scatter-wrap { grid-template-columns: 1fr; }
+            .controls { grid-template-columns: 1fr; }
+            .sim-controls { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 560px) {
+            .lanes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .lane { min-height: 0; }
+            .lane.after { grid-column: 1 / -1; }
+            .score th, .score td { padding: 8px 6px; }
+            .score td { font-size: 16px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="위치">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/en/train-val-calib-test/" hreflang="en" lang="en">English</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="wrap hero" aria-labelledby="page-title">
+            <nav class="kmap" aria-label="지식 지도" data-current="train-val-calib-test">
+                <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">기계 학습</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">이 분야의 첫 글이다. 먼저 읽을 글과 이어서 읽을 글은 아직 없다.</p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE · 기계 학습</p>
+            <h1 id="page-title">train-val-test는 레거시인가?</h1>
+            <p class="answer">아니다. calib은 학습이 끝난 뒤 데이터로 정하는 값, 곧 확신의 크기를 고치는 온도 T와 확률을 판정으로 바꾸는 threshold(임계값)를 위해 하나 더 두는 칸이다. 원리는 train-val-test와 같다. 무언가를 정한 데이터로는 그 결정을 공정하게 잴 수 없다.</p>
+            <p>train은 가중치를 정하고, val은 하이퍼파라미터와 쓸 모델을 고르고, test는 아무것도 정하지 않고 성적만 잰다. 학습이 끝난 뒤에도 정할 것이 남는다. 모델이 말하는 확률을 얼마나 믿을지(온도 T), 확률이 얼마를 넘으면 “불량”이라고 할지(threshold)다. 이 둘도 데이터에 맞춰 정하는 값이라, 어느 데이터로 정하느냐에 따라 성적이 부풀거나 무너진다. 온도 보정 논문은 하이퍼파라미터를 고른 그 val로 정해도 된다고 적었다. calib은 그 일을 떼어 맡는 칸이다.</p>
+            <p>Temperature는 값을 보정하고, threshold는 값의 채택 유무를 조정한다.</p>
+            <p class="source">출처: 온도 보정을 검증 세트에서 정하기: Guo 외 2017 §4 · 학습 데이터로 보정하면 치우친다: Niculescu-Mizil·Caruana 2005 §2.1</p>
+            <ol class="toc">
+                <li><a href="#try"><span>01 직접 해보기</span>T와 threshold를 어느 칸에서 정할까</a></li>
+                <li><a href="#temperature"><span>02 T</span>확신의 크기만 고친다</a></li>
+                <li><a href="#threshold"><span>03 threshold</span>확률을 판정으로 바꾼다</a></li>
+            </ol>
+        </section>
+
+        <section id="try" class="wide step" aria-labelledby="try-title">
+            <div style="max-width: var(--measure);">
+                <p class="step-no">01 직접 해보기</p>
+                <h2 id="try-title">T와 threshold를 어느 칸에서 정할까</h2>
+                <p>학습 데이터 2,000개를 다 맞힌 모델이 있다(합성 데이터, 클래스 10개). 클래스 0을 놓치면 안 되는 “불량”이라 하고, 불량의 95%를 잡는 threshold를 정한다. T와 threshold를 정할 칸을 바꿔 보자. test가 보고한 성적과, 배포 뒤 처음 보는 데이터 27,000개의 실제 성적이 함께 바뀐다.</p>
+            </div>
+            <div class="panel">
+                <div class="lanes">
+                    <div class="lane" data-lane="train"><b>train</b><span class="n">2,000개</span><div class="chips"><span class="chip">가중치</span></div></div>
+                    <div class="lane" data-lane="val"><b>val</b><span class="n">1,000개</span><div class="chips"><span class="chip">모델 고르기</span></div></div>
+                    <div class="lane" data-lane="calib"><b>calib</b><span class="n">1,000개</span><div class="chips"><span class="chip move" id="chip-T">T</span><span class="chip move" id="chip-thr">threshold</span></div></div>
+                    <div class="lane" data-lane="test"><b>test</b><span class="n">1,000개</span><div class="chips"><span class="chip">성적 보고</span></div></div>
+                    <div class="lane after" data-lane="after"><b>배포 뒤</b><span class="n">27,000개</span><div class="chips"><span class="chip judge">실제 성적</span></div></div>
+                </div>
+                <div class="controls">
+                    <div class="control">
+                        <span class="label" id="seg-T-label">T를 정할 칸</span>
+                        <div class="seg" id="seg-T" role="group" aria-labelledby="seg-T-label">
+                            <button type="button" data-v="none" aria-pressed="false">안 씀</button>
+                            <button type="button" data-v="train" aria-pressed="false">train</button>
+                            <button type="button" data-v="val" aria-pressed="false">val</button>
+                            <button type="button" data-v="calib" aria-pressed="true">calib</button>
+                            <button type="button" data-v="test" aria-pressed="false">test</button>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <span class="label" id="seg-thr-label">threshold를 정할 칸</span>
+                        <div class="seg" id="seg-thr" role="group" aria-labelledby="seg-thr-label">
+                            <button type="button" data-v="train" aria-pressed="false">train</button>
+                            <button type="button" data-v="val" aria-pressed="false">val</button>
+                            <button type="button" data-v="calib" aria-pressed="true">calib</button>
+                            <button type="button" data-v="test" aria-pressed="false">test</button>
+                        </div>
+                    </div>
+                </div>
+                <table class="score">
+                    <thead>
+                        <tr><td></td><th scope="col">test가 보고한 값</th><th scope="col">배포 뒤 실제</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">확신 − 정확도<span class="sub">0이면 확신이 정직하다</span></th><td id="gap-test" class="ok">+0.6%p</td><td id="gap-after" class="ok">+0.3%p</td></tr>
+                        <tr><th scope="row">불량 재현율<span class="sub">목표 95%</span></th><td id="rec-test" class="bad">94.0%</td><td id="rec-after" class="bad">94.4%</td></tr>
+                    </tbody>
+                </table>
+                <p class="verdict" id="verdict" aria-live="polite">calib에서 정한 T(2.62)로 확신이 정확도에 맞는다(배포 뒤 +0.3%p). calib에서 딱 95%로 정한 threshold는 test에서 94.0%, 배포 뒤 94.4%다. test는 정직한 추정이라 뽑을 때마다 위아래로 흔들린다.</p>
+                <div class="scatter-wrap">
+                    <svg class="chart" id="scatter" viewBox="0 0 340 260" role="img" aria-labelledby="scatter-caption"></svg>
+                    <div>
+                        <p class="fig-label" id="scatter-caption">점 하나가 val·calib·test를 새로 뽑은 한 번이다(100번). 가로는 배포 뒤 실제 재현율, 세로는 test가 보고한 재현율이다. 점선 대각선은 보고와 실제가 같은 자리이고, 그 위는 test가 부풀려 보고한 것이다.</p>
+                        <p id="tally" aria-live="polite">100번 뽑으면 test 보고 평균 94.5%, 배포 뒤 평균 94.3%. test는 95% 이상이라고 했는데 실제는 95% 아래였던 때는 14번이다.</p>
+                        <div class="row" style="justify-content: flex-start;">
+                            <button type="button" class="btn" id="redraw">다시 뽑기</button>
+                            <span class="hint" id="draw-no">뽑기 1 / 100</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="source" style="max-width: var(--measure);">숫자: 이 페이지가 합성 데이터(참 확률을 아는 10클래스)와 작은 신경망 12개로 직접 계산했다. 뽑을 때마다 val 정확도가 가장 높은 모델을 쓴다. threshold는 정한 데이터에서 딱 95%가 되는 점수(불량 n개 중 ⌈0.95n⌉번째)다.</p>
+        </section>
+
+        <section id="temperature" class="wrap step" aria-labelledby="temperature-title">
+            <p class="step-no">02 T</p>
+            <h2 id="temperature-title">T는 확신의 크기만 고친다</h2>
+            <p>“90%라고 말한 예측 100개 중 90개가 맞는” 상태를 보정되었다고 한다. 요즘 신경망은 보정이 나쁘다. 10년 전 신경망과 다른 점이다. CIFAR-100에서 110층 ResNet의 확신도는 정확도보다 훨씬 높았고, ECE(확신도와 실제 정답 비율의 평균 차이)가 16.53%였다.</p>
+            <p>온도 보정은 로짓(softmax에 들어가기 전의 점수) z를 T로 나눈 뒤 softmax를 한다. T가 1보다 크면 확률이 평평해지고, 작으면 뾰족해진다. 로짓 (3, 1, 0)은 T = 1에서 84 / 11 / 4%, T = 2에서 63 / 23 / 14%다. 모든 로짓을 같은 수로 나누므로 1등 클래스는 바뀌지 않는다. 그래서 정확도는 그대로이고 확신의 크기만 바뀐다.</p>
+            <p>T는 calib에서 NLL(정답 클래스에 준 확률에 −log를 씌운 평균)이 가장 작아지는 값 하나로 정한다. 틀린 답을 확신할수록 NLL이 크다. 자신감이 지나쳐지는 까닭도 NLL에 있다. 학습 데이터를 다 맞힌 뒤에도 확신을 키우면 학습 데이터의 NLL은 더 줄어서, 오래 학습하면 정확도는 그대로인데 확신만 커진다.</p>
+            <div class="panel">
+                <div class="control">
+                    <label for="t-slider">온도 T <output id="t-value" for="t-slider">1.00</output></label>
+                    <input id="t-slider" type="range" min="0.5" max="5" step="0.05" value="1">
+                </div>
+                <div class="seg" id="t-presets" style="margin-top: 6px;">
+                    <button type="button" data-t="1" aria-pressed="true">T = 1 (보정 전)</button>
+                    <button type="button" data-t="calib" aria-pressed="false">calib에서 정한 T = 2.62</button>
+                </div>
+                <svg class="chart" id="reliability" viewBox="0 0 340 250" role="img" aria-labelledby="rel-caption" style="max-width: 460px; margin-top: 12px;"></svg>
+                <p class="fig-label" id="rel-caption">막대는 그 확신도 구간에서 실제로 맞힌 비율이다(배포 뒤 27,000개, 구간 15개, 예측이 20개 미만인 구간은 그리지 않음). 대각선에 붙을수록 보정이 잘 된 것이다.</p>
+                <p class="numbers" aria-live="polite"><span>평균 확신도 <b id="rel-conf">93.5%</b></span><span>정확도 <b id="rel-acc">80.7%</b></span><span>ECE <b id="rel-ece">12.8%</b></span></p>
+            </div>
+            <p>이 모델은 T = 1에서 평균 93.5%를 확신하지만 80.7%만 맞힌다. calib에서 정한 T = 2.62에서는 평균 확신도가 80.9%로 내려오고 ECE가 0.6%가 된다. 같은 일을 train에서 하면 T는 0.05가 나온다. 학습 데이터에서는 확신할수록 NLL이 줄기 때문이다.</p>
+            <p class="source">출처: 보정의 정의, 신뢰도 도표, ECE(구간 15개): Guo 외 2017 §2 · 온도 보정과 정확도: §4.2 · NLL 과적합: §3 · ResNet 110의 ECE: 표 1 · 도표의 숫자: 이 페이지의 합성 실험</p>
+        </section>
+
+        <section id="threshold" class="wrap step" aria-labelledby="threshold-title">
+            <p class="step-no">03 threshold</p>
+            <h2 id="threshold-title">threshold는 확률을 판정으로 바꾼다</h2>
+            <p>모델은 확률을 내고, 판정은 threshold가 한다. “불량일 확률이 t 이상이면 경보”처럼. <a href="../iou-nms/">IOU·NMS</a>에서 본 YOLOv1의 신뢰도 기준 0.2도 threshold다. 0.5는 기본값일 뿐이다. 01의 모델로 직접 움직여 보자. 점 하나가 calib의 예시 하나이고, threshold보다 오른쪽에 있으면 경보가 울린다.</p>
+            <div class="panel">
+                <div class="sim-controls">
+                    <div class="control">
+                        <span class="label" id="sim-T-label">확률</span>
+                        <div class="seg" id="sim-T" role="group" aria-labelledby="sim-T-label">
+                            <button type="button" data-s="0" aria-pressed="true">T = 2.62로 보정</button>
+                            <button type="button" data-s="1" aria-pressed="false">보정 안 함(T = 1)</button>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <span class="label" id="sim-r-label">놓침 비용 ÷ 헛경보 비용</span>
+                        <div class="seg" id="sim-r" role="group" aria-labelledby="sim-r-label">
+                            <button type="button" data-r="1" aria-pressed="false">1배</button>
+                            <button type="button" data-r="3" aria-pressed="false">3배</button>
+                            <button type="button" data-r="9" aria-pressed="true">9배</button>
+                            <button type="button" data-r="19" aria-pressed="false">19배</button>
+                        </div>
+                    </div>
+                </div>
+                <svg class="sim-chart" id="sim-chart" role="img" aria-labelledby="sim-caption"></svg>
+                <p class="legend"><span><i class="key-hit"></i>잡은 불량</span><span><i class="key-miss"></i>놓친 불량</span><span><i class="key-alarm"></i>헛경보</span><span><i class="key-quiet"></i>경보 없는 정상</span></p>
+                <div class="control">
+                    <label for="sim-slider">threshold <output id="sim-value" for="sim-slider">0.0912</output></label>
+                    <input id="sim-slider" type="range" min="-4000" max="0" step="1" value="-1040">
+                </div>
+                <div class="seg" id="sim-presets">
+                    <button type="button" data-p="half" aria-pressed="false">0.5 (기본값)</button>
+                    <button type="button" data-p="exact95" aria-pressed="true">calib에서 딱 95%</button>
+                    <button type="button" data-p="plus1" aria-pressed="false">+1 보정</button>
+                    <button type="button" data-p="tstar" aria-pressed="false">비용식 t*</button>
+                </div>
+                <p class="fig-label" id="sim-caption">위 줄은 calib의 불량 106개, 아래 줄은 정상 894개다. 가로는 불량 확률이고, 0 가까이의 작은 확률을 넓게 보려고 로그 눈금으로 그렸다(0.0001보다 작으면 왼쪽 끝). 세로선이 threshold이고, t*는 비용식이 고른 자리다. 선을 끌거나 슬라이더로 움직인다.</p>
+                <table class="score">
+                    <thead>
+                        <tr><td></td><th scope="col">calib (정한 데이터)</th><th scope="col">배포 뒤 27,000개</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">잡은 불량<span class="sub">재현율</span></th><td id="sim-rec-cal">101 / 106 (95.3%)</td><td id="sim-rec-after">94.4%</td></tr>
+                        <tr><th scope="row">헛경보<span class="sub">정상 중 경보가 울린 비율</span></th><td id="sim-fa-cal">72 (8.1%)</td><td id="sim-fa-after">8.6%</td></tr>
+                        <tr><th scope="row">경보 중 진짜<span class="sub">정밀도</span></th><td id="sim-prec-cal">58.4%</td><td id="sim-prec-after">54.5%</td></tr>
+                        <tr><th scope="row">비용<span class="sub" id="sim-cost-sub">놓침 × 9 + 헛경보</span></th><td id="sim-cost-cal">117</td><td id="sim-cost-after">1,000개당 127</td></tr>
+                    </tbody>
+                </table>
+                <p class="verdict" id="sim-verdict" aria-live="polite">threshold 0.0912: calib의 불량 106개 중 101개를 잡고(95.3%) 정상 894개 중 72개에 헛경보를 낸다. 배포 뒤에는 불량의 94.4%를 잡는다. 놓침이 9배 비싸면 배포 뒤 비용은 1,000개당 이 threshold 127, t*(0.100) 126, calib에서 가장 싼 threshold(0.119) 127.</p>
+            </div>
+            <p>threshold를 내리면 놓친 불량이 줄고 헛경보가 는다. 어디가 좋은지는 비용이나 목표가 정한다. 확률이 참이라면 기대 비용이 가장 작은 threshold는 t* = 헛경보 비용 ÷ (헛경보 비용 + 놓침 비용)이다. 두 비용이 같으면 0.5, 놓침이 9배 비싸면 0.1이다. 놓침이 9배 비쌀 때 t* = 0.1의 배포 뒤 비용은 1,000개당 126으로, 0.5(216)보다 훨씬 싸고 calib에서 가장 싼 threshold(127)와 거의 같다. 이 식은 확률의 크기를 그대로 믿는다. “보정 안 함”을 누르면 같은 t*의 비용이 141로 올라, calib에서 가장 싼 threshold(128)보다 비싸진다. 그래서 T를 먼저 정한다.</p>
+            <p>비용을 숫자로 매기기 어려우면 목표로 정한다. “불량의 95%를 잡는다”면 calib의 불량을 점수 순으로 세우고 95% 자리를 읽는다(calib에서 딱 95%). 이 모델의 threshold는 0.09다. 클래스가 10개라 불량 확률이 9%만 넘어도 경보를 울려야 95%를 잡는다.</p>
+            <p>정한 데이터 위에서는 언제나 95% 이상이다. 새 데이터에서는 아니다. 불량 n개 중 k번째 점수를 threshold로 쓰면 새 불량이 그 위에 올 확률은 k/(n+1)이다. n = 100이면 딱 95%(k = 95)는 95/101 = 94.1%다. k를 ⌈(n+1) × 0.95⌉로 하나 올리면 평균이 95%를 넘는다(+1 보정).</p>
+            <p>그래도 한 번 뽑은 calib의 결과는 흔들린다. 흔들림은 calib 전체가 아니라 threshold가 걸린 쪽, 곧 불량의 개수로 정해진다.</p>
+            <div class="panel">
+                <svg class="chart" viewBox="0 0 340 150" role="img" aria-labelledby="spread-caption" style="max-width: 520px;">
+                    <line class="sc-target" x1="256.7" y1="12" x2="256.7" y2="128"></line>
+                    <text class="spread-label" x="0" y="34">불량 30개</text>
+                    <text class="spread-sub" x="0" y="47">calib 300개</text>
+                    <rect class="spread-bar" x="180.4" y="25" width="148.1" height="12" rx="3"></rect>
+                    <line class="spread-mean" x1="280.1" y1="22" x2="280.1" y2="40"></line>
+                    <text class="spread-label" x="0" y="72">불량 99개</text>
+                    <text class="spread-sub" x="0" y="85">calib 1,000개</text>
+                    <rect class="spread-bar" x="205.3" y="63" width="101.2" height="12" rx="3"></rect>
+                    <line class="spread-mean" x1="262.5" y1="60" x2="262.5" y2="78"></line>
+                    <text class="spread-label" x="0" y="110">불량 296개</text>
+                    <text class="spread-sub" x="0" y="123">calib 3,000개</text>
+                    <rect class="spread-bar" x="224.4" y="101" width="63.1" height="12" rx="3"></rect>
+                    <line class="spread-mean" x1="258.1" y1="98" x2="258.1" y2="116"></line>
+                    <line class="sc-axis" x1="110" y1="130" x2="330" y2="130"></line>
+                    <text class="sc-tick" x="110" y="144" text-anchor="middle">85%</text>
+                    <text class="sc-tick" x="183.3" y="144" text-anchor="middle">90%</text>
+                    <text class="sc-tick" x="256.7" y="144" text-anchor="middle">95%</text>
+                    <text class="sc-tick" x="330" y="144" text-anchor="middle">100%</text>
+                </svg>
+                <p class="fig-label" id="spread-caption">calib을 2,000번 새로 뽑아 ⌈(n+1) × 0.95⌉번째 점수로 threshold를 정하고 새 데이터에서 잰 재현율. 막대는 5~95% 범위, 세로 선은 평균(96.6%, 95.4%, 95.1%), 점선은 목표 95%.</p>
+            </div>
+            <p>클래스가 여럿이면 T가 예시들 사이의 순서까지 바꿀 수 있다. 그래서 threshold는 쓸 T를 정한 뒤의 확률에서 정한다.</p>
+            <p class="source">출처: 비용과 threshold, 0.5: Elkan 2001 §1.3 식 2, §2 · k/(n+1)과 +1 보정: Angelopoulos·Bates §1, 정리 1 · 점, 비용, 흔들림: 이 페이지의 합성 실험</p>
+        </section>
+
+        <section id="summary" class="wrap step" aria-labelledby="summary-title">
+            <p class="step-no">정리</p>
+            <h2 id="summary-title">새 규칙이 아니라, 같은 원리를 한 번 더 쓴 것</h2>
+            <ol class="limits">
+                <li><b>한 칸에 결정 하나.</b> train은 가중치, val은 모델 고르기, calib은 T와 threshold를 정하고, test는 아무것도 정하지 않는다. 칸의 수는 데이터로 정하는 단계의 수 + 1이다.</li>
+                <li><b>어디서 정했는지가 성적을 바꾼다.</b> train에서 정하면 무너지고, test에서 정하면 test가 부풀린다. 모델을 고른 val에서 함께 정해도 대개 괜찮다. 이 페이지의 실험에서도 차이가 작았다.</li>
+                <li><b>따로 두는 때가 있다.</b> 장비나 현장이 바뀌어 T와 threshold만 다시 정할 때, val로 아주 많이 골랐을 때 calib을 따로 둔다.</li>
+            </ol>
+            <div class="note">
+                <p><strong>오해</strong>train-val-calib-test가 새 표준이라 늘 넷으로 나눠야 한다.</p>
+                <p class="fact"><strong>실제로는</strong>학습 뒤에 데이터로 정하는 값이 없으면 calib은 필요 없다. 데이터가 적으면 val에서 T와 threshold를 함께 정해도 된다. 온도 보정 논문도 검증 세트에서 T를 정했다.</p>
+            </div>
+            <div class="note">
+                <p><strong>오해</strong>온도 보정을 하면 정확도가 오른다.</p>
+                <p class="fact"><strong>실제로는</strong>1등 클래스가 그대로라 정확도는 같다. 바뀌는 것은 확신의 크기다.</p>
+            </div>
+            <div class="note">
+                <p><span class="tag known">확인됨</span>정의, 식, 절 번호와 인용한 수치는 원문과 대조했다. 이 페이지의 숫자는 합성 데이터로 직접 계산했고, 이론(k/(n+1), 베타 분포)과 맞는지 테스트로 확인했다.</p>
+                <p><span class="tag guess">가설</span>실제 영상 모델과 실제 장비 변화에서도 방향은 같고 크기만 다를 것이다. val로 아주 많이 골랐다면 T와 threshold도 치우칠 것이다(후보 12개인 이 실험에서는 보이지 않았다).</p>
+                <p><span class="tag unknown">모름</span>정해진 분할 비율은 찾지 못했다. calib의 크기는 threshold가 걸린 쪽의 표본 수가, test의 크기는 재려는 지표의 오차가 정한다.</p>
+            </div>
+            <p class="source">출처: Guo 외 2017 §4 · Niculescu-Mizil·Caruana 2005 §2.1 · Ovadia 외 2019 §4.2</p>
+        </section>
+
+        <section id="faq" class="wrap step" aria-labelledby="faq-title">
+            <h2 id="faq-title">자주 묻는 질문</h2>
+            <!-- 검색·AI 답변용. 독자가 검색창에 칠 질문과, 출처가 있는 사실만 담은 두세 문장의 답. head의 FAQPage는 빌드 스크립트가 이 문장을 그대로 옮긴다. -->
+            <div class="faq" id="faq-list">
+                <details>
+                    <summary>train-val-test 분할은 이제 레거시인가?</summary>
+                    <p>아니다. train은 가중치를, val은 하이퍼파라미터와 모델을 정하고, test는 아무것도 정하지 않고 성적만 잰다. calib은 학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold가 있을 때 하나 더 두는 칸이다. 온도 보정 논문(Guo 외 2017 §4)은 하이퍼파라미터를 고른 검증 세트로 보정해도 된다고 적었다.</p>
+                </details>
+                <details>
+                    <summary>보정 세트(calibration set)와 검증 세트(validation set)는 무엇이 다른가?</summary>
+                    <p>검증 세트는 모델과 하이퍼파라미터를 고르고, 보정 세트는 고른 모델의 출력을 읽는 법(온도 T, threshold, 컨포멀 예측의 q̂)을 정한다. 데이터가 적으면 검증 세트에서 함께 정하기도 한다(Guo 외 2017 §4, Niculescu-Mizil·Caruana 2005 §2.1). 보정을 학습 데이터로 하면 치우친다(같은 §2.1).</p>
+                </details>
+                <details>
+                    <summary>온도 보정(temperature scaling)이란?</summary>
+                    <p>로짓을 온도 T로 나눈 뒤 softmax를 하는 보정이다. T가 1보다 크면 확률이 평평해져 자신감이 줄고, 작으면 뾰족해진다. T는 보정 세트에서 NLL(교차 엔트로피)이 가장 작아지는 값 하나로 정한다(Guo 외 2017 §4.2).</p>
+                </details>
+                <details>
+                    <summary>온도 보정을 하면 정확도가 오르나?</summary>
+                    <p>아니다. 모든 로짓을 같은 양수로 나누므로 가장 높은 클래스가 바뀌지 않아 정확도는 그대로다(Guo 외 2017 §4.2). 바뀌는 것은 확신의 크기다. CIFAR-100의 110층 ResNet은 ECE가 16.53%에서 1.26%로 줄었다(같은 논문 표 1).</p>
+                </details>
+                <details>
+                    <summary>분류 threshold(임계값)는 0.5로 두면 안 되나?</summary>
+                    <p>0.5는 두 틀림의 비용이 같고 확률이 참일 때만 맞는다. 비용으로 정하면 threshold는 헛경보 비용 ÷ (헛경보 비용 + 놓침 비용)이고, 놓침이 9배 비싸면 0.1이다(Elkan 2001 식 2). “불량의 95%를 잡는다” 같은 목표라면 보정 세트의 점수에서 그 자리를 읽고, 성적은 test에서 따로 잰다.</p>
+                </details>
+                <details>
+                    <summary>컨포멀 예측(conformal prediction)도 보정 세트를 쓰나?</summary>
+                    <p>쓴다. 보정 세트 n개의 점수 1 − (정답 클래스의 확률)에서 ⌈(n+1)(1−α)⌉번째 값을 threshold로 하고 그 threshold를 넘는 클래스를 모두 답 후보로 내면, 같은 분포의 새 데이터에서 정답이 후보에 들 확률이 1 − α 이상이다. 보정 세트가 1,000개면 포함률이 대개 0.88~0.92다(Angelopoulos·Bates §1, §3.2).</p>
+                </details>
+                <details>
+                    <summary>장비나 데이터가 바뀌면 보정을 다시 해야 하나?</summary>
+                    <p>그렇다. i.i.d. 검증 데이터에서 한 보정은 분포가 바뀐 데이터에서의 보정을 보장하지 않는다(Ovadia 외 2019 §4.2). 모델은 그대로 두고 새 환경의 데이터로 보정 세트를 새로 모아 T와 threshold를 다시 정할 수 있다. 이 페이지의 합성 실험에서는 잡음이 1.3배인 데이터에서 옛 값의 재현율이 83.8%였고, 새 데이터 1,000개로 다시 정하자 95.4%가 되었다.</p>
+                </details>
+            </div>
+            <p class="source">출처: Guo 외 2017(§4, §4.2, 표 1) · Niculescu-Mizil·Caruana 2005 §2.1 · Elkan 2001 식 2 · Angelopoulos·Bates(§1, §3.2) · Ovadia 외 2019 §4.2</p>
+        </section>
+
+        <section class="wrap step" aria-labelledby="more-title">
+            <h2 id="more-title">더 보기</h2>
+            <ul class="links">
+                <li><a href="https://arxiv.org/abs/1706.04599">Guo, Pleiss, Sun, Weinberger, On Calibration of Modern Neural Networks (ICML 2017)</a></li>
+                <li><a href="https://arxiv.org/abs/2107.07511">Angelopoulos, Bates, A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification</a></li>
+                <li><a href="https://www.cs.cornell.edu/~alexn/papers/calibration.icml05.crc.rev3.pdf">Niculescu-Mizil, Caruana, Predicting Good Probabilities With Supervised Learning (ICML 2005)</a></li>
+                <li><a href="https://cseweb.ucsd.edu/~elkan/rescale.pdf">Elkan, The Foundations of Cost-Sensitive Learning (IJCAI 2001)</a></li>
+                <li><a href="https://arxiv.org/abs/1906.02530">Ovadia et al., Can You Trust Your Model's Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift (NeurIPS 2019)</a></li>
+                <!-- 영상이 나오면 추가: <li><a href="https://www.youtube.com/watch?v=...">영상으로 보기</a></li> -->
+            </ul>
+            <p class="hint" style="margin-top: 12px;">이 페이지의 숫자는 합성 데이터(클래스 10개, 30차원 정규분포)와 은닉층 2개의 신경망 12개로 직접 계산했다. 같은 계산을 테스트로 이론과 맞춰 보았다. 실제 영상 모델의 숫자는 다를 수 있다.</p>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        마지막 업데이트 <time datetime="2026-10-13">2026-10-13</time> · <a href="/">Hugh Q Lee</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+            });
+            render();
+        })();
+    </script>
+    <script type="application/json" id="page-data">{"n":{"train":2000,"val":1000,"calib":1000,"test":1000,"after":27000},"T_places":["none","train","val","calib","test"],"thr_places":["train","val","calib","test"],"target":0.95,"positive_class":0,"draws":[{"model":10,"acc":[803,807],"T":[100,5,251,262,265],"gap":[[127,128],[193,190],[15,12],[6,3],[4,0]],"recall":[[[620,580],[930,927],[950,955],[950,953]],[[740,746],[930,930],[960,956],[950,955]],[[650,629],[930,917],[940,945],[950,948]],[[650,632],[930,916],[940,944],[950,947]],[[650,632],[930,916],[940,944],[950,947]]],"pos":[100,2658],"thr_calib":0.0911},{"model":5,"acc":[806,803],"T":[100,5,266,277,273],"gap":[[137,133],[190,194],[17,11],[8,2],[12,5]],"recall":[[[615,582],[979,948],[958,939],[958,932]],[[812,764],[969,945],[958,940],[958,934]],[[688,625],[1000,960],[948,930],[958,936]],[[688,627],[1000,962],[948,929],[958,935]],[[688,627],[1000,961],[948,929],[958,936]]],"pos":[96,2672],"thr_calib":0.1358},{"model":3,"acc":[806,804],"T":[100,5,286,271,273],"gap":[[130,133],[191,193],[-8,-4],[4,9],[2,7]],"recall":[[[563,589],[922,940],[913,925],[951,949]],[[728,748],[922,941],[913,926],[951,949]],[[621,644],[961,947],[903,920],[951,946]],[[621,639],[961,946],[903,920],[951,946]],[[621,640],[961,946],[903,920],[951,946]]],"pos":[103,2664],"thr_calib":0.1535},{"model":11,"acc":[813,807],"T":[100,5,263,254,259],"gap":[[119,127],[183,190],[-7,2],[1,10],[-3,5]],"recall":[[[557,583],[915,925],[934,938],[953,954]],[[717,757],[915,927],[925,933],[953,952]],[[604,633],[906,916],[943,953],[953,955]],[[604,631],[906,917],[943,953],[953,955]],[[604,632],[906,917],[943,953],[953,955]]],"pos":[106,2661],"thr_calib":0.0771},{"model":0,"acc":[805,805],"T":[100,5,464,467,460],"gap":[[160,158],[194,193],[6,2],[5,1],[8,4]],"recall":[[[590,610],[900,938],[900,936],[950,970]],[[730,780],[910,938],[900,935],[950,970]],[[650,661],[900,938],[900,944],[950,960]],[[650,662],[900,938],[900,944],[950,960]],[[650,661],[900,938],[900,944],[950,961]]],"pos":[100,2656],"thr_calib":0.1091},{"model":5,"acc":[800,805],"T":[100,5,282,265,272],"gap":[[134,132],[196,192],[-3,-2],[11,11],[5,6]],"recall":[[[529,585],[918,933],[906,921],[953,947]],[[718,763],[918,934],[906,916],[953,948]],[[565,632],[918,930],[906,918],[953,946]],[[565,630],[918,930],[906,920],[953,946]],[[565,630],[918,930],[906,918],[953,946]]],"pos":[85,2687],"thr_calib":0.1587},{"model":8,"acc":[812,808],"T":[100,5,488,491,461],"gap":[[154,155],[186,190],[-6,-6],[-8,-7],[6,7]],"recall":[[[602,574],[935,956],[935,966],[954,972]],[[759,787],[935,956],[935,966],[954,972]],[[657,639],[926,954],[926,960],[954,971]],[[657,640],[926,954],[926,960],[954,972]],[[657,637],[926,954],[926,960],[954,970]]],"pos":[108,2676],"thr_calib":0.0863},{"model":0,"acc":[800,803],"T":[100,5,480,438,465],"gap":[[162,159],[198,195],[-8,-4],[12,16],[0,3]],"recall":[[[578,608],[944,959],[922,938],[956,971]],[[778,779],[944,960],[922,938],[956,971]],[[633,666],[933,957],[922,945],[956,974]],[[633,659],[933,955],[922,942],[956,973]],[[633,663],[933,956],[922,944],[956,973]]],"pos":[90,2674],"thr_calib":0.1055},{"model":10,"acc":[815,806],"T":[100,5,263,254,249],"gap":[[116,129],[182,191],[-15,3],[-7,11],[-3,15]],"recall":[[[548,577],[939,919],[939,932],[957,959]],[[730,742],[939,922],[939,934],[957,954]],[[591,626],[930,923],[930,927],[957,954]],[[583,624],[930,923],[930,927],[957,955]],[[583,624],[930,922],[930,928],[957,955]]],"pos":[115,2667],"thr_calib":0.1186},{"model":9,"acc":[808,805],"T":[100,5,255,271,264],"gap":[[128,129],[189,191],[8,10],[-6,-4],[0,2]],"recall":[[[533,591],[902,922],[913,938],[957,959]],[[696,738],[902,922],[902,930],[957,961]],[[576,623],[870,908],[935,939],[957,949]],[[576,629],[870,906],[935,937],[957,949]],[[576,627],[870,908],[935,938],[957,949]]],"pos":[92,2683],"thr_calib":0.1019},{"model":9,"acc":[819,805],"T":[100,5,261,256,254],"gap":[[114,130],[177,192],[-11,6],[-7,10],[-5,12]],"recall":[[[582,594],[967,958],[956,933],[956,914]],[[769,739],[967,957],[956,935],[956,915]],[[593,630],[978,959],[956,935],[956,918]],[[593,629],[978,959],[956,935],[956,918]],[[593,627],[978,959],[956,935],[956,918]]],"pos":[91,2687],"thr_calib":0.1008},{"model":11,"acc":[813,808],"T":[100,5,254,253,247],"gap":[[128,126],[185,189],[8,8],[9,10],[14,14]],"recall":[[[518,583],[964,968],[940,942],[952,946]],[[675,752],[964,968],[928,941],[952,947]],[[542,629],[964,957],[952,954],[952,935]],[[542,629],[964,958],[952,954],[952,935]],[[542,628],[964,958],[952,954],[952,935]]],"pos":[83,2694],"thr_calib":0.0767},{"model":0,"acc":[810,803],"T":[100,5,461,488,455],"gap":[[156,160],[188,195],[5,5],[-8,-8],[8,8]],"recall":[[[594,605],[990,975],[938,922],[958,936]],[[812,774],[990,975],[938,923],[958,934]],[[677,659],[990,972],[938,900],[958,919]],[[688,662],[990,972],[927,897],[958,916]],[[677,658],[990,972],[938,901],[958,919]]],"pos":[96,2688],"thr_calib":0.209},{"model":7,"acc":[790,807],"T":[100,5,501,469,480],"gap":[[175,156],[209,191],[9,-12],[24,3],[19,-2]],"recall":[[[543,567],[914,903],[951,953],[951,928]],[[741,779],[914,906],[951,954],[951,929]],[[568,642],[951,925],[951,962],[951,923]],[[568,635],[938,922],[951,960],[951,924]],[[568,637],[938,923],[951,960],[951,924]]],"pos":[81,2682],"thr_calib":0.0685},{"model":2,"acc":[797,803],"T":[100,5,474,448,446],"gap":[[165,160],[202,195],[5,-2],[17,10],[18,11]],"recall":[[[635,605],[938,959],[938,941],[958,966]],[[760,783],[938,960],[938,942],[958,966]],[[677,671],[958,964],[927,945],[958,958]],[[667,666],[958,964],[927,946],[958,958]],[[667,665],[958,964],[927,946],[958,958]]],"pos":[96,2669],"thr_calib":0.0933},{"model":10,"acc":[801,807],"T":[100,5,249,273,262],"gap":[[136,127],[196,190],[24,14],[3,-7],[13,3]],"recall":[[[472,584],[921,947],[978,984],[955,976]],[[629,750],[921,946],[978,984],[955,976]],[[528,632],[899,941],[966,980],[955,975]],[[528,637],[899,939],[955,978],[955,974]],[[528,634],[899,939],[955,979],[955,974]]],"pos":[89,2667],"thr_calib":0.0388},{"model":4,"acc":[779,806],"T":[100,5,290,283,296],"gap":[[157,131],[217,191],[24,-10],[29,-4],[19,-14]],"recall":[[[602,603],[951,977],[942,942],[951,967]],[[728,733],[951,977],[942,945],[951,969]],[[641,640],[951,972],[932,936],[951,966]],[[641,638],[951,973],[932,936],[951,966]],[[641,641],[951,972],[932,936],[951,966]]],"pos":[103,2700],"thr_calib":0.1016},{"model":6,"acc":[799,807],"T":[100,5,467,453,477],"gap":[[162,157],[199,191],[11,5],[18,11],[7,0]],"recall":[[[533,577],[963,967],[888,921],[953,962]],[[748,786],[963,967],[888,921],[953,962]],[[598,634],[935,954],[879,911],[953,959]],[[598,633],[935,955],[879,910],[953,959]],[[607,635],[935,954],[879,910],[953,959]]],"pos":[107,2689],"thr_calib":0.1935},{"model":8,"acc":[803,808],"T":[100,5,481,448,468],"gap":[[162,156],[195,190],[4,-2],[19,13],[10,4]],"recall":[[[602,576],[959,948],[949,935],[959,940]],[[837,785],[959,949],[949,936],[959,940]],[[673,642],[959,939],[959,940],[959,934]],[[673,639],[959,940],[959,940],[959,935]],[[673,641],[959,939],[959,940],[959,934]]],"pos":[98,2672],"thr_calib":0.1129},{"model":6,"acc":[813,806],"T":[100,5,470,447,442],"gap":[[152,156],[186,191],[-1,3],[10,14],[13,17]],"recall":[[[606,574],[970,946],[980,961],[960,923]],[[818,782],[970,946],[980,961],[960,924]],[[667,635],[980,936],[980,950],[960,927]],[[667,632],[980,938],[980,950],[960,926]],[[667,631],[980,938],[980,951],[960,926]]],"pos":[99,2661],"thr_calib":0.0887},{"model":6,"acc":[807,806],"T":[100,5,462,469,459],"gap":[[159,156],[191,192],[12,7],[9,4],[13,8]],"recall":[[[593,575],[901,902],[877,885],[951,933]],[[765,784],[889,899],[877,887],[951,931]],[[642,634],[926,912],[864,869],[951,947]],[[642,634],[926,912],[864,870],[951,946]],[[642,634],[926,912],[864,869],[951,947]]],"pos":[81,2670],"thr_calib":0.2812},{"model":1,"acc":[782,802],"T":[100,5,446,458,478],"gap":[[174,160],[216,196],[20,13],[14,7],[4,-3]],"recall":[[[610,596],[980,971],[1000,976],[950,955]],[[750,766],[980,971],[1000,976],[950,955]],[[640,638],[960,969],[1000,976],[950,966]],[[640,640],[960,968],[1000,976],[950,966]],[[640,644],[950,968],[1000,975],[950,965]]],"pos":[100,2650],"thr_calib":0.0323},{"model":4,"acc":[841,803],"T":[100,5,262,274,259],"gap":[[101,134],[156,194],[-9,16],[-17,7],[-6,19]],"recall":[[[588,606],[922,909],[980,964],[951,934]],[[745,733],[922,908],[980,964],[951,924]],[[637,634],[941,931],[980,954],[951,933]],[[647,637],[941,931],[980,953],[951,934]],[[637,633],[941,930],[980,955],[951,933]]],"pos":[102,2684],"thr_calib":0.064},{"model":10,"acc":[813,807],"T":[100,5,260,267,251],"gap":[[127,127],[184,190],[2,4],[-4,-2],[10,12]],"recall":[[[538,579],[968,961],[989,976],[957,958]],[[742,742],[968,960],[989,976],[957,956]],[[602,628],[978,966],[989,978],[957,949]],[[602,629],[978,966],[989,978],[957,949]],[[602,625],[978,966],[989,979],[957,950]]],"pos":[93,2697],"thr_calib":0.0344},{"model":9,"acc":[769,806],"T":[100,5,257,247,274],"gap":[[154,129],[227,191],[32,9],[41,17],[17,-7]],"recall":[[[574,599],[957,977],[957,977],[957,964]],[[702,745],[957,977],[957,977],[957,960]],[[585,632],[947,972],[947,976],[957,976]],[[585,628],[947,974],[947,976],[957,976]],[[596,637],[947,970],[957,975],[957,974]]],"pos":[94,2690],"thr_calib":0.0355},{"model":3,"acc":[815,804],"T":[100,5,277,273,272],"gap":[[126,133],[182,193],[0,3],[3,6],[4,8]],"recall":[[[697,581],[960,956],[929,899],[960,934]],[[828,741],[960,956],[929,902],[960,935]],[[727,635],[960,966],[909,888],[960,916]],[[727,634],[960,965],[909,889],[960,916]],[[727,633],[960,964],[909,889],[960,916]]],"pos":[99,2696],"thr_calib":0.2128},{"model":5,"acc":[810,804],"T":[100,5,280,272,266],"gap":[[128,133],[186,193],[-3,-1],[4,6],[9,11]],"recall":[[[663,579],[930,935],[930,934],[953,943]],[[791,762],[930,937],[930,924],[953,943]],[[698,626],[919,924],[965,943],[953,939]],[[698,625],[919,924],[965,943],[953,938]],[[698,624],[919,924],[965,943],[953,939]]],"pos":[86,2706],"thr_calib":0.1015},{"model":11,"acc":[814,807],"T":[100,5,253,261,259],"gap":[[120,127],[183,190],[5,11],[-1,4],[0,5]],"recall":[[[619,577],[876,909],[948,955],[959,965]],[[753,750],[876,910],[948,956],[959,966]],[[660,623],[887,912],[948,964],[959,966]],[[660,625],[887,912],[948,964],[959,965]],[[660,624],[887,912],[948,964],[959,965]]],"pos":[97,2693],"thr_calib":0.0567},{"model":6,"acc":[803,805],"T":[100,5,439,469,484],"gap":[[158,157],[194,193],[21,19],[7,5],[0,-2]],"recall":[[[534,576],[913,896],[932,924],[951,946]],[[786,784],[913,897],[922,921],[951,946]],[[612,630],[922,927],[922,910],[951,943]],[[612,635],[922,930],[913,908],[951,943]],[[612,637],[922,930],[913,908],[951,943]]],"pos":[103,2680],"thr_calib":0.1905},{"model":11,"acc":[816,807],"T":[100,5,252,273,255],"gap":[[119,126],[181,189],[-1,11],[-19,-7],[-4,8]],"recall":[[[564,583],[941,932],[970,963],[950,950]],[[792,750],[941,933],[970,963],[950,951]],[[624,629],[921,930],[970,965],[950,941]],[[634,632],[921,931],[980,968],[950,942]],[[624,629],[921,931],[970,966],[950,941]]],"pos":[101,2684],"thr_calib":0.0579},{"model":5,"acc":[805,805],"T":[100,5,271,286,283],"gap":[[131,132],[192,192],[9,7],[-3,-6],[-1,-3]],"recall":[[[574,585],[944,954],[963,968],[954,960]],[[713,766],[944,954],[963,970],[954,961]],[[639,630],[944,950],[954,965],[954,956]],[[639,631],[944,950],[954,965],[954,957]],[[639,631],[944,950],[954,965],[954,957]]],"pos":[108,2660],"thr_calib":0.068},{"model":8,"acc":[801,808],"T":[100,5,471,463,479],"gap":[[160,155],[196,190],[12,2],[15,6],[8,-1]],"recall":[[[667,572],[990,962],[960,940],[960,940]],[[808,786],[1000,963],[960,941],[960,941]],[[707,634],[980,954],[939,923],[960,931]],[[707,634],[980,954],[939,924],[960,930]],[[707,636],[980,954],[939,922],[960,931]]],"pos":[99,2677],"thr_calib":0.1547},{"model":6,"acc":[817,807],"T":[100,5,488,483,471],"gap":[[147,156],[181,191],[-15,-5],[-12,-3],[-7,2]],"recall":[[[578,573],[980,987],[951,944],[951,927]],[[843,782],[980,987],[951,944],[951,923]],[[657,635],[971,983],[951,952],[951,940]],[[657,633],[971,983],[951,951],[951,939]],[[657,631],[971,984],[951,951],[951,939]]],"pos":[102,2686],"thr_calib":0.1002},{"model":9,"acc":[805,806],"T":[100,5,267,262,276],"gap":[[137,128],[192,190],[9,-1],[13,3],[1,-9]],"recall":[[[551,594],[966,948],[978,966],[955,922]],[[697,743],[966,948],[978,968],[955,924]],[[618,630],[933,930],[978,969],[955,940]],[[618,628],[933,931],[978,968],[955,939]],[[618,633],[933,928],[978,969],[955,941]]],"pos":[89,2682],"thr_calib":0.0492},{"model":8,"acc":[812,807],"T":[100,5,466,470,459],"gap":[[148,156],[187,191],[-3,5],[-5,4],[0,8]],"recall":[[[629,573],[962,958],[848,894],[952,952]],[[781,788],[962,958],[857,894],[952,952]],[[695,635],[952,957],[857,888],[952,956]],[[695,635],[952,957],[857,888],[952,956]],[[695,635],[952,957],[848,886],[952,955]]],"pos":[105,2667],"thr_calib":0.2407},{"model":7,"acc":[816,806],"T":[100,5,467,476,476],"gap":[[145,158],[182,192],[-8,6],[-13,1],[-12,1]],"recall":[[[639,564],[938,941],[938,941],[959,956]],[[825,775],[938,941],[938,942],[959,956]],[[722,630],[928,946],[928,946],[959,957]],[[722,632],[928,945],[928,945],[959,956]],[[722,632],[928,945],[928,945],[959,956]]],"pos":[97,2677],"thr_calib":0.0929},{"model":8,"acc":[779,810],"T":[100,5,465,513,490],"gap":[[181,153],[219,188],[27,4],[4,-19],[15,-8]],"recall":[[[566,574],[928,914],[988,955],[952,919]],[[819,783],[928,914],[988,955],[952,920]],[[651,636],[976,940],[976,942],[952,912]],[[651,643],[976,942],[976,945],[952,910]],[[651,639],[976,941],[976,944],[952,911]]],"pos":[83,2708],"thr_calib":0.1152},{"model":4,"acc":[821,804],"T":[100,5,283,273,274],"gap":[[118,133],[178,193],[-18,-1],[-10,6],[-11,6]],"recall":[[[559,605],[892,926],[824,907],[951,972]],[[667,739],[902,928],[824,909],[951,973]],[[618,640],[853,921],[863,930],[951,964]],[[618,638],[853,920],[863,930],[951,965]],[[618,640],[853,920],[863,930],[951,965]]],"pos":[102,2656],"thr_calib":0.113},{"model":8,"acc":[818,807],"T":[100,5,458,475,466],"gap":[[150,156],[180,191],[5,9],[-3,1],[1,5]],"recall":[[[649,570],[982,950],[982,942],[955,932]],[[811,782],[982,950],[982,942],[955,933]],[[676,633],[973,936],[973,941],[955,919]],[[676,635],[973,936],[973,941],[955,918]],[[676,633],[973,936],[973,941],[955,919]]],"pos":[111,2673],"thr_calib":0.1148},{"model":11,"acc":[828,807],"T":[100,5,254,277,247],"gap":[[108,127],[167,190],[-7,9],[-27,-11],[-2,14]],"recall":[[[629,578],[966,931],[966,940],[955,909]],[[742,750],[966,927],[966,943],[955,901]],[[697,624],[989,939],[989,936],[955,918]],[[697,627],[989,942],[989,937],[955,921]],[[685,622],[989,940],[989,937],[955,918]]],"pos":[89,2699],"thr_calib":0.1176},{"model":8,"acc":[800,809],"T":[100,5,504,442,489],"gap":[[168,154],[198,189],[-2,-13],[27,15],[5,-6]],"recall":[[[687,576],[980,965],[909,912],[960,941]],[[798,787],[980,965],[919,912],[960,941]],[[747,642],[990,972],[929,918],[960,940]],[[737,633],[990,975],[929,919],[960,939]],[[747,639],[990,973],[929,919],[960,940]]],"pos":[99,2667],"thr_calib":0.1613},{"model":7,"acc":[813,806],"T":[100,5,456,457,466],"gap":[[149,158],[186,192],[10,11],[9,10],[5,6]],"recall":[[[593,566],[982,967],[956,938],[956,926]],[[788,779],[982,967],[956,938],[956,927]],[[628,634],[991,972],[973,943],[956,931]],[[628,635],[991,972],[973,943],[956,931]],[[628,637],[991,972],[973,944],[956,932]]],"pos":[113,2675],"thr_calib":0.092},{"model":1,"acc":[800,802],"T":[100,5,494,453,457],"gap":[[161,159],[199,196],[-17,-12],[4,8],[2,6]],"recall":[[[553,593],[968,972],[957,967],[957,967]],[[713,766],[968,972],[957,968],[957,967]],[[574,644],[968,974],[957,966],[957,966]],[[574,639],[968,974],[957,967],[957,966]],[[574,639],[968,974],[957,967],[957,966]]],"pos":[94,2699],"thr_calib":0.0472},{"model":4,"acc":[825,804],"T":[100,5,267,298,256],"gap":[[112,133],[172,193],[-5,12],[-30,-14],[3,20]],"recall":[[[589,605],[955,942],[964,950],[955,934]],[[750,733],[964,944],[964,952],[955,932]],[[607,634],[946,938],[955,949],[955,943]],[[634,643],[946,938],[955,949],[955,946]],[[616,631],[946,938],[955,950],[955,942]]],"pos":[112,2672],"thr_calib":0.08},{"model":10,"acc":[810,806],"T":[100,5,258,268,255],"gap":[[122,128],[186,191],[-3,7],[-11,-2],[1,10]],"recall":[[[567,578],[944,955],[967,963],[956,961]],[[733,741],[944,956],[967,964],[956,963]],[[611,630],[933,953],[933,955],[956,966]],[[611,631],[933,953],[933,955],[956,966]],[[611,628],[933,953],[933,956],[956,965]]],"pos":[90,2683],"thr_calib":0.0761},{"model":7,"acc":[816,805],"T":[100,5,438,471,461],"gap":[[150,159],[182,193],[8,20],[-8,4],[-3,9]],"recall":[[[581,562],[930,878],[942,919],[953,971]],[[802,776],[930,878],[942,919],[953,971]],[[640,626],[930,889],[930,918],[953,964]],[[640,633],[930,892],[930,919],[953,962]],[[640,632],[930,891],[930,919],[953,962]]],"pos":[86,2673],"thr_calib":0.1542},{"model":8,"acc":[836,807],"T":[100,5,471,466,440],"gap":[[126,156],[162,191],[-23,4],[-20,6],[-9,18]],"recall":[[[559,581],[983,965],[975,944],[958,917]],[[847,787],[983,965],[975,944],[958,917]],[[644,643],[975,967],[975,954],[958,915]],[[644,643],[975,967],[975,954],[958,915]],[[644,639],[975,967],[975,956],[958,916]]],"pos":[118,2635],"thr_calib":0.0849},{"model":0,"acc":[793,804],"T":[100,5,451,459,452],"gap":[[171,159],[205,194],[16,10],[12,6],[15,9]],"recall":[[[552,609],[933,940],[943,950],[952,952]],[[762,780],[933,940],[943,948],[952,953]],[[629,663],[933,938],[952,966],[952,958]],[[629,663],[933,938],[952,965],[952,958]],[[629,663],[933,938],[952,966],[952,958]]],"pos":[105,2667],"thr_calib":0.0677},{"model":10,"acc":[802,807],"T":[100,5,265,271,265],"gap":[[135,127],[195,190],[7,-1],[3,-5],[7,-1]],"recall":[[[541,576],[898,927],[969,977],[959,966]],[[714,744],[898,928],[969,978],[959,963]],[[602,627],[878,932],[980,978],[959,963]],[[602,628],[878,933],[980,978],[959,963]],[[602,627],[878,932],[980,978],[959,963]]],"pos":[98,2675],"thr_calib":0.0377},{"model":6,"acc":[820,806],"T":[100,5,468,452,468],"gap":[[147,157],[178,192],[1,5],[8,12],[1,4]],"recall":[[[530,573],[910,925],[960,960],[950,956]],[[790,784],[910,927],[960,960],[950,956]],[[610,634],[880,923],[950,960],[950,948]],[[610,633],[880,923],[950,960],[950,947]],[[610,634],[880,923],[950,960],[950,948]]],"pos":[100,2676],"thr_calib":0.0779},{"model":7,"acc":[818,807],"T":[100,5,473,463,473],"gap":[[147,157],[180,192],[-3,2],[1,7],[-3,2]],"recall":[[[600,565],[962,975],[943,964],[952,973]],[[790,778],[952,975],[943,965],[952,973]],[[667,635],[962,979],[933,965],[952,972]],[[667,633],[962,979],[933,965],[952,972]],[[667,635],[962,979],[933,965],[952,972]]],"pos":[105,2687],"thr_calib":0.0634},{"model":8,"acc":[792,809],"T":[100,5,453,467,468],"gap":[[172,155],[207,190],[15,11],[8,4],[8,4]],"recall":[[[608,569],[959,950],[887,893],[959,949]],[[763,783],[959,950],[887,893],[959,949]],[[660,632],[969,954],[887,889],[959,945]],[[660,633],[969,955],[887,888],[959,945]],[[660,633],[969,955],[887,888],[959,945]]],"pos":[97,2692],"thr_calib":0.2343},{"model":1,"acc":[795,802],"T":[100,5,468,460,484],"gap":[[166,159],[203,196],[8,2],[12,6],[0,-6]],"recall":[[[537,594],[947,939],[947,937],[958,952]],[[695,765],[947,939],[947,938],[958,952]],[[600,642],[958,950],[958,942],[958,942]],[[600,641],[958,950],[958,942],[958,942]],[[600,644],[958,949],[958,943],[958,941]]],"pos":[95,2662],"thr_calib":0.0914},{"model":11,"acc":[808,807],"T":[100,5,261,241,265],"gap":[[127,126],[189,189],[1,3],[18,20],[-2,-1]],"recall":[[[561,584],[925,924],[935,933],[953,946]],[[794,752],[925,925],[935,934],[953,947]],[[626,631],[907,923],[925,931],[953,949]],[[617,626],[907,923],[925,932],[953,946]],[[626,632],[907,923],[925,931],[953,949]]],"pos":[107,2682],"thr_calib":0.1105},{"model":5,"acc":[807,804],"T":[100,5,257,282,284],"gap":[[136,133],[191,193],[25,18],[6,-2],[4,-4]],"recall":[[[643,584],[918,929],[969,973],[959,971]],[[786,764],[918,929],[969,974],[959,971]],[[653,626],[929,930],[990,976],[959,966]],[[653,631],[929,931],[990,977],[959,966]],[[653,631],[929,931],[990,978],[959,966]]],"pos":[98,2667],"thr_calib":0.0438},{"model":11,"acc":[801,807],"T":[100,5,254,268,260],"gap":[[136,126],[196,190],[16,9],[5,-3],[12,4]],"recall":[[[617,578],[974,968],[904,923],[957,961]],[[757,751],[974,966],[904,921],[957,960]],[[661,625],[983,972],[913,933],[957,962]],[[670,628],[983,972],[913,933],[957,962]],[[670,626],[983,972],[913,934],[957,962]]],"pos":[115,2678],"thr_calib":0.1241},{"model":11,"acc":[822,808],"T":[100,5,277,270,267],"gap":[[115,126],[176,189],[-15,-12],[-9,-6],[-7,-3]],"recall":[[[644,577],[967,959],[956,944],[956,939]],[[767,751],[967,959],[967,943],[956,940]],[[689,626],[956,958],[956,944],[956,943]],[[689,626],[956,958],[956,946],[956,943]],[[689,626],[956,958],[956,945],[956,943]]],"pos":[90,2706],"thr_calib":0.1054},{"model":10,"acc":[787,805],"T":[100,5,248,234,254],"gap":[[136,129],[209,191],[17,16],[29,28],[12,11]],"recall":[[[534,580],[932,949],[909,885],[955,961]],[[750,738],[932,951],[909,890],[955,962]],[[591,624],[943,957],[909,872],[955,961]],[[580,622],[943,955],[909,869],[955,961]],[[591,625],[943,958],[909,872],[955,962]]],"pos":[88,2691],"thr_calib":0.2555},{"model":6,"acc":[821,807],"T":[100,5,462,491,441],"gap":[[144,156],[176,191],[-7,7],[-20,-7],[3,16]],"recall":[[[570,576],[990,972],[990,971],[950,908]],[[890,783],[990,972],[990,971],[950,908]],[[650,634],[990,981],[980,963],[950,891]],[[660,637],[990,981],[980,960],[950,889]],[[650,631],[990,980],[980,963],[950,892]]],"pos":[100,2656],"thr_calib":0.0881},{"model":10,"acc":[813,806],"T":[100,5,255,260,253],"gap":[[119,128],[183,191],[4,9],[0,5],[5,10]],"recall":[[[648,573],[956,963],[956,964],[956,956]],[[769,741],[956,961],[956,965],[956,957]],[[648,624],[956,958],[989,972],[956,953]],[[648,625],[956,958],[989,972],[956,953]],[[648,623],[956,959],[989,972],[956,953]]],"pos":[91,2694],"thr_calib":0.0418},{"model":7,"acc":[786,808],"T":[100,5,459,490,473],"gap":[[176,157],[212,191],[20,9],[6,-6],[14,2]],"recall":[[[549,569],[929,960],[929,945],[956,983]],[[779,779],[929,960],[929,945],[956,982]],[[637,633],[929,962],[920,940],[956,980]],[[637,639],[929,960],[920,939],[956,980]],[[637,636],[929,961],[920,940],[956,980]]],"pos":[113,2664],"thr_calib":0.1134},{"model":10,"acc":[816,806],"T":[100,5,269,263,249],"gap":[[121,128],[182,190],[-11,-3],[-7,2],[5,14]],"recall":[[[541,579],[954,931],[972,960],[954,931]],[[688,744],[954,933],[972,960],[954,928]],[[596,629],[927,922],[991,972],[954,939]],[[596,628],[927,922],[982,972],[954,938]],[[596,625],[936,923],[982,971],[954,936]]],"pos":[109,2667],"thr_calib":0.0442},{"model":11,"acc":[808,808],"T":[100,5,273,250,268],"gap":[[130,126],[190,189],[-4,-7],[15,12],[0,-3]],"recall":[[[537,585],[926,909],[947,945],[958,947]],[[737,751],[926,910],[947,942],[958,948]],[[579,633],[905,906],[958,969],[958,940]],[[579,629],[916,905],[958,965],[958,939]],[[579,633],[905,906],[958,969],[958,939]]],"pos":[95,2679],"thr_calib":0.0516},{"model":4,"acc":[806,804],"T":[100,5,279,272,287],"gap":[[134,133],[190,193],[7,2],[12,7],[0,-5]],"recall":[[[602,604],[961,980],[922,947],[951,975]],[[728,735],[961,980],[922,950],[951,974]],[[631,641],[961,983],[932,939],[951,975]],[[631,638],[961,983],[922,939],[951,975]],[[631,643],[961,983],[932,940],[951,975]]],"pos":[103,2690],"thr_calib":0.0944},{"model":5,"acc":[797,804],"T":[100,5,269,275,283],"gap":[[140,133],[199,193],[15,8],[11,4],[4,-3]],"recall":[[[564,583],[968,956],[968,960],[957,928]],[[777,764],[968,956],[968,961],[957,930]],[[638,627],[968,959],[968,962],[957,933]],[[638,628],[968,959],[968,963],[957,934]],[[638,629],[968,958],[968,964],[957,934]]],"pos":[94,2687],"thr_calib":0.064},{"model":8,"acc":[809,808],"T":[100,5,462,459,468],"gap":[[155,156],[190,190],[7,7],[9,8],[5,4]],"recall":[[[645,573],[944,952],[911,890],[952,952]],[[815,785],[944,952],[911,891],[952,952]],[[710,636],[960,951],[927,903],[952,942]],[[710,636],[960,951],[927,903],[952,942]],[[710,636],[960,950],[927,903],[952,942]]],"pos":[124,2667],"thr_calib":0.1994},{"model":9,"acc":[803,806],"T":[100,5,260,282,267],"gap":[[129,128],[193,191],[9,6],[-10,-14],[3,-1]],"recall":[[[687,587],[1000,954],[1000,963],[960,875]],[[859,736],[1000,954],[1000,961],[960,872]],[[707,622],[1000,945],[1000,965],[960,905]],[[717,630],[1000,948],[1000,963],[960,908]],[[707,625],[1000,946],[1000,964],[960,905]]],"pos":[99,2654],"thr_calib":0.0656},{"model":0,"acc":[798,804],"T":[100,5,465,438,484],"gap":[[167,158],[200,194],[12,2],[25,15],[2,-7]],"recall":[[[676,609],[951,942],[902,927],[951,942]],[[775,782],[951,942],[912,927],[951,942]],[[716,666],[931,937],[912,920],[951,950]],[[716,661],[931,938],[912,922],[951,949]],[[716,668],[931,936],[912,918],[951,950]]],"pos":[102,2673],"thr_calib":0.1404},{"model":9,"acc":[799,806],"T":[100,5,252,267,252],"gap":[[133,128],[198,191],[21,12],[9,-1],[21,12]],"recall":[[[561,595],[963,958],[953,942],[953,938]],[[748,740],[963,954],[953,942],[953,940]],[[589,626],[972,963],[944,939],[953,940]],[[598,631],[972,961],[944,936],[953,940]],[[589,626],[972,963],[944,939],[953,940]]],"pos":[107,2669],"thr_calib":0.1041},{"model":3,"acc":[778,805],"T":[100,5,279,279,292],"gap":[[154,132],[219,192],[22,2],[22,1],[12,-9]],"recall":[[[491,591],[954,959],[935,958],[954,958]],[[648,748],[954,960],[935,958],[954,959]],[[546,646],[935,955],[926,954],[954,957]],[[546,646],[935,955],[926,954],[954,957]],[[546,648],[935,955],[917,954],[954,957]]],"pos":[108,2670],"thr_calib":0.0942},{"model":3,"acc":[825,804],"T":[100,5,267,295,259],"gap":[[114,133],[172,193],[-5,12],[-27,-11],[1,18]],"recall":[[[622,587],[939,949],[969,978],[959,954]],[[786,745],[939,950],[969,977],[959,955]],[[663,638],[939,939],[969,975],[959,956]],[[673,644],[939,936],[969,975],[959,957]],[[663,636],[939,939],[969,975],[959,956]]],"pos":[98,2684],"thr_calib":0.0585},{"model":10,"acc":[806,806],"T":[100,5,244,256,260],"gap":[[133,128],[191,191],[20,18],[10,8],[6,5]],"recall":[[[602,576],[978,930],[978,983],[957,902]],[[796,739],[978,918],[978,983],[957,902]],[[624,624],[978,923],[978,981],[957,895]],[[624,626],[978,922],[978,981],[957,894]],[[624,627],[978,921],[978,981],[957,893]]],"pos":[93,2674],"thr_calib":0.0296},{"model":3,"acc":[793,806],"T":[100,5,283,282,297],"gap":[[152,131],[204,191],[16,-3],[17,-1],[5,-14]],"recall":[[[535,593],[1000,970],[977,967],[953,946]],[[756,750],[1000,971],[977,968],[953,947]],[[616,647],[1000,974],[988,965],[953,945]],[[616,647],[1000,974],[988,965],[953,945]],[[616,647],[1000,974],[988,965],[953,946]]],"pos":[86,2708],"thr_calib":0.0716},{"model":6,"acc":[817,807],"T":[100,5,466,458,455],"gap":[[148,156],[181,191],[-2,6],[1,9],[3,11]],"recall":[[[552,579],[979,980],[938,934],[958,942]],[[792,785],[979,980],[938,935],[958,943]],[[594,638],[979,977],[938,922],[958,941]],[[594,638],[979,977],[938,923],[958,941]],[[594,638],[979,977],[938,923],[958,941]]],"pos":[96,2665],"thr_calib":0.1591},{"model":7,"acc":[811,807],"T":[100,5,512,476,461],"gap":[[153,157],[186,191],[-20,-17],[-3,0],[4,7]],"recall":[[[577,565],[928,955],[928,963],[955,981]],[[820,778],[928,956],[928,963],[955,981]],[[667,644],[910,949],[928,963],[955,988]],[[649,636],[910,950],[928,962],[955,985]],[[640,633],[910,951],[928,962],[955,985]]],"pos":[111,2667],"thr_calib":0.0699},{"model":11,"acc":[813,808],"T":[100,5,258,259,258],"gap":[[122,126],[184,189],[-2,5],[-4,4],[-2,5]],"recall":[[[531,582],[969,961],[939,947],[959,956]],[[694,753],[949,955],[918,938],[959,956]],[[551,630],[949,957],[959,967],[959,966]],[[551,630],[949,957],[959,968],[959,966]],[[551,630],[949,957],[959,968],[959,966]]],"pos":[98,2673],"thr_calib":0.054},{"model":1,"acc":[799,800],"T":[100,5,433,445,446],"gap":[[161,161],[199,198],[21,19],[16,14],[15,13]],"recall":[[[626,593],[960,962],[929,897],[960,917]],[[818,761],[960,962],[929,898],[960,918]],[[677,633],[960,958],[939,902],[960,904]],[[677,636],[960,958],[939,901],[960,903]],[[677,637],[960,958],[949,901],[960,903]]],"pos":[99,2670],"thr_calib":0.1673},{"model":2,"acc":[809,802],"T":[100,5,454,436,441],"gap":[[152,161],[189,197],[-1,8],[7,17],[5,14]],"recall":[[[617,602],[922,922],[922,931],[957,950]],[[791,777],[922,919],[922,929],[957,950]],[[661,662],[930,928],[930,939],[957,948]],[[661,657],[930,928],[930,938],[957,947]],[[661,658],[930,928],[930,938],[957,948]]],"pos":[115,2665],"thr_calib":0.1005},{"model":8,"acc":[817,808],"T":[100,5,456,489,453],"gap":[[149,155],[182,190],[2,9],[-13,-6],[3,10]],"recall":[[[649,572],[969,946],[969,945],[959,886]],[[856,787],[969,947],[969,946],[959,886]],[[722,634],[959,929],[959,928],[959,906]],[[722,637],[959,928],[959,927],[959,911]],[[722,634],[959,930],[959,928],[959,906]]],"pos":[97,2689],"thr_calib":0.1525},{"model":8,"acc":[792,808],"T":[100,5,464,454,513],"gap":[[173,155],[207,190],[21,6],[26,11],[-2,-16]],"recall":[[[466,582],[883,949],[835,939],[951,985]],[[709,791],[883,950],[835,940],[951,985]],[[515,645],[903,955],[893,944],[951,984]],[[515,643],[903,955],[893,943],[951,984]],[[515,652],[903,955],[893,944],[951,984]]],"pos":[103,2667],"thr_calib":0.1143},{"model":8,"acc":[814,808],"T":[100,5,480,484,452],"gap":[[153,155],[184,190],[-4,-2],[-6,-3],[9,11]],"recall":[[[527,581],[946,947],[982,968],[955,947]],[[821,784],[946,948],[982,968],[955,948]],[[661,640],[938,944],[1000,973],[955,950]],[[661,641],[938,944],[1000,973],[955,949]],[[652,638],[938,943],[1000,974],[955,952]]],"pos":[112,2684],"thr_calib":0.0574},{"model":4,"acc":[810,804],"T":[100,5,279,279,272],"gap":[[126,133],[185,193],[-5,1],[-5,2],[1,7]],"recall":[[[625,599],[979,958],[958,934],[958,923]],[[740,732],[979,959],[969,936],[958,926]],[[646,634],[969,954],[958,931],[958,929]],[[646,634],[969,954],[958,931],[958,929]],[[646,632],[969,954],[958,931],[958,927]]],"pos":[96,2686],"thr_calib":0.11},{"model":11,"acc":[818,807],"T":[100,5,260,268,253],"gap":[[117,126],[179,190],[-7,4],[-14,-3],[-2,9]],"recall":[[[584,584],[980,985],[970,976],[950,920]],[[762,756],[980,986],[970,977],[950,922]],[[624,633],[980,985],[970,983],[950,927]],[[624,635],[980,985],[970,982],[950,927]],[[624,632],[980,985],[970,983],[950,926]]],"pos":[101,2660],"thr_calib":0.0392},{"model":9,"acc":[800,806],"T":[100,5,258,257,265],"gap":[[129,129],[195,191],[10,8],[11,9],[4,2]],"recall":[[[556,598],[926,953],[889,934],[954,963]],[[713,743],[926,953],[889,932],[954,963]],[[611,631],[907,954],[889,928],[954,962]],[[611,631],[907,954],[889,929],[954,962]],[[611,634],[907,954],[889,927],[954,962]]],"pos":[108,2677],"thr_calib":0.1172},{"model":11,"acc":[807,807],"T":[100,5,256,242,256],"gap":[[129,127],[190,189],[4,8],[15,19],[3,8]],"recall":[[[582,581],[929,961],[806,851],[959,973]],[[735,753],[929,961],[796,837],[959,975]],[[622,628],[939,967],[847,884],[959,970]],[[622,626],[939,966],[847,882],[959,970]],[[622,628],[939,967],[847,884],[959,970]]],"pos":[98,2676],"thr_calib":0.249},{"model":8,"acc":[813,808],"T":[100,5,468,481,479],"gap":[[152,156],[184,191],[4,4],[-2,-2],[-1,-1]],"recall":[[[619,580],[938,951],[947,971],[956,972]],[[805,786],[929,947],[947,971],[956,972]],[[655,644],[973,971],[982,977],[956,964]],[[664,644],[973,970],[982,978],[956,963]],[[664,644],[973,970],[982,978],[956,963]]],"pos":[113,2665],"thr_calib":0.0496},{"model":11,"acc":[804,806],"T":[100,5,250,252,275],"gap":[[129,127],[191,190],[18,12],[17,11],[-2,-9]],"recall":[[[680,580],[928,943],[856,897],[959,994]],[[732,752],[928,942],[856,900],[959,993]],[[701,628],[907,945],[856,895],[959,997]],[[701,629],[907,945],[856,895],[959,997]],[[711,632],[897,945],[856,895],[959,997]]],"pos":[97,2672],"thr_calib":0.2211},{"model":5,"acc":[805,805],"T":[100,5,266,285,281],"gap":[[132,132],[191,192],[16,10],[0,-6],[4,-3]],"recall":[[[594,588],[969,969],[979,979],[958,961]],[[792,768],[969,972],[979,979],[958,960]],[[688,632],[969,969],[979,974],[958,951]],[[688,634],[958,970],[979,973],[958,949]],[[688,634],[969,970],[979,973],[958,949]]],"pos":[96,2672],"thr_calib":0.0512},{"model":3,"acc":[799,804],"T":[100,5,273,286,287],"gap":[[137,133],[199,192],[5,7],[-7,-4],[-7,-4]],"recall":[[[585,587],[841,851],[976,972],[951,907]],[[756,744],[866,854],[976,972],[951,908]],[[598,637],[829,849],[976,965],[951,914]],[[622,641],[829,850],[976,965],[951,915]],[[622,641],[829,850],[976,965],[951,915]]],"pos":[82,2695],"thr_calib":0.0698},{"model":7,"acc":[813,806],"T":[100,5,447,455,452],"gap":[[151,157],[184,192],[5,15],[2,11],[3,12]],"recall":[[[506,564],[876,903],[978,966],[955,953]],[[775,776],[876,905],[978,966],[955,953]],[[573,630],[865,897],[966,959],[955,949]],[[573,631],[865,897],[966,959],[955,949]],[[573,631],[865,897],[966,959],[955,949]]],"pos":[89,2678],"thr_calib":0.0651},{"model":10,"acc":[809,805],"T":[100,5,254,260,262],"gap":[[129,129],[187,191],[10,10],[5,6],[4,4]],"recall":[[[553,581],[979,974],[979,980],[957,940]],[[777,744],[979,974],[979,980],[957,941]],[[606,628],[968,970],[968,976],[957,926]],[[606,629],[968,970],[968,976],[957,925]],[[606,629],[968,970],[968,976],[957,925]]],"pos":[94,2700],"thr_calib":0.0382},{"model":4,"acc":[801,804],"T":[100,5,265,276,265],"gap":[[135,133],[195,193],[16,13],[8,4],[16,13]],"recall":[[[692,595],[972,929],[991,942],[953,900]],[[776,731],[972,926],[991,945],[953,903]],[[710,626],[981,928],[991,941],[953,895]],[[710,632],[981,928],[991,943],[953,895]],[[710,626],[981,928],[991,941],[953,895]]],"pos":[107,2658],"thr_calib":0.0815},{"model":10,"acc":[801,807],"T":[100,5,261,260,260],"gap":[[137,128],[196,190],[6,3],[7,4],[7,4]],"recall":[[[596,570],[968,947],[947,903],[957,925]],[[787,736],[968,948],[947,905],[957,927]],[[649,622],[968,937],[926,893],[957,919]],[[649,622],[968,937],[926,893],[957,919]],[[649,622],[968,937],[926,892],[957,919]]],"pos":[94,2667],"thr_calib":0.2018},{"model":7,"acc":[817,806],"T":[100,5,441,454,444],"gap":[[149,158],[181,192],[8,18],[2,12],[6,17]],"recall":[[[573,567],[938,924],[927,898],[958,930]],[[823,775],[938,925],[927,900],[958,927]],[[646,628],[938,914],[927,892],[958,948]],[[646,631],[938,916],[927,892],[958,947]],[[646,629],[938,914],[927,893],[958,947]]],"pos":[96,2687],"thr_calib":0.2086},{"model":0,"acc":[794,804],"T":[100,5,472,461,474],"gap":[[169,158],[205,194],[8,-1],[14,4],[7,-2]],"recall":[[[562,611],[969,979],[938,941],[958,954]],[[750,782],[969,978],[938,941],[958,955]],[[615,667],[979,990],[948,946],[958,958]],[[615,665],[979,990],[948,945],[958,958]],[[615,668],[979,990],[948,946],[958,958]]],"pos":[96,2678],"thr_calib":0.107},{"model":7,"acc":[801,807],"T":[100,5,473,472,466],"gap":[[160,157],[196,192],[3,2],[3,3],[6,5]],"recall":[[[656,563],[967,939],[967,952],[956,901]],[[800,776],[967,939],[967,952],[956,899]],[[700,634],[967,939],[967,953],[956,917]],[[700,634],[967,939],[967,953],[956,917]],[[700,633],[967,939],[967,953],[956,917]]],"pos":[90,2686],"thr_calib":0.0784},{"model":11,"acc":[829,807],"T":[100,5,253,251,254],"gap":[[111,127],[169,189],[1,10],[2,11],[0,9]],"recall":[[[595,585],[948,922],[966,956],[957,941]],[[767,753],[948,923],[966,950],[957,940]],[[603,633],[940,926],[974,956],[957,939]],[[603,632],[940,926],[974,956],[957,940]],[[603,633],[940,926],[974,956],[957,939]]],"pos":[116,2664],"thr_calib":0.065},{"model":4,"acc":[787,804],"T":[100,5,264,270,303],"gap":[[150,133],[210,193],[36,14],[31,9],[5,-18]],"recall":[[[648,601],[943,941],[1000,971],[955,952]],[[807,730],[955,944],[1000,972],[955,943]],[[670,631],[932,945],[1000,977],[955,951]],[[682,633],[932,945],[1000,977],[955,950]],[[693,641],[932,942],[1000,979],[955,950]]],"pos":[88,2678],"thr_calib":0.0266},{"model":8,"acc":[794,809],"T":[100,5,483,476,476],"gap":[[171,154],[205,189],[7,-3],[10,0],[10,0]],"recall":[[[554,578],[980,940],[980,934],[950,853]],[[851,785],[980,940],[980,935],[950,856]],[[634,642],[980,943],[980,919],[950,844]],[[634,642],[980,943],[980,919],[950,844]],[[634,642],[980,943],[980,919],[950,844]]],"pos":[101,2693],"thr_calib":0.1601},{"model":7,"acc":[813,806],"T":[100,5,483,457,468],"gap":[[154,157],[185,192],[-2,-3],[10,9],[5,4]],"recall":[[[686,562],[930,951],[930,952],[953,969]],[[849,778],[930,951],[930,953],[953,969]],[[709,637],[953,969],[930,946],[953,964]],[[709,632],[953,967],[930,947],[953,965]],[[709,634],[953,969],[930,947],[953,965]]],"pos":[86,2717],"thr_calib":0.0856}],"rel":{"T":[0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1.0,1.05,1.1,1.15,1.2,1.25,1.3,1.35,1.4,1.45,1.5,1.55,1.6,1.65,1.7,1.75,1.8,1.85,1.9,1.95,2.0,2.05,2.1,2.15,2.2,2.25,2.3,2.35,2.4,2.45,2.5,2.55,2.6,2.6249,2.65,2.7,2.75,2.8,2.85,2.9,2.95,3.0,3.05,3.1,3.15,3.2,3.25,3.3,3.35,3.4,3.45,3.5,3.55,3.6,3.65,3.7,3.75,3.8,3.85,3.9,3.95,4.0,4.05,4.1,4.15,4.2,4.25,4.3,4.35,4.4,4.45,4.5,4.55,4.6,4.65,4.7,4.75,4.8,4.85,4.9,4.95,5.0],"T_calib":2.6249,"n":27000,"acc":807,"rows":[{"ece":161,"conf":968,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,252,0],[0,0,0],[16,375,375],[39,438,436],[220,508,323],[341,568,402],[320,635,419],[360,701,428],[436,769,433],[564,835,482],[802,903,481],[23901,997,854]]},{"ece":158,"conf":965,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,247,0],[1,332,0],[21,377,381],[51,441,373],[242,508,343],[365,567,414],[368,635,424],[386,702,420],[483,768,455],[602,834,467],[888,904,490],[23592,997,859]]},{"ece":155,"conf":962,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,243,0],[1,330,0],[25,374,360],[69,441,348],[266,509,365],[389,567,404],[387,634,437],[435,701,416],[530,767,464],[615,833,478],[1010,904,501],[23272,996,864]]},{"ece":152,"conf":958,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,240,0],[1,328,0],[32,372,344],[79,440,342],[284,507,363],[410,565,412],[428,632,425],[495,700,424],[571,769,476],[647,835,476],[1083,903,505],[22969,996,869]]},{"ece":148,"conf":955,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,237,0],[2,328,0],[37,371,351],[99,441,323],[302,508,361],[437,565,423],[466,633,401],[519,699,453],[599,766,481],[712,835,473],[1165,903,532],[22661,996,873]]},{"ece":145,"conf":952,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,234,0],[3,327,0],[41,369,390],[114,438,325],[327,507,343],[467,565,439],[529,634,412],[530,701,457],[628,766,481],[772,836,475],[1235,903,555],[22353,996,877]]},{"ece":142,"conf":949,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,231,0],[6,325,0],[46,370,391],[124,435,331],[367,507,343],[493,567,440],[551,633,437],[591,702,447],[632,767,467],[850,835,513],[1275,903,547],[22064,995,881]]},{"ece":139,"conf":945,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,229,0],[9,323,0],[55,373,400],[142,436,352],[382,507,338],[548,568,431],[569,634,431],[616,701,468],[686,768,478],[878,835,524],[1332,902,542],[21782,995,886]]},{"ece":135,"conf":942,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,227,0],[9,317,0],[66,372,364],[151,435,351],[410,506,349],[589,567,438],[591,633,418],[654,701,489],[720,768,478],[938,836,522],[1389,903,566],[21482,995,890]]},{"ece":132,"conf":938,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,225,0],[12,316,83],[80,373,338],[159,436,358],[439,506,355],[637,568,444],[608,634,421],[676,700,485],[753,767,481],[990,835,532],[1452,903,573],[21193,994,894]]},{"ece":128,"conf":935,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,223,0],[18,317,167],[88,374,318],[182,438,346],[463,507,374],[663,567,433],[657,635,428],[695,701,486],[793,768,497],[1027,835,556],[1484,902,569],[20929,994,898]]},{"ece":125,"conf":932,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,221,0],[21,315,190],[93,371,312],[206,437,345],[499,507,377],[662,566,438],[703,633,427],[733,701,491],[834,768,518],[1087,835,548],[1520,903,586],[20641,994,902]]},{"ece":121,"conf":928,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,220,0],[25,313,280],[105,372,305],[217,436,336],[540,507,380],[693,566,442],[719,633,448],[782,700,477],[855,768,535],[1131,835,545],[1584,904,602],[20348,994,906]]},{"ece":118,"conf":925,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,218,0],[28,311,321],[117,371,325],[234,436,325],[568,506,393],[745,567,426],[738,634,465],[806,700,486],[912,769,534],[1128,834,553],[1646,903,610],[20077,993,910]]},{"ece":114,"conf":921,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,216,0],[30,308,300],[134,370,351],[246,436,309],[621,506,391],[762,567,433],[762,634,461],[833,700,504],[943,768,529],[1165,834,568],[1717,903,619],[19786,993,914]]},{"ece":111,"conf":918,"bins":[[0,0,0],[0,0,0],[0,0,0],[1,215,0],[40,311,275],[141,371,355],[264,436,322],[661,505,398],[779,567,430],[804,633,469],[842,699,504],[981,767,543],[1224,834,573],[1766,903,633],[19497,993,917]]},{"ece":107,"conf":914,"bins":[[0,0,0],[0,0,0],[0,0,0],[2,238,0],[48,312,250],[156,372,346],[280,437,321],[687,504,409],[831,567,434],[825,634,475],[844,699,512],[1065,768,549],[1209,834,577],[1862,903,648],[19191,992,921]]},{"ece":104,"conf":910,"bins":[[0,0,0],[0,0,0],[0,0,0],[3,245,0],[59,313,237],[162,373,358],[313,437,316],[697,504,413],[878,567,426],[860,635,485],[876,700,526],[1089,768,549],[1250,835,597],[1897,903,661],[18916,992,924]]},{"ece":100,"conf":907,"bins":[[0,0,0],[0,0,0],[0,0,0],[3,242,0],[63,310,238],[174,372,356],[345,437,330],[723,503,419],[916,566,422],[892,635,489],[906,702,532],[1102,767,561],[1292,835,602],[1968,904,675],[18616,992,927]]},{"ece":96,"conf":903,"bins":[[0,0,0],[0,0,0],[0,0,0],[4,245,0],[69,309,261],[187,371,348],[377,437,329],[758,504,423],[914,566,423],[934,634,507],[945,702,530],[1126,767,559],[1312,835,604],[2032,903,694],[18342,991,930]]},{"ece":93,"conf":899,"bins":[[0,0,0],[0,0,0],[0,0,0],[6,250,0],[72,308,278],[201,370,353],[402,436,331],[789,503,425],[943,565,422],[955,633,527],[1000,702,542],[1143,768,555],[1347,835,605],[2067,903,708],[18075,991,933]]},{"ece":89,"conf":896,"bins":[[0,0,0],[0,0,0],[0,0,0],[7,250,0],[77,306,273],[217,369,364],[441,436,333],[824,504,426],[960,565,435],[970,632,526],[1038,701,542],[1151,767,565],[1402,835,613],[2121,902,719],[17792,990,936]]},{"ece":85,"conf":892,"bins":[[0,0,0],[0,0,0],[0,0,0],[7,247,0],[90,306,256],[235,371,383],[460,435,339],[873,504,418],[977,566,445],[999,633,524],[1056,701,553],[1180,767,588],[1447,835,610],[2183,903,732],[17493,990,939]]},{"ece":81,"conf":888,"bins":[[0,0,0],[0,0,0],[0,0,0],[7,244,0],[99,305,283],[257,371,354],[478,435,349],[906,503,424],[1020,566,456],[1009,633,520],[1074,700,556],[1242,767,592],[1481,835,632],[2222,903,737],[17205,990,943]]},{"ece":78,"conf":884,"bins":[[0,0,0],[0,0,0],[0,0,0],[10,248,0],[108,305,287],[278,371,335],[505,435,364],[947,503,431],[1049,566,460],[1009,633,517],[1114,700,558],[1271,767,608],[1521,836,644],[2249,903,744],[16939,989,945]]},{"ece":74,"conf":881,"bins":[[0,0,0],[0,0,0],[0,0,0],[12,249,0],[120,306,292],[303,372,330],[538,436,366],[972,503,430],[1070,566,476],[1046,634,532],[1166,701,551],[1250,767,608],[1572,835,674],[2293,903,752],[16658,989,947]]},{"ece":70,"conf":877,"bins":[[0,0,0],[0,0,0],[1,199,0],[15,255,200],[126,305,294],[332,372,331],[567,437,370],[1007,503,428],[1065,566,482],[1084,633,544],[1180,700,553],[1279,766,607],[1623,835,686],[2339,903,767],[16382,988,949]]},{"ece":66,"conf":873,"bins":[[0,0,0],[0,0,0],[1,198,0],[17,254,294],[135,305,289],[352,371,321],[597,436,387],[1065,503,425],[1081,567,494],[1111,633,542],[1212,701,566],[1300,767,608],[1639,835,699],[2413,903,777],[16077,988,952]]},{"ece":62,"conf":869,"bins":[[0,0,0],[0,0,0],[1,197,0],[18,252,278],[152,305,309],[374,372,324],[639,437,379],[1078,503,429],[1126,567,500],[1111,634,554],[1255,701,578],[1318,768,602],[1664,834,712],[2471,903,790],[15793,988,954]]},{"ece":58,"conf":865,"bins":[[0,0,0],[0,0,0],[1,195,0],[21,252,238],[164,305,317],[399,372,336],[664,437,378],[1111,502,438],[1148,567,503],[1157,634,557],[1260,701,585],[1350,768,610],[1707,835,724],[2496,903,793],[15522,987,957]]},{"ece":54,"conf":861,"bins":[[0,0,0],[0,0,0],[1,194,0],[26,252,231],[174,305,310],[422,371,339],[677,435,375],[1166,501,448],[1176,567,510],[1164,634,557],[1299,701,590],[1373,768,626],[1730,834,729],[2543,903,800],[15249,987,960]]},{"ece":50,"conf":857,"bins":[[0,0,0],[0,0,0],[1,193,0],[33,253,182],[177,304,316],[461,371,360],[702,436,363],[1193,501,460],[1197,567,515],[1191,634,550],[1319,700,594],[1400,768,644],[1783,834,733],[2581,903,812],[14962,986,962]]},{"ece":47,"conf":853,"bins":[[0,0,0],[0,0,0],[1,192,0],[43,253,163],[180,305,328],[489,370,362],[746,436,370],[1216,501,462],[1211,567,529],[1218,633,549],[1334,699,596],[1467,768,657],[1791,835,743],[2627,903,825],[14677,986,963]]},{"ece":43,"conf":849,"bins":[[0,0,0],[0,0,0],[1,191,0],[47,252,170],[202,306,332],[510,370,363],[795,437,384],[1229,501,462],[1238,567,536],[1237,634,547],[1366,699,608],[1492,768,679],[1831,835,743],[2688,903,830],[14364,985,966]]},{"ece":39,"conf":845,"bins":[[0,0,0],[0,0,0],[1,189,0],[51,251,157],[222,306,324],[524,370,372],[836,436,384],[1243,500,466],[1277,567,547],[1282,634,554],[1361,699,607],[1510,767,689],[1867,835,754],[2718,903,838],[14108,985,967]]},{"ece":35,"conf":841,"bins":[[0,0,0],[0,0,0],[1,188,0],[53,249,189],[235,305,319],[549,369,379],[890,436,383],[1259,500,473],[1304,567,544],[1322,634,566],[1371,700,615],[1537,768,695],[1906,835,769],[2745,903,846],[13828,984,969]]},{"ece":30,"conf":837,"bins":[[0,0,0],[0,0,0],[1,187,0],[59,248,237],[248,305,315],[589,369,368],[927,436,401],[1269,501,474],[1350,567,544],[1339,635,586],[1386,700,616],[1573,768,705],[1936,835,777],[2781,903,854],[13542,984,970]]},{"ece":26,"conf":833,"bins":[[0,0,0],[0,0,0],[1,186,0],[67,248,209],[263,305,331],[617,369,371],[975,436,407],[1303,501,480],[1339,567,544],[1366,634,586],[1426,700,628],[1592,768,712],[1982,835,788],[2820,903,867],[13249,983,971]]},{"ece":22,"conf":828,"bins":[[0,0,0],[0,0,0],[1,185,0],[76,248,237],[284,306,331],[645,369,367],[1022,436,420],[1298,501,484],[1370,566,553],[1400,634,579],[1422,700,637],[1645,767,720],[1993,835,800],[2893,903,871],[12951,983,973]]},{"ece":18,"conf":824,"bins":[[0,0,0],[0,0,0],[1,184,0],[80,247,250],[310,306,332],[672,369,371],[1055,436,420],[1320,501,489],[1389,566,554],[1456,634,587],[1442,701,657],[1645,768,726],[2011,835,804],[2960,903,878],[12659,982,975]]},{"ece":14,"conf":820,"bins":[[0,0,0],[0,0,0],[2,191,0],[85,246,259],[332,306,325],[699,369,373],[1080,435,430],[1366,501,495],[1390,565,555],[1493,633,588],[1457,701,667],[1674,767,733],[2028,834,812],[3024,903,887],[12370,982,976]]},{"ece":11,"conf":816,"bins":[[0,0,0],[0,0,0],[2,189,0],[93,246,258],[351,306,330],[747,370,361],[1088,435,446],[1413,501,502],[1435,566,558],[1474,633,596],[1493,700,670],[1692,767,749],[2091,835,816],[3010,903,893],[12111,981,977]]},{"ece":8,"conf":811,"bins":[[0,0,0],[0,0,0],[2,188,0],[95,244,263],[388,306,327],[770,370,369],[1116,435,452],[1443,501,508],[1472,566,560],[1482,633,607],[1512,700,679],[1731,767,754],[2106,835,822],[3091,903,902],[11792,981,978]]},{"ece":6,"conf":809,"bins":[[0,0,0],[0,0,0],[2,188,0],[99,244,263],[404,306,327],[784,370,371],[1142,435,457],[1449,501,507],[1485,567,562],[1489,634,616],[1536,701,683],[1726,768,758],[2130,835,824],[3107,903,905],[11647,981,979]]},{"ece":6,"conf":807,"bins":[[0,0,0],[0,0,0],[2,187,0],[104,244,250],[416,306,337],[794,370,369],[1158,435,462],[1469,501,508],[1492,566,566],[1510,634,613],[1534,701,685],[1735,767,769],[2149,834,828],[3141,903,907],[11496,980,979]]},{"ece":7,"conf":803,"bins":[[0,0,0],[0,0,0],[2,186,0],[114,244,246],[429,305,350],[837,369,367],[1198,435,467],[1500,501,511],[1504,567,576],[1539,634,615],[1536,701,697],[1792,767,776],[2151,834,837],[3157,903,911],[11241,980,980]]},{"ece":10,"conf":799,"bins":[[0,0,0],[0,0,0],[3,190,0],[125,244,256],[445,305,362],[869,369,367],[1229,434,472],[1542,501,516],[1521,567,580],[1540,633,624],[1593,701,700],[1823,768,784],[2149,835,849],[3229,903,914],[10932,979,982]]},{"ece":13,"conf":794,"bins":[[0,0,0],[0,0,0],[3,188,0],[132,244,258],[474,305,371],[907,369,361],[1249,434,479],[1581,501,526],[1561,567,574],[1535,634,635],[1626,701,713],[1843,768,793],[2169,835,854],[3281,903,919],[10639,979,983]]},{"ece":17,"conf":790,"bins":[[0,0,0],[0,0,0],[3,187,0],[145,244,255],[499,305,375],[950,369,367],[1261,434,481],[1619,500,531],[1565,567,578],[1574,633,647],[1641,701,715],[1836,767,804],[2231,834,858],[3331,903,923],[10345,978,984]]},{"ece":21,"conf":786,"bins":[[0,0,0],[0,0,0],[3,186,0],[157,243,268],[521,305,369],[991,369,371],[1294,434,492],[1649,500,529],[1574,567,584],[1610,633,653],[1671,701,727],[1840,767,804],[2293,835,873],[3325,903,927],[10072,978,985]]},{"ece":26,"conf":781,"bins":[[0,0,0],[0,0,0],[3,185,0],[171,243,275],[547,305,371],[1025,369,378],[1321,434,494],[1677,500,536],[1587,566,593],[1628,633,661],[1705,701,730],[1891,768,813],[2292,835,877],[3383,903,933],[9770,977,986]]},{"ece":30,"conf":777,"bins":[[0,0,0],[0,0,0],[3,184,0],[181,243,276],[590,305,363],[1059,369,391],[1352,435,496],[1695,500,542],[1601,566,595],[1666,633,671],[1706,701,734],[1918,767,822],[2328,835,884],[3417,903,937],[9484,977,986]]},{"ece":34,"conf":772,"bins":[[0,0,0],[0,0,0],[5,189,0],[200,244,285],[608,306,367],[1103,369,403],[1396,435,487],[1690,500,554],[1659,566,601],[1649,633,680],[1735,700,744],[1945,767,826],[2345,835,890],[3440,903,939],[9225,976,987]]},{"ece":39,"conf":768,"bins":[[0,0,0],[0,0,0],[5,188,0],[207,243,285],[640,305,367],[1132,369,415],[1441,435,482],[1729,500,566],[1702,567,596],[1615,633,690],[1774,700,756],[1985,767,834],[2330,835,894],[3502,903,945],[8938,976,988]]},{"ece":43,"conf":764,"bins":[[0,0,0],[0,0,0],[6,189,0],[222,243,279],[668,305,367],[1166,368,424],[1475,435,485],[1756,500,574],[1718,567,602],[1646,633,696],[1790,700,770],[1990,767,838],[2377,835,896],[3522,903,949],[8664,975,988]]},{"ece":48,"conf":759,"bins":[[0,0,0],[0,0,0],[7,190,0],[235,242,277],[702,305,369],[1186,368,430],[1521,435,493],[1785,500,569],[1730,567,613],[1669,633,700],[1824,700,783],[1996,767,843],[2395,835,903],[3527,902,950],[8423,975,989]]},{"ece":52,"conf":755,"bins":[[0,0,0],[0,0,0],[8,190,0],[251,242,279],[731,305,371],[1231,368,442],[1574,435,489],[1785,500,577],[1742,567,619],[1685,633,709],[1867,700,791],[2014,768,850],[2408,835,908],[3557,902,953],[8147,974,990]]},{"ece":56,"conf":750,"bins":[[0,0,0],[0,0,0],[10,191,100],[263,242,278],[757,304,375],[1267,367,448],[1624,435,489],[1790,500,579],[1770,567,631],[1725,634,711],[1859,700,802],[2033,767,859],[2457,835,908],[3582,902,957],[7863,974,990]]},{"ece":61,"conf":746,"bins":[[0,0,0],[0,0,0],[14,192,143],[271,242,280],[794,304,382],[1300,367,447],[1661,435,491],[1802,500,585],[1803,566,647],[1787,634,711],[1838,701,812],[2047,767,861],[2471,835,917],[3583,902,957],[7629,973,991]]},{"ece":65,"conf":742,"bins":[[0,0,0],[0,0,0],[14,191,143],[286,241,290],[839,304,384],[1332,368,450],[1683,435,499],[1822,499,586],[1835,566,652],[1786,634,719],[1865,701,813],[2105,767,871],[2483,835,923],[3557,902,959],[7393,972,992]]},{"ece":70,"conf":737,"bins":[[0,0,0],[0,0,0],[17,192,118],[300,241,293],[881,304,381],[1367,368,455],[1721,435,507],[1854,500,593],[1837,566,655],[1782,634,730],[1922,700,820],[2089,767,874],[2540,835,925],[3568,902,964],[7122,972,992]]},{"ece":74,"conf":733,"bins":[[0,0,0],[0,0,0],[19,191,105],[321,242,312],[904,304,374],[1412,368,465],[1748,434,516],[1873,500,592],[1863,566,664],[1789,633,732],[1948,700,831],[2112,767,880],[2591,835,928],[3550,902,965],[6870,971,993]]},{"ece":79,"conf":728,"bins":[[0,0,0],[0,0,0],[21,191,95],[335,241,328],[967,305,374],[1416,368,468],[1805,434,520],[1905,500,597],[1848,566,671],[1837,634,744],[1957,700,834],[2119,767,888],[2596,835,931],[3562,902,968],[6632,971,993]]},{"ece":83,"conf":724,"bins":[[0,0,0],[0,0,0],[23,191,87],[353,241,334],[1007,304,370],[1449,368,476],[1836,434,532],[1940,501,599],[1844,566,673],[1858,633,756],[1984,700,835],[2125,767,892],[2623,835,936],[3558,902,971],[6400,970,993]]},{"ece":87,"conf":719,"bins":[[0,0,0],[0,0,0],[24,190,83],[376,241,330],[1052,305,373],[1472,368,483],[1867,434,543],[1964,500,594],[1870,566,686],[1887,633,763],[1998,700,842],[2145,767,896],[2642,835,940],[3547,902,972],[6156,970,994]]},{"ece":92,"conf":715,"bins":[[0,0,0],[0,0,0],[30,191,100],[383,241,337],[1100,304,374],[1498,368,487],[1899,433,543],[2010,500,603],[1880,567,698],[1917,634,767],[2006,701,849],[2147,768,900],[2664,835,943],[3556,902,972],[5910,969,995]]},{"ece":96,"conf":711,"bins":[[0,0,0],[0,0,0],[31,190,129],[404,241,337],[1143,304,375],[1540,369,486],[1913,433,558],[2045,500,602],[1916,567,705],[1929,635,779],[2028,701,858],[2145,768,902],[2693,835,945],[3527,902,975],[5686,969,995]]},{"ece":101,"conf":706,"bins":[[0,0,0],[0,0,0],[31,189,129],[432,241,343],[1177,304,376],[1570,368,494],[1946,433,555],[2057,500,614],[1945,567,712],[1942,634,785],[2036,701,861],[2175,768,905],[2702,835,948],[3513,902,977],[5474,968,995]]},{"ece":105,"conf":702,"bins":[[0,0,0],[0,0,0],[36,190,167],[454,241,333],[1197,303,388],[1627,368,494],[1956,433,558],[2110,500,621],[1936,567,713],[1952,634,797],[2044,700,866],[2188,767,910],[2765,834,951],[3463,902,978],[5272,968,995]]},{"ece":109,"conf":698,"bins":[[0,0,0],[0,0,0],[41,190,195],[471,241,335],[1241,303,392],[1692,369,493],[1995,434,566],[2103,500,630],[1924,567,714],[1993,633,810],[2064,700,866],[2225,768,916],[2733,834,954],[3482,902,979],[5036,967,995]]},{"ece":114,"conf":693,"bins":[[0,0,0],[0,0,0],[45,190,222],[483,240,335],[1278,302,396],[1731,368,497],[2032,433,568],[2125,500,638],[1944,567,718],[1999,633,820],[2086,699,866],[2257,768,923],[2755,835,956],[3431,902,980],[4834,967,995]]},{"ece":118,"conf":689,"bins":[[0,0,0],[0,0,0],[48,189,208],[505,240,333],[1336,303,406],[1778,369,494],[2039,434,578],[2109,499,643],[2002,566,724],[1999,633,826],[2099,699,875],[2298,768,923],[2738,834,959],[3419,902,982],[4630,966,995]]},{"ece":122,"conf":685,"bins":[[0,0,0],[0,0,0],[55,190,255],[530,241,340],[1368,303,406],[1819,369,499],[2072,434,581],[2123,499,648],[2019,566,737],[2044,633,828],[2084,699,879],[2315,768,927],[2724,834,962],[3419,902,983],[4428,966,996]]},{"ece":127,"conf":680,"bins":[[0,0,0],[0,0,0],[57,189,246],[560,241,343],[1396,302,413],[1868,369,499],[2091,434,593],[2167,499,648],[2022,566,744],[2085,634,836],[2073,700,882],[2333,768,931],[2721,834,964],[3388,901,983],[4239,965,996]]},{"ece":131,"conf":676,"bins":[[0,0,0],[0,0,0],[59,188,254],[597,241,340],[1410,302,419],[1918,368,505],[2140,434,592],[2161,499,655],[2048,566,751],[2131,634,840],[2053,700,888],[2353,767,935],[2721,834,964],[3370,901,985],[4039,965,996]]},{"ece":135,"conf":672,"bins":[[0,0,0],[0,0,0],[59,187,254],[625,241,339],[1453,302,427],[1947,368,507],[2181,434,589],[2200,500,667],[2042,567,759],[2164,634,848],[2059,701,892],[2357,767,938],[2720,834,966],[3351,901,987],[3842,964,996]]},{"ece":139,"conf":667,"bins":[[0,0,0],[0,0,0],[62,187,258],[654,240,341],[1476,302,427],[2007,368,510],[2215,434,594],[2211,500,677],[2069,567,767],[2153,634,852],[2096,701,896],[2377,768,940],[2721,834,968],[3316,902,989],[3643,964,996]]},{"ece":144,"conf":663,"bins":[[0,0,0],[0,0,0],[64,187,250],[684,240,345],[1513,301,433],[2072,368,512],[2240,435,605],[2223,500,683],[2083,567,771],[2129,633,857],[2115,700,899],[2421,767,945],[2706,834,969],[3287,902,989],[3463,963,997]]},{"ece":148,"conf":659,"bins":[[0,0,0],[0,0,0],[72,187,250],[706,240,350],[1557,301,433],[2123,368,520],[2249,435,607],[2255,500,688],[2102,568,777],[2139,633,861],[2130,701,907],[2419,767,950],[2712,834,968],[3233,901,990],[3303,963,997]]},{"ece":152,"conf":655,"bins":[[0,0,0],[0,0,0],[75,187,240],[741,240,354],[1595,301,441],[2145,367,523],[2295,434,608],[2250,500,694],[2131,567,788],[2152,633,862],[2155,701,914],[2426,767,948],[2692,834,971],[3211,901,989],[3132,962,997]]},{"ece":156,"conf":650,"bins":[[0,0,0],[0,0,0],[80,187,238],[767,240,356],[1629,301,449],[2184,367,525],[2328,434,615],[2242,499,695],[2172,567,799],[2172,633,862],[2173,701,916],[2445,767,951],[2676,834,973],[3156,901,991],[2976,962,997]]},{"ece":160,"conf":646,"bins":[[0,0,0],[0,0,0],[87,187,241],[798,240,355],[1663,301,453],[2214,367,530],[2383,434,619],[2224,499,701],[2196,566,803],[2187,632,867],[2205,701,918],[2453,768,955],[2667,834,975],[3095,901,992],[2828,961,997]]},{"ece":165,"conf":642,"bins":[[0,0,0],[0,0,0],[90,186,233],[834,240,357],[1723,301,455],[2224,367,538],[2423,434,624],[2234,499,706],[2225,566,808],[2177,632,875],[2234,701,920],[2463,768,958],[2652,835,977],[3061,901,992],[2660,961,997]]},{"ece":169,"conf":638,"bins":[[0,0,0],[0,0,0],[95,186,253],[867,240,360],[1767,301,458],[2278,367,543],[2426,434,628],[2261,499,714],[2262,567,816],[2153,632,877],[2252,700,923],[2456,767,958],[2647,834,977],[3026,901,993],[2510,960,997]]},{"ece":173,"conf":634,"bins":[[0,0,0],[0,0,0],[105,187,257],[891,240,358],[1836,302,463],[2288,367,548],[2460,434,635],[2285,500,718],[2292,567,823],[2131,633,877],[2260,700,931],[2452,767,960],[2639,834,980],[3009,901,993],[2352,960,997]]},{"ece":177,"conf":630,"bins":[[0,0,0],[0,0,0],[110,186,255],[924,240,361],[1884,302,462],[2321,367,552],[2466,433,639],[2330,499,727],[2327,567,829],[2108,633,880],[2264,700,933],[2462,766,963],[2620,834,981],[2963,901,994],[2221,960,997]]},{"ece":181,"conf":626,"bins":[[0,0,0],[0,0,0],[114,186,246],[962,240,368],[1924,302,466],[2355,367,559],[2492,433,637],[2345,499,737],[2350,567,836],[2150,634,886],[2264,701,934],[2438,766,964],[2600,833,982],[2905,900,994],[2101,959,997]]},{"ece":185,"conf":622,"bins":[[0,0,0],[0,0,0],[122,186,238],[1000,240,372],[1964,302,467],[2377,367,563],[2539,433,641],[2368,500,747],[2340,567,841],[2157,634,890],[2309,701,939],[2405,767,964],[2609,833,984],[2832,900,993],[1978,959,998]]},{"ece":189,"conf":618,"bins":[[0,0,0],[0,0,0],[132,186,258],[1036,240,371],[2006,302,477],[2427,367,559],[2549,433,648],[2397,500,757],[2315,567,845],[2165,633,893],[2340,700,941],[2405,766,965],[2573,833,987],[2810,900,993],[1845,958,998]]},{"ece":193,"conf":614,"bins":[[0,0,0],[0,0,0],[145,187,234],[1070,240,378],[2048,302,479],[2451,367,562],[2592,433,657],[2412,500,762],[2316,567,847],[2197,633,901],[2348,700,945],[2432,767,968],[2509,834,987],[2752,900,993],[1728,958,998]]},{"ece":197,"conf":610,"bins":[[0,0,0],[0,0,0],[155,187,239],[1107,240,380],[2079,302,481],[2490,367,565],[2622,433,666],[2426,500,766],[2321,566,852],[2234,634,905],[2343,701,948],[2419,767,967],[2491,834,988],[2697,900,994],[1616,958,998]]},{"ece":201,"conf":606,"bins":[[0,0,0],[0,0,0],[167,187,240],[1151,240,380],[2119,302,487],[2518,367,572],[2648,433,666],[2414,500,773],[2371,566,858],[2215,634,909],[2371,700,950],[2403,767,968],[2500,834,988],[2612,900,995],[1511,957,999]]}]},"thr":{"grid":[-4000,0,5],"clip":-5000,"costs":[1,3,9,19],"r0":9,"sets":[{"T":262,"d":[0,0,0,0,0,0,-1,-1,-1,-1,-1,-2,-3,-3,-4,-4,-6,-6,-6,-8,-11,-11,-11,-14,-15,-15,-16,-17,-19,-21,-27,-27,-28,-28,-29,-29,-30,-37,-39,-43,-46,-51,-51,-52,-57,-58,-61,-63,-72,-72,-73,-75,-78,-82,-85,-95,-103,-106,-106,-144,-154,-155,-162,-174,-197,-200,-201,-223,-234,-239,-273,-277,-280,-293,-302,-324,-332,-352,-358,-376,-394,-396,-417,-427,-432,-445,-450,-451,-463,-491,-506,-539,-562,-615,-621,-622,-732,-761,-861,-924,-1040,-1133,-1182,-1371,-1405,-2006],"n":[-27,-32,-44,-62,-110,-137,-150,-170,-172,-181,-249,-254,-268,-269,-281,-356,-363,-368,-372,-425,-427,-444,-477,-507,-517,-522,-524,-546,-562,-579,-599,-600,-615,-624,-640,-652,-673,-681,-693,-696,-697,-699,-709,-709,-710,-721,-751,-752,-766,-797,-808,-809,-813,-819,-825,-843,-849,-875,-900,-932,-933,-937,-946,-970,-993,-995,-997,-1008,-1013,-1014,-1034,-1037,-1044,-1044,-1064,-1073,-1079,-1083,-1084,-1112,-1114,-1117,-1127,-1128,-1130,-1142,-1144,-1153,-1157,-1167,-1178,-1179,-1180,-1181,-1182,-1182,-1188,-1194,-1202,-1203,-1207,-1209,-1209,-1219,-1225,-1226,-1230,-1238,-1239,-1250,-1260,-1274,-1276,-1284,-1287,-1291,-1311,-1320,-1335,-1341,-1351,-1379,-1387,-1390,-1392,-1393,-1407,-1407,-1414,-1418,-1422,-1434,-1437,-1438,-1442,-1448,-1452,-1453,-1461,-1462,-1465,-1480,-1483,-1489,-1490,-1491,-1515,-1515,-1528,-1529,-1535,-1540,-1542,-1547,-1550,-1555,-1562,-1563,-1567,-1569,-1572,-1574,-1582,-1585,-1587,-1590,-1590,-1594,-1596,-1597,-1601,-1605,-1610,-1611,-1611,-1618,-1619,-1620,-1628,-1636,-1655,-1655,-1655,-1657,-1658,-1664,-1666,-1668,-1670,-1671,-1673,-1674,-1675,-1676,-1679,-1680,-1685,-1686,-1687,-1689,-1690,-1690,-1690,-1693,-1694,-1696,-1700,-1701,-1705,-1708,-1708,-1709,-1722,-1730,-1731,-1738,-1749,-1755,-1757,-1761,-1766,-1766,-1772,-1781,-1783,-1786,-1788,-1789,-1791,-1793,-1796,-1807,-1813,-1818,-1818,-1818,-1819,-1830,-1832,-1833,-1838,-1838,-1841,-1842,-1843,-1848,-1864,-1867,-1872,-1875,-1878,-1881,-1884,-1884,-1897,-1902,-1904,-1908,-1908,-1914,-1916,-1917,-1927,-1930,-1931,-1934,-1935,-1936,-1939,-1946,-1947,-1959,-1963,-1969,-1973,-1974,-1984,-1984,-1988,-1988,-1993,-1993,-2002,-2004,-2011,-2013,-2015,-2016,-2024,-2026,-2026,-2027,-2029,-2032,-2037,-2038,-2045,-2049,-2051,-2058,-2061,-2063,-2063,-2067,-2068,-2070,-2072,-2075,-2080,-2093,-2095,-2104,-2105,-2107,-2107,-2110,-2114,-2115,-2116,-2117,-2117,-2118,-2122,-2126,-2129,-2129,-2132,-2132,-2138,-2143,-2146,-2158,-2163,-2165,-2170,-2170,-2171,-2171,-2172,-2174,-2176,-2176,-2183,-2184,-2188,-2194,-2195,-2196,-2202,-2202,-2203,-2207,-2210,-2219,-2228,-2236,-2238,-2244,-2248,-2250,-2256,-2256,-2258,-2258,-2263,-2265,-2267,-2270,-2272,-2273,-2274,-2276,-2276,-2278,-2286,-2297,-2298,-2298,-2300,-2308,-2313,-2313,-2320,-2330,-2339,-2340,-2347,-2352,-2354,-2354,-2354,-2356,-2359,-2361,-2364,-2365,-2367,-2367,-2369,-2369,-2372,-2373,-2375,-2379,-2384,-2399,-2399,-2401,-2402,-2407,-2408,-2418,-2418,-2418,-2432,-2434,-2438,-2440,-2441,-2442,-2444,-2456,-2457,-2461,-2463,-2465,-2469,-2471,-2473,-2474,-2475,-2476,-2477,-2478,-2478,-2479,-2486,-2494,-2498,-2502,-2505,-2506,-2513,-2514,-2514,-2516,-2526,-2527,-2529,-2529,-2534,-2538,-2540,-2548,-2553,-2555,-2555,-2562,-2564,-2569,-2572,-2574,-2579,-2581,-2586,-2587,-2587,-2602,-2602,-2610,-2616,-2617,-2626,-2626,-2630,-2631,-2632,-2636,-2640,-2644,-2644,-2645,-2648,-2656,-2659,-2666,-2668,-2673,-2676,-2682,-2685,-2689,-2698,-2708,-2710,-2713,-2721,-2723,-2724,-2725,-2725,-2741,-2744,-2749,-2755,-2757,-2758,-2761,-2763,-2766,-2775,-2775,-2777,-2778,-2780,-2785,-2792,-2799,-2802,-2807,-2809,-2818,-2821,-2821,-2822,-2824,-2827,-2827,-2832,-2833,-2834,-2835,-2842,-2849,-2851,-2852,-2858,-2860,-2862,-2867,-2867,-2868,-2879,-2882,-2884,-2887,-2891,-2894,-2895,-2899,-2902,-2904,-2907,-2907,-2911,-2912,-2926,-2926,-2926,-2928,-2932,-2933,-2940,-2941,-2944,-2946,-2949,-2949,-2952,-2959,-2964,-2964,-2965,-2968,-2974,-2979,-2981,-2982,-2983,-2983,-2984,-2986,-2987,-2992,-2995,-2997,-3000,-3008,-3009,-3018,-3018,-3027,-3027,-3030,-3032,-3039,-3044,-3048,-3051,-3051,-3055,-3059,-3062,-3071,-3073,-3076,-3076,-3079,-3081,-3085,-3093,-3096,-3097,-3098,-3102,-3102,-3108,-3109,-3117,-3119,-3122,-3130,-3131,-3132,-3149,-3150,-3154,-3157,-3162,-3169,-3173,-3175,-3180,-3182,-3184,-3185,-3189,-3191,-3193,-3194,-3196,-3200,-3200,-3200,-3204,-3206,-3212,-3221,-3222,-3225,-3229,-3252,-3271,-3276,-3280,-3281,-3284,-3284,-3284,-3285,-3286,-3290,-3301,-3305,-3309,-3310,-3315,-3317,-3321,-3321,-3336,-3345,-3350,-3358,-3360,-3361,-3372,-3372,-3376,-3380,-3397,-3398,-3401,-3403,-3404,-3406,-3413,-3414,-3415,-3419,-3421,-3422,-3424,-3425,-3429,-3429,-3433,-3435,-3437,-3440,-3443,-3447,-3448,-3448,-3448,-3462,-3464,-3465,-3471,-3480,-3487,-3494,-3498,-3511,-3518,-3518,-3533,-3535,-3548,-3556,-3560,-3570,-3571,-3576,-3580,-3586,-3588,-3588,-3592,-3596,-3597,-3614,-3615,-3618,-3620,-3622,-3624,-3646,-3650,-3669,-3693,-3737,-3744,-3764,-3776,-3778,-3783,-3787,-3789,-3795,-3795,-3799,-3801,-3801,-3817,-3817,-3819,-3825,-3828,-3831,-3833,-3851,-3857,-3860,-3865,-3866,-3866,-3875,-3876,-3882,-3892,-3906,-3913,-3921,-3926,-3931,-3950,-3950,-3962,-3966,-3989,-3991,-3994,-3995,-3996,-3996,-4002,-4011,-4012,-4025,-4027,-4037,-4042,-4046,-4054,-4056,-4069,-4079,-4084,-4085,-4091,-4095,-4096,-4109,-4131,-4133,-4140,-4141,-4147,-4149,-4150,-4154,-4156,-4161,-4173,-4186,-4188,-4196,-4242,-4261,-4277,-4278,-4291,-4297,-4324,-4325,-4337,-4348,-4365,-4370,-4384,-4405,-4409,-4415,-4446,-4454,-4458,-4481,-4487,-4489,-4492,-4495,-4506,-4510,-4524,-4535,-4552,-4564,-4569,-4576,-4587,-4620,-4623,-4625,-4649,-4655,-4659,-4709,-4712,-4718,-4747,-4821,-4846,-4849,-4851,-4894,-4904,-4906,-4911,-4927,-4938,-4980,-4998,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000],"nd":2658,"nn":24342,"recall":[10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,10000,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9996,9992,9989,9989,9989,9985,9985,9985,9985,9985,9985,9985,9985,9985,9985,9985,9985,9985,9985,9985,9985,9985,9985,9981,9981,9981,9981,9981,9981,9981,9981,9981,9981,9981,9981,9974,9970,9970,9970,9970,9970,9970,9970,9970,9970,9970,9970,9970,9970,9970,9970,9970,9970,9970,9970,9970,9970,9966,9966,9966,9966,9966,9966,9966,9966,9966,9966,9966,9966,9966,9966,9966,9966,9966,9966,9966,9962,9959,9959,9959,9955,9955,9955,9955,9955,9955,9955,9955,9955,9955,9951,9951,9947,9947,9944,9944,9944,9944,9944,9944,9944,9944,9944,9940,9940,9940,9940,9940,9940,9940,9940,9936,9936,9936,9936,9936,9936,9936,9936,9936,9936,9936,9936,9936,9936,9936,9929,9929,9929,9929,9929,9929,9929,9929,9929,9925,9925,9925,9925,9917,9917,9917,9910,9910,9906,9906,9906,9902,9902,9902,9902,9902,9902,9902,9902,9902,9902,9902,9898,9898,9898,9895,9891,9891,9891,9891,9891,9891,9891,9887,9883,9883,9883,9883,9883,9883,9883,9880,9880,9880,9880,9876,9876,9876,9876,9876,9872,9872,9872,9868,9868,9865,9861,9861,9861,9861,9861,9861,9861,9857,9857,9857,9857,9850,9842,9838,9838,9834,9834,9831,9827,9827,9819,9816,9812,9812,9812,9808,9797,9793,9789,9786,9782,9774,9767,9763,9763,9763,9755,9755,9752,9744,9744,9740,9740,9740,9740,9740,9737,9737,9737,9737,9729,9722,9722,9722,9718,9710,9710,9710,9703,9699,9699,9699,9691,9688,9688,9684,9684,9684,9676,9673,9665,9658,9654,9654,9654,9646,9643,9635,9635,9635,9620,9616,9612,9601,9597,9597,9594,9590,9586,9579,9579,9571,9567,9564,9560,9556,9552,9541,9541,9537,9533,9522,9515,9511,9507,9503,9500,9492,9492,9481,9477,9473,9473,9470,9462,9454,9451,9447,9439,9439,9428,9413,9406,9402,9402,9398,9394,9383,9379,9368,9353,9345,9345,9342,9334,9330,9330,9327,9319,9312,9300,9300,9289,9285,9278,9270,9266,9259,9251,9244,9240,9229,9229,9225,9221,9214,9202,9195,9195,9176,9165,9161,9146,9138,9123,9123,9112,9101,9090,9082,9074,9063,9056,9056,9044,9029,9022,9014,9011,9003,8992,8980,8973,8969,8969,8962,8962,8947,8935,8932,8924,8913,8901,8886,8871,8860,8853,8841,8837,8822,8815,8800,8796,8781,8774,8758,8751,8725,8721,8713,8710,8679,8664,8657,8649,8638,8634,8623,8612,8589,8578,8563,8559,8548,8525,8506,8488,8480,8473,8457,8439,8416,8397,8378,8352,8337,8330,8311,8288,8266,8239,8224,8209,8194,8164,8153,8130,8108,8089,8074,8062,8040,8010,7995,7983,7957,7946,7916,7897,7889,7844,7833,7810,7799,7761,7746,7724,7694,7679,7656,7626,7607,7585,7543,7521,7483,7464,7449,7423,7389,7366,7344,7321,7276,7235,7193,7156,7122,7073,7013,6975,6926,6892,6843,6806,6780,6701,6652,6618,6561,6509,6441,6366,6294,6211,6136,6080,6016,5907,5824,5756,5655,5568,5451,5327,5203,5083,4929,4767,4612,4372,4108,3766,3390,2919,2156,470],"fpr":[8838,8826,8816,8809,8803,8798,8790,8780,8771,8764,8755,8750,8739,8733,8726,8716,8705,8697,8690,8683,8678,8669,8661,8650,8644,8635,8626,8614,8603,8592,8581,8572,8562,8553,8543,8534,8524,8515,8506,8494,8480,8471,8460,8449,8437,8431,8423,8411,8400,8391,8379,8365,8353,8343,8334,8327,8317,8306,8292,8282,8272,8261,8254,8245,8236,8222,8211,8200,8188,8178,8167,8156,8144,8133,8125,8114,8105,8092,8084,8070,8061,8051,8038,8030,8017,8003,7990,7977,7964,7958,7948,7936,7923,7917,7906,7897,7885,7870,7856,7847,7836,7825,7809,7796,7785,7775,7762,7747,7733,7719,7708,7693,7683,7667,7655,7645,7637,7626,7611,7599,7586,7577,7561,7550,7539,7526,7511,7495,7480,7464,7452,7441,7428,7415,7401,7387,7375,7365,7350,7340,7326,7315,7297,7282,7265,7253,7235,7220,7206,7191,7176,7163,7145,7133,7117,7110,7092,7080,7063,7045,7034,7015,7001,6988,6976,6960,6946,6938,6922,6905,6889,6875,6858,6841,6829,6810,6799,6778,6762,6750,6735,6717,6696,6680,6663,6650,6641,6628,6614,6601,6587,6571,6553,6536,6524,6513,6500,6484,6470,6456,6434,6414,6397,6380,6368,6350,6336,6319,6299,6276,6260,6248,6232,6214,6198,6181,6165,6152,6139,6122,6106,6093,6073,6054,6036,6022,6000,5981,5960,5944,5926,5914,5898,5880,5859,5846,5835,5812,5800,5784,5768,5750,5733,5716,5698,5680,5662,5646,5629,5610,5592,5573,5557,5539,5526,5508,5486,5468,5453,5435,5417,5400,5379,5361,5340,5321,5305,5290,5274,5260,5243,5224,5205,5188,5173,5158,5144,5122,5105,5089,5073,5054,5035,5023,5005,4988,4972,4952,4931,4915,4897,4879,4862,4844,4826,4812,4794,4773,4758,4743,4728,4709,4691,4671,4657,4641,4623,4608,4592,4572,4553,4536,4521,4503,4491,4473,4455,4436,4419,4402,4394,4376,4359,4338,4317,4301,4282,4269,4251,4231,4218,4200,4188,4168,4148,4131,4111,4093,4078,4061,4040,4017,4004,3986,3968,3948,3936,3917,3900,3885,3871,3853,3836,3821,3809,3790,3770,3755,3737,3719,3702,3688,3675,3651,3632,3615,3602,3580,3560,3545,3531,3512,3494,3478,3465,3452,3437,3419,3403,3388,3373,3358,3344,3333,3315,3301,3287,3273,3256,3245,3229,3217,3206,3190,3171,3160,3146,3128,3111,3099,3086,3066,3051,3033,3017,3003,2994,2979,2965,2949,2934,2918,2904,2890,2878,2864,2848,2832,2817,2803,2787,2771,2757,2743,2731,2718,2706,2689,2679,2667,2655,2645,2631,2609,2592,2577,2563,2550,2531,2516,2501,2487,2469,2454,2443,2428,2415,2399,2382,2367,2354,2336,2321,2306,2294,2280,2267,2252,2240,2229,2217,2205,2191,2176,2165,2152,2139,2123,2114,2101,2087,2074,2061,2047,2034,2023,2013,2004,1992,1978,1965,1951,1941,1929,1920,1906,1889,1878,1868,1854,1844,1831,1817,1807,1794,1781,1769,1758,1743,1735,1725,1710,1698,1688,1674,1662,1647,1635,1625,1613,1605,1595,1582,1575,1562,1555,1544,1535,1523,1510,1500,1491,1481,1473,1461,1450,1436,1427,1416,1407,1398,1387,1379,1367,1354,1343,1336,1330,1320,1309,1300,1292,1284,1273,1262,1254,1243,1230,1223,1217,1205,1198,1188,1180,1172,1160,1151,1142,1131,1122,1108,1099,1091,1085,1075,1067,1061,1055,1045,1034,1028,1021,1016,1006,997,988,980,974,967,960,950,943,935,926,919,908,903,897,889,883,875,868,859,851,843,834,831,827,820,811,806,802,796,793,786,781,777,769,764,757,752,745,736,731,725,716,710,705,697,689,686,680,675,669,665,661,656,650,644,639,634,629,623,617,610,604,597,592,588,580,576,572,567,562,557,550,544,537,532,530,525,518,513,503,500,494,490,485,478,472,467,460,455,451,446,442,436,432,427,424,420,417,411,407,403,400,397,394,390,388,382,379,377,372,366,360,358,354,348,345,342,339,335,333,329,327,324,321,318,316,311,309,302,298,294,290,285,282,279,276,269,266,261,258,253,250,245,242,240,236,233,229,226,221,217,214,212,207,204,201,197,194,190,187,182,181,177,175,170,165,162,158,155,153,149,148,145,142,137,135,133,131,127,126,125,121,120,115,112,111,107,104,99,95,90,90,85,83,80,77,75,73,71,65,62,58,55,52,50,49,46,44,40,35,33,30,28,25,23,22,20,18,16,15,12,9,8,6,4,2,0]},{"T":100,"d":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,-1,-1,-2,-2,-3,-5,-8,-9,-9,-10,-13,-15,-15,-18,-20,-23,-25,-26,-37,-37,-44,-45,-77,-94,-96,-120,-152,-181,-192,-217,-248,-314,-340,-346,-394,-409,-418,-419,-445,-466,-644,-673,-869,-941,-995,-1204,-1255,-1659,-1912,-1963,-2613,-2769,-2853,-2892,-3631,-5000],"n":[0,0,-1,-1,-3,-15,-15,-16,-21,-37,-43,-51,-72,-113,-113,-134,-181,-211,-266,-363,-371,-430,-432,-436,-659,-705,-752,-772,-781,-785,-798,-830,-866,-920,-938,-950,-966,-990,-1000,-1007,-1037,-1096,-1118,-1179,-1186,-1242,-1247,-1254,-1278,-1346,-1365,-1412,-1421,-1477,-1520,-1522,-1662,-1681,-1729,-1754,-1855,-1888,-1895,-1923,-1930,-1989,-2025,-2128,-2140,-2157,-2202,-2226,-2231,-2261,-2266,-2273,-2294,-2299,-2331,-2344,-2373,-2377,-2419,-2433,-2433,-2450,-2456,-2488,-2511,-2522,-2525,-2526,-2531,-2536,-2537,-2538,-2566,-2605,-2686,-2705,-2731,-2754,-2774,-2801,-2807,-2807,-2810,-2817,-2818,-2836,-2894,-2897,-2904,-2905,-2909,-2934,-2953,-2958,-2967,-2981,-3005,-3024,-3025,-3081,-3137,-3194,-3229,-3240,-3258,-3259,-3271,-3282,-3283,-3301,-3326,-3327,-3335,-3354,-3361,-3394,-3406,-3418,-3430,-3454,-3469,-3470,-3485,-3489,-3500,-3531,-3542,-3585,-3586,-3610,-3626,-3631,-3646,-3657,-3666,-3669,-3699,-3705,-3718,-3740,-3747,-3751,-3835,-3862,-3867,-3867,-3868,-3880,-3888,-3903,-3906,-3916,-3919,-3929,-3937,-3945,-3953,-3959,-3961,-3972,-3993,-4020,-4025,-4044,-4045,-4052,-4054,-4057,-4057,-4061,-4078,-4083,-4097,-4097,-4103,-4114,-4123,-4128,-4140,-4143,-4170,-4172,-4195,-4209,-4233,-4244,-4247,-4248,-4273,-4275,-4276,-4280,-4300,-4307,-4317,-4319,-4329,-4336,-4347,-4347,-4350,-4355,-4362,-4368,-4408,-4408,-4416,-4423,-4429,-4438,-4449,-4450,-4451,-4453,-4454,-4460,-4462,-4484,-4493,-4522,-4527,-4550,-4556,-4561,-4562,-4569,-4569,-4580,-4588,-4588,-4597,-4610,-4614,-4624,-4635,-4642,-4652,-4655,-4665,-4668,-4672,-4680,-4682,-4703,-4704,-4724,-4726,-4733,-4736,-4738,-4769,-4783,-4784,-4797,-4806,-4814,-4834,-4849,-4860,-4870,-4878,-4881,-4887,-4901,-4948,-4966,-4969,-4972,-4973,-4974,-4981,-4982,-4985,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000,-5000],"nd":2658,"nn":24342,"recall":[9846,9846,9846,9842,9842,9842,9842,9842,9842,9838,9838,9838,9838,9838,9838,9838,9838,9838,9838,9834,9834,9834,9834,9834,9834,9831,9831,9831,9831,9831,9831,9831,9827,9827,9827,9827,9827,9827,9827,9827,9827,9823,9823,9823,9823,9823,9823,9823,9823,9823,9823,9823,9823,9823,9819,9819,9819,9819,9819,9819,9816,9816,9816,9816,9816,9816,9812,9808,9808,9808,9804,9804,9801,9797,9797,9793,9793,9793,9793,9793,9789,9786,9786,9786,9786,9786,9782,9782,9782,9782,9782,9782,9782,9782,9782,9782,9774,9774,9774,9774,9774,9774,9774,9774,9774,9774,9774,9774,9774,9771,9767,9767,9763,9763,9763,9763,9763,9763,9763,9759,9759,9759,9759,9759,9759,9759,9759,9759,9759,9759,9759,9755,9755,9752,9752,9744,9744,9744,9744,9744,9744,9740,9737,9737,9737,9737,9737,9733,9733,9733,9733,9733,9733,9733,9729,9729,9729,9729,9729,9729,9729,9729,9729,9729,9729,9725,9718,9718,9718,9718,9718,9718,9714,9714,9714,9710,9710,9710,9710,9710,9710,9710,9710,9710,9703,9703,9699,9695,9695,9695,9695,9695,9695,9691,9691,9691,9691,9688,9688,9688,9684,9684,9680,9676,9676,9673,9669,9669,9665,9665,9665,9661,9661,9661,9658,9658,9658,9650,9650,9650,9646,9646,9646,9646,9646,9646,9646,9646,9643,9643,9639,9639,9635,9631,9631,9628,9624,9624,9624,9624,9624,9624,9620,9616,9616,9612,9612,9609,9605,9605,9605,9605,9605,9605,9601,9601,9601,9597,9597,9597,9594,9594,9590,9590,9582,9579,9575,9575,9575,9575,9575,9571,9571,9567,9567,9564,9556,9552,9552,9552,9549,9545,9541,9537,9537,9533,9533,9533,9533,9533,9530,9530,9530,9530,9530,9526,9522,9522,9522,9518,9518,9518,9515,9511,9511,9511,9511,9507,9500,9496,9496,9496,9492,9488,9481,9481,9481,9470,9470,9470,9470,9466,9466,9462,9462,9458,9454,9454,9454,9451,9451,9451,9451,9451,9451,9451,9447,9447,9447,9443,9443,9443,9443,9443,9443,9443,9443,9443,9443,9443,9443,9443,9439,9439,9436,9436,9436,9432,9432,9432,9432,9428,9424,9424,9424,9424,9421,9421,9417,9413,9413,9406,9406,9406,9406,9402,9398,9394,9394,9391,9391,9387,9387,9383,9383,9383,9379,9372,9372,9372,9372,9372,9372,9364,9364,9364,9360,9360,9353,9349,9349,9345,9342,9338,9338,9334,9334,9330,9330,9327,9323,9323,9319,9315,9315,9312,9312,9308,9308,9308,9300,9296,9289,9289,9285,9281,9281,9278,9270,9270,9270,9266,9266,9266,9266,9263,9263,9263,9263,9263,9263,9263,9263,9263,9248,9244,9244,9240,9240,9240,9240,9240,9236,9236,9236,9233,9225,9225,9225,9225,9225,9225,9217,9214,9210,9210,9199,9195,9195,9195,9195,9195,9195,9195,9191,9187,9187,9184,9184,9176,9172,9169,9165,9161,9157,9157,9157,9157,9153,9150,9150,9150,9146,9142,9142,9135,9131,9127,9127,9127,9127,9127,9127,9123,9123,9123,9116,9116,9112,9108,9108,9108,9101,9097,9097,9097,9097,9093,9093,9090,9086,9086,9082,9078,9078,9074,9074,9074,9071,9071,9071,9071,9067,9059,9052,9052,9052,9052,9052,9052,9052,9048,9048,9041,9037,9029,9026,9022,9022,9022,9022,9014,9007,9007,8995,8995,8988,8988,8988,8980,8980,8969,8969,8969,8969,8958,8954,8950,8947,8943,8939,8935,8928,8924,8924,8920,8920,8920,8920,8916,8913,8913,8901,8894,8894,8894,8890,8890,8890,8886,8886,8886,8879,8879,8875,8875,8868,8868,8864,8860,8845,8841,8830,8826,8826,8826,8819,8819,8811,8804,8800,8792,8785,8785,8781,8781,8774,8770,8762,8755,8755,8751,8751,8740,8740,8732,8728,8717,8713,8710,8710,8710,8706,8706,8706,8695,8687,8687,8679,8676,8672,8664,8664,8657,8653,8646,8642,8642,8638,8631,8631,8631,8631,8600,8600,8597,8597,8597,8593,8589,8578,8567,8567,8567,8555,8552,8544,8540,8536,8536,8533,8525,8521,8518,8510,8506,8499,8491,8491,8491,8488,8480,8476,8473,8469,8454,8450,8446,8442,8427,8427,8420,8416,8405,8397,8386,8382,8378,8371,8371,8360,8356,8348,8341,8341,8341,8341,8322,8322,8315,8299,8296,8296,8296,8288,8288,8288,8281,8281,8273,8262,8258,8239,8236,8228,8217,8213,8205,8202,8194,8190,8183,8179,8172,8168,8160,8153,8149,8130,8115,8104,8104,8096,8085,8081,8070,8059,8044,8029,8017,8010,7995,7983,7980,7950,7935,7931,7927,7923,7916,7908,7897,7897,7882,7874,7863,7856,7837,7825,7818,7792,7769,7743,7731,7713,7709,7686,7679,7664,7649,7630,7619,7607,7588,7562,7528,7476,7423,7378,7348,7302,7257,7208,7148,7103,7005,6926,6768,6603,6290,5098],"fpr":[2140,2135,2130,2128,2124,2120,2117,2111,2107,2101,2096,2093,2089,2084,2081,2076,2071,2066,2060,2057,2053,2050,2045,2039,2038,2035,2031,2026,2022,2017,2014,2007,2004,1999,1997,1988,1983,1979,1976,1971,1967,1963,1961,1957,1949,1945,1940,1935,1932,1930,1925,1919,1913,1909,1904,1900,1893,1890,1887,1884,1880,1874,1870,1866,1862,1859,1853,1850,1847,1841,1837,1831,1829,1823,1819,1817,1813,1811,1808,1802,1799,1796,1794,1793,1787,1783,1778,1774,1768,1765,1760,1757,1753,1750,1744,1738,1733,1730,1726,1723,1719,1715,1711,1707,1704,1700,1697,1691,1686,1683,1679,1675,1668,1663,1659,1655,1651,1646,1643,1640,1638,1635,1630,1625,1619,1617,1613,1610,1605,1603,1600,1596,1590,1589,1587,1584,1579,1575,1573,1571,1564,1560,1555,1550,1546,1543,1541,1533,1530,1526,1523,1520,1514,1510,1508,1506,1503,1501,1499,1495,1491,1488,1483,1477,1474,1472,1467,1464,1462,1459,1455,1451,1449,1444,1439,1436,1433,1428,1425,1423,1421,1418,1412,1408,1404,1398,1395,1393,1389,1385,1380,1373,1370,1366,1362,1360,1355,1351,1349,1346,1344,1340,1336,1331,1329,1326,1322,1318,1312,1311,1305,1303,1301,1298,1295,1294,1291,1288,1284,1281,1276,1273,1269,1264,1262,1259,1254,1249,1245,1242,1237,1232,1230,1226,1224,1221,1219,1216,1213,1211,1208,1205,1202,1199,1195,1188,1186,1182,1176,1173,1168,1165,1163,1160,1156,1151,1147,1142,1138,1135,1132,1130,1126,1122,1120,1117,1116,1112,1109,1107,1104,1099,1096,1094,1091,1087,1085,1082,1080,1079,1078,1075,1073,1071,1066,1065,1063,1062,1059,1055,1054,1050,1048,1045,1043,1041,1038,1036,1032,1030,1027,1025,1023,1020,1017,1014,1011,1009,1005,1003,1000,997,995,992,989,988,982,980,976,974,969,966,964,960,958,955,952,950,948,945,942,938,938,937,935,931,928,926,924,921,919,919,913,911,911,909,907,904,902,899,895,892,889,887,885,883,880,879,876,875,873,871,869,866,864,862,861,860,858,854,852,851,848,845,843,841,838,836,832,831,829,824,821,817,814,813,809,807,805,805,802,798,797,794,791,789,787,785,783,781,777,774,772,770,769,767,766,764,761,760,759,758,754,751,750,746,744,741,739,736,735,732,731,730,728,726,724,721,719,717,717,716,713,711,710,708,705,703,702,700,699,698,694,692,689,688,687,685,684,683,680,680,676,675,673,671,669,668,666,663,662,661,659,658,657,656,654,652,651,650,648,645,643,643,640,639,638,636,634,632,631,629,627,625,622,619,617,615,613,611,609,608,606,604,603,602,600,597,595,595,593,592,590,587,583,581,578,576,576,573,571,568,566,565,563,560,559,557,557,555,553,550,550,549,548,546,545,543,541,540,539,537,535,535,534,533,530,527,525,522,520,516,514,512,510,507,507,505,503,501,500,500,500,497,496,494,493,491,491,487,486,485,483,480,478,477,474,471,469,468,466,465,465,462,460,458,456,456,454,454,453,451,450,448,447,446,444,442,440,436,435,434,433,433,432,431,431,430,429,428,427,426,425,424,423,422,421,420,419,419,418,418,417,416,413,412,410,408,407,405,403,402,401,398,397,396,394,394,392,390,390,388,385,384,384,383,381,381,379,378,377,375,374,373,371,370,370,368,368,366,364,362,361,360,359,358,357,355,353,352,350,349,348,346,345,343,342,340,338,338,337,336,336,334,332,330,329,328,327,325,325,325,323,321,321,319,318,317,316,316,313,312,311,310,309,308,307,306,303,301,298,297,297,295,293,292,291,289,288,286,285,283,283,281,280,278,276,276,274,273,271,268,267,266,263,261,260,258,257,256,255,253,251,249,246,245,243,242,240,238,236,235,235,233,232,229,226,225,225,223,221,219,216,212,212,210,209,207,203,201,198,196,194,192,191,189,186,184,182,179,177,175,173,170,168,165,163,159,158,154,151,149,147,145,140,137,134,131,128,125,120,116,113,109,107,99,92,84,70,58,20]}]}}</script>
+    <script>
+        // 01과 02: 숫자는 knowledge-lab/calib-split/scripts/page_data.py가 미리 계산한 page-data다(비율은 천분율).
+        (function () {
+            "use strict";
+            var D = JSON.parse(document.getElementById("page-data").textContent);
+            if (!D.draws) return;
+            var NS = "http://www.w3.org/2000/svg";
+            var TXT = {
+                T_none: "T를 쓰지 않으면 배포 뒤 모델은 정확도보다 {gap} 더 확신한다.",
+                T_train: "train에서 정한 T({T})는 “더 확신하라”는 답이다. 학습 데이터는 다 맞히기 때문이다. 배포 뒤 확신이 정확도보다 {gap} 높다.",
+                T_val: "모델을 고른 val에서 정한 T({T})도 확신을 정확도에 맞춘다(배포 뒤 {gap}).",
+                T_calib: "calib에서 정한 T({T})로 확신이 정확도에 맞는다(배포 뒤 {gap}).",
+                T_test: "test에서 정한 T({T})도 확신을 맞춘다(배포 뒤 {gap}). 값이 하나라 부풀림은 작지만, test는 이제 결정에 쓰인 데이터다.",
+                t_train: "train에서 정한 threshold는 너무 높다. 학습 데이터에서는 불량을 크게 확신하기 때문이다. 재현율은 test에서 {test}, 배포 뒤 {after}로 목표에 한참 못 미친다.",
+                t_val: "모델을 고른 val에서 정한 threshold는 test에서 {test}, 배포 뒤 {after}다. calib에서 정한 것과 거의 같다.",
+                t_calib: "calib에서 딱 95%로 정한 threshold는 test에서 {test}, 배포 뒤 {after}다. test는 정직한 추정이라 뽑을 때마다 위아래로 흔들린다.",
+                t_test: "test에서 정한 threshold는 test 위에서 늘 95% 이상({test})이다. 배포 뒤 실제는 {after}다.",
+                tally: "100번 뽑으면 test 보고 평균 {mt}, 배포 뒤 평균 {ma}. test는 95% 이상이라고 했는데 실제는 95% 아래였던 때는 {n}번이다.",
+                draw: "뽑기 {k} / {n}",
+                axisX: "배포 뒤 실제 재현율",
+                axisY: "test가 보고한 재현율",
+                inflated: "부푼 보고",
+                relX: "모델이 말한 확신도",
+                relY: "실제로 맞힌 비율",
+                simD: "불량 {n}개",
+                simN: "정상 {n}개",
+                simX: "불량 확률 (로그 눈금)",
+                per1000: "1,000개당 {v}",
+                costSub: "놓침 × {r} + 헛경보",
+                simV: "threshold {t}: calib의 불량 {nd}개 중 {c}개를 잡고({rc}) 정상 {nn}개 중 {fa}개에 헛경보를 낸다. 배포 뒤에는 불량의 {ra}를 잡는다. 놓침이 {r}배 비싸면 배포 뒤 비용은 1,000개당 이 threshold {ca}, t*({ts}) {cs}, calib에서 가장 싼 threshold({tm}) {cm}."
+            };
+            function fill(s, o) { return s.replace(/\{(\w+)\}/g, function (_, k) { return o[k]; }); }
+            function pct(v) { return (v / 10).toFixed(1) + "%"; }
+            function pp(v) { var x = Math.round(v) / 10; return (x < 0 ? "−" : "+") + Math.abs(x).toFixed(1) + "%p"; }
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+
+            // 01: which split fits T and the threshold
+            var state = { T: "calib", t: "calib", k: 0 };
+            var lanes = {};
+            Array.prototype.forEach.call(document.querySelectorAll(".lane"), function (l) { lanes[l.getAttribute("data-lane")] = l; });
+            var chipT = document.getElementById("chip-T"), chipThr = document.getElementById("chip-thr");
+            var segT = document.getElementById("seg-T"), segThr = document.getElementById("seg-thr");
+            var scatter = document.getElementById("scatter");
+            function setCell(id, text, bad) {
+                var c = document.getElementById(id);
+                c.textContent = text;
+                c.className = bad ? "bad" : "ok";
+            }
+            function drawScatter(ti, hi) {
+                clear(scatter);
+                var pts = D.draws.map(function (d) { return d.recall[ti][hi]; });
+                var lo = 1000;
+                pts.forEach(function (p) { lo = Math.min(lo, p[0], p[1]); });
+                lo = Math.min(850, Math.floor((lo - 10) / 50) * 50);
+                var W = 340, H = 260, L = 46, R = 10, T = 10, B = 40;
+                function X(v) { return L + (v - lo) / (1000 - lo) * (W - L - R); }
+                function Y(v) { return H - B - (v - lo) / (1000 - lo) * (H - T - B); }
+                el("rect", { x: X(lo), y: Y(1000), width: X(950) - X(lo), height: Y(950) - Y(1000), "class": "sc-warn" }, scatter);
+                el("text", { x: X(lo) + 6, y: Y(1000) + 15, "class": "sc-warn-label" }, scatter).textContent = TXT.inflated;
+                for (var v = lo; v <= 1000; v += 50) {
+                    el("line", { x1: X(v), y1: Y(lo), x2: X(v), y2: Y(lo) + 4, "class": "sc-axis" }, scatter);
+                    el("text", { x: X(v), y: Y(lo) + 16, "text-anchor": "middle", "class": "sc-tick" }, scatter).textContent = (v / 10) + "%";
+                    el("line", { x1: X(lo) - 4, y1: Y(v), x2: X(lo), y2: Y(v), "class": "sc-axis" }, scatter);
+                    el("text", { x: X(lo) - 6, y: Y(v) + 4, "text-anchor": "end", "class": "sc-tick" }, scatter).textContent = (v / 10) + "%";
+                }
+                el("line", { x1: X(lo), y1: Y(lo), x2: X(1000), y2: Y(lo), "class": "sc-axis" }, scatter);
+                el("line", { x1: X(lo), y1: Y(lo), x2: X(lo), y2: Y(1000), "class": "sc-axis" }, scatter);
+                el("line", { x1: X(950), y1: Y(lo), x2: X(950), y2: Y(1000), "class": "sc-target" }, scatter);
+                el("line", { x1: X(lo), y1: Y(950), x2: X(1000), y2: Y(950), "class": "sc-target" }, scatter);
+                el("line", { x1: X(lo), y1: Y(lo), x2: X(1000), y2: Y(1000), "class": "sc-diag" }, scatter);
+                pts.forEach(function (p, i) {
+                    if (i !== state.k) el("circle", { cx: X(p[1]), cy: Y(p[0]), r: 3, "class": "sc-dot" }, scatter);
+                });
+                var c = pts[state.k];
+                el("circle", { cx: X(c[1]), cy: Y(c[0]), r: 5.5, "class": "sc-dot now" }, scatter);
+                el("text", { x: (X(lo) + X(1000)) / 2, y: H - 4, "text-anchor": "middle", "class": "sc-title" }, scatter).textContent = TXT.axisX;
+                var my = (Y(lo) + Y(1000)) / 2;
+                el("text", { x: 11, y: my, "text-anchor": "middle", "class": "sc-title", transform: "rotate(-90 11 " + my + ")" }, scatter).textContent = TXT.axisY;
+            }
+            function render() {
+                var dr = D.draws[state.k];
+                var ti = D.T_places.indexOf(state.T), hi = D.thr_places.indexOf(state.t);
+                var gap = dr.gap[ti], rec = dr.recall[ti][hi];
+                setCell("gap-test", pp(gap[0]), Math.abs(gap[0]) > 30);
+                setCell("gap-after", pp(gap[1]), Math.abs(gap[1]) > 30);
+                setCell("rec-test", pct(rec[0]), rec[0] < 950);
+                setCell("rec-after", pct(rec[1]), rec[1] < 950);
+                document.getElementById("verdict").textContent =
+                    fill(TXT["T_" + state.T], { T: (dr.T[ti] / 100).toFixed(2), gap: pp(gap[1]) }) + " " +
+                    fill(TXT["t_" + state.t], { test: pct(rec[0]), after: pct(rec[1]) });
+                var st = 0, sa = 0, n = 0;
+                D.draws.forEach(function (d) {
+                    var r = d.recall[ti][hi];
+                    st += r[0];
+                    sa += r[1];
+                    if (r[0] >= 950 && r[1] < 950) n++;
+                });
+                document.getElementById("tally").textContent = fill(TXT.tally, { mt: pct(st / D.draws.length), ma: pct(sa / D.draws.length), n: n });
+                document.getElementById("draw-no").textContent = fill(TXT.draw, { k: state.k + 1, n: D.draws.length });
+                chipT.hidden = state.T === "none";
+                if (state.T !== "none") lanes[state.T].querySelector(".chips").appendChild(chipT);
+                lanes[state.t].querySelector(".chips").appendChild(chipThr);
+                ["train", "test"].forEach(function (k) { lanes[k].classList.toggle("misused", state.T === k || state.t === k); });
+                [[segT, state.T], [segThr, state.t]].forEach(function (pair) {
+                    Array.prototype.forEach.call(pair[0].querySelectorAll("button"), function (b) {
+                        b.setAttribute("aria-pressed", String(b.getAttribute("data-v") === pair[1]));
+                    });
+                });
+                drawScatter(ti, hi);
+            }
+            segT.addEventListener("click", function (e) {
+                var b = e.target.closest("button");
+                if (b) { state.T = b.getAttribute("data-v"); render(); }
+            });
+            segThr.addEventListener("click", function (e) {
+                var b = e.target.closest("button");
+                if (b) { state.t = b.getAttribute("data-v"); render(); }
+            });
+            document.getElementById("redraw").addEventListener("click", function () {
+                state.k = (state.k + 1) % D.draws.length;
+                render();
+            });
+            render();
+
+            // 02: the reliability diagram for a temperature T (after release, draw 0)
+            var R = D.rel, rel = document.getElementById("reliability");
+            var slider = document.getElementById("t-slider"), out = document.getElementById("t-value");
+            var presets = document.getElementById("t-presets");
+            var iCalib = R.T.indexOf(R.T_calib), iOne = R.T.indexOf(1);
+            function nearest(v) {
+                var best = 0;
+                R.T.forEach(function (t, i) { if (Math.abs(t - v) < Math.abs(R.T[best] - v)) best = i; });
+                return best;
+            }
+            function drawRel(i) {
+                clear(rel);
+                var W = 340, H = 250, L = 46, Rr = 10, T = 10, B = 40;
+                function X(v) { return L + v * (W - L - Rr); }
+                function Y(v) { return H - B - v * (H - T - B); }
+                R.rows[i].bins.forEach(function (b, m) {
+                    if (b[0] < 20) return;
+                    var x0 = X(m / 15) + 1, x1 = X((m + 1) / 15) - 1;
+                    el("rect", { x: x0, y: Y(b[2] / 1000), width: x1 - x0, height: Y(0) - Y(b[2] / 1000), "class": "rel-bar" }, rel);
+                });
+                [0, 0.5, 1].forEach(function (v) {
+                    el("text", { x: X(v), y: Y(0) + 16, "text-anchor": "middle", "class": "sc-tick" }, rel).textContent = (v * 100) + "%";
+                    el("text", { x: X(0) - 6, y: Y(v) + 4, "text-anchor": "end", "class": "sc-tick" }, rel).textContent = (v * 100) + "%";
+                });
+                el("line", { x1: X(0), y1: Y(0), x2: X(1), y2: Y(0), "class": "sc-axis" }, rel);
+                el("line", { x1: X(0), y1: Y(0), x2: X(0), y2: Y(1), "class": "sc-axis" }, rel);
+                el("line", { x1: X(0), y1: Y(0), x2: X(1), y2: Y(1), "class": "sc-diag" }, rel);
+                el("text", { x: (X(0) + X(1)) / 2, y: H - 4, "text-anchor": "middle", "class": "sc-title" }, rel).textContent = TXT.relX;
+                var my = (Y(0) + Y(1)) / 2;
+                el("text", { x: 11, y: my, "text-anchor": "middle", "class": "sc-title", transform: "rotate(-90 11 " + my + ")" }, rel).textContent = TXT.relY;
+                out.textContent = R.T[i].toFixed(2);
+                document.getElementById("rel-conf").textContent = pct(R.rows[i].conf);
+                document.getElementById("rel-acc").textContent = pct(R.acc);
+                document.getElementById("rel-ece").textContent = pct(R.rows[i].ece);
+                Array.prototype.forEach.call(presets.querySelectorAll("button"), function (b) {
+                    var on = b.getAttribute("data-t") === "calib" ? i === iCalib : i === iOne;
+                    b.setAttribute("aria-pressed", String(on));
+                });
+            }
+            slider.addEventListener("input", function () { drawRel(nearest(Number(slider.value))); });
+            presets.addEventListener("click", function (e) {
+                var b = e.target.closest("button");
+                if (!b) return;
+                var i = b.getAttribute("data-t") === "calib" ? iCalib : iOne;
+                slider.value = R.T[i];
+                drawRel(i);
+            });
+            drawRel(iOne);
+
+            // 03: the threshold simulator. Same arithmetic as knowledge-lab/calib-split/cs/threshold.py:
+            // scores are round(1000 * log10 p) of the defect probability; an example raises an alarm when score >= threshold.
+            var TH = D.thr, simSvg = document.getElementById("sim-chart");
+            var GLO = TH.grid[0], GHI = TH.grid[1], GST = TH.grid[2];
+            var SIM = { s: 0, r: TH.r0, preset: "exact95", L: 0 };
+            function tOf(L) { return Math.pow(10, L / 1000); }
+            function LOf(t) { return Math.round(1000 * Math.log10(t)); }
+            function p1(x) { return (100 * x).toFixed(1) + "%"; }
+            function calibAt(s, L) {
+                var c = 0, a = 0;
+                s.d.forEach(function (v) { if (v >= L) c++; });
+                s.n.forEach(function (v) { if (v >= L) a++; });
+                return { caught: c, missed: s.d.length - c, alarms: a };
+            }
+            function afterAt(s, L) {
+                var x = (Math.min(Math.max(L, GLO), GHI) - GLO) / GST;
+                var i = Math.min(Math.floor(x), s.recall.length - 2), f = x - i;
+                var rec = (s.recall[i] * (1 - f) + s.recall[i + 1] * f) / 10000;
+                var fpr = (s.fpr[i] * (1 - f) + s.fpr[i + 1] * f) / 10000;
+                var tp = rec * s.nd, fp = fpr * s.nn;
+                return { recall: rec, fpr: fpr, precision: tp + fp ? tp / (tp + fp) : NaN };
+            }
+            function costCal(s, L, r) { var c = calibAt(s, L); return r * c.missed + c.alarms; }
+            function costAfter(s, L, r) { var a = afterAt(s, L); return (r * (1 - a.recall) * s.nd + a.fpr * s.nn) / (s.nd + s.nn) * 1000; }
+            function calibMin(s, r) {
+                var seen = {}, best = null, bestCost = Infinity;
+                s.d.concat(s.n.map(function (v) { return v + 1; })).concat([LOf(1 / (1 + r))]).forEach(function (L) {
+                    if (L < GLO || L > GHI || seen[L]) return;
+                    seen[L] = true;
+                    var c = costCal(s, L, r);
+                    if (c < bestCost || (c === bestCost && L > best)) { bestCost = c; best = L; }
+                });
+                return best;
+            }
+            function presetL(s, name, r) {
+                if (name === "half") return LOf(0.5);
+                if (name === "tstar") return LOf(1 / (1 + r));
+                var n = s.d.length;
+                var k = name === "exact95" ? Math.ceil(0.95 * n - 1e-9) : Math.ceil(0.95 * (n + 1) - 1e-9);
+                return s.d[k - 1];
+            }
+            var simDots = [], simGeo = null;
+            function jitter(i, k) { var v = Math.sin((i + 1) * 12.9898 + k * 78.233) * 43758.5453; return v - Math.floor(v); }
+            function simBuild() {
+                var s = TH.sets[SIM.s];
+                clear(simSvg);
+                var W = Math.round(Math.max(300, simSvg.getBoundingClientRect().width || 640)), H = 236, R0 = 12;
+                simSvg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                el("rect", { id: "sim-zone", "class": "sim-zone", x: W - R0, y: 24, width: 0, height: 158 }, simSvg);
+                // the row labels set the left margin, so a longer label (English) does not run into the dots
+                var rows = [[62, fill(TXT.simD, { n: s.d.length })], [140, fill(TXT.simN, { n: s.n.length })]].map(function (q) {
+                    var t = el("text", { x: 0, y: q[0], "class": "sim-row" }, simSvg);
+                    t.textContent = q[1];
+                    return t.getComputedTextLength ? t.getComputedTextLength() : 60;
+                });
+                var L0 = Math.ceil(Math.max.apply(null, rows)) + 12;
+                function X(L) { return L0 + (Math.min(Math.max(L, GLO), GHI) - GLO) / (GHI - GLO) * (W - L0 - R0); }
+                simGeo = { X: X, W: W, L0: L0, R0: R0 };
+                simDots = [];
+                s.d.forEach(function (v, i) { simDots.push([el("circle", { cx: X(v), cy: 34 + 46 * jitter(i, 1), r: 3 }, simSvg), v, true]); });
+                s.n.forEach(function (v, i) { simDots.push([el("circle", { cx: X(v), cy: 98 + 76 * jitter(i, 2), r: 2 }, simSvg), v, false]); });
+                el("line", { x1: L0, y1: 192, x2: W - R0, y2: 192, "class": "sc-axis" }, simSvg);
+                [[-4000, "0.0001"], [-3000, "0.001"], [-2000, "0.01"], [-1000, "0.1"], [-301, "0.5"], [0, "1"]].forEach(function (tk) {
+                    el("line", { x1: X(tk[0]), y1: 192, x2: X(tk[0]), y2: 196, "class": "sc-axis" }, simSvg);
+                    el("text", { x: X(tk[0]), y: 208, "text-anchor": "middle", "class": "sc-tick" }, simSvg).textContent = tk[1];
+                });
+                el("text", { x: (L0 + W - R0) / 2, y: 228, "text-anchor": "middle", "class": "sc-title" }, simSvg).textContent = TXT.simX;
+                el("path", { id: "sim-tstar", "class": "sim-tstar", d: "" }, simSvg);
+                el("text", { id: "sim-tstar-text", "class": "sim-tstar-text", x: 0, y: 190 }, simSvg).textContent = "t*";
+                el("line", { id: "sim-line", "class": "sim-line", x1: 0, y1: 22, x2: 0, y2: 192 }, simSvg);
+                el("text", { id: "sim-line-text", "class": "sim-line-text", x: 0, y: 15, "text-anchor": "middle" }, simSvg);
+                simRender();
+            }
+            function setText(id, v) { document.getElementById(id).textContent = v; }
+            function simRender() {
+                var s = TH.sets[SIM.s], r = SIM.r, L = SIM.L, g = simGeo;
+                var x = g.X(L), xs = g.X(LOf(1 / (1 + r)));
+                var zone = document.getElementById("sim-zone");
+                zone.setAttribute("x", x);
+                zone.setAttribute("width", Math.max(0, g.W - g.R0 - x));
+                var line = document.getElementById("sim-line");
+                line.setAttribute("x1", x);
+                line.setAttribute("x2", x);
+                var lt = document.getElementById("sim-line-text");
+                lt.textContent = "threshold " + tOf(L).toPrecision(3);
+                lt.setAttribute("x", Math.min(Math.max(x, g.L0 + 56), g.W - g.R0 - 56));
+                document.getElementById("sim-tstar").setAttribute("d", "M" + (xs - 5) + ",180 L" + (xs + 5) + ",180 L" + xs + ",189 z");
+                document.getElementById("sim-tstar-text").setAttribute("x", xs + 8);
+                simDots.forEach(function (dt) {
+                    var on = dt[1] >= L;
+                    dt[0].setAttribute("class", dt[2] ? (on ? "dot-hit" : "dot-miss") : (on ? "dot-alarm" : "dot-quiet"));
+                });
+                var c = calibAt(s, L), a = afterAt(s, L), nd = s.d.length, nn = s.n.length;
+                var ca = costAfter(s, L, r), Ls = LOf(1 / (1 + r)), Lm = calibMin(s, r);
+                setText("sim-rec-cal", c.caught + " / " + nd + " (" + p1(c.caught / nd) + ")");
+                setText("sim-rec-after", p1(a.recall));
+                setText("sim-fa-cal", c.alarms + " (" + p1(c.alarms / nn) + ")");
+                setText("sim-fa-after", p1(a.fpr));
+                setText("sim-prec-cal", c.caught + c.alarms ? p1(c.caught / (c.caught + c.alarms)) : "—");
+                setText("sim-prec-after", isNaN(a.precision) ? "—" : p1(a.precision));
+                setText("sim-cost-sub", fill(TXT.costSub, { r: r }));
+                setText("sim-cost-cal", String(r * c.missed + c.alarms));
+                setText("sim-cost-after", fill(TXT.per1000, { v: Math.round(ca) }));
+                setText("sim-verdict", fill(TXT.simV, {
+                    t: tOf(L).toPrecision(3), nd: nd, c: c.caught, rc: p1(c.caught / nd), nn: nn, fa: c.alarms, ra: p1(a.recall), r: r,
+                    ca: Math.round(ca), ts: tOf(Ls).toPrecision(3), cs: Math.round(costAfter(s, Ls, r)),
+                    tm: tOf(Lm).toPrecision(3), cm: Math.round(costAfter(s, Lm, r))
+                }));
+                setText("sim-value", tOf(L).toPrecision(3));
+                document.getElementById("sim-slider").value = L;
+                [["sim-T", "data-s", String(SIM.s)], ["sim-r", "data-r", String(r)], ["sim-presets", "data-p", SIM.preset]].forEach(function (q) {
+                    Array.prototype.forEach.call(document.getElementById(q[0]).querySelectorAll("button"), function (b) {
+                        b.setAttribute("aria-pressed", String(b.getAttribute(q[1]) === q[2]));
+                    });
+                });
+            }
+            function simSet(L, preset) {
+                SIM.L = Math.min(Math.max(Math.round(L), GLO), GHI);
+                SIM.preset = preset || null;
+                simRender();
+            }
+            function fromPointer(e) {
+                var box = simSvg.getBoundingClientRect(), g = simGeo;
+                var x = (e.clientX - box.left) / box.width * g.W;
+                simSet(GLO + (x - g.L0) / (g.W - g.L0 - g.R0) * (GHI - GLO), null);
+            }
+            simSvg.addEventListener("pointerdown", function (e) {
+                if (simSvg.setPointerCapture) simSvg.setPointerCapture(e.pointerId);
+                simSvg.dataset.drag = "1";
+                fromPointer(e);
+            });
+            simSvg.addEventListener("pointermove", function (e) { if (simSvg.dataset.drag === "1") fromPointer(e); });
+            ["pointerup", "pointercancel"].forEach(function (k) { simSvg.addEventListener(k, function () { simSvg.dataset.drag = ""; }); });
+            document.getElementById("sim-slider").addEventListener("input", function (e) { simSet(Number(e.target.value), null); });
+            document.getElementById("sim-presets").addEventListener("click", function (e) {
+                var b = e.target.closest("button");
+                if (b) simSet(presetL(TH.sets[SIM.s], b.getAttribute("data-p"), SIM.r), b.getAttribute("data-p"));
+            });
+            document.getElementById("sim-T").addEventListener("click", function (e) {
+                var b = e.target.closest("button");
+                if (!b) return;
+                SIM.s = Number(b.getAttribute("data-s"));
+                if (SIM.preset) SIM.L = presetL(TH.sets[SIM.s], SIM.preset, SIM.r);
+                simBuild();
+            });
+            document.getElementById("sim-r").addEventListener("click", function (e) {
+                var b = e.target.closest("button");
+                if (!b) return;
+                SIM.r = Number(b.getAttribute("data-r"));
+                if (SIM.preset === "tstar") SIM.L = presetL(TH.sets[SIM.s], "tstar", SIM.r);
+                simRender();
+            });
+            SIM.L = presetL(TH.sets[0], "exact95", SIM.r);
+            simBuild();
+            if ("ResizeObserver" in window) {
+                var simLast = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(simSvg.getBoundingClientRect().width);
+                    if (w && w !== simLast) { simLast = w; simBuild(); }
+                }).observe(simSvg);
+            }
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-10-13","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"},{"id":"ml","name":"기계 학습","name_en":"Machine learning"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"},{"id":"train-val-calib-test","title":"train·val·calib·test","title_en":"train/val/calib/test","domain":"ml","status":"published","href":"../train-val-calib-test/","summary":"학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold를 위해 칸 하나를 더 두기","summary_en":"Keep one more split for what is fitted after training: the temperature T and the threshold"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 64 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (준비 중)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "준비 중";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "지금 이 글";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
