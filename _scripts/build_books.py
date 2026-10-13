@@ -11,7 +11,8 @@ engines and AI answer engines see every book and review.
 books/books.json is the only file to edit for books and reviews. A book needs an id (the year it
 joined the shelf and its order, for links such as /books/#book-2026-001), title, author, publisher,
 genres, listPrice, and status. Optional: subtitle, original (the original title of a translated
-book), translator, series and volume, isbn, note, knowledge, waitlist, loans, readers, and hugh.
+book), translator, series and volume, isbn, language ("ko" unless the book is in another language,
+such as "en" for an English original), note, knowledge, waitlist, loans, readers, and hugh.
 
 Ratings are out of three stars: 3 = recommended, 2 = pretty good but not quite satisfying,
 1 = not really recommended.
@@ -87,10 +88,10 @@ UI = {
         "stats": lambda s: (f"책 <b>{s['books']}</b>권 · 대여 가능 <b>{s['available']}</b>권 · "
                             f"누적 대여 <b>{s['loans']}</b>회 · 감상 <b>{s['reviews']}</b>개"),
         "consensus": "독자 모두 추천",
-        "split": "의견이 갈림 · 토론 후보",
+        "split": "의견이 갈림",
         "for": "이런 사람에게: ",
         "related": "관련 지식: ",
-        "empty": "아직 서가가 비어 있다.",
+        "empty": "아직 책장이 비어 있다.",
         "draft": "초안 · 책장 사진에서 옮긴 목록이라 서지와 보증금을 아직 확인하는 중이다. 확인이 끝나기 전까지 이 페이지는 검색엔진에 노출하지 않는다.",
     },
     "en": {
@@ -112,7 +113,7 @@ UI = {
             f"<b>{s['loans']}</b> loan" + ("" if s["loans"] == 1 else "s"),
             f"<b>{s['reviews']}</b> review" + ("" if s["reviews"] == 1 else "s")]),
         "consensus": "Every reader recommends",
-        "split": "Split verdicts · up for discussion",
+        "split": "Split verdicts",
         "for": "For: ",
         "related": "Related: ",
         "empty": "The shelf is empty for now.",
@@ -173,6 +174,7 @@ def load():
         for key in OPTIONAL_TEXT:
             check(key not in book or (isinstance(book[key], str) and book[key].strip()), f"{key} must be text when present")
         check(isinstance(book.get("volume", 1), int) and book.get("volume", 1) >= 1, "volume must be a number from 1")
+        check(book.get("language", "ko") in ("ko", "en"), 'language must be "ko" or "en"')
         check(book.get("genres") and all(g in genres for g in book["genres"]),
               "genres must be keys of the genres table: " + ", ".join(genres))
         price = book.get("listPrice")
@@ -243,6 +245,8 @@ def stars(lang, n):
 def card(lang, book, genres, titles):
     ui = UI[lang]
     ko = ' lang="ko"' if lang == "en" else ""  # Korean text on the English page
+    own = book.get("language", "ko")
+    mark = f' lang="{own}"' if own != lang else ""  # the book's title and byline, in the book's language
 
     def korean(value):
         return f'<span lang="ko">{text(value)}</span>' if lang == "en" else text(value)
@@ -270,15 +274,15 @@ def card(lang, book, genres, titles):
         f'            <p class="meta">{text(" · ".join(meta))}</p>',
         f'            <p class="badges">{" ".join(badges)}</p>',
         '        </div>',
-        f'        <h3{ko}>{text(book["title"])}</h3>',
+        f'        <h3{mark}>{text(book["title"])}</h3>',
     ]
     if book.get("subtitle"):
-        lines.append(f'        <p class="subtitle"{ko}>{text(book["subtitle"])}</p>')
+        lines.append(f'        <p class="subtitle"{mark}>{text(book["subtitle"])}</p>')
     if book.get("original"):
         original = text(book["original"])
         lines.append(f'        <p class="original">원제 <span lang="en">{original}</span></p>' if lang == "ko"
                      else f'        <p class="original">{original}</p>')
-    lines.append(f'        <p class="byline"{ko}>{text(byline)}</p>')
+    lines.append(f'        <p class="byline"{mark}>{text(byline)}</p>')
     review = hugh.get("reviewEn") if lang == "en" and hugh.get("reviewEn") else hugh.get("review")
     if hugh.get("stars") or review:
         pick = '        <p class="pick"><span class="who">Hugh</span>'
@@ -381,7 +385,7 @@ def structured_data(lang, doc, books, genres):
     items = []
     for position, book in enumerate(books, 1):
         item = {"@type": "Book", "@id": f"{page}#book-{book['id']}", "url": f"{page}#book-{book['id']}",
-                "name": book["title"], "inLanguage": "ko",
+                "name": book["title"], "inLanguage": book.get("language", "ko"),
                 "author": [{"@type": "Person", "name": n} for n in names(book["author"])],
                 "genre": [genres[g][lang] for g in book["genres"]]}
         if book.get("subtitle"):

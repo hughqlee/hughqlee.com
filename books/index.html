@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="ko" data-theme="dark">
 <!--
-  서재 페이지(https://hughqlee.com/books/)의 한국어 원본. 영어판은 books/en/index.html이다.
-  generated 블록(서가, 집계, 필터, 구조화 데이터, robots, 초안 안내)은 _scripts/build_books.py가
+  책장 페이지(https://hughqlee.com/books/)의 한국어 원본. 영어판은 books/en/index.html이다.
+  generated 블록(책장, 집계, 필터, 구조화 데이터, robots, 초안 안내)은 _scripts/build_books.py가
   books/books.json에서 채운다. 그 밖의 글은 이 파일에서 고치고, 영어판도 같이 고친다.
 -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HughQLee는 독서가 취미입니다 | Hugh Q Lee</title>
-    <meta name="description" content="Hugh Q Lee가 직접 산 책을 지인과 독서모임 멤버에게 빌려주는 서재. 대여료 없이 새 책값만큼 보증금을 맡기고 돌려주면 전액 돌려받으며, 빌려 읽은 독자의 감상을 함께 싣는다.">
+    <meta name="description" content="Hugh Q Lee가 다 읽고 별점을 매긴 책을 지인에게 빌려주는 책장. 대여료 없이 새 책값만큼 보증금을 맡기고, 돌려주면 전액 돌려받는다.">
     <meta name="author" content="Hugh Q Lee">
     <!-- generated:robots -->
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -23,7 +23,7 @@
     <meta property="og:locale" content="ko_KR">
     <meta property="og:locale:alternate" content="en_US">
     <meta property="og:title" content="HughQLee는 독서가 취미입니다 | Hugh Q Lee">
-    <meta property="og:description" content="직접 산 책을 빌려주는 서재. 대여료 없이 새 책값을 보증금으로 맡기고, 돌려주면 전액 돌려받는다.">
+    <meta property="og:description" content="다 읽은 책만 빌려주는 책장. 대여료 없이 새 책값만큼 보증금을 맡기고, 돌려주면 전액 돌려받는다.">
     <meta property="og:url" content="https://hughqlee.com/books/">
     <meta property="og:image" content="https://hughqlee.com/images/og-cover-ko.jpg">
     <meta property="og:image:width" content="1200">
@@ -31,7 +31,7 @@
     <meta property="og:image:alt" content="아스키아트로 쓴 hughqlee, “본다는 것은 특별한 일입니다.”, projects·knowledge·books 안내가 담긴 Hugh Q Lee의 터미널 스타일 홈 화면.">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="HughQLee는 독서가 취미입니다 | Hugh Q Lee">
-    <meta name="twitter:description" content="직접 산 책을 빌려주는 서재. 대여료 없이 새 책값을 보증금으로 맡기고, 돌려주면 전액 돌려받는다.">
+    <meta name="twitter:description" content="다 읽은 책만 빌려주는 책장. 대여료 없이 새 책값만큼 보증금을 맡기고, 돌려주면 전액 돌려받는다.">
     <meta name="twitter:image" content="https://hughqlee.com/images/og-cover-ko.jpg">
     <!-- generated:jsonld -->
     <script type="application/ld+json">
@@ -43,7 +43,7 @@
           "@id": "https://hughqlee.com/books/#collection",
           "url": "https://hughqlee.com/books/",
           "name": "HughQLee는 독서가 취미입니다",
-          "description": "Hugh Q Lee가 직접 산 책을 지인과 독서모임 멤버에게 빌려주는 서재. 대여료 없이 새 책값만큼 보증금을 맡기고 돌려주면 전액 돌려받으며, 빌려 읽은 독자의 감상을 함께 싣는다.",
+          "description": "Hugh Q Lee가 다 읽고 별점을 매긴 책을 지인에게 빌려주는 책장. 대여료 없이 새 책값만큼 보증금을 맡기고, 돌려주면 전액 돌려받는다.",
           "inLanguage": "ko",
           "author": {
             "@id": "https://hughqlee.com/#person"
@@ -53,11 +53,52 @@
           },
           "mainEntity": {
             "@type": "ItemList",
-            "numberOfItems": 29,
+            "numberOfItems": 35,
             "itemListElement": [
               {
                 "@type": "ListItem",
                 "position": 1,
+                "item": {
+                  "@type": "Book",
+                  "@id": "https://hughqlee.com/books/#book-2026-044",
+                  "url": "https://hughqlee.com/books/#book-2026-044",
+                  "name": "나는 왜 남들보다 쉽게 지칠까",
+                  "inLanguage": "ko",
+                  "author": [
+                    {
+                      "@type": "Person",
+                      "name": "최재훈"
+                    }
+                  ],
+                  "genre": [
+                    "자기계발"
+                  ],
+                  "alternativeHeadline": "무던해 보이지만 누구보다 예민한 HSP를 위한 심리학",
+                  "publisher": {
+                    "@type": "Organization",
+                    "name": "서스테인"
+                  },
+                  "review": [
+                    {
+                      "@type": "Review",
+                      "author": {
+                        "@id": "https://hughqlee.com/#person"
+                      },
+                      "reviewRating": {
+                        "@type": "Rating",
+                        "ratingValue": 3,
+                        "bestRating": 3,
+                        "worstRating": 1
+                      },
+                      "reviewBody": "High Sensitive Person, 읽는 내내 '이거 나잖아!?'.",
+                      "inLanguage": "ko"
+                    }
+                  ]
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-038",
@@ -95,7 +136,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 2,
+                "position": 3,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-037",
@@ -143,7 +184,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 3,
+                "position": 4,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-030",
@@ -183,7 +224,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 4,
+                "position": 5,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-018",
@@ -221,7 +262,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 5,
+                "position": 6,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-016",
@@ -261,7 +302,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 6,
+                "position": 7,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-012",
@@ -299,7 +340,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 7,
+                "position": 8,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-008",
@@ -347,7 +388,136 @@
               },
               {
                 "@type": "ListItem",
-                "position": 8,
+                "position": 9,
+                "item": {
+                  "@type": "Book",
+                  "@id": "https://hughqlee.com/books/#book-2026-043",
+                  "url": "https://hughqlee.com/books/#book-2026-043",
+                  "name": "불변의 법칙",
+                  "inLanguage": "ko",
+                  "author": [
+                    {
+                      "@type": "Person",
+                      "name": "모건 하우절"
+                    }
+                  ],
+                  "genre": [
+                    "돈·경제"
+                  ],
+                  "alternativeHeadline": "절대 변하지 않는 것들에 대한 23가지 이야기",
+                  "alternateName": "Same as Ever",
+                  "translator": [
+                    {
+                      "@type": "Person",
+                      "name": "이수경"
+                    }
+                  ],
+                  "publisher": {
+                    "@type": "Organization",
+                    "name": "서삼독"
+                  },
+                  "review": [
+                    {
+                      "@type": "Review",
+                      "author": {
+                        "@id": "https://hughqlee.com/#person"
+                      },
+                      "reviewRating": {
+                        "@type": "Rating",
+                        "ratingValue": 2,
+                        "bestRating": 3,
+                        "worstRating": 1
+                      },
+                      "reviewBody": "좋은 내용인데 잘 읽히지 않았다.",
+                      "inLanguage": "ko"
+                    }
+                  ]
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 10,
+                "item": {
+                  "@type": "Book",
+                  "@id": "https://hughqlee.com/books/#book-2026-041",
+                  "url": "https://hughqlee.com/books/#book-2026-041",
+                  "name": "혁펜하임의 Easy! 딥러닝",
+                  "inLanguage": "ko",
+                  "author": [
+                    {
+                      "@type": "Person",
+                      "name": "혁펜하임"
+                    }
+                  ],
+                  "genre": [
+                    "기술·IT"
+                  ],
+                  "publisher": {
+                    "@type": "Organization",
+                    "name": "북엔드"
+                  },
+                  "review": [
+                    {
+                      "@type": "Review",
+                      "author": {
+                        "@id": "https://hughqlee.com/#person"
+                      },
+                      "reviewRating": {
+                        "@type": "Rating",
+                        "ratingValue": 2,
+                        "bestRating": 3,
+                        "worstRating": 1
+                      },
+                      "reviewBody": "너무 기초를 샀다.",
+                      "inLanguage": "ko"
+                    }
+                  ]
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 11,
+                "item": {
+                  "@type": "Book",
+                  "@id": "https://hughqlee.com/books/#book-2026-040",
+                  "url": "https://hughqlee.com/books/#book-2026-040",
+                  "name": "ROS2 혼자 공부하는 로봇 SW",
+                  "inLanguage": "ko",
+                  "author": [
+                    {
+                      "@type": "Person",
+                      "name": "민형기"
+                    }
+                  ],
+                  "genre": [
+                    "기술·IT"
+                  ],
+                  "alternativeHeadline": "직접 만들고 코딩하자",
+                  "publisher": {
+                    "@type": "Organization",
+                    "name": "잇플ITPLE"
+                  },
+                  "review": [
+                    {
+                      "@type": "Review",
+                      "author": {
+                        "@id": "https://hughqlee.com/#person"
+                      },
+                      "reviewRating": {
+                        "@type": "Rating",
+                        "ratingValue": 2,
+                        "bestRating": 3,
+                        "worstRating": 1
+                      },
+                      "reviewBody": "쉽게 읽었지만 실행하지 못한.",
+                      "inLanguage": "ko"
+                    }
+                  ]
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 12,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-035",
@@ -386,7 +556,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 9,
+                "position": 13,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-034",
@@ -429,7 +599,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 10,
+                "position": 14,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-028",
@@ -470,7 +640,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 11,
+                "position": 15,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-027",
@@ -509,7 +679,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 12,
+                "position": 16,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-023",
@@ -548,7 +718,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 13,
+                "position": 17,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-021",
@@ -591,7 +761,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 14,
+                "position": 18,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-013",
@@ -638,7 +808,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 15,
+                "position": 19,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-010",
@@ -687,7 +857,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 16,
+                "position": 20,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-009",
@@ -739,7 +909,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 17,
+                "position": 21,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-006",
@@ -784,7 +954,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 18,
+                "position": 22,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-005",
@@ -841,7 +1011,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 19,
+                "position": 23,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-003",
@@ -879,7 +1049,96 @@
               },
               {
                 "@type": "ListItem",
-                "position": 20,
+                "position": 24,
+                "item": {
+                  "@type": "Book",
+                  "@id": "https://hughqlee.com/books/#book-2026-042",
+                  "url": "https://hughqlee.com/books/#book-2026-042",
+                  "name": "Same as Ever",
+                  "inLanguage": "en",
+                  "author": [
+                    {
+                      "@type": "Person",
+                      "name": "Morgan Housel"
+                    }
+                  ],
+                  "genre": [
+                    "돈·경제"
+                  ],
+                  "alternativeHeadline": "A Guide to What Never Changes",
+                  "publisher": {
+                    "@type": "Organization",
+                    "name": "Portfolio"
+                  },
+                  "review": [
+                    {
+                      "@type": "Review",
+                      "author": {
+                        "@id": "https://hughqlee.com/#person"
+                      },
+                      "reviewRating": {
+                        "@type": "Rating",
+                        "ratingValue": 1,
+                        "bestRating": 3,
+                        "worstRating": 1
+                      },
+                      "reviewBody": "영어 원서는 아직 무리다.",
+                      "inLanguage": "ko"
+                    }
+                  ]
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 25,
+                "item": {
+                  "@type": "Book",
+                  "@id": "https://hughqlee.com/books/#book-2026-039",
+                  "url": "https://hughqlee.com/books/#book-2026-039",
+                  "name": "한 권으로 읽는 컴퓨터 구조와 프로그래밍",
+                  "inLanguage": "ko",
+                  "author": [
+                    {
+                      "@type": "Person",
+                      "name": "조너선 스타인하트"
+                    }
+                  ],
+                  "genre": [
+                    "기술·IT"
+                  ],
+                  "alternativeHeadline": "더 나은 소프트웨어 개발을 위한 하드웨어, 자료구조, 필수 알고리즘 등 프로그래머의 비밀 노트",
+                  "alternateName": "The Secret Life of Programs",
+                  "translator": [
+                    {
+                      "@type": "Person",
+                      "name": "오현석"
+                    }
+                  ],
+                  "publisher": {
+                    "@type": "Organization",
+                    "name": "책만"
+                  },
+                  "review": [
+                    {
+                      "@type": "Review",
+                      "author": {
+                        "@id": "https://hughqlee.com/#person"
+                      },
+                      "reviewRating": {
+                        "@type": "Rating",
+                        "ratingValue": 1,
+                        "bestRating": 3,
+                        "worstRating": 1
+                      },
+                      "reviewBody": "어려워~~~",
+                      "inLanguage": "ko"
+                    }
+                  ]
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 26,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-036",
@@ -920,7 +1179,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 21,
+                "position": 27,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-031",
@@ -961,7 +1220,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 22,
+                "position": 28,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-029",
@@ -1002,7 +1261,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 23,
+                "position": 29,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-022",
@@ -1042,7 +1301,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 24,
+                "position": 30,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-019",
@@ -1085,7 +1344,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 25,
+                "position": 31,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-017",
@@ -1132,7 +1391,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 26,
+                "position": 32,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-015",
@@ -1171,7 +1430,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 27,
+                "position": 33,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-014",
@@ -1216,7 +1475,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 28,
+                "position": 34,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-011",
@@ -1264,7 +1523,7 @@
               },
               {
                 "@type": "ListItem",
-                "position": 29,
+                "position": 35,
                 "item": {
                   "@type": "Book",
                   "@id": "https://hughqlee.com/books/#book-2026-007",
@@ -1474,7 +1733,7 @@
         h1 { margin: 0 0 16px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
         .lead { color: var(--muted); }
 
-        /* 터미널처럼 보이는 서가 현황 한 줄 */
+        /* 터미널처럼 보이는 책장 현황 한 줄 */
         .shell {
             margin: 20px 0 0;
             padding: 12px 16px;
@@ -1689,22 +1948,22 @@
         <section class="hero" aria-labelledby="page-title">
             <p class="eyebrow">BOOKS</p>
             <h1 id="page-title">HughQLee는 독서가 취미입니다</h1>
-            <p class="lead">직접 산 책을 지인과 독서모임 멤버에게 빌려준다. 대여료는 없다. 새 책값만큼 보증금을 맡기고, 돌려주면 전액 돌려받는다. 책마다 빌려 읽은 사람들의 감상이 쌓인다.</p>
+            <p class="lead">다 읽고 별점을 매긴 책을 지인에게 빌려준다. 대여료는 없고, 새 책값만큼 보증금을 맡겼다가 돌려주면 전액 돌려받는다. 책마다 빌려 읽은 사람들의 별점이 쌓인다.</p>
             <!-- generated:stats -->
             <div class="shell">
                 <p aria-hidden="true"><span class="prompt">$</span> ls ~/books</p>
-                <p class="out">책 <b>29</b>권 · 대여 가능 <b>28</b>권 · 누적 대여 <b>0</b>회 · 감상 <b>0</b>개</p>
+                <p class="out">책 <b>35</b>권 · 대여 가능 <b>34</b>권 · 누적 대여 <b>0</b>회 · 감상 <b>0</b>개</p>
             </div>
             <!-- /generated:stats -->
-            <p class="access"><strong>대여는 지금 지인과 독서모임 멤버만 한다.</strong> 서가와 감상은 누구나 볼 수 있다. 모임에 함께하고 싶으면 인스타그램 <a href="https://www.instagram.com/hughqlee/">@hughqlee</a>로 DM을 보내면 된다.</p>
+            <p class="access"><strong>대여는 지인에게만 한다.</strong> 책장과 별점은 누구나 볼 수 있다. 빌리고 싶은 책이 있으면 인스타그램 <a href="https://www.instagram.com/hughqlee/">@hughqlee</a>로 DM을 보내면 된다.</p>
         </section>
 
         <section class="shelf-section" aria-labelledby="shelf-title">
-            <h2 id="shelf-title">서가</h2>
+            <h2 id="shelf-title">책장</h2>
             <!-- generated:filters -->
             <div id="filters" class="filters" hidden>
                 <div class="filter-head">
-                    <button type="button" id="available-only" class="switch" role="switch" aria-checked="false"><span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>대여 가능한 책만 <span class="n">28</span></button>
+                    <button type="button" id="available-only" class="switch" role="switch" aria-checked="false"><span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>대여 가능한 책만 <span class="n">34</span></button>
                     <p id="filter-count" class="filter-count" aria-live="polite" data-format="{shown}권 / 전체 {total}권"></p>
                 </div>
                 <div class="filter-row" role="group" aria-label="장르">
@@ -1712,10 +1971,11 @@
                     <button type="button" data-genre="humanities" aria-pressed="true">인문 <span class="n">4</span></button>
                     <button type="button" data-genre="work" aria-pressed="true">일·리더십 <span class="n">8</span></button>
                     <button type="button" data-genre="startup" aria-pressed="true">창업·브랜드 <span class="n">4</span></button>
-                    <button type="button" data-genre="money" aria-pressed="true">돈·경제 <span class="n">4</span></button>
-                    <button type="button" data-genre="self" aria-pressed="true">자기계발 <span class="n">1</span></button>
+                    <button type="button" data-genre="money" aria-pressed="true">돈·경제 <span class="n">6</span></button>
+                    <button type="button" data-genre="self" aria-pressed="true">자기계발 <span class="n">2</span></button>
                     <button type="button" data-genre="essay" aria-pressed="true">에세이 <span class="n">1</span></button>
                     <button type="button" data-genre="science" aria-pressed="true">수학·과학 <span class="n">1</span></button>
+                    <button type="button" data-genre="tech" aria-pressed="true">기술·IT <span class="n">3</span></button>
                     <button type="button" data-genre="parenting" aria-pressed="true">육아 <span class="n">1</span></button>
                     <button type="button" data-genre="language" aria-pressed="true">외국어 <span class="n">1</span></button>
                 </div>
@@ -1724,6 +1984,19 @@
             <!-- /generated:filters -->
             <!-- generated:shelf -->
             <ol id="shelf" class="shelf" aria-labelledby="shelf-title">
+                <li id="book-2026-044" data-genres="self" data-views="available pick">
+                    <article class="book">
+                        <div class="book-top">
+                            <p class="meta">자기계발 · 보증금 16,000원</p>
+                            <p class="badges"><span class="badge st-available">대여 가능</span></p>
+                        </div>
+                        <h3>나는 왜 남들보다 쉽게 지칠까</h3>
+                        <p class="subtitle">무던해 보이지만 누구보다 예민한 HSP를 위한 심리학</p>
+                        <p class="byline">최재훈 · 서스테인</p>
+                        <p class="pick"><span class="who">Hugh</span> <span class="stars" role="img" aria-label="별 3개 중 3개"><span class="on">★★★</span></span> <span class="mood">추천도서</span></p>
+                        <p class="pick-review">High Sensitive Person, 읽는 내내 '이거 나잖아!?'.</p>
+                    </article>
+                </li>
                 <li id="book-2026-038" data-genres="society" data-views="available pick">
                     <article class="book">
                         <div class="book-top">
@@ -1807,6 +2080,45 @@
                         <p class="byline">패트릭 렌시오니 · 서진영 옮김 · 위즈덤하우스</p>
                         <p class="pick"><span class="who">Hugh</span> <span class="stars" role="img" aria-label="별 3개 중 3개"><span class="on">★★★</span></span> <span class="mood">추천도서</span></p>
                         <p class="pick-review">정말 재밌는 픽션.</p>
+                    </article>
+                </li>
+                <li id="book-2026-043" data-genres="money" data-views="available">
+                    <article class="book">
+                        <div class="book-top">
+                            <p class="meta">돈·경제 · 보증금 22,000원</p>
+                            <p class="badges"><span class="badge st-available">대여 가능</span></p>
+                        </div>
+                        <h3>불변의 법칙</h3>
+                        <p class="subtitle">절대 변하지 않는 것들에 대한 23가지 이야기</p>
+                        <p class="original">원제 <span lang="en">Same as Ever</span></p>
+                        <p class="byline">모건 하우절 · 이수경 옮김 · 서삼독</p>
+                        <p class="pick"><span class="who">Hugh</span> <span class="stars" role="img" aria-label="별 3개 중 2개"><span class="on">★★</span><span class="off">★</span></span> <span class="mood">꽤 좋았지만 만족까진 아니야</span></p>
+                        <p class="pick-review">좋은 내용인데 잘 읽히지 않았다.</p>
+                    </article>
+                </li>
+                <li id="book-2026-041" data-genres="tech" data-views="available">
+                    <article class="book">
+                        <div class="book-top">
+                            <p class="meta">기술·IT · 보증금 31,000원</p>
+                            <p class="badges"><span class="badge st-available">대여 가능</span></p>
+                        </div>
+                        <h3>혁펜하임의 Easy! 딥러닝</h3>
+                        <p class="byline">혁펜하임 · 북엔드</p>
+                        <p class="pick"><span class="who">Hugh</span> <span class="stars" role="img" aria-label="별 3개 중 2개"><span class="on">★★</span><span class="off">★</span></span> <span class="mood">꽤 좋았지만 만족까진 아니야</span></p>
+                        <p class="pick-review">너무 기초를 샀다.</p>
+                    </article>
+                </li>
+                <li id="book-2026-040" data-genres="tech" data-views="available">
+                    <article class="book">
+                        <div class="book-top">
+                            <p class="meta">기술·IT · 보증금 24,000원</p>
+                            <p class="badges"><span class="badge st-available">대여 가능</span></p>
+                        </div>
+                        <h3>ROS2 혼자 공부하는 로봇 SW</h3>
+                        <p class="subtitle">직접 만들고 코딩하자</p>
+                        <p class="byline">민형기 · 잇플ITPLE</p>
+                        <p class="pick"><span class="who">Hugh</span> <span class="stars" role="img" aria-label="별 3개 중 2개"><span class="on">★★</span><span class="off">★</span></span> <span class="mood">꽤 좋았지만 만족까진 아니야</span></p>
+                        <p class="pick-review">쉽게 읽었지만 실행하지 못한.</p>
                     </article>
                 </li>
                 <li id="book-2026-035" data-genres="startup" data-views="available">
@@ -1955,6 +2267,33 @@
                         <p class="pick"><span class="who">Hugh</span> <span class="stars" role="img" aria-label="별 3개 중 2개"><span class="on">★★</span><span class="off">★</span></span> <span class="mood">꽤 좋았지만 만족까진 아니야</span></p>
                     </article>
                 </li>
+                <li id="book-2026-042" data-genres="money" data-views="available">
+                    <article class="book">
+                        <div class="book-top">
+                            <p class="meta">돈·경제 · 보증금 22,000원</p>
+                            <p class="badges"><span class="badge st-available">대여 가능</span></p>
+                        </div>
+                        <h3 lang="en">Same as Ever</h3>
+                        <p class="subtitle" lang="en">A Guide to What Never Changes</p>
+                        <p class="byline" lang="en">Morgan Housel · Portfolio</p>
+                        <p class="pick"><span class="who">Hugh</span> <span class="stars" role="img" aria-label="별 3개 중 1개"><span class="on">★</span><span class="off">★★</span></span> <span class="mood">별로 권하지 않아</span></p>
+                        <p class="pick-review">영어 원서는 아직 무리다.</p>
+                    </article>
+                </li>
+                <li id="book-2026-039" data-genres="tech" data-views="available">
+                    <article class="book">
+                        <div class="book-top">
+                            <p class="meta">기술·IT · 보증금 31,000원</p>
+                            <p class="badges"><span class="badge st-available">대여 가능</span></p>
+                        </div>
+                        <h3>한 권으로 읽는 컴퓨터 구조와 프로그래밍</h3>
+                        <p class="subtitle">더 나은 소프트웨어 개발을 위한 하드웨어, 자료구조, 필수 알고리즘 등 프로그래머의 비밀 노트</p>
+                        <p class="original">원제 <span lang="en">The Secret Life of Programs</span></p>
+                        <p class="byline">조너선 스타인하트 · 오현석 옮김 · 책만</p>
+                        <p class="pick"><span class="who">Hugh</span> <span class="stars" role="img" aria-label="별 3개 중 1개"><span class="on">★</span><span class="off">★★</span></span> <span class="mood">별로 권하지 않아</span></p>
+                        <p class="pick-review">어려워~~~</p>
+                    </article>
+                </li>
                 <li id="book-2026-036" data-genres="society" data-views="available">
                     <article class="book">
                         <div class="book-top">
@@ -2089,16 +2428,16 @@
             <section id="how" aria-labelledby="how-title">
                 <h2 id="how-title">빌리는 법</h2>
                 <ol class="steps">
-                    <li>서가에서 고른 책을 모임 전에 알려 준다.</li>
+                    <li>책장에서 고른 책을 인스타그램 DM으로 알려 준다.</li>
                     <li>새 책값만큼 보증금을 보낸다.</li>
-                    <li>모임에서 책을 받는다. 모임에 못 오면 착불 택배로 보낸다.</li>
-                    <li>4주 동안 읽고 다음 모임에서 돌려주면, 보증금을 그 자리에서 전액 돌려준다.</li>
+                    <li>직접 만나서 받거나, 착불 택배로 받는다.</li>
+                    <li>4주 안에 돌려주면 보증금을 전액 돌려준다.</li>
                 </ol>
             </section>
 
             <section id="deposit" aria-labelledby="deposit-title">
                 <h2 id="deposit-title">보증금</h2>
-                <p>대여료, 연체료, 회비는 없다. 새 책값만큼 보증금을 맡기고, 돌려주면 전액 돌려받는다.</p>
+                <p>대여료와 연체료는 없다. 새 책값만큼 보증금을 맡기고, 돌려주면 전액 돌려받는다.</p>
                 <p>책이 상하거나 돌아오지 않으면 보증금으로 대신하고, 그 책은 빌린 사람이 갖는다. 읽은 흔적은 괜찮고, 젖거나 찢어지거나 필기한 경우만 상한 것으로 본다.</p>
             </section>
 
@@ -2116,11 +2455,11 @@
                 <details>
                     <summary>대여 약관</summary>
                     <ol class="terms">
-                        <li>대여는 무료다. 대여료, 연체료, 회비 등 어떤 돈도 받지 않는다.</li>
-                        <li>지인과 독서모임 멤버가 한 번에 2권까지 빌릴 수 있다.</li>
+                        <li>대여는 무료다. 대여료, 연체료 등 어떤 돈도 받지 않는다.</li>
+                        <li>지인이 한 번에 2권까지 빌릴 수 있다.</li>
                         <li>보증금은 새 책값만큼이고, 반납하면 전액 돌려준다.</li>
-                        <li>대여 기간은 4주(다음 모임까지)이고, 예약한 사람이 없으면 한 번 연장할 수 있다.</li>
-                        <li>책은 직접 주고받는다. 택배라면 보낼 때는 착불, 돌려줄 때는 선불이다.</li>
+                        <li>대여 기간은 4주이고, 예약한 사람이 없으면 한 번 연장할 수 있다.</li>
+                        <li>책은 직접 주고받거나 택배로 보낸다. 택배는 보낼 때 착불, 돌려줄 때 선불이다.</li>
                         <li>책이 상하거나 분실되면 보증금으로 정산하고, 그 책은 빌린 사람의 것이 된다.</li>
                         <li>반납 기한이 지나고 2주가 더 지나도록 연락이 없으면 분실로 본다.</li>
                         <li>별점과 감상은 원하는 사람만, 별명으로 남긴다.</li>
@@ -2158,9 +2497,9 @@
             label();
         })();
 
-        // 서가 필터: '대여 가능한 책만' 스위치와 장르 칩. 장르는 처음에 모두 켜져 있고 여러 개를 켜고 끌 수 있으며,
+        // 책장 필터: '대여 가능한 책만' 스위치와 장르 칩. 장르는 처음에 모두 켜져 있고 여러 개를 켜고 끌 수 있으며,
         // 켜진 장르 가운데 하나라도 해당하면 보인다(OR). 칩의 숫자는 스위치 조건에서 그 장르에 든 책의 수다.
-        // 스크립트가 없으면 필터는 숨은 채로 남고 서가는 전부 보인다.
+        // 스크립트가 없으면 필터는 숨은 채로 남고 책은 전부 보인다.
         (function () {
             var filters = document.getElementById("filters");
             if (!filters) {

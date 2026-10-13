@@ -37,4 +37,4 @@ Selected work (each is a run report on the projects page; client and lab details
 
 ## Books
 
-- [My Hobby Is Reading](https://hughqlee.com/books/en/): A lending shelf of books Hugh Q Lee bought, for friends and book-club members: no fees, a deposit equal to the price of a new copy refunded in full on return, and reviews from the readers who borrowed each book. Korean original: [HughQLee는 독서가 취미입니다](https://hughqlee.com/books/).
+- [My Hobby Is Reading](https://hughqlee.com/books/en/): Books Hugh Q Lee has read and rated, lent to friends with no fees: a deposit equal to the price of a new copy, refunded in full on return, and ratings from the readers who borrowed each book. Korean original: [HughQLee는 독서가 취미입니다](https://hughqlee.com/books/).

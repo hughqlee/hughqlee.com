@@ -471,6 +471,76 @@
       "genres": ["society"],
       "listPrice": 22000,
       "status": "available"
+    },
+    {
+      "id": "2026-039",
+      "title": "한 권으로 읽는 컴퓨터 구조와 프로그래밍",
+      "hugh": { "stars": 1, "review": "어려워~~~" },
+      "subtitle": "더 나은 소프트웨어 개발을 위한 하드웨어, 자료구조, 필수 알고리즘 등 프로그래머의 비밀 노트",
+      "original": "The Secret Life of Programs",
+      "author": "조너선 스타인하트",
+      "translator": "오현석",
+      "publisher": "책만",
+      "genres": ["tech"],
+      "listPrice": 35000,
+      "status": "available"
+    },
+    {
+      "id": "2026-040",
+      "title": "ROS2 혼자 공부하는 로봇 SW",
+      "hugh": { "stars": 2, "review": "쉽게 읽었지만 실행하지 못한." },
+      "subtitle": "직접 만들고 코딩하자",
+      "author": "민형기",
+      "publisher": "잇플ITPLE",
+      "genres": ["tech"],
+      "listPrice": 27300,
+      "status": "available"
+    },
+    {
+      "id": "2026-041",
+      "title": "혁펜하임의 Easy! 딥러닝",
+      "hugh": { "stars": 2, "review": "너무 기초를 샀다." },
+      "author": "혁펜하임",
+      "publisher": "북엔드",
+      "genres": ["tech"],
+      "listPrice": 35000,
+      "status": "available"
+    },
+    {
+      "id": "2026-042",
+      "title": "Same as Ever",
+      "hugh": { "stars": 1, "review": "영어 원서는 아직 무리다." },
+      "subtitle": "A Guide to What Never Changes",
+      "language": "en",
+      "author": "Morgan Housel",
+      "publisher": "Portfolio",
+      "genres": ["money"],
+      "listPrice": 25000,
+      "status": "available"
+    },
+    {
+      "id": "2026-043",
+      "title": "불변의 법칙",
+      "hugh": { "stars": 2, "review": "좋은 내용인데 잘 읽히지 않았다." },
+      "subtitle": "절대 변하지 않는 것들에 대한 23가지 이야기",
+      "original": "Same as Ever",
+      "author": "모건 하우절",
+      "translator": "이수경",
+      "publisher": "서삼독",
+      "genres": ["money"],
+      "listPrice": 25000,
+      "status": "available"
+    },
+    {
+      "id": "2026-044",
+      "title": "나는 왜 남들보다 쉽게 지칠까",
+      "hugh": { "stars": 3, "review": "High Sensitive Person, 읽는 내내 '이거 나잖아!?'." },
+      "subtitle": "무던해 보이지만 누구보다 예민한 HSP를 위한 심리학",
+      "author": "최재훈",
+      "publisher": "서스테인",
+      "genres": ["self"],
+      "listPrice": 17800,
+      "status": "available"
     }
   ]
 }
