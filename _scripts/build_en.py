@@ -119,25 +119,18 @@ def replace_block(doc, name, body, indent):
     return doc[:i] + body + doc[j:]
 
 
-def static_copy(doc, ui, count):
+def static_copy(doc, ui, projects):
     """The text renderStaticCopy() sets, written into the HTML (mirror that function when it changes)."""
-    keys = ui["introKeys"]
-    values = ui["introValues"]
-    status = ui["status"]
+    # A project with a link (href) is one with a published paper.
+    meta = (ui["introMeta"].replace("{count}", str(len(projects)))
+            .replace("{papers}", str(sum(1 for p in projects if p.get("href")))))
     for el_id, value in [
-        ("introKeyDomain", keys["domain"]), ("introKeyExperience", keys["experience"]),
-        ("introValueDomain", values["domain"]), ("introValueExperience", values["experience"]),
-        ("statusPanelLabel", status["panel"]), ("statusPortfolioLabel", status["portfolio"]),
-        ("statusPortfolioValue", status["ready"]), ("statusSelectedLabel", status["selectedRuns"]),
-        ("statusSelectedValue", str(count)), ("statusStackLabel", status["primaryStack"]),
-        ("statusStackValue", status["stackValue"]), ("statusModeLabel", status["publicMode"]),
-        ("statusModeValue", status["publicModeValue"]), ("selected-work-title", ui["selectedWorkTitle"]),
-        ("selectedWorkDescription", ui["selectedWorkDescription"].replace("{count}", str(count))),
+        ("skipLink", ui["skipLink"]), ("introLead", ui["introLead"]), ("introMeta", meta),
+        ("introNote", ui["introNote"]), ("selected-work-title", ui["selectedWorkTitle"]),
     ]:
         doc = set_inner(doc, el_id, text(value))
     doc = set_inner(doc, "introByline", "Hugh Q Lee<br>" + text(ui["profileRole"]))
     for el_id, name in [("crumbs", "crumbsAria"), ("promptLine", "promptAria"),
-                        ("introOutput", "introOutputAria"), ("portfolioStatus", "portfolioStatusAria"),
                         ("modalClose", "modalCloseAria"), ("languageToggle", "languageToggleAria"),
                         ("modalLanguageToggle", "languageToggleAria")]:
         doc = set_attr(doc, el_id, "aria-label", ui[name])
@@ -252,6 +245,10 @@ def localize_english(doc, ui):
     once('<meta property="og:locale" content="ko_KR">', '<meta property="og:locale" content="en_US">')
     once('<meta property="og:locale:alternate" content="en_US">', '<meta property="og:locale:alternate" content="ko_KR">')
     once('href="/projects/en/" hreflang="en"', 'href="/projects/" hreflang="ko"', count=2)
+    # The footer, as on the English knowledge pages: home in English and a link to the Korean original.
+    once('<a href="/" id="footerHome">Hugh Q Lee</a>',
+         '<a href="/en/" id="footerHome">Hugh Q Lee</a> · Translated from the '
+         '<a href="/projects/" hreflang="ko">Korean original</a>')
     return set_attr(doc, "homeCrumb", "href", "/en/")
 
 
@@ -261,12 +258,12 @@ def build():
     ko_head = {key: get_head(ko_doc, tag) for key, tag in HEAD_TAG.items()}
     ko_text, en_text = texts("ko", copy, projects, ko_head), texts("en", copy, projects, EN_HEAD)
 
-    ko = static_copy(ko_doc, copy["ko"], len(projects))
+    ko = static_copy(ko_doc, copy["ko"], projects)
     ko = set_head(ko, '<meta name="twitter:description" ', ko_head["og:description"])
     ko = replace_block(ko, "jsonld", structured_data("ko", copy["ko"], projects, ko_head["description"]), "    ")
     ko = replace_block(ko, "runs", runs_without_js("ko", projects), "            ")
 
-    en = static_copy(ko, copy["en"], len(projects))
+    en = static_copy(ko, copy["en"], projects)
     en = replace_block(en, "jsonld", structured_data("en", copy["en"], projects, EN_HEAD["description"]), "    ")
     en = replace_block(en, "runs", runs_without_js("en", projects), "            ")
     en = localize_english(en, copy["en"])

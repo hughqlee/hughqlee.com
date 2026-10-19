@@ -66,6 +66,36 @@
                 "position": 1,
                 "item": {
                   "@type": "CreativeWork",
+                  "@id": "https://hughqlee.com/projects/#microinjection-platform",
+                  "url": "https://hughqlee.com/projects/#microinjection-platform",
+                  "name": "비전 기반 제브라피쉬 수정란·치어 미세주사 자동화 플랫폼",
+                  "alternateName": "미세주사 자동화 플랫폼",
+                  "genre": "로보틱 미세주사",
+                  "description": "제브라피쉬 수정란과 치어 실험을 위해 시각 타겟팅, 스테이지 이동, 니들 구동, 시약 주입, 후속 분석을 연결한 미세주사 자동화 워크플로입니다.",
+                  "abstract": "정밀한 수정란·치어 주사 과정을 캘리브레이션, 타겟 계산, 니들 삽입, 시약 주입, 형광 지표 분석까지 포함한 시스템으로 정리했습니다.",
+                  "keywords": [
+                    "컴퓨터 비전",
+                    "모션 제어",
+                    "미세주사",
+                    "액추에이터 제어",
+                    "형광 분석"
+                  ],
+                  "inLanguage": "ko",
+                  "creator": {
+                    "@id": "https://hughqlee.com/#person"
+                  },
+                  "image": "https://hughqlee.com/images/microinjection-preview.webp",
+                  "subjectOf": {
+                    "@type": "ScholarlyArticle",
+                    "url": "https://doi.org/10.1371/journal.pone.0333369"
+                  }
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                  "@type": "CreativeWork",
                   "@id": "https://hughqlee.com/projects/#toxicity-evaluation-automation",
                   "url": "https://hughqlee.com/projects/#toxicity-evaluation-automation",
                   "name": "제브라피쉬 치어 독성 평가 자동화 플랫폼",
@@ -85,36 +115,6 @@
                     "@id": "https://hughqlee.com/#person"
                   },
                   "image": "https://hughqlee.com/images/zeFET.webp"
-                }
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "item": {
-                  "@type": "CreativeWork",
-                  "@id": "https://hughqlee.com/projects/#microinjection-platform",
-                  "url": "https://hughqlee.com/projects/#microinjection-platform",
-                  "name": "비전 기반 제브라피쉬 에그·치어 미세주사 자동화 플랫폼",
-                  "alternateName": "미세주사 자동화 플랫폼",
-                  "genre": "로보틱 미세주사",
-                  "description": "제브라피쉬 에그와 치어 실험을 위해 시각 타겟팅, 스테이지 이동, 니들 구동, 시약 주입, 후속 분석을 연결한 미세주사 자동화 워크플로입니다.",
-                  "abstract": "정밀한 에그·치어 주사 과정을 캘리브레이션, 타겟 계산, 니들 삽입, 시약 주입, 형광 지표 분석까지 포함한 시스템으로 정리했습니다.",
-                  "keywords": [
-                    "컴퓨터 비전",
-                    "모션 제어",
-                    "미세주사",
-                    "액추에이터 제어",
-                    "형광 분석"
-                  ],
-                  "inLanguage": "ko",
-                  "creator": {
-                    "@id": "https://hughqlee.com/#person"
-                  },
-                  "image": "https://hughqlee.com/images/microinjection-preview.webp",
-                  "subjectOf": {
-                    "@type": "ScholarlyArticle",
-                    "url": "https://doi.org/10.1371/journal.pone.0333369"
-                  }
                 }
               },
               {
@@ -152,8 +152,8 @@
                   "name": "로봇암·미세유체 기반 제브라피쉬 3D 이미징 플랫폼",
                   "alternateName": "로보틱 3D 이미징",
                   "genre": "로보틱 이미징",
-                  "description": "로봇암 핸들링, 시각 정렬, 미세유체 샘플 이송, 회전 캐피러리 이미징, 3D 형광 볼륨 분석을 결합한 스케일업 자동화 플랫폼입니다.",
-                  "abstract": "로봇암 샘플 핸들링, 미세유체 이송, 캐피러리 회전 촬영, 이미지 기반 3D 형광 볼륨 지표를 하나의 흐름으로 연결했습니다.",
+                  "description": "로봇암 핸들링, 시각 정렬, 미세유체 샘플 이송, 회전 캐필러리 이미징, 3D 형광 볼륨 분석을 결합한 스케일업 자동화 플랫폼입니다.",
+                  "abstract": "로봇암 샘플 핸들링, 미세유체 이송, 캐필러리 회전 촬영, 이미지 기반 3D 형광 볼륨 지표를 하나의 흐름으로 연결했습니다.",
                   "keywords": [
                     "로봇암",
                     "미세유체",
@@ -255,7 +255,7 @@
             --artifact-bg: #050607;
             --modal-backdrop: rgba(2, 3, 4, 0.78);
             --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
             --radius: 8px;
             --container: 1120px;
         }
@@ -304,6 +304,9 @@
             min-height: 100vh;
             color: var(--text);
             font-family: var(--mono);
+            /* Korean lines break between words, not inside one; a word too long for its line still breaks. */
+            word-break: keep-all;
+            overflow-wrap: break-word;
             background:
                 linear-gradient(var(--grid-line) 1px, transparent 1px),
                 linear-gradient(90deg, var(--grid-line-alt) 1px, transparent 1px),
@@ -343,7 +346,37 @@
         .page {
             width: min(calc(100% - 32px), var(--container));
             margin: 0 auto;
-            padding: 24px 0 64px;
+            padding: 24px 0 0;
+        }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border: 1px solid var(--line-strong);
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+
+        .skip:focus {
+            top: 12px;
+        }
+
+        .page-footer {
+            width: min(calc(100% - 32px), var(--container));
+            margin: 48px auto 0;
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .page-footer a {
+            color: var(--accent);
+            text-underline-offset: 3px;
         }
 
         .terminal-window {
@@ -505,14 +538,8 @@
             animation: cursor-blink 1.2s steps(2, start) infinite;
         }
 
-        .hero-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
-            gap: 22px;
-            margin-top: 22px;
-        }
-
         .profile-output {
+            margin-top: 22px;
             border: 1px solid var(--line);
             border-radius: var(--radius);
             background: var(--panel-soft);
@@ -543,88 +570,34 @@
             text-align: right;
         }
 
-        .kv-list {
-            display: grid;
-            gap: 10px;
-            margin: 18px 0 0;
-        }
-
-        .kv-row {
-            display: grid;
-            grid-template-columns: 112px minmax(0, 1fr);
-            gap: 14px;
-            align-items: start;
-            min-width: 0;
-        }
-
-        .kv-key {
-            color: var(--faint);
-            font-size: 0.78rem;
-        }
-
-        .kv-value {
+        .intro-lead {
+            margin: 16px 0 0;
+            max-width: 64ch;
             color: var(--text);
-            line-height: 1.45;
-            min-width: 0;
+            font-family: var(--sans);
+            font-size: 1.02rem;
+            line-height: 1.65;
         }
 
-        .run-aside {
-            display: grid;
-            gap: 12px;
-        }
-
-        .status-panel {
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            background: var(--panel-soft);
-            padding: 16px;
-        }
-
-        .panel-label {
-            margin: 0 0 12px;
-            color: var(--faint);
-            font-size: 0.76rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        .status-list {
-            list-style: none;
-            display: grid;
-            gap: 10px;
-            margin: 0;
-            padding: 0;
-        }
-
-        .status-list li {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
+        .intro-meta {
+            margin: 10px 0 0;
             color: var(--muted);
-            font-size: 0.84rem;
+            font-size: 0.8rem;
         }
 
-        .status-list strong {
-            color: var(--text);
-            font-weight: 500;
-            text-align: right;
+        /* Written once here, as a shell comment, instead of on every project. */
+        .intro-note {
+            margin: 8px 0 0;
+            color: var(--faint);
+            font-family: var(--sans);
+            font-size: 0.86rem;
+            line-height: 1.6;
         }
 
-        .status-dot {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .status-dot::before {
-            content: "";
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--accent-green);
-            box-shadow: 0 0 14px rgba(156, 227, 125, 0.6);
-            animation: status-pulse 2.6s ease-in-out infinite;
+        .intro-note::before {
+            content: "# ";
+            color: var(--accent-green);
+            font-family: var(--mono);
         }
 
         .section-head {
@@ -642,16 +615,8 @@
             font-weight: 500;
         }
 
-        .section-head p {
-            margin: 0;
-            color: var(--muted);
-            font-size: 0.78rem;
-            text-align: right;
-        }
-
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 16px;
         }
 
@@ -659,10 +624,6 @@
             position: relative;
             display: grid;
             grid-template-rows: auto 1fr;
-            align-content: start;
-            gap: 14px;
-            min-height: 360px;
-            padding: 0;
             border: 1px solid var(--line);
             border-radius: var(--radius);
             background: var(--panel);
@@ -730,22 +691,51 @@
             background: var(--accent-warn);
         }
 
-        .run-card-body {
+        .status-badge.is-paper::before {
+            background: var(--accent);
+        }
+
+        /* The picture (or the workflow, when there is no public picture) on the left and the text on
+           the right. On a phone the title comes first, so the first card's title is on the first screen. */
+        .run-card-main {
             display: grid;
-            align-content: start;
-            gap: 14px;
-            padding: 0 16px 16px;
+            grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+            grid-template-rows: auto 1fr;
+            grid-template-areas:
+                "visual head"
+                "visual body";
+            gap: 12px 24px;
+            padding: 16px;
         }
 
-        .run-command {
-            color: var(--muted);
-            font-size: 0.82rem;
-            line-height: 1.5;
-            word-break: break-word;
+        .run-card.is-featured .run-card-main {
+            grid-template-columns: minmax(0, 11fr) minmax(0, 9fr);
         }
 
-        .run-command .prompt {
-            color: var(--accent-green);
+        .run-card-head {
+            grid-area: head;
+            min-width: 0;
+        }
+
+        .run-card-main > .artifact-preview,
+        .run-card-main > .artifact-log {
+            grid-area: visual;
+            align-self: start;
+        }
+
+        .run-card-body {
+            grid-area: body;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .run-category {
+            margin: 0 0 8px;
+            color: var(--accent);
+            font-size: 0.76rem;
         }
 
         .run-card h3 {
@@ -753,84 +743,138 @@
             color: var(--text);
             font-family: var(--sans);
             font-size: clamp(1.35rem, 3vw, 2.05rem);
-            line-height: 0.98;
+            line-height: 1.08;
             letter-spacing: -0.045em;
         }
 
+        .run-card.is-featured h3 {
+            font-size: clamp(1.6rem, 3.6vw, 2.5rem);
+        }
+
         .run-summary {
-            display: grid;
-            gap: 10px;
-            padding: 12px;
-            border: 1px solid var(--line);
-            border-radius: 6px;
-            background: var(--subtle-bg);
-        }
-
-        .summary-row {
-            display: grid;
-            grid-template-columns: 80px minmax(0, 1fr);
-            gap: 12px;
-            color: var(--muted);
-            font-size: 0.82rem;
-            line-height: 1.45;
-        }
-
-        .summary-row span:first-child {
-            color: var(--faint);
-        }
-
-        .summary-row strong {
+            margin: 0;
             color: var(--text);
-            font-weight: 500;
+            font-family: var(--sans);
+            font-size: 0.95rem;
+            line-height: 1.65;
         }
 
-        .log-preview {
+        .run-outcome {
+            margin: 0;
+            color: var(--muted);
+            font-family: var(--sans);
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        .run-outcome-label {
+            margin-right: 4px;
+            color: var(--accent-green);
+            font-family: var(--mono);
+            font-size: 0.76rem;
+        }
+
+        .run-tags {
             list-style: none;
-            display: grid;
-            gap: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
             margin: 0;
             padding: 0;
         }
 
-        .log-preview li {
-            display: grid;
-            grid-template-columns: 54px minmax(0, 1fr);
-            gap: 10px;
+        .run-tags li {
+            padding: 4px 8px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
             color: var(--muted);
-            font-size: 0.78rem;
-            line-height: 1.45;
+            background: var(--subtle-bg);
+            font-size: 0.72rem;
         }
 
-        .log-prefix {
-            color: var(--accent-green);
-        }
-
-        .artifact-preview {
+        .artifact-preview,
+        .report-artifact {
+            margin: 0;
             border: 1px solid var(--line);
             border-radius: 6px;
             overflow: hidden;
             background: var(--artifact-bg);
         }
 
-        .artifact-label {
+        .artifact-preview img,
+        .report-artifact img {
+            display: block;
+            width: 100%;
+            height: auto;
+            filter: var(--artifact-filter);
+        }
+
+        .artifact-preview figcaption,
+        .report-artifact figcaption {
+            padding: 9px 10px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--sans);
+            font-size: 0.78rem;
+            line-height: 1.5;
+        }
+
+        .artifact-credit {
+            display: block;
+            margin-top: 2px;
+            color: var(--faint);
+        }
+
+        .artifact-credit a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .artifact-credit a:hover,
+        .artifact-credit a:focus-visible {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .artifact-log {
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: var(--artifact-bg);
+            overflow: hidden;
+        }
+
+        .artifact-log-head {
             display: flex;
-            align-items: center;
             justify-content: space-between;
             gap: 12px;
+            margin: 0;
             padding: 9px 10px;
             border-bottom: 1px solid var(--line);
-            color: var(--muted);
+            color: var(--faint);
             font-size: 0.74rem;
         }
 
-        .artifact-preview img {
-            display: block;
-            width: 100%;
-            aspect-ratio: 3 / 2;
-            height: auto;
-            object-fit: cover;
-            object-position: center 36%;
-            filter: var(--artifact-filter);
+        .artifact-log ol {
+            list-style: none;
+            display: grid;
+            gap: 10px;
+            margin: 0;
+            padding: 12px 10px 14px;
+        }
+
+        .artifact-log li {
+            display: grid;
+            grid-template-columns: 24px minmax(0, 1fr);
+            gap: 8px;
+            color: var(--muted);
+            font-family: var(--sans);
+            font-size: 0.84rem;
+            line-height: 1.55;
+        }
+
+        .log-prefix {
+            color: var(--accent-green);
+            font-family: var(--mono);
         }
 
         .open-report {
@@ -890,15 +934,17 @@
             box-shadow: var(--shadow);
         }
 
+        /* A bar of its own, so the report scrolls under it instead of showing between the buttons. */
         .modal-actions {
             position: sticky;
-            top: 12px;
+            top: 0;
             z-index: 2;
-            margin: 12px 12px 0 auto;
             display: flex;
             justify-content: flex-end;
             gap: 8px;
-            width: fit-content;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--line);
+            background: var(--panel);
         }
 
         .modal-close {
@@ -923,7 +969,7 @@
         }
 
         .modal-content {
-            padding: 2px 22px 24px;
+            padding: 18px 22px 24px;
         }
 
         .report-kicker {
@@ -952,6 +998,7 @@
             margin: 14px 0 20px;
             max-width: 72ch;
             color: var(--muted);
+            font-family: var(--sans);
             font-size: 0.92rem;
             line-height: 1.65;
         }
@@ -995,6 +1042,11 @@
             word-break: break-word;
         }
 
+        /* A line may break between the words of a command, never inside one (not after the first "-" of "--flag"). */
+        .command-word {
+            white-space: nowrap;
+        }
+
         .workflow-list,
         .role-list,
         .stack-list,
@@ -1021,6 +1073,7 @@
         .role-list p,
         .evidence-list p {
             margin: 0;
+            font-family: var(--sans);
         }
 
         .workflow-list span,
@@ -1046,20 +1099,6 @@
 
         .report-artifact {
             margin: 12px;
-            border: 1px solid var(--line);
-            border-radius: 6px;
-            overflow: hidden;
-            background: var(--artifact-bg);
-        }
-
-        .report-artifact img {
-            display: block;
-            width: 100%;
-            height: auto;
-            max-height: 420px;
-            object-fit: cover;
-            object-position: center 36%;
-            filter: var(--artifact-filter);
         }
 
         .report-link {
@@ -1083,15 +1122,6 @@
             }
         }
 
-        @keyframes status-pulse {
-            0%, 100% {
-                opacity: 0.55;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
-
         @keyframes reveal-up {
             to {
                 opacity: 1;
@@ -1100,12 +1130,7 @@
         }
 
         @media (max-width: 880px) {
-            .hero-grid,
             .report-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .gallery-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -1118,10 +1143,26 @@
             }
         }
 
+        @media (max-width: 760px) {
+            .run-card-main,
+            .run-card.is-featured .run-card-main {
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: auto;
+                grid-template-areas:
+                    "head"
+                    "visual"
+                    "body";
+            }
+        }
+
         @media (max-width: 640px) {
             .page {
                 width: min(calc(100% - 20px), var(--container));
-                padding: 10px 0 44px;
+                padding: 10px 0 0;
+            }
+
+            .page-footer {
+                width: min(calc(100% - 20px), var(--container));
             }
 
             .terminal-bar {
@@ -1138,17 +1179,11 @@
                 padding: 16px;
             }
 
-            .kv-row,
-            .summary-row,
             .workflow-list li,
             .role-list li,
             .evidence-list li {
                 grid-template-columns: 1fr;
                 gap: 4px;
-            }
-
-            .run-card {
-                min-height: 0;
             }
 
             .stack-list {
@@ -1160,16 +1195,12 @@
                 flex-direction: column;
             }
 
-            .section-head p {
-                text-align: left;
-            }
-
             .modal {
                 padding: 10px;
             }
 
             .modal-content {
-                padding: 0 14px 18px;
+                padding: 14px 14px 18px;
             }
 
         }
@@ -1196,6 +1227,7 @@
     </style>
 </head>
 <body>
+    <a class="skip" href="#page-title" id="skipLink">본문으로 건너뛰기</a>
     <main class="page">
         <section class="terminal-window hero" aria-labelledby="page-title">
             <div class="terminal-bar">
@@ -1225,75 +1257,58 @@
                 <span>agent run portfolio --target vision-ai-lab-automation</span>
                 <span class="cursor" aria-hidden="true"></span>
             </div>
-            <div class="hero-grid">
-                <div class="profile-output">
-                    <div class="profile-header">
-                        <h1 id="page-title">Projects</h1>
-                        <p id="introByline">Hugh Q Lee<br>비전 AI 프로덕트 엔지니어</p>
-                    </div>
-                    <div class="kv-list" aria-label="프로젝트 개요" id="introOutput">
-                        <div class="kv-row">
-                            <span class="kv-key" id="introKeyDomain">도메인</span>
-                            <span class="kv-value" id="introValueDomain">제브라피쉬 이미징, 미세주사, 행동 분석, 현미경 자동화.</span>
-                        </div>
-                        <div class="kv-row">
-                            <span class="kv-key" id="introKeyExperience">경력</span>
-                            <span class="kv-value" id="introValueExperience">Zefit 랩 자동화 AI 엔지니어, 2021-현재.</span>
-                        </div>
-                    </div>
+            <div class="profile-output">
+                <div class="profile-header">
+                    <h1 id="page-title">Projects</h1>
+                    <p id="introByline">Hugh Q Lee<br>비전 AI 프로덕트 엔지니어</p>
                 </div>
-                <aside class="run-aside" aria-label="포트폴리오 상태" id="portfolioStatus">
-                    <div class="status-panel">
-                        <p class="panel-label" id="statusPanelLabel">현재 프로세스</p>
-                        <ul class="status-list">
-                            <li><span class="status-dot" id="statusPortfolioLabel">포트폴리오</span><strong id="statusPortfolioValue">준비됨</strong></li>
-                            <li><span id="statusSelectedLabel">선택된 실행</span><strong id="statusSelectedValue">4</strong></li>
-                            <li><span id="statusStackLabel">핵심 스택</span><strong id="statusStackValue">비전 + 로보틱스</strong></li>
-                            <li><span id="statusModeLabel">공개 모드</span><strong id="statusModeValue">대외비 보호</strong></li>
-                        </ul>
-                    </div>
-                </aside>
+                <p class="intro-lead" id="introLead">제브라피쉬 이미징, 미세주사, 행동 분석, 현미경 자동화를 위해 만든 컴퓨터 비전·로보틱스 시스템입니다.</p>
+                <p class="intro-meta" id="introMeta">프로젝트 4 · 논문 1 · Zefit 2021-현재</p>
+                <p class="intro-note" id="introNote">운영 시스템은 대외비입니다. 이 페이지에는 발표된 논문과 공개해도 되는 자료만 담았습니다.</p>
             </div>
         </section>
 
         <section class="gallery-section" aria-labelledby="selected-work-title">
             <div class="section-head">
-                <h2 id="selected-work-title">&gt; 선택된 실행 목록</h2>
-                <p id="selectedWorkDescription">제브라피쉬 평가 자동화, 이미징, 분석을 위한 4개의 응용 AI 시스템.</p>
+                <h2 id="selected-work-title">&gt; 주요 프로젝트</h2>
             </div>
             <div class="gallery-grid" id="galleryGrid"></div>
             <!-- generated:runs -->
             <noscript>
                 <ol class="noscript-runs">
                     <li>
+                        <h3>비전 기반 제브라피쉬 수정란·치어 미세주사 자동화 플랫폼</h3>
+                        <p>로보틱 미세주사 · 논문 공개</p>
+                        <p>제브라피쉬 수정란과 치어 실험을 위해 시각 타겟팅, 스테이지 이동, 니들 구동, 시약 주입, 후속 분석을 연결한 미세주사 자동화 워크플로입니다.</p>
+                        <p>정밀한 수정란·치어 주사 과정을 캘리브레이션, 타겟 계산, 니들 삽입, 시약 주입, 형광 지표 분석까지 포함한 시스템으로 정리했습니다.</p>
+                    </li>
+                    <li>
                         <h3>제브라피쉬 치어 독성 평가 자동화 플랫폼</h3>
-                        <p>평가 자동화 · 완료 / 대외비</p>
+                        <p>평가 자동화 · 완료</p>
                         <p>96웰 독성 평가를 위해 플레이트 순회, 오토포커스, 치어 감지, 상태 분류, 결과 기록을 하나의 현미경 자동화 워크플로로 연결했습니다.</p>
                         <p>수동 독성 평가 과정을 이미지 획득, AI 분류, 구조화된 결과 기록이 가능한 반복 실행 루프로 전환했습니다.</p>
                     </li>
                     <li>
-                        <h3>비전 기반 제브라피쉬 에그·치어 미세주사 자동화 플랫폼</h3>
-                        <p>로보틱 미세주사 · 공개 논문 / 대외비</p>
-                        <p>제브라피쉬 에그와 치어 실험을 위해 시각 타겟팅, 스테이지 이동, 니들 구동, 시약 주입, 후속 분석을 연결한 미세주사 자동화 워크플로입니다.</p>
-                        <p>정밀한 에그·치어 주사 과정을 캘리브레이션, 타겟 계산, 니들 삽입, 시약 주입, 형광 지표 분석까지 포함한 시스템으로 정리했습니다.</p>
-                    </li>
-                    <li>
                         <h3>제브라피쉬 치어 행동 추적 및 FL/IR 섭식 분석 시스템</h3>
-                        <p>영상 분석 · 완료 / 대외비</p>
+                        <p>영상 분석 · 완료</p>
                         <p>웰플레이트 기반 실험 영상을 궤적, 행동 지표, 형광 기반 섭식·소화 지표로 변환하는 분석 시스템입니다.</p>
                         <p>녹화 실험을 연결된 궤적, 회피·불안 관련 지표, 속도 기반 행동 이벤트, 형광 섭식 신호로 변환했습니다.</p>
                     </li>
                     <li>
                         <h3>로봇암·미세유체 기반 제브라피쉬 3D 이미징 플랫폼</h3>
-                        <p>로보틱 이미징 · 진행 중 / 대외비</p>
-                        <p>로봇암 핸들링, 시각 정렬, 미세유체 샘플 이송, 회전 캐피러리 이미징, 3D 형광 볼륨 분석을 결합한 스케일업 자동화 플랫폼입니다.</p>
-                        <p>로봇암 샘플 핸들링, 미세유체 이송, 캐피러리 회전 촬영, 이미지 기반 3D 형광 볼륨 지표를 하나의 흐름으로 연결했습니다.</p>
+                        <p>로보틱 이미징 · 진행 중</p>
+                        <p>로봇암 핸들링, 시각 정렬, 미세유체 샘플 이송, 회전 캐필러리 이미징, 3D 형광 볼륨 분석을 결합한 스케일업 자동화 플랫폼입니다.</p>
+                        <p>로봇암 샘플 핸들링, 미세유체 이송, 캐필러리 회전 촬영, 이미지 기반 3D 형광 볼륨 지표를 하나의 흐름으로 연결했습니다.</p>
                     </li>
                 </ol>
             </noscript>
             <!-- /generated:runs -->
         </section>
     </main>
+
+    <footer class="page-footer">
+        <a href="/" id="footerHome">Hugh Q Lee</a>
+    </footer>
 
     <div class="modal" id="projectModal" aria-hidden="true">
         <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -1338,10 +1353,9 @@
         const copy = {
             en: {
                 documentTitle: "Projects | Hugh Q Lee",
+                skipLink: "Skip to content",
                 crumbsAria: "Breadcrumb",
                 promptAria: "Portfolio command",
-                introOutputAria: "Projects overview",
-                portfolioStatusAria: "Portfolio status",
                 languageToggleAria: "Switch language to Korean",
                 themeToggleAria: {
                     toLight: "Switch to light theme",
@@ -1353,35 +1367,17 @@
                 },
                 modalCloseAria: "Close",
                 profileRole: "Vision AI Product Engineer",
-                introKeys: {
-                    domain: "domain",
-                    experience: "experience"
-                },
-                introValues: {
-                    domain: "Zebrafish imaging, microinjection, behavior analytics, microscopy automation.",
-                    experience: "AI Engineer for Lab Automation at Zefit, 2021-Present."
-                },
-                status: {
-                    panel: "current process",
-                    portfolio: "portfolio",
-                    ready: "ready",
-                    selectedRuns: "selected_runs",
-                    primaryStack: "primary_stack",
-                    stackValue: "vision + robotics",
-                    publicMode: "public_mode",
-                    publicModeValue: "proprietary-safe"
-                },
+                introLead: "Computer vision and robotics systems built for zebrafish imaging, microinjection, behavior analytics, and microscopy automation.",
+                introMeta: "projects {count} · papers {papers} · Zefit 2021-present",
+                introNote: "The production systems are proprietary; this page holds only the published paper and material cleared for release.",
                 selectedWorkTitle: "> list selected_runs",
-                selectedWorkDescription: "{count} applied AI systems for zebrafish assay automation, imaging, and analysis.",
-                summaryLabels: {
-                    system: "system",
-                    stack: "stack",
-                    outcome: "outcome"
+                cardLabels: {
+                    outcome: "outcome",
+                    workflow: "workflow",
+                    noImage: "no public image"
                 },
                 openReport: "open run report",
                 cardAriaSuffix: "run report",
-                artifactPreview: "preview",
-                artifactAltSuffix: "artifact preview",
                 modalLabels: {
                     command: "Command",
                     workflow: "Workflow",
@@ -1395,10 +1391,9 @@
             },
             ko: {
                 documentTitle: "Projects | Hugh Q Lee",
+                skipLink: "본문으로 건너뛰기",
                 crumbsAria: "위치",
                 promptAria: "포트폴리오 명령",
-                introOutputAria: "프로젝트 개요",
-                portfolioStatusAria: "포트폴리오 상태",
                 languageToggleAria: "언어를 영어로 전환",
                 themeToggleAria: {
                     toLight: "라이트 테마로 전환",
@@ -1410,35 +1405,17 @@
                 },
                 modalCloseAria: "닫기",
                 profileRole: "비전 AI 프로덕트 엔지니어",
-                introKeys: {
-                    domain: "도메인",
-                    experience: "경력"
-                },
-                introValues: {
-                    domain: "제브라피쉬 이미징, 미세주사, 행동 분석, 현미경 자동화.",
-                    experience: "Zefit 랩 자동화 AI 엔지니어, 2021-현재."
-                },
-                status: {
-                    panel: "현재 프로세스",
-                    portfolio: "포트폴리오",
-                    ready: "준비됨",
-                    selectedRuns: "선택된 실행",
-                    primaryStack: "핵심 스택",
-                    stackValue: "비전 + 로보틱스",
-                    publicMode: "공개 모드",
-                    publicModeValue: "대외비 보호"
-                },
-                selectedWorkTitle: "> 선택된 실행 목록",
-                selectedWorkDescription: "제브라피쉬 평가 자동화, 이미징, 분석을 위한 {count}개의 응용 AI 시스템.",
-                summaryLabels: {
-                    system: "시스템",
-                    stack: "스택",
-                    outcome: "결과"
+                introLead: "제브라피쉬 이미징, 미세주사, 행동 분석, 현미경 자동화를 위해 만든 컴퓨터 비전·로보틱스 시스템입니다.",
+                introMeta: "프로젝트 {count} · 논문 {papers} · Zefit 2021-현재",
+                introNote: "운영 시스템은 대외비입니다. 이 페이지에는 발표된 논문과 공개해도 되는 자료만 담았습니다.",
+                selectedWorkTitle: "> 주요 프로젝트",
+                cardLabels: {
+                    outcome: "결과",
+                    workflow: "워크플로",
+                    noImage: "공개 이미지 없음"
                 },
                 openReport: "실행 리포트 열기",
                 cardAriaSuffix: "실행 리포트",
-                artifactPreview: "미리보기",
-                artifactAltSuffix: "아티팩트 미리보기",
                 modalLabels: {
                     command: "명령",
                     workflow: "워크플로",
@@ -1454,74 +1431,25 @@
 
         const projectData = [
             {
-                id: "toxicity-evaluation-automation",
-                runId: "run_001_toxicity_eval",
-                command: "agent run assay.toxicity --plate 96well --mode autofocus+classify",
-                status: "published",
-                artifactImage: "/images/zeFET.webp",
-                artifactWidth: 1100,
-                artifactHeight: 734,
-                i18n: {
-                    en: {
-                        statusLabel: "completed / proprietary",
-                        title: "Toxicity Evaluation Automation",
-                        fullTitle: "Automated Zebrafish Larva Toxicity Evaluation Platform",
-                        category: "Assay Automation",
-                        summary: "A microscope automation workflow for 96-well toxicity evaluation, combining plate navigation, autofocus, larva detection, condition classification, and result logging.",
-                        stack: ["Computer Vision", "Microscope Automation", "XY/Z Stage", "96-well Plate", "Lightweight ML"],
-                        outcome: "Converted manual toxicity inspection into a repeatable run loop with image capture, AI classification, and structured result records.",
-                        workflow: [
-                            "Traverse a 96-well plate with XY stage control.",
-                            "Autofocus each well with Z stage control.",
-                            "Detect zebrafish larvae from 1x images using a lightweight neural network.",
-                            "Move to the detected point, acquire detailed 4x imagery, classify condition, and log raw images with evaluation results."
-                        ],
-                        engineeringRole: [
-                            "Customized the microscope control workflow around stage movement, autofocus, detection, zoomed capture, and assay logging.",
-                            "Designed lightweight neural network logic for larva detection and condition classification under constrained imaging hardware.",
-                            "Integrated hardware movement, AI inference, and data recording into one operator-facing execution flow."
-                        ],
-                        tags: ["Computer Vision", "Microscope Automation", "96-well Plate", "Lightweight ML", "Toxicology"],
-                        evidenceNote: "Public assets and detailed metrics are omitted because the production system is proprietary.",
-                        artifactLabel: "artifact: zeFET.webp"
-                    },
-                    ko: {
-                        statusLabel: "완료 / 대외비",
-                        title: "독성 평가 자동화",
-                        fullTitle: "제브라피쉬 치어 독성 평가 자동화 플랫폼",
-                        category: "평가 자동화",
-                        summary: "96웰 독성 평가를 위해 플레이트 순회, 오토포커스, 치어 감지, 상태 분류, 결과 기록을 하나의 현미경 자동화 워크플로로 연결했습니다.",
-                        stack: ["컴퓨터 비전", "현미경 자동화", "XY/Z 스테이지", "96웰 플레이트", "경량 ML"],
-                        outcome: "수동 독성 평가 과정을 이미지 획득, AI 분류, 구조화된 결과 기록이 가능한 반복 실행 루프로 전환했습니다.",
-                        workflow: [
-                            "XY 스테이지로 96웰 플레이트를 순회합니다.",
-                            "각 웰에서 Z 스테이지 기반 오토포커스를 수행합니다.",
-                            "1x 영상에서 경량 신경망으로 제브라피쉬 치어를 감지합니다.",
-                            "감지 지점으로 이동해 4x 세부 영상을 획득하고, 상태를 분류한 뒤 원본 이미지와 평가 결과를 기록합니다."
-                        ],
-                        engineeringRole: [
-                            "스테이지 이동, 오토포커스, 감지, 확대 촬영, 평가 기록을 포함한 현미경 제어 워크플로를 구성했습니다.",
-                            "제한된 이미징 환경에서 동작하는 치어 감지 및 상태 분류용 경량 신경망 로직을 설계했습니다.",
-                            "하드웨어 이동, AI 추론, 데이터 기록을 하나의 실험 실행 흐름으로 통합했습니다."
-                        ],
-                        tags: ["컴퓨터 비전", "현미경 자동화", "96웰 플레이트", "경량 ML", "독성 평가"],
-                        evidenceNote: "운영 시스템은 대외비이므로 공개 자료와 세부 수치는 생략했습니다.",
-                        artifactLabel: "artifact: zeFET.webp"
-                    }
-                }
-            },
-            {
                 id: "microinjection-platform",
                 runId: "run_002_microinject",
                 command: "agent run inject.microinjection --sample egg+larva --target vision-guided",
-                status: "published",
+                status: "paper",
+                featured: true,
                 href: "https://doi.org/10.1371/journal.pone.0333369",
                 artifactImage: "/images/microinjection-preview.webp",
                 artifactWidth: 1100,
                 artifactHeight: 617,
+                // Fig 6 of the paper, reused under the paper's CC BY 4.0 license; the caption credits it.
+                artifactCredit: {
+                    text: "Lee et al. 2025, PLOS ONE",
+                    href: "https://doi.org/10.1371/journal.pone.0333369",
+                    license: "CC BY 4.0",
+                    licenseHref: "https://creativecommons.org/licenses/by/4.0/"
+                },
                 i18n: {
                     en: {
-                        statusLabel: "published / proprietary",
+                        statusLabel: "paper published",
                         title: "Microinjection Platform",
                         fullTitle: "Vision-Guided Zebrafish Egg and Larva Microinjection Platform",
                         category: "Robotic Microinjection",
@@ -1542,31 +1470,92 @@
                         tags: ["Computer Vision", "Motion Control", "Microinjection", "Actuator Control", "Fluorescence Analysis"],
                         hrefLabel: "Related Publication",
                         evidenceNote: "A selected publication is public; additional platform details are proprietary.",
-                        artifactLabel: "artifact: microinjection-preview.webp"
+                        artifactCaption: "Paper Fig 6 · A target identified → B move to the injection position → C reach the pericardial space → D reagent injected",
+                        artifactAlt: "Four micrographs of a zebrafish larva: the injection point marked, the needle approaching, the needle inside the pericardial space, and blue reagent injected"
                     },
                     ko: {
-                        statusLabel: "공개 논문 / 대외비",
+                        statusLabel: "논문 공개",
                         title: "미세주사 자동화 플랫폼",
-                        fullTitle: "비전 기반 제브라피쉬 에그·치어 미세주사 자동화 플랫폼",
+                        fullTitle: "비전 기반 제브라피쉬 수정란·치어 미세주사 자동화 플랫폼",
                         category: "로보틱 미세주사",
-                        summary: "제브라피쉬 에그와 치어 실험을 위해 시각 타겟팅, 스테이지 이동, 니들 구동, 시약 주입, 후속 분석을 연결한 미세주사 자동화 워크플로입니다.",
+                        summary: "제브라피쉬 수정란과 치어 실험을 위해 시각 타겟팅, 스테이지 이동, 니들 구동, 시약 주입, 후속 분석을 연결한 미세주사 자동화 워크플로입니다.",
                         stack: ["컴퓨터 비전", "모션 제어", "미세주사", "액추에이터 제어", "형광 분석"],
-                        outcome: "정밀한 에그·치어 주사 과정을 캘리브레이션, 타겟 계산, 니들 삽입, 시약 주입, 형광 지표 분석까지 포함한 시스템으로 정리했습니다.",
+                        outcome: "정밀한 수정란·치어 주사 과정을 캘리브레이션, 타겟 계산, 니들 삽입, 시약 주입, 형광 지표 분석까지 포함한 시스템으로 정리했습니다.",
                         workflow: [
                             "현미경 카메라, 스테이지 좌표계, 니들 프리셋 위치를 캘리브레이션합니다.",
-                            "아가로스 플레이트를 순회하며 에그 또는 치어를 감지하고 주사 지점을 계산합니다.",
+                            "아가로스 플레이트를 순회하며 수정란 또는 치어를 감지하고 주사 지점을 계산합니다.",
                             "타겟으로 이동한 뒤 액추에이터로 니들을 삽입하고, 마이크로펌프로 시약을 주입한 뒤 니들을 후퇴시킵니다.",
                             "실험 출력을 기록하고, 후속 이미징이 있는 경우 형광 기반 지표를 계산합니다."
                         ],
                         engineeringRole: [
                             "현미경-카메라 정렬, 니들 프리셋, XY/XYZ 스테이지 이동을 포함한 캘리브레이션 및 타겟팅 흐름을 구축했습니다.",
-                            "니들 삽입 전 에그 또는 치어 위치를 찾기 위한 경량 감지 모델을 구현했습니다.",
-                            "주사 실행과 후속 형광 정량 소프트웨어를 연결해 xenograft 계열 실험 판독을 지원했습니다."
+                            "니들 삽입 전 수정란 또는 치어 위치를 찾기 위한 경량 감지 모델을 구현했습니다.",
+                            "주사 실행과 후속 형광 정량 소프트웨어를 연결해 이종이식(xenograft) 실험의 판독을 지원했습니다."
                         ],
                         tags: ["컴퓨터 비전", "모션 제어", "미세주사", "액추에이터 제어", "형광 분석"],
                         hrefLabel: "관련 논문",
                         evidenceNote: "선별된 논문은 공개되어 있으며, 추가 플랫폼 세부 사항은 대외비입니다.",
-                        artifactLabel: "artifact: microinjection-preview.webp"
+                        artifactCaption: "논문 Fig 6 · A 표적 인식 → B 주사 위치로 이동 → C 심낭강 도달 → D 시약 주입",
+                        artifactAlt: "제브라피쉬 치어 현미경 사진 네 장: 주사 지점 표시, 니들 접근, 심낭강 안의 니들, 파란 시약 주입"
+                    }
+                }
+            },
+            {
+                id: "toxicity-evaluation-automation",
+                runId: "run_001_toxicity_eval",
+                command: "agent run assay.toxicity --plate 96well --mode autofocus+classify",
+                status: "completed",
+                artifactImage: "/images/zeFET.webp",
+                artifactWidth: 1100,
+                artifactHeight: 734,
+                i18n: {
+                    en: {
+                        statusLabel: "completed",
+                        title: "Toxicity Evaluation Automation",
+                        fullTitle: "Automated Zebrafish Larva Toxicity Evaluation Platform",
+                        category: "Assay Automation",
+                        summary: "A microscope automation workflow for 96-well toxicity evaluation, combining plate navigation, autofocus, larva detection, condition classification, and result logging.",
+                        stack: ["Computer Vision", "Microscope Automation", "XY/Z Stage", "96-well Plate", "Lightweight ML"],
+                        outcome: "Converted manual toxicity inspection into a repeatable run loop with image capture, AI classification, and structured result records.",
+                        workflow: [
+                            "Traverse a 96-well plate with XY stage control.",
+                            "Autofocus each well with Z stage control.",
+                            "Detect zebrafish larvae from 1x images using a lightweight neural network.",
+                            "Move to the detected point, acquire detailed 4x imagery, classify condition, and log raw images with evaluation results."
+                        ],
+                        engineeringRole: [
+                            "Customized the microscope control workflow around stage movement, autofocus, detection, zoomed capture, and assay logging.",
+                            "Designed lightweight neural network logic for larva detection and condition classification under constrained imaging hardware.",
+                            "Integrated hardware movement, AI inference, and data recording into one operator-facing execution flow."
+                        ],
+                        tags: ["Computer Vision", "Microscope Automation", "96-well Plate", "Lightweight ML", "Toxicology"],
+                        evidenceNote: "Public assets and detailed metrics are omitted because the production system is proprietary.",
+                        artifactCaption: "Mockup · hardware layout and inspection flow",
+                        artifactAlt: "Mockup of the inspection setup, a microscope with motorized stages and a monitor, with four orthographic views and the inspection flow"
+                    },
+                    ko: {
+                        statusLabel: "완료",
+                        title: "독성 평가 자동화",
+                        fullTitle: "제브라피쉬 치어 독성 평가 자동화 플랫폼",
+                        category: "평가 자동화",
+                        summary: "96웰 독성 평가를 위해 플레이트 순회, 오토포커스, 치어 감지, 상태 분류, 결과 기록을 하나의 현미경 자동화 워크플로로 연결했습니다.",
+                        stack: ["컴퓨터 비전", "현미경 자동화", "XY/Z 스테이지", "96웰 플레이트", "경량 ML"],
+                        outcome: "수동 독성 평가 과정을 이미지 획득, AI 분류, 구조화된 결과 기록이 가능한 반복 실행 루프로 전환했습니다.",
+                        workflow: [
+                            "XY 스테이지로 96웰 플레이트를 순회합니다.",
+                            "각 웰에서 Z 스테이지 기반 오토포커스를 수행합니다.",
+                            "1x 영상에서 경량 신경망으로 제브라피쉬 치어를 감지합니다.",
+                            "감지 지점으로 이동해 4x 세부 영상을 획득하고, 상태를 분류한 뒤 원본 이미지와 평가 결과를 기록합니다."
+                        ],
+                        engineeringRole: [
+                            "스테이지 이동, 오토포커스, 감지, 확대 촬영, 평가 기록을 포함한 현미경 제어 워크플로를 구성했습니다.",
+                            "제한된 이미징 환경에서 동작하는 치어 감지 및 상태 분류용 경량 신경망 로직을 설계했습니다.",
+                            "하드웨어 이동, AI 추론, 데이터 기록을 하나의 실험 실행 흐름으로 통합했습니다."
+                        ],
+                        tags: ["컴퓨터 비전", "현미경 자동화", "96웰 플레이트", "경량 ML", "독성 평가"],
+                        evidenceNote: "운영 시스템은 대외비이므로 공개 자료와 세부 수치는 생략했습니다.",
+                        artifactCaption: "목업 · 장비 구성과 검사 흐름",
+                        artifactAlt: "전동 스테이지를 단 현미경과 모니터로 구성된 검사 장비 목업, 네 방향 도면, 검사 흐름도"
                     }
                 }
             },
@@ -1574,10 +1563,10 @@
                 id: "behavior-feeding-analytics",
                 runId: "run_003_behavior_flir",
                 command: "agent run video.analytics --source wellplate --track yolo --metrics behavior+feeding",
-                status: "published",
+                status: "completed",
                 i18n: {
                     en: {
-                        statusLabel: "completed / proprietary",
+                        statusLabel: "completed",
                         title: "Behavior & Feeding Analytics",
                         fullTitle: "Zebrafish Larva Behavior Tracking and FL/IR Feeding Analytics",
                         category: "Video Analytics",
@@ -1599,7 +1588,7 @@
                         evidenceNote: "Public assets and detailed metrics are omitted because the production system is proprietary."
                     },
                     ko: {
-                        statusLabel: "완료 / 대외비",
+                        statusLabel: "완료",
                         title: "행동·섭식 분석",
                         fullTitle: "제브라피쉬 치어 행동 추적 및 FL/IR 섭식 분석 시스템",
                         category: "영상 분석",
@@ -1632,11 +1621,11 @@
                 artifactHeight: 734,
                 i18n: {
                     en: {
-                        statusLabel: "in-progress / proprietary",
+                        statusLabel: "in progress",
                         title: "Robotic 3D Imaging",
                         fullTitle: "Robot-Arm Microfluidic Zebrafish 3D Imaging Platform",
                         category: "Robotic Imaging",
-                        summary: "A scale-up automation concept that combines robot-arm handling, visual alignment, microfluidic transfer, rotational capillary imaging, and volumetric fluorescence analysis.",
+                        summary: "A scale-up automation platform that combines robot-arm handling, visual alignment, microfluidic transfer, rotational capillary imaging, and volumetric fluorescence analysis.",
                         stack: ["Robot Arm", "Microfluidics", "3D Imaging", "Syringe Pump", "Fluorescence Volume"],
                         outcome: "Combined robot-arm sample handling, microfluidic transport, capillary rotation, and image-derived 3D fluorescence volume indicators.",
                         workflow: [
@@ -1652,38 +1641,43 @@
                         ],
                         tags: ["Robot Arm", "Microfluidics", "3D Imaging", "Syringe Pump", "Fluorescence Volume"],
                         evidenceNote: "Public assets and detailed metrics are omitted because the scale-up system is proprietary.",
-                        artifactLabel: "artifact: robotic_3d_imaging.webp"
+                        artifactCaption: "Concept diagram · robot-arm station, inspection flow, and an example vision UI",
+                        artifactAlt: "Render of a cabinet station with a six-axis robot arm, with sample handling and imaging examples, the automated inspection flow, and the vision UI"
                     },
                     ko: {
-                        statusLabel: "진행 중 / 대외비",
+                        statusLabel: "진행 중",
                         title: "로보틱 3D 이미징",
                         fullTitle: "로봇암·미세유체 기반 제브라피쉬 3D 이미징 플랫폼",
                         category: "로보틱 이미징",
-                        summary: "로봇암 핸들링, 시각 정렬, 미세유체 샘플 이송, 회전 캐피러리 이미징, 3D 형광 볼륨 분석을 결합한 스케일업 자동화 플랫폼입니다.",
+                        summary: "로봇암 핸들링, 시각 정렬, 미세유체 샘플 이송, 회전 캐필러리 이미징, 3D 형광 볼륨 분석을 결합한 스케일업 자동화 플랫폼입니다.",
                         stack: ["로봇암", "미세유체", "3D 이미징", "시린지펌프", "형광 볼륨"],
-                        outcome: "로봇암 샘플 핸들링, 미세유체 이송, 캐피러리 회전 촬영, 이미지 기반 3D 형광 볼륨 지표를 하나의 흐름으로 연결했습니다.",
+                        outcome: "로봇암 샘플 핸들링, 미세유체 이송, 캐필러리 회전 촬영, 이미지 기반 3D 형광 볼륨 지표를 하나의 흐름으로 연결했습니다.",
                         workflow: [
                             "카메라와 피펫팅이 결합된 로봇암 EoAT로 높은 Z축 위치에서 웰플레이트를 스캔합니다.",
                             "웰에 접근한 뒤 YOLO 계열 추론으로 치어를 감지하고 피펫 경로와 정렬합니다.",
-                            "시린지펌프 제어로 치어를 흡입하고 피펫 튜브를 통해 캐피러리로 샘플을 이송합니다.",
-                            "캐피러리를 회전시키며 명시야·형광 영상을 촬영하고 3D 형광 볼륨 지표를 계산한 뒤 다음 웰로 이동합니다."
+                            "시린지펌프 제어로 치어를 흡입하고 피펫 튜브를 통해 캐필러리로 샘플을 이송합니다.",
+                            "캐필러리를 회전시키며 명시야·형광 영상을 촬영하고 3D 형광 볼륨 지표를 계산한 뒤 다음 웰로 이동합니다."
                         ],
                         engineeringRole: [
                             "스캔, 접근, 감지, 정렬, 흡입, 이미징, 배출까지 이어지는 로봇암 EoAT 워크플로를 설계했습니다.",
-                            "시린지펌프 흡입, 캐피러리 이송, 회전 이미징, 역방향 배출을 통합했습니다.",
+                            "시린지펌프 흡입, 캐필러리 이송, 회전 이미징, 역방향 배출을 통합했습니다.",
                             "촬영 시퀀스에서 형광 볼륨 지표를 재구성하는 분석 소프트웨어를 개발했습니다."
                         ],
                         tags: ["로봇암", "미세유체", "3D 이미징", "시린지펌프", "형광 볼륨"],
                         evidenceNote: "스케일업 시스템은 대외비이므로 공개 자료와 세부 수치는 생략했습니다.",
-                        artifactLabel: "artifact: robotic_3d_imaging.webp"
+                        artifactCaption: "개념도 · 로봇암 스테이션, 자동 검사 흐름, 비전 UI 예시",
+                        artifactAlt: "6축 로봇암이 든 캐비닛형 장비 렌더와 시료 핸들링·이미지 획득 예시, 자동 검사 흐름, 비전 UI 화면"
                     }
                 }
             }
         ];
 
         const galleryGrid = document.getElementById("galleryGrid");
-        const pageMain = document.querySelector("main.page");
         const modal = document.getElementById("projectModal");
+        // Everything behind the dialog: the skip link, the page, and the footer.
+        const pageBehindModal = [...document.body.children].filter(
+            (element) => element !== modal && element.tagName !== "SCRIPT"
+        );
         const modalContent = document.getElementById("modalContent");
         const modalClose = document.getElementById("modalClose");
         const languageToggles = [
@@ -1704,6 +1698,13 @@
                 .replace(/'/g, "&#39;");
         }
 
+        function commandHtml(command) {
+            return command
+                .split(" ")
+                .map((word) => `<span class="command-word">${escapeHtml(word)}</span>`)
+                .join(" ");
+        }
+
         function getCopy() {
             return copy[currentLang] || copy.en;
         }
@@ -1720,7 +1721,8 @@
         }
 
         function statusClass(project) {
-            return project.status === "in-progress" ? "status-badge is-progress" : "status-badge";
+            const modifier = { "in-progress": "is-progress", paper: "is-paper" }[project.status];
+            return modifier ? `status-badge ${modifier}` : "status-badge";
         }
 
         function updateLanguageToggle(link) {
@@ -1749,13 +1751,13 @@
 
         function renderStaticCopy() {
             const ui = getCopy();
+            // A project with a link (href) is one with a published paper.
+            const paperCount = projectData.filter((project) => project.href).length;
             document.documentElement.lang = currentLang;
             document.documentElement.dataset.theme = currentTheme;
             document.title = ui.documentTitle;
             document.getElementById("crumbs")?.setAttribute("aria-label", ui.crumbsAria);
             document.getElementById("promptLine")?.setAttribute("aria-label", ui.promptAria);
-            document.getElementById("introOutput")?.setAttribute("aria-label", ui.introOutputAria);
-            document.getElementById("portfolioStatus")?.setAttribute("aria-label", ui.portfolioStatusAria);
             modalClose.setAttribute("aria-label", ui.modalCloseAria);
 
             const introByline = document.getElementById("introByline");
@@ -1763,48 +1765,62 @@
                 introByline.innerHTML = `Hugh Q Lee<br>${escapeHtml(ui.profileRole)}`;
             }
 
-            setText("introKeyDomain", ui.introKeys.domain);
-            setText("introKeyExperience", ui.introKeys.experience);
-            setText("introValueDomain", ui.introValues.domain);
-            setText("introValueExperience", ui.introValues.experience);
-            setText("statusPanelLabel", ui.status.panel);
-            setText("statusPortfolioLabel", ui.status.portfolio);
-            setText("statusPortfolioValue", ui.status.ready);
-            setText("statusSelectedLabel", ui.status.selectedRuns);
-            setText("statusStackLabel", ui.status.primaryStack);
-            setText("statusStackValue", ui.status.stackValue);
-            setText("statusModeLabel", ui.status.publicMode);
-            setText("statusModeValue", ui.status.publicModeValue);
+            setText("skipLink", ui.skipLink);
+            setText("introLead", ui.introLead);
+            setText("introMeta", ui.introMeta
+                .replace("{count}", String(projectData.length))
+                .replace("{papers}", String(paperCount)));
+            setText("introNote", ui.introNote);
             setText("selected-work-title", ui.selectedWorkTitle);
-            setText("statusSelectedValue", String(projectData.length));
-            setText("selectedWorkDescription", ui.selectedWorkDescription.replace("{count}", String(projectData.length)));
             languageToggles.forEach(updateLanguageToggle);
             themeToggles.forEach(updateThemeToggle);
         }
 
         function createArtifact(project, context) {
-            if (!project.artifactImage) {
-                return "";
-            }
-
             const ui = getCopy();
             const text = getProjectText(project);
+
+            if (!project.artifactImage) {
+                // No public picture: the card shows the run's workflow in its place. The report
+                // lists the same steps already, so it shows nothing here.
+                return context === "card" ? `
+                    <div class="artifact-log">
+                        <p class="artifact-log-head">
+                            <span>${escapeHtml(ui.cardLabels.workflow)}</span>
+                            <span>${escapeHtml(ui.cardLabels.noImage)}</span>
+                        </p>
+                        <ol>
+                            ${text.workflow.map((item, itemIndex) => `
+                                <li>
+                                    <span class="log-prefix">${String(itemIndex + 1).padStart(2, "0")}</span>
+                                    <span>${escapeHtml(item)}</span>
+                                </li>
+                            `).join("")}
+                        </ol>
+                    </div>
+                ` : "";
+            }
+
             const className = context === "report" ? "report-artifact" : "artifact-preview";
+            const credit = project.artifactCredit;
+            const creditHtml = credit ? `
+                <span class="artifact-credit">
+                    <a href="${escapeHtml(credit.href)}" target="_blank" rel="noreferrer">${escapeHtml(credit.text)}</a>
+                    · <a href="${escapeHtml(credit.licenseHref)}" target="_blank" rel="license noreferrer">${escapeHtml(credit.license)}</a>
+                </span>
+            ` : "";
 
             return `
-                <div class="${className}">
-                    <div class="artifact-label">
-                        <span>${escapeHtml(text.artifactLabel || "artifact")}</span>
-                        <span>${escapeHtml(ui.artifactPreview)}</span>
-                    </div>
+                <figure class="${className}">
                     <img
                         src="${escapeHtml(project.artifactImage)}"
-                        alt="${escapeHtml(`${text.title} ${ui.artifactAltSuffix}`)}"
+                        alt="${escapeHtml(text.artifactAlt)}"
                         width="${project.artifactWidth}"
                         height="${project.artifactHeight}"
                         loading="lazy"
                         decoding="async">
-                </div>
+                    <figcaption>${escapeHtml(text.artifactCaption)}${creditHtml}</figcaption>
+                </figure>
             `;
         }
 
@@ -1817,7 +1833,9 @@
             // No role="button" here: ARIA makes a button's children presentational, which
             // would hide the whole card body from assistive tech. The card stays a plain
             // article and the real <button> below carries the action.
-            card.className = hasRevealed ? "run-card is-static" : "run-card";
+            card.className = ["run-card", project.featured && "is-featured", hasRevealed && "is-static"]
+                .filter(Boolean)
+                .join(" ");
             card.setAttribute("data-project-id", project.id);
             card.setAttribute("aria-labelledby", titleId);
 
@@ -1825,44 +1843,39 @@
                 card.style.animationDelay = `${index * 80}ms`;
             }
 
+            // The run's command and workflow are in the report; the card keeps what it is,
+            // what it led to, and its stack.
             card.innerHTML = `
                 <div class="run-card-header">
                     <span class="run-id">${escapeHtml(project.runId)}</span>
                     <span class="${statusClass(project)}">${escapeHtml(text.statusLabel)}</span>
                 </div>
-                <div class="run-card-body">
-                    <span class="run-command"><span class="prompt">&gt;</span> ${escapeHtml(project.command)}</span>
-                    <h3 id="${escapeHtml(titleId)}">${escapeHtml(text.title)}</h3>
+                <div class="run-card-main">
+                    <div class="run-card-head">
+                        <p class="run-category">${escapeHtml(text.category)}</p>
+                        <h3 id="${escapeHtml(titleId)}">${escapeHtml(text.title)}</h3>
+                    </div>
                     ${createArtifact(project, "card")}
-                    <span class="run-summary">
-                        <span class="summary-row">
-                            <span>${escapeHtml(ui.summaryLabels.system)}</span>
-                            <strong>${escapeHtml(text.category)}</strong>
-                        </span>
-                        <span class="summary-row">
-                            <span>${escapeHtml(ui.summaryLabels.stack)}</span>
-                            <strong>${escapeHtml(text.stack.slice(0, 3).join(" / "))}</strong>
-                        </span>
-                        <span class="summary-row">
-                            <span>${escapeHtml(ui.summaryLabels.outcome)}</span>
-                            <strong>${escapeHtml(text.outcome)}</strong>
-                        </span>
-                    </span>
-                    <ul class="log-preview">
-                        ${text.workflow.slice(0, 3).map((item, itemIndex) => `
-                            <li>
-                                <span class="log-prefix">log_${String(itemIndex + 1).padStart(2, "0")}</span>
-                                <span>${escapeHtml(item)}</span>
-                            </li>
-                        `).join("")}
-                    </ul>
-                    <button class="open-report" type="button" aria-label="${escapeHtml(`${text.title} ${ui.cardAriaSuffix}`)}">${escapeHtml(ui.openReport)}</button>
+                    <div class="run-card-body">
+                        <p class="run-summary">${escapeHtml(text.summary)}</p>
+                        <p class="run-outcome"><span class="run-outcome-label">${escapeHtml(ui.cardLabels.outcome)}</span> ${escapeHtml(text.outcome)}</p>
+                        <ul class="run-tags" aria-label="${escapeHtml(ui.modalLabels.stack)}">
+                            ${text.stack.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+                        </ul>
+                        <button class="open-report" type="button" aria-label="${escapeHtml(`${text.title} ${ui.cardAriaSuffix}`)}">${escapeHtml(ui.openReport)}</button>
+                    </div>
                 </div>
             `;
 
             // One handler covers both paths: pointer clicks anywhere on the card, and
             // keyboard activation of the inner button (which dispatches a bubbling click).
-            card.addEventListener("click", () => openModal(project.id));
+            // A click on a link (the picture's credit) only follows the link.
+            card.addEventListener("click", (event) => {
+                if (event.target instanceof Element && event.target.closest("a")) {
+                    return;
+                }
+                openModal(project.id);
+            });
             return card;
         }
 
@@ -1927,7 +1940,7 @@
                     <div class="report-stack">
                         <div class="report-panel">
                             <h4>${escapeHtml(ui.modalLabels.command)}</h4>
-                            <pre class="command-block"><span class="prompt">&gt;</span> ${escapeHtml(project.command)}
+                            <pre class="command-block"><span class="prompt">&gt;</span> ${commandHtml(project.command)}
 ${escapeHtml(ui.statusLineLabel)}: ${escapeHtml(text.statusLabel)}
 ${escapeHtml(ui.outcomeLineLabel)}: ${escapeHtml(text.outcome)}</pre>
                         </div>
@@ -1986,9 +1999,7 @@ ${escapeHtml(ui.outcomeLineLabel)}: ${escapeHtml(text.outcome)}</pre>
             document.body.classList.add("modal-open");
             // The Tab trap only holds keyboard focus; inert also keeps a screen reader's
             // virtual cursor from wandering into the page behind the dialog.
-            if (pageMain) {
-                pageMain.setAttribute("inert", "");
-            }
+            pageBehindModal.forEach((element) => element.setAttribute("inert", ""));
             modalClose.focus();
         }
 
@@ -1997,9 +2008,7 @@ ${escapeHtml(ui.outcomeLineLabel)}: ${escapeHtml(text.outcome)}</pre>
             modal.setAttribute("aria-hidden", "true");
             document.body.classList.remove("modal-open");
             // Must come before focus(): an element inside an inert subtree cannot take focus.
-            if (pageMain) {
-                pageMain.removeAttribute("inert");
-            }
+            pageBehindModal.forEach((element) => element.removeAttribute("inert"));
             modalContent.innerHTML = "";
             activeProjectId = null;
             languageToggles.forEach(updateLanguageToggle);

@@ -1,17 +1,21 @@
 {
  "note": "Written by _scripts/build_en.py: the Korean and English text of the last build. Do not edit.",
  "text": {
-  "copy.artifactAltSuffix": [
-   "아티팩트 미리보기",
-   "artifact preview"
-  ],
-  "copy.artifactPreview": [
-   "미리보기",
-   "preview"
-  ],
   "copy.cardAriaSuffix": [
    "실행 리포트",
    "run report"
+  ],
+  "copy.cardLabels.noImage": [
+   "공개 이미지 없음",
+   "no public image"
+  ],
+  "copy.cardLabels.outcome": [
+   "결과",
+   "outcome"
+  ],
+  "copy.cardLabels.workflow": [
+   "워크플로",
+   "workflow"
   ],
   "copy.crumbsAria": [
    "위치",
@@ -21,25 +25,17 @@
    "Projects | Hugh Q Lee",
    "Projects | Hugh Q Lee"
   ],
-  "copy.introKeys.domain": [
-   "도메인",
-   "domain"
+  "copy.introLead": [
+   "제브라피쉬 이미징, 미세주사, 행동 분석, 현미경 자동화를 위해 만든 컴퓨터 비전·로보틱스 시스템입니다.",
+   "Computer vision and robotics systems built for zebrafish imaging, microinjection, behavior analytics, and microscopy automation."
   ],
-  "copy.introKeys.experience": [
-   "경력",
-   "experience"
+  "copy.introMeta": [
+   "프로젝트 {count} · 논문 {papers} · Zefit 2021-현재",
+   "projects {count} · papers {papers} · Zefit 2021-present"
   ],
-  "copy.introOutputAria": [
-   "프로젝트 개요",
-   "Projects overview"
-  ],
-  "copy.introValues.domain": [
-   "제브라피쉬 이미징, 미세주사, 행동 분석, 현미경 자동화.",
-   "Zebrafish imaging, microinjection, behavior analytics, microscopy automation."
-  ],
-  "copy.introValues.experience": [
-   "Zefit 랩 자동화 AI 엔지니어, 2021-현재.",
-   "AI Engineer for Lab Automation at Zefit, 2021-Present."
+  "copy.introNote": [
+   "운영 시스템은 대외비입니다. 이 페이지에는 발표된 논문과 공개해도 되는 자료만 담았습니다.",
+   "The production systems are proprietary; this page holds only the published paper and material cleared for release."
   ],
   "copy.languageToggleAria": [
    "언어를 영어로 전환",
@@ -77,10 +73,6 @@
    "결과",
    "outcome"
   ],
-  "copy.portfolioStatusAria": [
-   "포트폴리오 상태",
-   "Portfolio status"
-  ],
   "copy.profileRole": [
    "비전 AI 프로덕트 엔지니어",
    "Vision AI Product Engineer"
@@ -93,61 +85,17 @@
    "실행_리포트",
    "run_report"
   ],
-  "copy.selectedWorkDescription": [
-   "제브라피쉬 평가 자동화, 이미징, 분석을 위한 {count}개의 응용 AI 시스템.",
-   "{count} applied AI systems for zebrafish assay automation, imaging, and analysis."
-  ],
   "copy.selectedWorkTitle": [
-   "> 선택된 실행 목록",
+   "> 주요 프로젝트",
    "> list selected_runs"
   ],
-  "copy.status.panel": [
-   "현재 프로세스",
-   "current process"
-  ],
-  "copy.status.portfolio": [
-   "포트폴리오",
-   "portfolio"
-  ],
-  "copy.status.primaryStack": [
-   "핵심 스택",
-   "primary_stack"
-  ],
-  "copy.status.publicMode": [
-   "공개 모드",
-   "public_mode"
-  ],
-  "copy.status.publicModeValue": [
-   "대외비 보호",
-   "proprietary-safe"
-  ],
-  "copy.status.ready": [
-   "준비됨",
-   "ready"
-  ],
-  "copy.status.selectedRuns": [
-   "선택된 실행",
-   "selected_runs"
-  ],
-  "copy.status.stackValue": [
-   "비전 + 로보틱스",
-   "vision + robotics"
+  "copy.skipLink": [
+   "본문으로 건너뛰기",
+   "Skip to content"
   ],
   "copy.statusLineLabel": [
    "상태",
    "status"
-  ],
-  "copy.summaryLabels.outcome": [
-   "결과",
-   "outcome"
-  ],
-  "copy.summaryLabels.stack": [
-   "스택",
-   "stack"
-  ],
-  "copy.summaryLabels.system": [
-   "시스템",
-   "system"
   ],
   "copy.themeLabels.dark": [
    "다크",
@@ -206,8 +154,8 @@
    "[\"YOLO\", \"Multi-object Tracking\", \"Behavior Metrics\", \"FL/IR Imaging\", \"Well Plate\"]"
   ],
   "projectData.behavior-feeding-analytics.statusLabel": [
-   "완료 / 대외비",
-   "completed / proprietary"
+   "완료",
+   "completed"
   ],
   "projectData.behavior-feeding-analytics.summary": [
    "웰플레이트 기반 실험 영상을 궤적, 행동 지표, 형광 기반 섭식·소화 지표로 변환하는 분석 시스템입니다.",
@@ -225,16 +173,20 @@
    "[\"녹화된 웰플레이트 영상에 YOLO 기반 추론을 수행합니다.\", \"프레임 간 감지 지점을 연결해 웰 단위 추적을 완성합니다.\", \"좌표 기반으로 레드볼 회피, 가장자리 배회 등 영역 지표를 추출합니다.\", \"속도 기반 bout, burst 같은 행동 이벤트를 추출하고, 형광 신호를 이용한 섭식·소화 분석으로 확장합니다.\"]",
    "[\"Run YOLO-based inference over recorded well-plate videos.\", \"Link detections frame-to-frame into well-aware tracks.\", \"Extract region metrics such as red-ball avoidance and edge preference.\", \"Extract speed-based behavior events such as bout and burst movement, then extend analysis to fluorescence feeding and digestion signals.\"]"
   ],
-  "projectData.microinjection-platform.artifactLabel": [
-   "artifact: microinjection-preview.webp",
-   "artifact: microinjection-preview.webp"
+  "projectData.microinjection-platform.artifactAlt": [
+   "제브라피쉬 치어 현미경 사진 네 장: 주사 지점 표시, 니들 접근, 심낭강 안의 니들, 파란 시약 주입",
+   "Four micrographs of a zebrafish larva: the injection point marked, the needle approaching, the needle inside the pericardial space, and blue reagent injected"
+  ],
+  "projectData.microinjection-platform.artifactCaption": [
+   "논문 Fig 6 · A 표적 인식 → B 주사 위치로 이동 → C 심낭강 도달 → D 시약 주입",
+   "Paper Fig 6 · A target identified → B move to the injection position → C reach the pericardial space → D reagent injected"
   ],
   "projectData.microinjection-platform.category": [
    "로보틱 미세주사",
    "Robotic Microinjection"
   ],
   "projectData.microinjection-platform.engineeringRole": [
-   "[\"현미경-카메라 정렬, 니들 프리셋, XY/XYZ 스테이지 이동을 포함한 캘리브레이션 및 타겟팅 흐름을 구축했습니다.\", \"니들 삽입 전 에그 또는 치어 위치를 찾기 위한 경량 감지 모델을 구현했습니다.\", \"주사 실행과 후속 형광 정량 소프트웨어를 연결해 xenograft 계열 실험 판독을 지원했습니다.\"]",
+   "[\"현미경-카메라 정렬, 니들 프리셋, XY/XYZ 스테이지 이동을 포함한 캘리브레이션 및 타겟팅 흐름을 구축했습니다.\", \"니들 삽입 전 수정란 또는 치어 위치를 찾기 위한 경량 감지 모델을 구현했습니다.\", \"주사 실행과 후속 형광 정량 소프트웨어를 연결해 이종이식(xenograft) 실험의 판독을 지원했습니다.\"]",
    "[\"Built calibration and targeting flows for microscope-camera alignment, preset needle positions, and XY/XYZ stage movement.\", \"Implemented lightweight detection models for egg or larva localization before actuator-driven needle insertion.\", \"Connected injection execution with downstream fluorescence quantification software for xenograft-style assay readouts.\"]"
   ],
   "projectData.microinjection-platform.evidenceNote": [
@@ -242,7 +194,7 @@
    "A selected publication is public; additional platform details are proprietary."
   ],
   "projectData.microinjection-platform.fullTitle": [
-   "비전 기반 제브라피쉬 에그·치어 미세주사 자동화 플랫폼",
+   "비전 기반 제브라피쉬 수정란·치어 미세주사 자동화 플랫폼",
    "Vision-Guided Zebrafish Egg and Larva Microinjection Platform"
   ],
   "projectData.microinjection-platform.hrefLabel": [
@@ -250,7 +202,7 @@
    "Related Publication"
   ],
   "projectData.microinjection-platform.outcome": [
-   "정밀한 에그·치어 주사 과정을 캘리브레이션, 타겟 계산, 니들 삽입, 시약 주입, 형광 지표 분석까지 포함한 시스템으로 정리했습니다.",
+   "정밀한 수정란·치어 주사 과정을 캘리브레이션, 타겟 계산, 니들 삽입, 시약 주입, 형광 지표 분석까지 포함한 시스템으로 정리했습니다.",
    "Systemized delicate egg and larva injection workflows into calibrated targeting, needle insertion, reagent delivery, and downstream fluorescence analysis."
   ],
   "projectData.microinjection-platform.stack": [
@@ -258,11 +210,11 @@
    "[\"Computer Vision\", \"Motion Control\", \"Microinjection\", \"Actuator Control\", \"Fluorescence Analysis\"]"
   ],
   "projectData.microinjection-platform.statusLabel": [
-   "공개 논문 / 대외비",
-   "published / proprietary"
+   "논문 공개",
+   "paper published"
   ],
   "projectData.microinjection-platform.summary": [
-   "제브라피쉬 에그와 치어 실험을 위해 시각 타겟팅, 스테이지 이동, 니들 구동, 시약 주입, 후속 분석을 연결한 미세주사 자동화 워크플로입니다.",
+   "제브라피쉬 수정란과 치어 실험을 위해 시각 타겟팅, 스테이지 이동, 니들 구동, 시약 주입, 후속 분석을 연결한 미세주사 자동화 워크플로입니다.",
    "A family of automated injection workflows for zebrafish egg and larval assays, connecting visual targeting, stage motion, needle actuation, reagent delivery, and post-run analysis."
   ],
   "projectData.microinjection-platform.tags": [
@@ -274,19 +226,23 @@
    "Microinjection Platform"
   ],
   "projectData.microinjection-platform.workflow": [
-   "[\"현미경 카메라, 스테이지 좌표계, 니들 프리셋 위치를 캘리브레이션합니다.\", \"아가로스 플레이트를 순회하며 에그 또는 치어를 감지하고 주사 지점을 계산합니다.\", \"타겟으로 이동한 뒤 액추에이터로 니들을 삽입하고, 마이크로펌프로 시약을 주입한 뒤 니들을 후퇴시킵니다.\", \"실험 출력을 기록하고, 후속 이미징이 있는 경우 형광 기반 지표를 계산합니다.\"]",
+   "[\"현미경 카메라, 스테이지 좌표계, 니들 프리셋 위치를 캘리브레이션합니다.\", \"아가로스 플레이트를 순회하며 수정란 또는 치어를 감지하고 주사 지점을 계산합니다.\", \"타겟으로 이동한 뒤 액추에이터로 니들을 삽입하고, 마이크로펌프로 시약을 주입한 뒤 니들을 후퇴시킵니다.\", \"실험 출력을 기록하고, 후속 이미징이 있는 경우 형광 기반 지표를 계산합니다.\"]",
    "[\"Calibrate microscope camera, stage coordinate system, and needle preset positions.\", \"Traverse agarose plates, detect eggs or larvae, and calculate injection targets.\", \"Move to target, insert needle with actuator control, inject reagent with micro-pump, and retract needle.\", \"Record assay outputs and compute fluorescence-derived indicators when post-run imaging is available.\"]"
   ],
-  "projectData.robotic-3d-imaging.artifactLabel": [
-   "artifact: robotic_3d_imaging.webp",
-   "artifact: robotic_3d_imaging.webp"
+  "projectData.robotic-3d-imaging.artifactAlt": [
+   "6축 로봇암이 든 캐비닛형 장비 렌더와 시료 핸들링·이미지 획득 예시, 자동 검사 흐름, 비전 UI 화면",
+   "Render of a cabinet station with a six-axis robot arm, with sample handling and imaging examples, the automated inspection flow, and the vision UI"
+  ],
+  "projectData.robotic-3d-imaging.artifactCaption": [
+   "개념도 · 로봇암 스테이션, 자동 검사 흐름, 비전 UI 예시",
+   "Concept diagram · robot-arm station, inspection flow, and an example vision UI"
   ],
   "projectData.robotic-3d-imaging.category": [
    "로보틱 이미징",
    "Robotic Imaging"
   ],
   "projectData.robotic-3d-imaging.engineeringRole": [
-   "[\"스캔, 접근, 감지, 정렬, 흡입, 이미징, 배출까지 이어지는 로봇암 EoAT 워크플로를 설계했습니다.\", \"시린지펌프 흡입, 캐피러리 이송, 회전 이미징, 역방향 배출을 통합했습니다.\", \"촬영 시퀀스에서 형광 볼륨 지표를 재구성하는 분석 소프트웨어를 개발했습니다.\"]",
+   "[\"스캔, 접근, 감지, 정렬, 흡입, 이미징, 배출까지 이어지는 로봇암 EoAT 워크플로를 설계했습니다.\", \"시린지펌프 흡입, 캐필러리 이송, 회전 이미징, 역방향 배출을 통합했습니다.\", \"촬영 시퀀스에서 형광 볼륨 지표를 재구성하는 분석 소프트웨어를 개발했습니다.\"]",
    "[\"Designed the robot-arm EoAT workflow for scan, approach, detection, alignment, aspiration, imaging, and release.\", \"Integrated syringe-pump aspiration, capillary transfer, rotational imaging, and reverse-flow sample handling.\", \"Built analysis software to reconstruct fluorescence volume indicators from captured image sequences.\"]"
   ],
   "projectData.robotic-3d-imaging.evidenceNote": [
@@ -298,7 +254,7 @@
    "Robot-Arm Microfluidic Zebrafish 3D Imaging Platform"
   ],
   "projectData.robotic-3d-imaging.outcome": [
-   "로봇암 샘플 핸들링, 미세유체 이송, 캐피러리 회전 촬영, 이미지 기반 3D 형광 볼륨 지표를 하나의 흐름으로 연결했습니다.",
+   "로봇암 샘플 핸들링, 미세유체 이송, 캐필러리 회전 촬영, 이미지 기반 3D 형광 볼륨 지표를 하나의 흐름으로 연결했습니다.",
    "Combined robot-arm sample handling, microfluidic transport, capillary rotation, and image-derived 3D fluorescence volume indicators."
   ],
   "projectData.robotic-3d-imaging.stack": [
@@ -306,12 +262,12 @@
    "[\"Robot Arm\", \"Microfluidics\", \"3D Imaging\", \"Syringe Pump\", \"Fluorescence Volume\"]"
   ],
   "projectData.robotic-3d-imaging.statusLabel": [
-   "진행 중 / 대외비",
-   "in-progress / proprietary"
+   "진행 중",
+   "in progress"
   ],
   "projectData.robotic-3d-imaging.summary": [
-   "로봇암 핸들링, 시각 정렬, 미세유체 샘플 이송, 회전 캐피러리 이미징, 3D 형광 볼륨 분석을 결합한 스케일업 자동화 플랫폼입니다.",
-   "A scale-up automation concept that combines robot-arm handling, visual alignment, microfluidic transfer, rotational capillary imaging, and volumetric fluorescence analysis."
+   "로봇암 핸들링, 시각 정렬, 미세유체 샘플 이송, 회전 캐필러리 이미징, 3D 형광 볼륨 분석을 결합한 스케일업 자동화 플랫폼입니다.",
+   "A scale-up automation platform that combines robot-arm handling, visual alignment, microfluidic transfer, rotational capillary imaging, and volumetric fluorescence analysis."
   ],
   "projectData.robotic-3d-imaging.tags": [
    "[\"로봇암\", \"미세유체\", \"3D 이미징\", \"시린지펌프\", \"형광 볼륨\"]",
@@ -322,12 +278,16 @@
    "Robotic 3D Imaging"
   ],
   "projectData.robotic-3d-imaging.workflow": [
-   "[\"카메라와 피펫팅이 결합된 로봇암 EoAT로 높은 Z축 위치에서 웰플레이트를 스캔합니다.\", \"웰에 접근한 뒤 YOLO 계열 추론으로 치어를 감지하고 피펫 경로와 정렬합니다.\", \"시린지펌프 제어로 치어를 흡입하고 피펫 튜브를 통해 캐피러리로 샘플을 이송합니다.\", \"캐피러리를 회전시키며 명시야·형광 영상을 촬영하고 3D 형광 볼륨 지표를 계산한 뒤 다음 웰로 이동합니다.\"]",
+   "[\"카메라와 피펫팅이 결합된 로봇암 EoAT로 높은 Z축 위치에서 웰플레이트를 스캔합니다.\", \"웰에 접근한 뒤 YOLO 계열 추론으로 치어를 감지하고 피펫 경로와 정렬합니다.\", \"시린지펌프 제어로 치어를 흡입하고 피펫 튜브를 통해 캐필러리로 샘플을 이송합니다.\", \"캐필러리를 회전시키며 명시야·형광 영상을 촬영하고 3D 형광 볼륨 지표를 계산한 뒤 다음 웰로 이동합니다.\"]",
    "[\"Scan well plates from a high Z position using a camera-equipped robot-arm EoAT.\", \"Approach wells, detect larvae with YOLO-style inference, and align larvae with the pipetting path.\", \"Aspirate larvae with syringe-pump control and transport samples through a pipette tube into a capillary.\", \"Rotate the capillary for bright-field and fluorescence capture, compute 3D fluorescence volume indicators, and release the larva before moving to the next well.\"]"
   ],
-  "projectData.toxicity-evaluation-automation.artifactLabel": [
-   "artifact: zeFET.webp",
-   "artifact: zeFET.webp"
+  "projectData.toxicity-evaluation-automation.artifactAlt": [
+   "전동 스테이지를 단 현미경과 모니터로 구성된 검사 장비 목업, 네 방향 도면, 검사 흐름도",
+   "Mockup of the inspection setup, a microscope with motorized stages and a monitor, with four orthographic views and the inspection flow"
+  ],
+  "projectData.toxicity-evaluation-automation.artifactCaption": [
+   "목업 · 장비 구성과 검사 흐름",
+   "Mockup · hardware layout and inspection flow"
   ],
   "projectData.toxicity-evaluation-automation.category": [
    "평가 자동화",
@@ -354,8 +314,8 @@
    "[\"Computer Vision\", \"Microscope Automation\", \"XY/Z Stage\", \"96-well Plate\", \"Lightweight ML\"]"
   ],
   "projectData.toxicity-evaluation-automation.statusLabel": [
-   "완료 / 대외비",
-   "completed / proprietary"
+   "완료",
+   "completed"
   ],
   "projectData.toxicity-evaluation-automation.summary": [
    "96웰 독성 평가를 위해 플레이트 순회, 오토포커스, 치어 감지, 상태 분류, 결과 기록을 하나의 현미경 자동화 워크플로로 연결했습니다.",
