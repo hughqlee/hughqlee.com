@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backpropagation: How the Middle Layer Learns Without an Answer | Hugh Q Lee</title>
+    <meta name="description" content="Backpropagation passes back how wrong the output is, giving every neuron of the middle layer, which has no answer, its share of the error. With one network that learns XOR, see an MLP against a single-layer perceptron, the sigmoid against the step function, and gradient descent walking down the slope.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="backpropagation, error backpropagation, multilayer perceptron, MLP, single-layer perceptron, gradient descent, learning rate, chain rule, gradient, hidden layer, XOR problem, sigmoid, step function, neural network training">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/en/error-backpropagation/">
+    <!-- 영문판(/knowledge/en/error-backpropagation/)은 System/build_en.py가 이 페이지에서 만든다. 두 판이 서로를 가리킨다. -->
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/error-backpropagation/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/error-backpropagation/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/error-backpropagation/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ko_KR">
+    <meta property="og:title" content="Backpropagation: How the Middle Layer Learns Without an Answer">
+    <meta property="og:description" content="Backpropagation passes back how wrong the output is, giving every neuron of the middle layer, which has no answer, its share of the error. With one network that learns XOR, see an MLP against a single-layer perceptron, the sigmoid against the step function, and gradient descent walking down the slope.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/en/error-backpropagation/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/en/error-backpropagation/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="A multilayer perceptron with two inputs, two hidden neurons and one output. The computation goes from left to right, and the error signal δ comes back from right to left.">
+    <meta property="article:published_time" content="2026-10-19">
+    <meta property="article:modified_time" content="2026-10-19">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta property="article:tag" content="Backpropagation">
+    <meta property="article:tag" content="Multilayer perceptron">
+    <meta property="article:tag" content="Gradient descent">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Backpropagation: How the Middle Layer Learns Without an Answer">
+    <meta name="twitter:description" content="Backpropagation passes back how wrong the output is, giving every neuron of the middle layer, which has no answer, its share of the error. With one network that learns XOR, see an MLP against a single-layer perceptron, the sigmoid against the step function, and gradient descent walking down the slope.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/en/error-backpropagation/og.png">
+    <meta name="twitter:image:alt" content="A multilayer perceptron with two inputs, two hidden neurons and one output. The computation goes from left to right, and the error signal δ comes back from right to left.">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage는 빌드 스크립트가 본문 "자주 묻는 질문"에서 글자 그대로 옮긴다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/en/error-backpropagation/#article",
+          "headline": "Backpropagation: How the Middle Layer Learns Without an Answer",
+          "alternativeHeadline": "How does backpropagation teach a middle layer that has no answer?",
+          "description": "Backpropagation passes back how wrong the output is, giving every neuron of the middle layer, which has no answer, its share of the error. With one network that learns XOR, see an MLP against a single-layer perceptron, the sigmoid against the step function, and gradient descent walking down the slope.",
+          "abstract": "Pass back along the connections how wrong the output is, and even the neurons of the middle layer, which have no answer, get their own share of the error (δ). Each weight’s gradient is that share × the incoming value, and gradient descent corrects the weights a little the opposite way.",
+          "inLanguage": "en",
+          "datePublished": "2026-10-19",
+          "dateModified": "2026-10-19",
+          "url": "https://hughqlee.com/knowledge/en/error-backpropagation/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/en/error-backpropagation/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/en/error-backpropagation/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/en/#collection"
+          },
+          "isAccessibleForFree": true,
+          "about": [
+            "backpropagation",
+            "multilayer perceptron",
+            "gradient descent"
+          ],
+          "citation": [
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Rumelhart, Hinton, Williams, Learning representations by back-propagating errors (Nature 323, 1986)",
+              "url": "https://doi.org/10.1038/323533a0"
+            },
+            {
+              "@type": "Chapter",
+              "name": "Rumelhart, Hinton, Williams, Learning Internal Representations by Error Propagation (Parallel Distributed Processing Vol. 1, ch. 8, 1986)",
+              "url": "https://apps.dtic.mil/sti/pdfs/ADA164453.pdf"
+            },
+            {
+              "@type": "Book",
+              "name": "Bishop, Pattern Recognition and Machine Learning (Springer, 2006), §5.2, §5.3, §4.1.7",
+              "url": "https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Griewank, Who Invented the Reverse Mode of Differentiation? (Documenta Mathematica, Extra Volume ISMP, 2012)",
+              "url": "https://emis.muni.cz/journals/DMJDMV/vol-ismp/52_griewank-andreas-b.html"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Rosenblatt, The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain (Psychological Review 65(6), 1958)",
+              "url": "https://doi.org/10.1037/h0042519"
+            }
+          ],
+          "translationOfWork": {
+            "@id": "https://hughqlee.com/knowledge/error-backpropagation/#article"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/en/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/en/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Backpropagation: How the Middle Layer Learns Without an Answer",
+              "item": "https://hughqlee.com/knowledge/en/error-backpropagation/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/en/error-backpropagation/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is backpropagation?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A method that passes a neural network’s output error backward, from the output toward the input, with the chain rule, to get the gradient of the error for every weight at once. Hidden neurons, which have no answer, also get an error signal of their own by receiving the error signals of the neurons after them multiplied by the connection weights, and with it they get the gradients of their weights. It became widely known when Rumelhart, Hinton and Williams published it in Nature in 1986 as a way to train networks with hidden layers."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How is backpropagation different from gradient descent?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Backpropagation is the computation that gets the gradient; gradient descent moves the weights a little (by the learning rate η) in the opposite direction of that gradient. Bishop 2006 §5.3 separates the two and notes that the gradient from backpropagation can also be used by other optimization methods more powerful than gradient descent."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What does the chain rule do in backpropagation?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "It lets the effect of a weight on the error be found as a product of rates: how the weight changes the total input, how the total input changes the output, and how the output changes the error. A hidden neuron’s error signal is the sum of the error signals of the neurons after it, each times its connection weight, multiplied by the slope of its own activation function (Rumelhart, Hinton and Williams 1986, eqs. 5–7)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why does backpropagation compute backward from the output?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Because once the error signals at the output are known, those of the layer before follow from a few multiplications. One forward and one backward pass give the gradients of all the weights. Finite differences, changing the weights one at a time, need W forward computations for W weights, or 2W with central differences (Bishop 2006 §5.3.3)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why must the activation function be differentiable for backpropagation?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A step function is flat almost everywhere (its steepness is 0), so it does not say which way to change a weight to reduce the error. A differentiable function like the sigmoid σ(s) = 1 / (1 + e⁻ˢ) has a steepness σ(1 − σ) that is not 0, so the error passes backward. The original paper says any function with a bounded derivative will do (Rumelhart, Hinton and Williams 1986, eqs. 2, 5)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does backpropagation always find the answer?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. The error surface has local minima, and gradient descent can stop in one (Rumelhart, Hinton and Williams 1986). For learning XOR with two hidden neurons, PDP chapter 8 reports getting stuck twice in hundreds of runs; in this page’s computation (learning rate 0.5, starting weights from −0.3 to 0.3), 6 of 100 starting points were not solved within 30,000 sweeps."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is a multilayer perceptron (MLP)?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A neural network that stacks neurons in an input layer, one or more hidden layers and an output layer, connected only from earlier layers to later ones. Each neuron multiplies the outputs of the layer before by weights, adds them up with a bias, and puts the result into an activation function. The weights of the hidden layers learn from the gradients that backpropagation computes (Rumelhart, Hinton and Williams 1986, p. 533)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why does XOR need a hidden layer?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "One neuron splits the input plane with one straight line, and XOR must put 00 and 11 on one side and 01 and 10 on the other, so no such line exists. Hidden neurons give several lines, which can split them (PDP chapter 8 pp. 318–321). On this page, taking out the hidden layer makes the error stop at 0.50 even with the same learning rule."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --warn-soft: rgba(240, 198, 116, 0.13);
+            --danger: #ff8c8c;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            --wide: 980px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --warn-soft: rgba(150, 106, 16, 0.12);
+            --danger: #b42323;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+        .wide { width: min(var(--wide), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle, .btn {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-family: var(--mono);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover, .btn:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 8px; }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0 0 20px; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        .step { padding: 40px 0 8px; border-top: 1px solid var(--line); margin-top: 28px; }
+        .step-no { margin: 0 0 6px; color: var(--accent); font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; }
+        h2 { margin: 0 0 14px; font-size: clamp(22px, 4vw, 30px); line-height: 1.35; letter-spacing: -0.01em; }
+        h3 { margin: 28px 0 8px; font-size: 18px; line-height: 1.45; }
+        h3 .no { margin-right: 8px; color: var(--danger); font-family: var(--mono); font-size: 15px; }
+        .source { margin-top: 12px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+        .panel {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .fig-label { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+        .pb-toggles { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+        .control { display: grid; gap: 4px; }
+        .control .label { color: var(--muted); font-size: 14px; }
+        .seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+        .seg button {
+            min-height: 36px;
+            padding: 4px 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .seg button:hover { border-color: var(--line-strong); color: var(--text); }
+        .seg button[aria-pressed="true"] { border-color: var(--accent); color: var(--text); background: var(--accent-soft); }
+        .numbers { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 8px 0 0; font-family: var(--mono); font-size: 14px; color: var(--muted); }
+        .numbers b { color: var(--text); font-weight: 600; }
+        .formula {
+            margin: 14px 0;
+            padding: 10px 14px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+            font-family: var(--mono);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .formula p { margin: 0; }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            margin: 24px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+        .toc a { display: block; height: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); text-decoration: none; font-size: 15px; line-height: 1.5; }
+        .toc a:hover { border-color: var(--line-strong); }
+        .toc span { display: block; color: var(--accent); font-family: var(--mono); font-size: 12px; }
+
+        /* 직접 해보기: one MLP, one learning step = forward, error, backward (three steps), update */
+        .try { margin-top: 8px; }
+        .toc-nav { padding-top: 4px; }
+        .scene-text { min-height: 3.4em; margin: 12px 0 0; }
+        /* the panel: the slider stays on top while the figures scroll under it, and the network, the slope plot and the
+           calculation sit together (three columns on wide screens, two on tablets, one on phones) */
+        .pb-bar { position: sticky; top: 0; z-index: 3; margin: 12px -16px 0; padding: 8px 16px 6px; background: var(--panel); border-bottom: 1px solid var(--line); }
+        .pb-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px 20px; margin-top: 12px;
+            grid-template-areas: "net" "slope" "calc" "verdict" "status" "controls" "plane" "chart"; }
+        .panel .pb-grid > * { min-width: 0; margin: 0; }
+        .pb-cell-net { grid-area: net; }
+        .pb-cell-slope { grid-area: slope; }
+        .pb-cell-plane { grid-area: plane; }
+        .pb-cell-chart { grid-area: chart; align-self: start; }
+        #pb-calc { grid-area: calc; }
+        #pb-verdict { grid-area: verdict; }
+        #pb-status { grid-area: status; }
+        .pb-grid .pb-controls { grid-area: controls; }
+        @media (min-width: 640px) {
+            .pb-grid { grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-areas: "net slope" "calc calc" "verdict verdict" "status controls" "plane chart"; }
+        }
+        @media (min-width: 960px) {
+            .pb-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(0, 0.9fr);
+                grid-template-areas: "net slope plane" "calc calc chart" "verdict verdict chart" "status status chart" "controls controls chart"; }
+        }
+        svg.pb-net, svg.pb-plane { display: block; width: 100%; height: auto; overflow: visible; }
+        .pb-node circle { fill: var(--panel-strong); stroke: var(--line-strong); stroke-width: 1.5; }
+        .pb-node.active circle { stroke: var(--accent); stroke-width: 2.5; }
+        .pb-node.active-back circle { stroke: var(--danger); stroke-width: 2.5; }
+        .pb-node .v { fill: var(--text); font-family: var(--mono); font-size: 13px; }
+        .pb-node .n { fill: var(--muted); font-family: var(--sans); font-size: 13px; }
+        .pb-node .b { fill: var(--faint); font-family: var(--mono); font-size: 11px; }
+        .pb-node .dl { fill: var(--danger); font-family: var(--mono); font-size: 11.5px; font-weight: 600; }
+        .pb-node .b { cursor: pointer; }
+        .pb-node .b.picked { fill: var(--text); text-decoration: underline; }
+        .pb-edge line { stroke-linecap: round; }
+        .pb-edge.pos line.w { stroke: var(--accent); }
+        .pb-edge.neg line.w { stroke: var(--accent-warn); }
+        .pb-edge.back line.w { stroke-dasharray: 6 5; }
+        .pb-edge line.halo { stroke: var(--text); stroke-opacity: 0.28; }
+        .pb-edge line.hit { stroke: transparent; stroke-width: 18; cursor: pointer; }
+        .pb-edge text { fill: var(--muted); font-family: var(--mono); font-size: 11.5px; paint-order: stroke; stroke: var(--panel); stroke-width: 4px; stroke-linejoin: round; pointer-events: none; }
+        .pb-edge text.grad { fill: var(--danger); font-weight: 600; }
+        .pb-edge.changed text { fill: var(--text); font-weight: 700; }
+        .pb-edge.picked text { fill: var(--text); text-decoration: underline; }
+        .pb-flow { fill: var(--faint); font-family: var(--sans); font-size: 11.5px; }
+        .pb-flow.back { fill: var(--danger); font-weight: 600; }
+        .pb-plane .cell { fill: var(--accent); }
+        .pb-plane .frame { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+        .pb-plane .tick { fill: var(--faint); font-family: var(--mono); font-size: 11px; }
+        .pb-plane .main-line { stroke: var(--accent); stroke-width: 2.5; }
+        .pb-plane .h-line { stroke: var(--accent-green); stroke-width: 1.8; stroke-dasharray: 7 5; }
+        .pb-plane .h-label { fill: var(--accent-green); font-family: var(--mono); font-size: 12px; font-weight: 600; paint-order: stroke; stroke: var(--panel); stroke-width: 4px; }
+        .pb-plane .pt1 { fill: var(--accent-green); stroke: var(--panel); stroke-width: 1.5; }
+        .pb-plane .pt0 { fill: var(--panel); stroke: var(--text); stroke-width: 2; }
+        .pb-plane .wrong { fill: none; stroke: var(--danger); stroke-width: 2.5; }
+        .pb-plane .now { fill: none; stroke: var(--text); stroke-width: 1.4; stroke-dasharray: 3 3; }
+        .pb-plane .pt-label { fill: var(--text); font-family: var(--mono); font-size: 12px; paint-order: stroke; stroke: var(--panel); stroke-width: 4px; }
+        .legend { display: flex; flex-wrap: wrap; gap: 2px 12px; margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+        .legend i { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 50%; vertical-align: -1px; }
+        .legend .k1 { background: var(--accent-green); }
+        .legend .k0 { border: 2px solid var(--text); }
+        .legend .kw { border: 2px solid var(--danger); }
+        .legend .kl { width: 16px; height: 0; border-radius: 0; border-top: 2.5px solid var(--accent); vertical-align: 3px; }
+        .legend .kh { width: 16px; height: 0; border-radius: 0; border-top: 2px dashed var(--accent-green); vertical-align: 3px; }
+        .pb-stages { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; padding: 0; list-style: none; }
+        .pb-stages li { padding: 2px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 14px; }
+        .pb-stages li.on { border-color: var(--accent); background: var(--accent-soft); color: var(--text); font-weight: 600; }
+        .pb-stages li.on-back { border-color: var(--danger); color: var(--text); font-weight: 600; }
+        .pb-stages .sub { margin-left: 6px; color: var(--danger); font-family: var(--mono); font-size: 12px; }
+        .pb-calc { min-height: 8.6em; margin: 10px 0 0; padding: 10px 12px; border-left: 3px solid var(--accent); background: var(--panel-soft); font-family: var(--mono); font-size: 13.5px; line-height: 1.7; }
+        .pb-calc.back { border-left-color: var(--danger); }
+        .pb-calc p { margin: 0; }
+        .pb-calc .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 14px; }
+        .pb-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+        .pb-slider { display: grid; gap: 2px; }
+        .pb-slider label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 8px; color: var(--muted); font-size: 14px; }
+        .pb-slider output { color: var(--text); font-family: var(--mono); }
+        .pb-slider input[type="range"] { width: 100%; min-height: 40px; margin: 0; accent-color: var(--accent); }
+        .pb-scale { --fine: 40%; display: grid; grid-template-columns: repeat(4, calc(var(--fine) / 4)) minmax(0, 1fr); margin-top: -6px; color: var(--faint); font-family: var(--mono); font-size: 12px; text-align: center; }
+        .pb-scale .later { padding-left: 8px; border-left: 1px solid var(--line-strong); font-family: var(--sans); text-align: left; }
+        .pb-scale .later b { color: var(--muted); font-family: var(--mono); font-weight: 500; }
+        .pb-scale.narrow .later-words { display: none; }  /* the right part is only 30% wide on phones */
+        .pb-verdict { min-height: 3.4em; margin: 8px 0 0; padding-left: 12px; border-left: 3px solid var(--accent-green); }
+        /* the two plots: the error per sweep, and the slope along one weight (03) */
+        .pb-pick, .pb-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-height: 36px; margin: 0 0 4px; color: var(--muted); font-size: 14px; }
+        .pb-pick select { min-height: 36px; padding: 4px 8px; border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--panel); color: var(--text); font: inherit; font-family: var(--mono); font-size: 14px; }
+        svg.pb-chart, svg.pb-slope { display: block; width: 100%; height: 150px; overflow: visible; }
+        .pb-chart .axis, .pb-slope .axis { stroke: var(--line-strong); stroke-width: 1; }
+        .pb-chart .tick, .pb-slope .tick { fill: var(--faint); font-family: var(--mono); font-size: 11px; }
+        .pb-slope .tick.name { fill: var(--muted); font-size: 12px; }
+        .pb-chart .curve, .pb-slope .curve { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linejoin: round; }
+        .pb-chart .goal { stroke: var(--accent-green); stroke-width: 1; stroke-dasharray: 4 3; }
+        .pb-chart .now { stroke: var(--text); stroke-opacity: 0.35; stroke-dasharray: 2 3; }
+        .pb-chart .dot { fill: var(--accent); }
+        .pb-slope .tangent { stroke: var(--danger); stroke-width: 2.2; stroke-linecap: round; }
+        .pb-slope .step { stroke: var(--text); stroke-width: 1.8; }
+        .pb-slope .tip { fill: var(--text); }
+        .pb-slope .dot { fill: var(--text); stroke: var(--panel); stroke-width: 1.5; }
+        .pb-slope-out { min-height: 4.8em; margin: 6px 0 0; font-family: var(--mono); font-size: 13px; line-height: 1.6; }
+        .pb-slope-out span { display: block; }
+
+        /* 더 보기: formulas, the papers' numbers and history fold away so the main text stays plain */
+        .more { margin: 14px 0 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .more summary { min-height: 40px; padding: 9px 14px; color: var(--muted); font-size: 15px; cursor: pointer; }
+        .more summary:hover { color: var(--text); }
+        .more[open] summary { border-bottom: 1px solid var(--line); }
+        .more > p, .more > .formula { margin: 10px 14px; }
+        .more > :last-child { margin-bottom: 14px; }
+        .limits { margin: 0; padding-left: 1.2em; }
+        .limits li { margin: 8px 0; }
+        .steps { margin: 0; padding-left: 1.4em; }
+        .steps li { margin: 8px 0; }
+        .steps li::marker { color: var(--accent); font-family: var(--mono); }
+        .note {
+            margin-top: 16px;
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+        .tag {
+            display: inline-block;
+            margin-right: 6px;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.known { color: var(--accent-green); }
+        .tag.guess { color: var(--accent-warn); }
+        .tag.unknown { color: var(--muted); }
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        footer {
+            padding: 24px 0 48px;
+            margin-top: 40px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (max-width: 760px) {
+            .pb-calc .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 520px) {
+            .pb-calc .grid.long { grid-template-columns: 1fr; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/en/">hughqlee.com</a> / <a href="/knowledge/en/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/error-backpropagation/" hreflang="ko" lang="ko">한국어</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="wrap hero" aria-labelledby="page-title">
+            <nav class="kmap" aria-label="Knowledge map" data-current="error-backpropagation">
+                <p class="kmap-head"><span class="kmap-label">KNOWLEDGE MAP</span><span class="kmap-path">Machine learning</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">Nothing to read before or after it yet · Same field: <a href="../train-val-calib-test/">train/val/calib/test</a></p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE · MACHINE LEARNING</p>
+            <h1 id="page-title">How does backpropagation teach a middle layer that has no answer?</h1>
+            <p class="answer">Pass back along the connections how wrong the output is, and even the neurons of the middle layer, which have no answer, get their own share of the error (δ). Each weight’s gradient is that share × the incoming value, and gradient descent corrects the weights a little the opposite way.</p>
+            <p>A multilayer perceptron (MLP) is a neural network of neurons stacked in several layers. The training data holds only the inputs and the answers at the output; it says nothing about what the neurons of the middle layer (the hidden layer) should output. Backpropagation, shown by Rumelhart, Hinton and Williams in 1986, passes back how wrong the output is and so teaches this middle layer too. The small MLP in the figure below learns XOR. The inputs are the four corners 00, 01, 10 and 11, and XOR is 1 only at 01 and 10, where the two inputs differ.</p>
+            <p class="source">Sources: hidden units are given no desired state, backpropagation: Rumelhart, Hinton &amp; Williams 1986, Nature 323 p. 533</p>
+        </section>
+
+        <section id="try" class="wide try" aria-label="Try it">
+            <div class="panel">
+                <div class="pb-toggles">
+                    <div class="control">
+                        <span class="label" id="pb-shape-label">Structure</span>
+                        <div class="seg" id="pb-shape" role="group" aria-labelledby="pb-shape-label">
+                            <button type="button" data-v="mlp" aria-pressed="true">MLP (2 hidden neurons)</button>
+                            <button type="button" data-v="none" aria-pressed="false">Single-layer perceptron (no hidden layer)</button>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <span class="label" id="pb-act-label">Activation function</span>
+                        <div class="seg" id="pb-act" role="group" aria-labelledby="pb-act-label">
+                            <button type="button" data-v="sigmoid" aria-pressed="true">Sigmoid</button>
+                            <button type="button" data-v="step" aria-pressed="false">Step function</button>
+                        </div>
+                    </div>
+                </div>
+                <p class="scene-text" id="pb-scene-text">A multilayer perceptron (2 inputs → 2 hidden → 1 output) learns XOR. Seeing the four cases once each is one sweep. Drag “Learning” to follow the path the error takes back.</p>
+                <div class="pb-bar">
+                    <div class="pb-slider">
+                        <label for="pb-t"><span>Learning</span><output id="pb-t-out" for="pb-t">First sweep · case 00 · ① Forward</output></label>
+                        <input id="pb-t" type="range" min="0" max="1000" step="any" value="0" aria-valuetext="First sweep · case 00 · ① Forward">
+                        <div class="pb-scale" id="pb-scale" aria-hidden="true"><span>00</span><span>01</span><span>10</span><span>11</span><span class="later"><span class="later-words">then sweep by sweep </span>→ <b id="pb-max">2,097</b> sweeps</span></div>
+                    </div>
+                </div>
+                <ol class="pb-stages" id="pb-stages" aria-label="The four stages of learning one case">
+                    <li class="on">① Forward</li>
+                    <li>② Error</li>
+                    <li>③ Backward<span class="sub" id="pb-sub"></span></li>
+                    <li>④ Update</li>
+                </ol>
+                <div class="pb-grid" id="pb-grid">
+                    <div class="pb-cell pb-cell-net">
+                        <svg class="pb-net" id="pb-net" viewBox="0 0 340 250" role="img" aria-label="Network figure: input, hidden and output neurons and their connection weights. The computation in words is in the box below."></svg>
+                        <p class="fig-label">Circles: the value each neuron gives for the current case. Numbers on the lines: weights (blue lines +, yellow lines −). b: bias. Red numbers in ③: the shares δ and the gradients. Press a line or a b to switch the slope plot to that weight.</p>
+                    </div>
+                    <figure class="pb-cell pb-cell-slope">
+                        <div class="pb-pick"><label for="pb-pick">Weight to see the slope of</label><select id="pb-pick"><option value="0">w₁₁</option><option value="1">w₁₂</option><option value="2">b₁</option><option value="3">w₂₁</option><option value="4">w₂₂</option><option value="5">b₂</option><option value="6" selected>v₁</option><option value="7">v₂</option><option value="8">c</option></select></div>
+                        <svg class="pb-slope" id="pb-slope" role="img" aria-labelledby="pb-slope-label"></svg>
+                        <figcaption class="fig-label" id="pb-slope-label">The error of case 00, drawn while changing only v₁ (the other weights stay as they are).</figcaption>
+                        <p class="pb-slope-out" id="pb-slope-out" aria-live="polite"><span>The dot is where it stands now (v₁ = 0.0700, error 0.1321). The red line (the gradient) comes in ③-3.</span></p>
+                    </figure>
+                    <div class="pb-calc" id="pb-calc" aria-live="polite"><p>Case 00: compute from left to right (σ is the sigmoid).</p><p>h₁ = σ(0.08·0 − 0.30·0 + 0.02) = 0.505</p><p>h₂ = σ(0.29·0 + 0.28·0 − 0.13) = 0.468</p><p>y = σ(0.07·0.505 + 0.13·0.468 − 0.04) = 0.514</p></div>
+                    <p class="pb-verdict" id="pb-verdict" aria-live="polite">The left part shows the first sweep one step at a time. Drag into the right part to see what repeating the same step sweep after sweep achieves.</p>
+                    <p class="numbers" id="pb-status"><span>Error E <b>0.500</b></span><span>Right <b>2/4</b></span><span>Start <b>1</b></span></p>
+                    <div class="pb-controls">
+                        <button type="button" class="btn" id="pb-auto">Auto</button>
+                        <button type="button" class="btn" id="pb-seed">Another start</button>
+                    </div>
+                    <div class="pb-cell pb-cell-plane">
+                        <svg class="pb-plane" id="pb-plane" viewBox="0 0 268 268" role="img" aria-label="Input plane: the four corners, where the output is near 1, and the line each neuron draws"></svg>
+                        <p class="legend"><span><i class="k1"></i>Answer 1</span><span><i class="k0"></i>Answer 0</span><span><i class="kw"></i>Wrong now</span><span><i class="kl"></i>Output neuron’s line</span><span><i class="kh"></i>Hidden neurons’ lines</span></p>
+                        <p class="fig-label">The shaded area is where the output is 1 (with the sigmoid, the darker, the closer to 1).</p>
+                    </div>
+                    <figure class="pb-cell pb-cell-chart">
+                        <figcaption class="fig-label pb-head" id="pb-chart-label">Total error E of the four cases per sweep (dashed: 0.05)</figcaption>
+                        <svg class="pb-chart" id="pb-chart" role="img" aria-labelledby="pb-chart-label"></svg>
+                    </figure>
+                </div>
+            </div>
+            <p class="source" style="max-width: var(--measure);">Computation: this page does it in your browser. One sweep shows the four cases once each, in the order 00, 01, 10, 11. The weights and biases start from values drawn from −0.3 to 0.3 (starting points 1, 2, 3, …) and are corrected after every case with learning rate η = 0.5. The weights the right part of the “Learning” slider picks are computed in advance (until solved, or 30,000 sweeps if not; 3,000 sweeps for the single-layer perceptron; 100 sweeps with the step function). The slope plot computes the error again 241 times, changing only the chosen weight. Its horizontal axis is a little wider than everywhere that weight goes during this run. The gradient check adds 0.001 to the chosen weight and subtracts it, and computes that case’s error again. The same computation done separately in Python gives the same numbers.</p>
+        </section>
+
+        <nav class="wrap toc-nav" aria-label="In detail">
+            <ol class="toc">
+                <li><a href="#mlp"><span>01 MLP vs. single-layer perceptron</span>XOR needs a hidden layer</a></li>
+                <li><a href="#activation"><span>02 Sigmoid vs. step function</span>The step function cuts the way back</a></li>
+                <li><a href="#descent"><span>03 Gradient descent</span>One step at a time, against the gradient</a></li>
+            </ol>
+        </nav>
+
+        <section id="mlp" class="wrap step" aria-labelledby="mlp-title">
+            <p class="step-no">01 MLP vs. single-layer perceptron</p>
+            <h2 id="mlp-title">XOR needs a hidden layer</h2>
+            <p>A neuron multiplies each input by its weight, adds them up, and adds a bias b. If this sum is above 0 the neuron is on (a value near 1); if below, it is off (a value near 0). On the input plane, the places where the sum is exactly 0 join up into a straight line. So one neuron splits the plane with one straight line.</p>
+            <div class="formula"><p>sum s = w₁x₁ + w₂x₂ + b,  output y = f(s)</p></div>
+            <h3>Single-layer perceptron: one line</h3>
+            <p>The figure’s “single-layer perceptron” is a network with only one output neuron and no hidden layer. One line cannot split XOR. 01 and 10 must go on one side and 00 and 11 on the other, but the diagonal joining 01 and 10 and the diagonal joining 00 and 11 cross in the middle. So when you choose “Single-layer perceptron”, the error falls no further than 0.50, and to the end it gets only two right.</p>
+            <details class="more">
+                <summary>As formulas, and the 1958 perceptron</summary>
+                <p>For 00 to be 0, b &lt; 0; for 01 and 10 to be 1, w₂ + b ≥ 0 and w₁ + b ≥ 0. Adding the last two gives w₁ + w₂ + b ≥ −b &gt; 0, so 11 is 1 too. So no such line exists.</p>
+                <p>Rosenblatt’s 1958 perceptron had three layers: sensory, association and response. But its first connections were fixed at random and only the response layer learned, so counting the layers that learn, it has one.</p>
+            </details>
+            <h3>MLP: one line per hidden neuron</h3>
+            <p>Neurons stacked in layers make a multilayer perceptron (MLP). Each neuron of the middle layer (each hidden neuron) draws a line of its own, and the output neuron splits their results again. With two lines, XOR can be split too. By hand, you could make h₁ “at least one on” (OR) and h₂ “both on” (AND), and have the output turn on when h₁ is on and h₂ is off. The green dashed lines in the figure are the two lines that learning found.</p>
+            <details class="more">
+                <summary>The answer starting point 1 found by itself</summary>
+                <p>The answer the MLP from starting point 1 found after 2,097 sweeps differs from the one set by hand. h₁ is on when both inputs are off, h₂ is on when the inputs are not both on, and the output is on when h₂ is on and h₁ is off. A different road, but it does the same job.</p>
+            </details>
+            <h3>But hidden neurons have no answer</h3>
+            <p>The training data has answers only for the output. Nobody tells h₁ and h₂ what they should output. So what to look at when correcting the weights into the hidden neurons was a problem for a long time. Networks without a hidden layer had simple rules with guarantees, such as the perceptron convergence procedure, but networks with a hidden layer had no such rule. Backpropagation filled that gap (03).</p>
+            <p class="source">Sources: one neuron and the step function: Rosenblatt 1958, Bishop 2006 §4.1.7 eqs. 4.52–4.53 · the 1958 perceptron’s three layers and fixed first connections: Rosenblatt 1958 pp. 389–392, Rumelhart, Hinton &amp; Williams 1986, Nature p. 533 · no XOR without hidden units, hidden layers can represent it, no rule as good for networks with hidden units: PDP ch. 8 pp. 318–321 · stops at 0.50, only two, the two lines found from starting point 1: this page’s computation</p>
+        </section>
+
+        <section id="activation" class="wrap step" aria-labelledby="activation-title">
+            <p class="step-no">02 Sigmoid vs. step function</p>
+            <h2 id="activation-title">The step function cuts the way back</h2>
+            <p>The activation function turns the sum s that came into a neuron into its output. The step function gives only 1 if s is 0 or more and 0 otherwise (the 1958 perceptron). The sigmoid joins 0 and 1 with a smooth S curve.</p>
+            <h3>Step function: flat, so the signal is cut</h3>
+            <p>Each time backpropagation passes the error back, it multiplies by how steep the activation function is at that point (③ in 03). Apart from the one point where it jumps, the step function is flat everywhere, so its steepness is 0. Multiplying by 0 makes every share sent back 0, and no weight changes at all. Choose “Step function” in the figure: after 100 sweeps the weights are exactly as they started.</p>
+            <p>The slope plot makes it plainer. The step function’s error stays flat and then jumps in steps of 0.5 at some point. For case 00 in the first sweep, making v₁ smaller than 0.04 would bring this case’s error to 0, yet the current place (0.07) is flat, so there is no gradient to say “go that way”.</p>
+            <h3>Sigmoid: a little slope everywhere</h3>
+            <p>The sigmoid slopes at least a little everywhere. It is steepest in the middle (s = 0) and flattens toward both ends. So the shares sent back are never cut, and every weight gets a direction to be corrected. It need not be the sigmoid: any function that slopes smoothly like this will do.</p>
+            <details class="more">
+                <summary>As formulas, and how the perceptron learned</summary>
+                <div class="formula"><p>Step function: f(s) = 1 (s ≥ 0), 0 (s &lt; 0)</p><p>Sigmoid: σ(s) = 1 / (1 + e⁻ˢ),  steepness σ(1 − σ)</p></div>
+                <p>The sigmoid’s steepness σ(1 − σ) is largest at s = 0, where it is 0.25. The original paper notes that it need not be exactly the sigmoid: any function with a bounded derivative will do.</p>
+                <p>The 1958 perceptron did learn with a step function. Its rule adds a wrong case’s input to the weights or subtracts it. Because the rule compares the neuron with its own answer, it works only on the one output layer that has answers. This page’s figure learns not by this rule but by the gradient (gradient descent), so with the step function it does not move. Learning XOR with the perceptron rule never ends: the weights keep coming back to the same values (from the 4th sweep in a separate computation).</p>
+            </details>
+            <p class="source">Sources: the step function: Bishop 2006 eqs. 4.52–4.53 · the number of mistakes is flat like a staircase with a gradient of 0 almost everywhere, the perceptron criterion and its rule: Bishop 2006 p. 193, eqs. 4.54–4.55 · the sigmoid, a bounded derivative will do: Rumelhart, Hinton &amp; Williams 1986, Nature eq. 2, p. 534 · no rule as good for hidden units: PDP ch. 8 p. 321 · unchanged after 100 sweeps, an error that jumps in steps of 0.5, the 0.04 for case 00: this page’s computation · the perceptron rule circling on XOR: a separate computation (start 0.25, −0.5, 0.25, learning rate 0.5)</p>
+        </section>
+
+        <section id="descent" class="wrap step" aria-labelledby="descent-title">
+            <p class="step-no">03 Gradient descent</p>
+            <h2 id="descent-title">One step at a time, against the gradient</h2>
+            <p>To get down a foggy mountain into the valley, look at which way the ground slopes under your feet and take one step downhill at a time. That is what gradient descent does. The height of the ground is the error, and where you stand is the values of the weights.</p>
+            <p>The slope plot shows how the error changes when only one weight moves. The red line is the gradient where it stands now. If the ground rises to the right (a positive gradient), the weight is decreased; if it falls (negative), it is increased. Gradient descent moves all the weights together, each a little against its own gradient.</p>
+            <div class="formula"><p>new weight = current weight − 0.5 × gradient</p></div>
+            <p>The 0.5 is the number that sets the size of a step, called the learning rate. A step is small: for case 00 in the first sweep, v₁ moves only 0.032. Repeating such steps, the MLP from starting point 1 solved XOR in 2,097 sweeps. For the first 1,000 sweeps or so the error hardly falls. Early in the right part, switch the slope plot to a hidden weight (for example w₁₁) and its slope is almost flat, probably because the starting weights are small, so the output hardly changes even when a hidden neuron does (hypothesis).</p>
+            <h3>The gradient of every weight: backpropagation</h3>
+            <p>For a weight connected directly to the output, the gradient comes straight from how wrong the output is. A weight going into a hidden neuron is stuck, because that neuron has no answer. Backpropagation passes back how wrong the output is and makes each neuron’s share of the error, δ. ③ in the figure is its three steps.</p>
+            <ol class="steps">
+                <li><b>③-1 The output’s share:</b> multiply how wrong the output is (y − d) by the output neuron’s steepness y(1 − y). This is the output neuron’s share δy.</li>
+                <li><b>③-2 A hidden neuron’s share:</b> multiply δy by the connection weight v to send it to the hidden neuron, then by the hidden neuron’s steepness h(1 − h). This is how a hidden neuron with no answer gets its own share δh.</li>
+                <li><b>③-3 A gradient for each connection:</b> multiply the share δ of the neuron at the connection’s far end by the value that came in through that connection. If the incoming value is 0, the gradient is 0 too.</li>
+            </ol>
+            <div class="formula"><p>δy = (y − d) · y(1 − y)</p><p>δh = δy · v · h(1 − h)</p><p>gradient = δ × (incoming value)</p></div>
+            <p>In the slope plot, the slope of the red line is the value found this way. Measuring it directly, by adding 0.001 to the weight and subtracting it, almost always gives the same value to six decimal places (③-3 in the figure).</p>
+            <p>Jiggling the weights one at a time and measuring also gives the gradients. But 9 weights need 18 more computations, and the more weights, the more it takes. Backpropagation gets every gradient with one forward and one backward computation.</p>
+            <details class="more">
+                <summary>A little more on the share δ and the chain rule</summary>
+                <p>δ is the rate at which the error changes when the sum coming into that neuron changes a little (it is also called the error signal). When a change passes through several stages, the rates of change of the stages multiply; this is the chain rule. When a hidden neuron h changes a little, the output’s sum changes v times as much, so the rate at which the error changes with h is δy · v. Multiplied by h’s steepness, it is δh. If a hidden neuron is connected to several neurons, it adds up (δ × connection weight) over the neurons after it before multiplying by its steepness, and with more layers the same formula repeats one layer at a time.</p>
+                <p>A share here is not a piece cut from a whole. The signal is only multiplied by weights on the way back, so the hidden neurons’ shares do not add up to δy.</p>
+                <p>As a formula, the gradient is ∂E/∂w: the rate at which the error E changes when the weight w is increased a little. Gradient descent is w ← w − η · ∂E/∂w, where η is the learning rate. A bias counts as the weight of an input that is always 1.</p>
+                <p>In this page’s computation, backpropagation and the directly measured gradients differed by at most 1.4 × 10⁻¹¹. This computation, which gathers derivatives backward from the output, appeared independently in several fields in the 1960s and 70s (reverse-mode automatic differentiation); the 1986 paper used it to show that hidden neurons learn useful features by themselves.</p>
+            </details>
+            <h3>One step per case</h3>
+            <p>This page corrects the weights right after seeing each case. So in the first sweep the slope plot draws the error of that one case, and each case pulls its own way. In the first sweep, 00 and 11 decrease v₁, and 01 and 10 increase it. In the right part, the slope plot draws the error of the four cases together, and the red line is the four gradients added.</p>
+            <details class="more">
+                <summary>What changes when correcting after each case</summary>
+                <p>Correcting after each case departs a little from true gradient descent, but PDP chapter 8 notes that if the learning rate is small enough the difference is negligible. In this page’s computation, after 1,000 sweeps, while the error comes down, the way the weights moved during a sweep was almost the same as the opposite of the four gradients added. In the first 500 sweeps the cases’ gradients pointed opposite ways and were much larger than their sum, and the two had almost nothing to do with each other. After 3,000 sweeps the single-layer perceptron’s weights stay the same through one more sweep, yet the slope in the slope plot is not 0. It has stopped where the steps of the cases cancel out within a sweep.</p>
+            </details>
+            <h3>The size of a step and where it stops</h3>
+            <p>A larger learning rate makes bigger steps and goes down faster, but too large and it oscillates across the valley. So it is set as large as possible without oscillation.</p>
+            <p>When the gradients come close to 0, there is no way further down, and it almost stops. There is no guarantee that this is the lowest place. It can be a valley lower only than its surroundings (a local minimum). Press “Another start” once (starting point 2) and drag to the end. The error stops at 0.33, and whichever weight you choose in the slope plot, the dot sits at the bottom. With this page’s settings, 6 of 100 starting points were not solved within 30,000 sweeps.</p>
+            <p>If all the weights start from the same value, the hidden neurons learn the same thing and always draw the same line. So it starts from small random values.</p>
+            <details class="more">
+                <summary>A little more on the learning rate and momentum</summary>
+                <p>True gradient descent assumes tiny steps. PDP chapter 8 says it chooses the largest learning rate that does not lead to oscillation. Learning XOR with eight hidden neurons, it was solved after about 450 presentations on average with η = 0.1 and about 68 with η = 0.75, and larger rates were unstable. Momentum, which adds part of the previous step to enlarge the step (Nature eq. 9), also exists, but this page does not use it.</p>
+            </details>
+            <p class="source">Sources: the formula of gradient descent: Rumelhart, Hinton &amp; Williams 1986, Nature eq. 8, Bishop 2006 eq. 5.41 · a bias is the weight of an input that is always 1: Nature eq. 1 · the error surface and its gradient, where the gradient is 0, global and local minima: Bishop 2006 §5.2.1 fig. 5.5, eq. 5.26 · the forward and backward passes and eqs. 4–7: Nature pp. 534–535 · the formulas for δ and gradient = δ × incoming value: Bishop 2006 eqs. 5.53–5.56 · the cost of finite differences: Bishop 2006 §5.3.3 · the history of reverse-mode differentiation: Griewank 2012 pp. 389–390 · correcting after each case: Bishop 2006 eq. 5.43, Nature p. 535, PDP ch. 8 p. 324 · the learning rate and momentum: PDP ch. 8 pp. 329–330, 333–334, Nature eq. 9 · local minima, breaking symmetry: Nature p. 535, PDP ch. 8 pp. 330–332 · 0.0648 and 0.032, 2,097 sweeps, 1.4 × 10⁻¹¹, which way each case pulls, how a sweep moves (median cosine: 0.96 or more after 1,000 sweeps, near 0 in the first 500), the slope where the single-layer perceptron stops, the flat first slope of a hidden weight, 6 of 100, starting point 2’s 0.33, the gradient check: this page’s computation</p>
+        </section>
+
+        <section id="summary" class="wrap step" aria-labelledby="summary-title">
+            <p class="step-no">Summary</p>
+            <h2 id="summary-title">What backpropagation needs</h2>
+            <ol class="steps">
+                <li>A hidden layer (01). Each hidden neuron draws a line, which splits XOR. But hidden neurons have no answer.</li>
+                <li>A smooth activation function (02). A flat step function cuts the shares sent back to 0.</li>
+                <li>Backpropagation finds each neuron’s share δ and from it every weight’s gradient (δ × incoming value), and gradient descent corrects the weights a little the opposite way (03). There is no guarantee of reaching the lowest place.</li>
+            </ol>
+            <div class="note">
+                <p><strong>Myth</strong>Backpropagation is the algorithm that trains a neural network.</p>
+                <p class="fact"><strong>In fact</strong>Backpropagation is the part that gets the gradient. Correcting the weights with that gradient is done by an optimization method such as gradient descent, and the same gradient can be used by other methods too.</p>
+            </div>
+            <div class="note">
+                <p><strong>Myth</strong>Backpropagation is how the brain learns.</p>
+                <p class="fact"><strong>In fact</strong>The 1986 paper itself says that, in its current form, it is not a plausible model of learning in brains. It ends by noting that, since gradient descent can build useful internal representations, more biologically plausible ways of doing it are worth looking for.</p>
+            </div>
+            <h3>Confirmed · Hypothesis · Unknown</h3>
+            <ul class="limits">
+                <li><span class="tag known">Confirmed</span>Equations and section numbers were checked against the originals. That backpropagation equals numerical differentiation (difference 1.4 × 10⁻¹¹), that the slope in the slope plot equals backpropagation’s gradient, that the step-function network has a gradient of 0, and that the single-layer perceptron stops at an error of 0.50 were checked with this page’s computation.</li>
+                <li><span class="tag guess">Hypothesis</span>That the MLP got stuck in a local minimum more often than in the original paper (6 of 100 starting points; the paper, twice in hundreds of runs) is probably because there is no momentum and the stopping rule and the range of the starting weights differ. That the error hardly falls for the first 1,000 sweeps or so is probably because, with small starting weights, the hidden weights’ gradients are less than a twentieth of the output ones and the cases pull different ways.</li>
+                <li><span class="tag unknown">Unknown</span>Apart from the learning rate, the original paper does not give the settings of its XOR runs (the range of the starting weights, the stopping rule). Werbos’s 1974 PhD thesis was not read.</li>
+            </ul>
+            <p class="source">Sources: backpropagation and gradient descent told apart: Bishop 2006 §5.3 · not a model of learning in brains: Rumelhart, Hinton &amp; Williams 1986, Nature p. 536 · local minima: Nature p. 535, PDP ch. 8 pp. 331–332 · the size of the first gradients: this page’s computation</p>
+        </section>
+
+        <section id="faq" class="wrap step" aria-labelledby="faq-title">
+            <p class="step-no">Questions</p>
+            <h2 id="faq-title">Frequently asked questions</h2>
+            <!-- 검색·AI 답변용. head의 FAQPage는 빌드 스크립트가 아래 문장에서 글자 그대로 옮긴다. -->
+            <div class="faq" id="faq-list">
+                <details>
+                    <summary>What is backpropagation?</summary>
+                    <p>A method that passes a neural network’s output error backward, from the output toward the input, with the chain rule, to get the gradient of the error for every weight at once. Hidden neurons, which have no answer, also get an error signal of their own by receiving the error signals of the neurons after them multiplied by the connection weights, and with it they get the gradients of their weights. It became widely known when Rumelhart, Hinton and Williams published it in Nature in 1986 as a way to train networks with hidden layers.</p>
+                </details>
+                <details>
+                    <summary>How is backpropagation different from gradient descent?</summary>
+                    <p>Backpropagation is the computation that gets the gradient; gradient descent moves the weights a little (by the learning rate η) in the opposite direction of that gradient. Bishop 2006 §5.3 separates the two and notes that the gradient from backpropagation can also be used by other optimization methods more powerful than gradient descent.</p>
+                </details>
+                <details>
+                    <summary>What does the chain rule do in backpropagation?</summary>
+                    <p>It lets the effect of a weight on the error be found as a product of rates: how the weight changes the total input, how the total input changes the output, and how the output changes the error. A hidden neuron’s error signal is the sum of the error signals of the neurons after it, each times its connection weight, multiplied by the slope of its own activation function (Rumelhart, Hinton and Williams 1986, eqs. 5–7).</p>
+                </details>
+                <details>
+                    <summary>Why does backpropagation compute backward from the output?</summary>
+                    <p>Because once the error signals at the output are known, those of the layer before follow from a few multiplications. One forward and one backward pass give the gradients of all the weights. Finite differences, changing the weights one at a time, need W forward computations for W weights, or 2W with central differences (Bishop 2006 §5.3.3).</p>
+                </details>
+                <details>
+                    <summary>Why must the activation function be differentiable for backpropagation?</summary>
+                    <p>A step function is flat almost everywhere (its steepness is 0), so it does not say which way to change a weight to reduce the error. A differentiable function like the sigmoid σ(s) = 1 / (1 + e⁻ˢ) has a steepness σ(1 − σ) that is not 0, so the error passes backward. The original paper says any function with a bounded derivative will do (Rumelhart, Hinton and Williams 1986, eqs. 2, 5).</p>
+                </details>
+                <details>
+                    <summary>Does backpropagation always find the answer?</summary>
+                    <p>No. The error surface has local minima, and gradient descent can stop in one (Rumelhart, Hinton and Williams 1986). For learning XOR with two hidden neurons, PDP chapter 8 reports getting stuck twice in hundreds of runs; in this page’s computation (learning rate 0.5, starting weights from −0.3 to 0.3), 6 of 100 starting points were not solved within 30,000 sweeps.</p>
+                </details>
+                <details>
+                    <summary>What is a multilayer perceptron (MLP)?</summary>
+                    <p>A neural network that stacks neurons in an input layer, one or more hidden layers and an output layer, connected only from earlier layers to later ones. Each neuron multiplies the outputs of the layer before by weights, adds them up with a bias, and puts the result into an activation function. The weights of the hidden layers learn from the gradients that backpropagation computes (Rumelhart, Hinton and Williams 1986, p. 533).</p>
+                </details>
+                <details>
+                    <summary>Why does XOR need a hidden layer?</summary>
+                    <p>One neuron splits the input plane with one straight line, and XOR must put 00 and 11 on one side and 01 and 10 on the other, so no such line exists. Hidden neurons give several lines, which can split them (PDP chapter 8 pp. 318–321). On this page, taking out the hidden layer makes the error stop at 0.50 even with the same learning rule.</p>
+                </details>
+            </div>
+            <p class="source">Sources: Rumelhart, Hinton &amp; Williams 1986 (Nature 323 eqs. 2, 5–7, pp. 533, 535) · Bishop 2006 §5.3, §5.3.3 · PDP ch. 8 pp. 318–321, 331–332</p>
+        </section>
+
+        <section class="wrap step" aria-labelledby="more-title">
+            <h2 id="more-title">Further reading</h2>
+            <ul class="links">
+                <li><a href="https://doi.org/10.1038/323533a0">Rumelhart, Hinton, Williams, Learning representations by back-propagating errors (Nature, 1986)</a></li>
+                <li><a href="https://apps.dtic.mil/sti/pdfs/ADA164453.pdf">Rumelhart, Hinton, Williams, Learning Internal Representations by Error Propagation (the report version of PDP chapter 8, 1985)</a></li>
+                <li><a href="https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf">Bishop, Pattern Recognition and Machine Learning (2006), §5.2 network training and gradient descent, §5.3 error backpropagation, §4.1.7 the perceptron</a></li>
+                <li><a href="https://emis.muni.cz/journals/DMJDMV/vol-ismp/52_griewank-andreas-b.html">Griewank, Who Invented the Reverse Mode of Differentiation? (2012)</a></li>
+                <li><a href="https://doi.org/10.1037/h0042519">Rosenblatt, The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain (Psychological Review, 1958)</a></li>
+                <li>Computation: backpropagation in the multilayer perceptron, the single-layer perceptron, the step-function network, the gradient check and the slope plot were implemented separately with the Python standard library, and their numbers matched this page’s script.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        Last updated <time datetime="2026-10-19">2026-10-19</time> · <a href="/en/">Hugh Q Lee</a> · Translated from the <a href="/knowledge/error-backpropagation/" hreflang="ko">Korean original</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+            });
+            render();
+        })();
+    </script>
+    <script>
+        // pb-core: the arithmetic of knowledge-lab/perceptron-backprop/pb/core.py, in the same order.
+        // MLP (9 numbers): w11 w12 b1 | w21 w22 b2 | v1 v2 c. No hidden layer (3): w1 w2 b.
+        var PB = (function () {
+            "use strict";
+            var INPUTS = [[0, 0], [0, 1], [1, 0], [1, 1]];
+            var TASKS = { XOR: [0, 1, 1, 0] };
+            function step(s) { return s >= 0 ? 1 : 0; }
+            function sigmoid(s) { return 1 / (1 + Math.exp(-s)); }
+            function forward(p, x, f) {
+                var a1 = p[0] * x[0] + p[1] * x[1] + p[2];
+                var a2 = p[3] * x[0] + p[4] * x[1] + p[5];
+                var h1 = f(a1), h2 = f(a2);
+                var a3 = p[6] * h1 + p[7] * h2 + p[8];
+                return { a: [a1, a2, a3], h: [h1, h2], y: f(a3) };
+            }
+            // Rumelhart et al. 1986 eqs. 4-7. With the step function the slope is 0, so every delta is 0.
+            function backward(p, x, d, kind) {
+                var o = forward(p, x, kind === "sigmoid" ? sigmoid : step);
+                var h1 = o.h[0], h2 = o.h[1], y = o.y;
+                var dy = y - d, d3, e1, e2, d1, d2;
+                if (kind === "sigmoid") {
+                    d3 = dy * (y * (1 - y));
+                    e1 = d3 * p[6];
+                    e2 = d3 * p[7];
+                    d1 = e1 * (h1 * (1 - h1));
+                    d2 = e2 * (h2 * (1 - h2));
+                } else {
+                    d3 = 0;
+                    e1 = d3 * p[6];
+                    e2 = d3 * p[7];
+                    d1 = 0;
+                    d2 = 0;
+                }
+                return { a: o.a, h: o.h, y: y, dy: dy, delta: [d1, d2, d3], dh: [e1, e2],
+                    grad: [d1 * x[0], d1 * x[1], d1, d2 * x[0], d2 * x[1], d2, d3 * h1, d3 * h2, d3] };
+            }
+            function forward1(p, x, f) {
+                var a = p[0] * x[0] + p[1] * x[1] + p[2];
+                return { a: [a], y: f(a) };
+            }
+            function backward1(p, x, d, kind) {
+                var o = forward1(p, x, kind === "sigmoid" ? sigmoid : step);
+                var y = o.y, dy = y - d;
+                var d3 = kind === "sigmoid" ? dy * (y * (1 - y)) : 0;
+                return { a: o.a, y: y, dy: dy, delta: [d3], grad: [d3 * x[0], d3 * x[1], d3] };
+            }
+            function update(p, g, eta) {
+                var q = [];
+                for (var k = 0; k < p.length; k++) q.push(p[k] - eta * g[k]);
+                return q;
+            }
+            function error(p, x, d, f) {
+                var y = forward(p, x, f).y;
+                return 0.5 * (y - d) * (y - d);
+            }
+            function error1(p, x, d, f) {
+                var y = forward1(p, x, f).y;
+                return 0.5 * (y - d) * (y - d);
+            }
+            function totalError(p, t, f) {
+                var s = 0;
+                for (var i = 0; i < 4; i++) s += error(p, INPUTS[i], t[i], f);
+                return s;
+            }
+            function totalError1(p, t, f) {
+                var s = 0;
+                for (var i = 0; i < 4; i++) s += error1(p, INPUTS[i], t[i], f);
+                return s;
+            }
+            function allRight(p, t, f) {
+                for (var i = 0; i < 4; i++) if ((forward(p, INPUTS[i], f).y >= 0.5) !== (t[i] === 1)) return false;
+                return true;
+            }
+            function sweep(p, t, eta, kind) {
+                for (var i = 0; i < 4; i++) p = update(p, backward(p, INPUTS[i], t[i], kind).grad, eta);
+                return p;
+            }
+            function sweep1(p, t, eta, kind) {
+                for (var i = 0; i < 4; i++) p = update(p, backward1(p, INPUTS[i], t[i], kind).grad, eta);
+                return p;
+            }
+            // the gradient check: E of this case with weight k moved by +eps and -eps
+            function nudge(p, x, d, k, eps, hidden, kind) {
+                var f = kind === "sigmoid" ? sigmoid : step, err = hidden ? error : error1;
+                var up = p.slice(), dn = p.slice();
+                up[k] = p[k] + eps;
+                dn[k] = p[k] - eps;
+                var eu = err(up, x, d, f), ed = err(dn, x, d, f);
+                return { up: eu, down: ed, rate: (eu - ed) / (2 * eps) };
+            }
+            // the slope plot: E with weight k set to each value in us, the others as they are; one case i, or (i null) all four
+            function curve(p, k, us, i, t, hidden, kind) {
+                var f = kind === "sigmoid" ? sigmoid : step, err = hidden ? error : error1, out = [];
+                for (var j = 0; j < us.length; j++) {
+                    var q = p.slice(), s = 0;
+                    q[k] = us[j];
+                    if (i == null) { for (var c = 0; c < 4; c++) s += err(q, INPUTS[c], t[c], f); out.push(s); }
+                    else out.push(err(q, INPUTS[i], t[i], f));
+                }
+                return out;
+            }
+            // dE/dw of the total error: the four cases' gradients added, case 00 first
+            function gradTotal(p, t, hidden, kind) {
+                var g = null;
+                for (var c = 0; c < 4; c++) {
+                    var b = hidden ? backward(p, INPUTS[c], t[c], kind) : backward1(p, INPUTS[c], t[c], kind);
+                    if (!g) g = b.grad.slice(); else for (var k = 0; k < g.length; k++) g[k] += b.grad[k];
+                }
+                return g;
+            }
+            function mulberry32(a) {
+                return function () {
+                    a |= 0; a = a + 0x6D2B79F5 | 0;
+                    var t = Math.imul(a ^ a >>> 15, 1 | a);
+                    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+                    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+                };
+            }
+            function start(seed, n, scale) {
+                var r = mulberry32(seed), out = [];
+                for (var i = 0; i < n; i++) out.push(Math.floor((2 * r() - 1) * scale * 100 + 0.5) / 100);
+                return out;
+            }
+            return { INPUTS: INPUTS, TASKS: TASKS, step: step, sigmoid: sigmoid, forward: forward, backward: backward,
+                forward1: forward1, backward1: backward1, update: update, error: error, error1: error1,
+                totalError: totalError, totalError1: totalError1, allRight: allRight, sweep: sweep, sweep1: sweep1,
+                nudge: nudge, curve: curve, gradTotal: gradTotal, start: start };
+        })();
+    </script>
+    <script>
+        // 직접 해보기: 오차 신호가 뒤로 가는 길. ‘학습’ 슬라이더 하나가 모든 것을 정한다.
+        // 왼쪽 40%: 첫 바퀴를 한 걸음씩(예시 00·01·10·11 × ① 앞으로 → ② 오차 → ③ 뒤로(세 걸음) → ④ 고치기).
+        // 오른쪽 60%: 그 뒤를 바퀴마다(1바퀴 → 끝). 바퀴마다의 가중치는 처음에 한 번 계산해 둔다.
+        // 아래 두 그림: 바퀴마다의 오차(01·02의 결과)와, 고른 가중치 하나의 비탈(03 gradient descent).
+        (function () {
+            "use strict";
+            var T = {
+                scene: {
+                    "mlp-sigmoid": "A multilayer perceptron (2 inputs → 2 hidden → 1 output) learns XOR. Seeing the four cases once each is one sweep. Drag “Learning” to follow the path the error takes back.",
+                    "none-sigmoid": "The single-layer perceptron, with the hidden layer taken out. One output neuron takes the inputs directly. With the same rule, does it solve XOR?",
+                    "mlp-step": "The activation function is now a step function that gives only 0 or 1 (the function of the 1958 perceptron). Does the error get back?",
+                    "none-step": "One neuron with a step function and no hidden layer (the same shape as the 1958 perceptron). This figure learns by the gradient, and here too the gradient is 0."
+                },
+                stage: ["① Forward", "② Error", "③-1 The output’s share", "③-2 The hidden neurons’ shares", "③-3 A gradient for each connection", "④ Update"],
+                posFirst: "First sweep · case {x} · {s}",
+                posLater: "After {n} sweeps",
+                start: "The left part shows the first sweep one step at a time. Drag into the right part to see what repeating the same step sweep after sweep achieves.",
+                outs: "After {n} sweeps, the outputs for the four cases:",
+                outRow: "{x} → {y} (answer {d})",
+                fwd: "Case {x}: compute from left to right (σ is the sigmoid).",
+                fwdStep: "Case {x}: compute from left to right.",
+                fStep: "step",
+                err: "Answer {d}, output {y}. How wrong: y − d = {dy}; error E = ½(y − d)² = {E}.",
+                b1: "The output neuron’s share δy: multiply how wrong it is (y − d) by the output neuron’s steepness y(1 − y).",
+                s1: "The step function is flat, so its steepness is 0. So δy = (y − d)·0 = 0.",
+                b2: "δy was multiplied by the connection weights v₁, v₂ and sent to the hidden neurons, then multiplied by the hidden neurons’ steepness. This is how h₁ and h₂, which have no answer, get their own shares δ.",
+                s2: "δh₁ = δy·v₁·0 = 0, δh₂ = 0. There is nothing to send back.",
+                b3: "For each connection, gradient = the share δ of the neuron at the far end × the incoming value:",
+                s3: "All the gradients are 0.",
+                fix: "Move each weight the opposite way by 0.5 × its gradient (w ← w − 0.5·gradient):",
+                sFix: "w ← w − 0.5·0: all {m} weights stay the same.",
+                check: "Check: adding 0.001 to {w} makes this case’s error {up}; subtracting it, {down}. The gradient measured directly, (E₊ − E₋) ÷ 0.002 = {rate}; the gradient backpropagation found = {g}.",
+                cost: "Measuring all {m} weights this way, one at a time, takes {k} forward computations. Backpropagation takes one forward and one backward pass.",
+                at: "After {n} sweeps: total error of the four cases E = {E}, {k}/4 right.",
+                gSolved: "Solved in {n} sweeps. All four cases are right and E fell below 0.05 (E = {E}). The two hidden neurons’ lines split the corners.",
+                gStuck: "After {n} sweeps E stays at {E} and falls no further. It is stuck in a local minimum. Try “Another start”.",
+                flat: "After {n} sweeps E stays at {E} and does not fall. All four outputs are near 0.5 ({ys}). Without a hidden layer there is only one line, which cannot split XOR.",
+                still: "After {n} sweeps all {m} weights are exactly as they started. The gradient is 0, so there is no direction to correct.",
+                errNow: "Error E",
+                rightNow: "Right",
+                seedNo: "Start",
+                auto: "Auto",
+                pause: "Pause",
+                chart: "Total error E of the four cases per sweep",
+                chartGoal: "Total error E of the four cases per sweep (dashed: 0.05)",
+                slopeCase: "The error of case {x}, drawn while changing only {w} (the other weights stay as they are).",
+                slopeTotal: "After {n} sweeps, the error of the four cases together, drawn while changing only {w} (the rest stay as they are).",
+                slopeWait: "The dot is where it stands now ({w} = {w0}, error {e}). The red line (the gradient) comes in ③-3.",
+                stepTo: "{w} ← {w0} − 0.5 × {g} = {w1}.",
+                stepDown: "The ground rises to the right (gradient > 0), so it decreases (a step of {d}). The arrow shows the way it goes.",
+                stepUp: "The ground falls to the right (gradient < 0), so it increases (a step of {d}). The arrow shows the way it goes.",
+                stepFlat: "It is flat (gradient 0), so it stays.",
+                stepAll: "All {m} weights move together, each by its own gradient, and this case’s error goes {e0} → {e1}.",
+                slopeNow: "{w} = {w0}, gradient {g} (the four cases’ gradients added).",
+                axisE: "error",
+                flowF: "forward →",
+                flowB: "← backward"
+            };
+            var ETA = 0.5, SCALE = 0.3, GOAL = 0.05, MAX_SWEEPS = 30000, NONE_AUTO = 3000, STEP_AUTO = 100, NUDGE = 0.001;
+            var NAMES9 = ["w₁₁", "w₁₂", "b₁", "w₂₁", "w₂₂", "b₂", "v₁", "v₂", "c"];
+            var EXPR9 = ["δh₁·x₁", "δh₁·x₂", "δh₁·1", "δh₂·x₁", "δh₂·x₂", "δh₂·1", "δy·h₁", "δy·h₂", "δy·1"];
+            var NAMES3 = ["w₁", "w₂", "b"], EXPR3 = ["δy·x₁", "δy·x₂", "δy·1"];
+            var NS = "http://www.w3.org/2000/svg";
+            var $ = function (id) { return document.getElementById(id); };
+            var net = $("pb-net"), plane = $("pb-plane"), chart = $("pb-chart"), slope = $("pb-slope"), calc = $("pb-calc"), tIn = $("pb-t");
+            var st = { hidden: true, act: "sigmoid", seed: 1, pick: 6, pickFor: true, v: 0 }, timer = null;
+            var FINE = 400, TOTAL = 1000;  // the slider runs 0-1000: 0-FINE the first sweep step by step, FINE-1000 the sweeps after it
+            var SAMPLES = 240;  // the slope plot computes E at 241 values of the chosen weight
+            var SHADE = 96, shade = document.createElement("canvas"), shadeCtx;
+            shade.width = shade.height = SHADE;
+            shadeCtx = shade.getContext("2d");
+            function accent() {
+                var c = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+                var m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(c);
+                return m ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)] : [105, 210, 255];
+            }
+
+            function fmt(s, o) { return s.replace(/\{(\w+)\}/g, function (m, k) { return o[k]; }); }
+            function num(v, k) {
+                var s = (Math.abs(v) < 0.5 * Math.pow(10, -k) ? 0 : v).toFixed(k);
+                return s.charAt(0) === "-" ? "−" + s.slice(1) : s;
+            }
+            function int(n) { return n.toLocaleString("en-US"); }
+            // "0.25·0 − 0.50·1 + 0.25": weights with k decimals, inputs as 0/1 or with 3 decimals
+            function lin(ws, xs, b, k) {
+                var fx = function (v) { return v === Math.round(v) ? String(v) : num(v, 3); };
+                var out = num(ws[0], k) + "·" + fx(xs[0]);
+                for (var i = 1; i < ws.length; i++) out += (ws[i] < 0 ? " − " : " + ") + num(Math.abs(ws[i]), k) + "·" + fx(xs[i]);
+                return out + (b < 0 ? " − " : " + ") + num(Math.abs(b), k);
+            }
+            function el(tag, attrs, parent, text) {
+                var e = document.createElementNS(NS, tag);
+                for (var a in attrs) e.setAttribute(a, attrs[a]);
+                if (text != null) e.textContent = text;
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+            function width(svg, least, fallback) { return Math.max(least, Math.round(svg.getBoundingClientRect().width) || fallback); }
+
+            // the network on stage: an MLP (9 numbers) or one output unit, the single-layer perceptron (3)
+            function sig() { return st.act === "sigmoid"; }
+            function f() { return sig() ? PB.sigmoid : PB.step; }
+            function names() { return st.hidden ? NAMES9 : NAMES3; }
+            function back(p, x, d) { return st.hidden ? PB.backward(p, x, d, st.act) : PB.backward1(p, x, d, st.act); }
+            function total(p) { return st.hidden ? PB.totalError(p, st.targets, f()) : PB.totalError1(p, st.targets, f()); }
+            function one(p, x, d) { return st.hidden ? PB.error(p, x, d, f()) : PB.error1(p, x, d, f()); }
+            function out(p, x) { return st.hidden ? PB.forward(p, x, f()).y : PB.forward1(p, x, f()).y; }
+            function rightCount(p) {
+                var n = 0;
+                for (var i = 0; i < 4; i++) if ((out(p, PB.INPUTS[i]) >= 0.5) === (st.targets[i] === 1)) n++;
+                return n;
+            }
+            // the stages of one case: with no hidden layer ③-2 has nothing to do
+            function order() { return st.hidden ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 4, 5]; }
+
+            // every sweep's starting weights, until it is solved or for the scene's length
+            function train() {
+                var p = PB.start(st.seed, st.size, SCALE), traj = [p], E = [total(p)];
+                var limit = !sig() ? STEP_AUTO : (st.hidden ? MAX_SWEEPS : NONE_AUTO);
+                st.done = null;
+                for (var k = 1; k <= limit; k++) {
+                    p = st.hidden ? PB.sweep(p, st.targets, ETA, st.act) : PB.sweep1(p, st.targets, ETA, st.act);
+                    traj.push(p);
+                    E.push(total(p));
+                    if (sig() && st.hidden && rightCount(p) === 4 && E[k] < GOAL) { st.done = "solved"; break; }
+                }
+                if (!st.done) st.done = !sig() ? "still" : (st.hidden ? "stuck" : "flat");
+                st.traj = traj; st.E = E; st.max = traj.length - 1;
+                // the slope plot's axis for each weight: a little wider than everywhere the weight goes in this run
+                st.lim = [];
+                for (var j = 0; j < st.size; j++) {
+                    var far = 0;
+                    for (var n = 0; n < traj.length; n++) far = Math.max(far, Math.abs(traj[n][j]));
+                    st.lim.push(Math.max(2, Math.ceil(far) + 1));
+                }
+            }
+            function reset(keep) {
+                stop();
+                st.targets = PB.TASKS.XOR;
+                st.size = st.hidden ? 9 : 3;
+                if (st.pickFor !== st.hidden) { st.pick = st.hidden ? 6 : 2; st.pickFor = st.hidden; }  // v₁ or b: their input is never 0
+                train();
+                if (!keep) st.v = 0;
+                tIn.value = String(st.v);
+                layout();
+                $("pb-max").textContent = int(st.max);
+                var sel = $("pb-pick");
+                clear(sel);
+                names().forEach(function (name, k) {
+                    var o = document.createElement("option");
+                    o.value = String(k); o.textContent = name;
+                    sel.appendChild(o);
+                });
+                render();
+            }
+            // where the slider is: a step of the first sweep (left part) or the end of sweep n (right part)
+            function steps() { return 4 * order().length; }
+            function at(v) {
+                if (v < FINE) return { fine: true, n: 0, pos: Math.min(steps() - 1, Math.floor(v / FINE * steps())) };
+                return { fine: false, pos: 0, n: Math.max(1, Math.min(st.max, 1 + Math.round((v - FINE) / (TOTAL - FINE) * (st.max - 1)))) };
+            }
+            function valueOfPos(pos) { return (pos + 0.5) / steps() * FINE; }
+            function valueOfN(n) { return st.max > 1 ? FINE + (n - 1) / (st.max - 1) * (TOTAL - FINE) : TOTAL; }
+            function view() {
+                var a = at(st.v);
+                if (!a.fine) return { fine: false, n: a.n, shown: st.traj[a.n] };
+                var o = order(), i = Math.floor(a.pos / o.length), s = o[a.pos % o.length], p = st.traj[0];
+                for (var j = 0; j < i; j++) p = PB.update(p, back(p, PB.INPUTS[j], st.targets[j]).grad, ETA);
+                var c = back(p, PB.INPUTS[i], st.targets[i]);
+                c.x = PB.INPUTS[i]; c.d = st.targets[i]; c.before = p; c.after = PB.update(p, c.grad, ETA);
+                return { fine: true, n: 0, i: i, s: s, c: c, shown: s === 5 ? c.after : c.before };
+            }
+            function setV(v) { st.v = Math.max(0, Math.min(TOTAL, v)); tIn.value = String(st.v); render(); }
+            // narrow screens give the first sweep 70% of the slider, so each step stays wide enough for a finger
+            function layout() {
+                var a = at(st.v), fine = (tIn.getBoundingClientRect().width || 600) < 520 ? 700 : 400;
+                if (fine === FINE) return false;
+                FINE = fine;
+                $("pb-scale").style.setProperty("--fine", FINE / 10 + "%");
+                $("pb-scale").classList.toggle("narrow", FINE === 700);
+                st.v = a.fine ? valueOfPos(a.pos) : valueOfN(a.n);
+                tIn.value = String(st.v);
+                return true;
+            }
+
+            function quiet(on) {
+                calc.setAttribute("aria-live", on ? "off" : "polite");
+                $("pb-slope-out").setAttribute("aria-live", on ? "off" : "polite");
+            }
+            function stop() {
+                if (timer) { clearTimeout(timer); timer = null; }
+                quiet(false);
+                $("pb-auto").textContent = T.auto;
+            }
+            // ‘자동으로’ drags the slider to its end: the first sweep a step at a time, then sweep after sweep
+            function auto() {
+                if (timer) { stop(); return; }
+                var a = at(st.v);
+                if (!a.fine && a.n >= st.max) setV(0);
+                quiet(true);
+                $("pb-auto").textContent = T.pause;
+                var frame = function () {
+                    var a = at(st.v), delay = 30;
+                    if (a.fine) { setV(a.pos + 1 < steps() ? valueOfPos(a.pos + 1) : valueOfN(1)); delay = 320; }
+                    else setV(valueOfN(Math.min(st.max, a.n + (sig() ? Math.min(40, 1 + Math.floor(a.n / 40)) : 2))));
+                    var b = at(st.v);
+                    if (!b.fine && b.n >= st.max) { stop(); render(); return; }
+                    timer = setTimeout(frame, delay);
+                };
+                timer = setTimeout(frame, 30);
+            }
+
+            // ---- drawing
+            var LAYOUT = {
+                X2: [{ x: 44, y: 80 }, { x: 44, y: 188 }], X1: [{ x: 60, y: 80 }, { x: 60, y: 188 }],
+                H: [{ x: 170, y: 80 }, { x: 170, y: 188 }], Y2: { x: 296, y: 134 }, Y1: { x: 260, y: 134 }
+            };
+            function edgesOf() {
+                var X = st.hidden ? LAYOUT.X2 : LAYOUT.X1, H = LAYOUT.H, Y = st.hidden ? LAYOUT.Y2 : LAYOUT.Y1;
+                return st.hidden
+                    ? [[X[0], H[0], 0], [X[1], H[0], 1], [X[0], H[1], 3], [X[1], H[1], 4], [H[0], Y, 6], [H[1], Y, 7]]
+                    : [[X[0], Y, 0], [X[1], Y, 1]];
+            }
+            // a bias under its neuron; pressing it picks that bias for the slope plot
+            function bias(g, pt, k, w) {
+                el("text", { x: pt.x, y: pt.y + 55, "text-anchor": "middle", "class": "b" + (st.pick === k ? " picked" : ""), "data-k": k }, g, "b " + num(w, 2));
+            }
+            function edge(e, w, cls, label, labelCls) {
+                var k = e[2], picked = st.pick === k;
+                var g = el("g", { "class": "pb-edge " + (w < 0 ? "neg" : "pos") + cls + (picked ? " picked" : "") }, net), sw = 1 + Math.min(Math.abs(w), 6) * 0.9;
+                if (picked) el("line", { x1: e[0].x, y1: e[0].y, x2: e[1].x, y2: e[1].y, "class": "halo", "stroke-width": (sw + 6).toFixed(2) }, g);
+                el("line", { x1: e[0].x, y1: e[0].y, x2: e[1].x, y2: e[1].y, "class": "w", "stroke-width": sw.toFixed(2) }, g);
+                var t = st.hidden && k < 6 ? 0.36 : 0.45;
+                el("text", { x: e[0].x + (e[1].x - e[0].x) * t, y: e[0].y + (e[1].y - e[0].y) * t - 6, "text-anchor": "middle", "class": labelCls || "" }, g, label);
+                el("line", { x1: e[0].x, y1: e[0].y, x2: e[1].x, y2: e[1].y, "class": "hit", "data-k": k }, g);
+            }
+            function drawNet(v) {
+                clear(net);
+                if (!v.fine) return drawWeights(v.shown);
+                var two = st.hidden, c = v.c, sg = v.s;
+                var X = two ? LAYOUT.X2 : LAYOUT.X1, H = LAYOUT.H, Y = two ? LAYOUT.Y2 : LAYOUT.Y1;
+                var before = c.before, now = c.after, shown = v.shown;
+                edgesOf().forEach(function (e) {
+                    var k = e[2], backNow = (sg === 3 && k >= 6) || sg === 4;
+                    var cls = (backNow ? " back" : "") + (sg === 5 && before[k] !== now[k] ? " changed" : "");
+                    if (sg === 4) edge(e, shown[k], cls, num(c.grad[k], 4), "grad");
+                    else edge(e, shown[k], cls, num(shown[k], 2));
+                });
+                function node(pt, name, value, b, delta, cls) {
+                    var g = el("g", { "class": "pb-node" + (cls ? " " + cls : "") }, net);
+                    el("circle", { cx: pt.x, cy: pt.y, r: 22 }, g);
+                    el("text", { x: pt.x, y: pt.y + 4.5, "text-anchor": "middle", "class": "v" }, g, value);
+                    el("text", { x: pt.x, y: pt.y + 40, "text-anchor": "middle", "class": "n" }, g, name);
+                    if (b != null) bias(g, pt, b, shown[b]);
+                    if (delta != null) el("text", { x: pt.x, y: pt.y - 30, "text-anchor": "middle", "class": "dl" }, g, "δ " + num(delta, 4));
+                }
+                var hv = function (x) { return sig() ? num(x, 2) : String(x); };
+                node(X[0], "x₁", String(c.x[0]), null, null, sg === 0 ? "active" : "");
+                node(X[1], "x₂", String(c.x[1]), null, null, sg === 0 ? "active" : "");
+                if (two) {
+                    node(H[0], "h₁", hv(c.h[0]), 2, sg >= 3 ? c.delta[0] : null, sg === 3 ? "active-back" : (sg === 0 ? "active" : ""));
+                    node(H[1], "h₂", hv(c.h[1]), 5, sg >= 3 ? c.delta[1] : null, sg === 3 ? "active-back" : (sg === 0 ? "active" : ""));
+                    node(Y, "y", hv(c.y), 8, sg >= 2 ? c.delta[2] : null, sg === 2 ? "active-back" : (sg <= 1 ? "active" : ""));
+                } else {
+                    node(Y, "y", hv(c.y), 2, sg >= 2 ? c.delta[0] : null, sg === 2 ? "active-back" : (sg <= 1 ? "active" : ""));
+                }
+                el("text", { x: X[0].x - 22, y: 16, "class": "pb-flow" }, net, T.flowF);
+                if (sg >= 2 && sg <= 4) el("text", { x: Y.x + 22, y: 16, "text-anchor": "end", "class": "pb-flow back" }, net, T.flowB);
+            }
+            // right part of the slider: the weights at the end of a sweep, with no case flowing through
+            function drawWeights(w) {
+                var two = st.hidden, X = two ? LAYOUT.X2 : LAYOUT.X1, H = LAYOUT.H, Y = two ? LAYOUT.Y2 : LAYOUT.Y1;
+                edgesOf().forEach(function (e) { edge(e, w[e[2]], "", num(w[e[2]], 2)); });
+                var nodes = two ? [[X[0], "x₁"], [X[1], "x₂"], [H[0], "h₁", 2], [H[1], "h₂", 5], [Y, "y", 8]] : [[X[0], "x₁"], [X[1], "x₂"], [Y, "y", 2]];
+                nodes.forEach(function (n) {
+                    var g = el("g", { "class": "pb-node" }, net);
+                    el("circle", { cx: n[0].x, cy: n[0].y, r: 22 }, g);
+                    el("text", { x: n[0].x, y: n[0].y + 40, "text-anchor": "middle", "class": "n" }, g, n[1]);
+                    if (n[2] != null) bias(g, n[0], n[2], w[n[2]]);
+                });
+                el("text", { x: X[0].x - 22, y: 16, "class": "pb-flow" }, net, T.flowF);
+            }
+            function drawPlane(v) {
+                clear(plane);
+                var L = 24, S = 232, lo = -0.5, hi = 1.5;
+                var px = function (u) { return L + (u - lo) / (hi - lo) * S; };
+                var py = function (y) { return L + S - (y - lo) / (hi - lo) * S; };
+                var p = v.shown;
+                if (!st.hidden && !sig()) {
+                    // the half-plane s >= 0, clipped to the frame
+                    var box = [[lo, lo], [hi, lo], [hi, hi], [lo, hi]], poly = [];
+                    var side = function (q) { return p[0] * q[0] + p[1] * q[1] + p[2]; };
+                    box.forEach(function (q, i) {
+                        var r = box[(i + 1) % 4], sq = side(q), sr = side(r);
+                        if (sq >= 0) poly.push(q);
+                        if ((sq >= 0) !== (sr >= 0)) { var t = sq / (sq - sr); poly.push([q[0] + t * (r[0] - q[0]), q[1] + t * (r[1] - q[1])]); }
+                    });
+                    if (poly.length > 2) el("polygon", { points: poly.map(function (q) { return px(q[0]).toFixed(1) + "," + py(q[1]).toFixed(1); }).join(" "), "class": "cell", "fill-opacity": "0.34" }, plane);
+                } else {
+                    // the network's output on a 96 x 96 grid, drawn as a smoothed image
+                    var rgb = accent(), img = shadeCtx.createImageData(SHADE, SHADE);
+                    for (var j = 0; j < SHADE; j++) for (var a = 0; a < SHADE; a++) {
+                        var y = out(p, [lo + (a + 0.5) * (hi - lo) / SHADE, hi - (j + 0.5) * (hi - lo) / SHADE]), o = 4 * (j * SHADE + a);
+                        img.data[o] = rgb[0]; img.data[o + 1] = rgb[1]; img.data[o + 2] = rgb[2]; img.data[o + 3] = Math.round(255 * 0.4 * y);
+                    }
+                    shadeCtx.putImageData(img, 0, 0);
+                    el("image", { href: shade.toDataURL(), x: L, y: L, width: S, height: S, preserveAspectRatio: "none" }, plane);
+                }
+                el("rect", { x: L, y: L, width: S, height: S, "class": "frame" }, plane);
+                [0, 1].forEach(function (t) {
+                    el("text", { x: px(t), y: L + S + 16, "text-anchor": "middle", "class": "tick" }, plane, String(t));
+                    el("text", { x: L - 8, y: py(t) + 4, "text-anchor": "end", "class": "tick" }, plane, String(t));
+                });
+                el("text", { x: L + S, y: L + S + 16, "text-anchor": "end", "class": "tick" }, plane, "x₁");
+                el("text", { x: L - 8, y: L + 10, "text-anchor": "end", "class": "tick" }, plane, "x₂");
+                // a·u + b·v + c = 0, clipped to the frame
+                function line(A, B, C, cls, label) {
+                    var pts = [];
+                    if (Math.abs(B) > 1e-12) [lo, hi].forEach(function (u) { var w = -(A * u + C) / B; if (w >= lo - 1e-9 && w <= hi + 1e-9) pts.push([u, w]); });
+                    if (Math.abs(A) > 1e-12) [lo, hi].forEach(function (w) { var u = -(B * w + C) / A; if (u >= lo - 1e-9 && u <= hi + 1e-9) pts.push([u, w]); });
+                    if (pts.length < 2) return;
+                    var s = pts[0], e = pts[1];
+                    for (var i = 1; i < pts.length; i++) if (Math.abs(pts[i][0] - s[0]) + Math.abs(pts[i][1] - s[1]) > 1e-6) { e = pts[i]; break; }
+                    el("line", { x1: px(s[0]), y1: py(s[1]), x2: px(e[0]), y2: py(e[1]), "class": cls }, plane);
+                    if (label) {
+                        var m = s[0] > e[0] || (s[0] === e[0] && s[1] > e[1]) ? s : e;
+                        el("text", { x: Math.min(L + S - 4, Math.max(L + 4, px(m[0]) - 6)), y: Math.min(L + S - 6, Math.max(L + 14, py(m[1]) + (m[1] > 1 ? 16 : -6))), "text-anchor": "end", "class": "h-label" }, plane, label);
+                    }
+                }
+                if (st.hidden) { line(p[0], p[1], p[2], "h-line", "h₁"); line(p[3], p[4], p[5], "h-line", "h₂"); }
+                else line(p[0], p[1], p[2], "main-line");
+                PB.INPUTS.forEach(function (x, i) {
+                    var d = st.targets[i], y = out(p, x);
+                    var cx = px(x[0]), cy = py(x[1]);
+                    if ((y >= 0.5) !== (d === 1)) el("circle", { cx: cx, cy: cy, r: 13, "class": "wrong" }, plane);
+                    if (v.fine && v.i === i) el("circle", { cx: cx, cy: cy, r: 18, "class": "now" }, plane);
+                    el("circle", { cx: cx, cy: cy, r: 7, "class": d ? "pt1" : "pt0" }, plane);
+                    el("text", { x: cx + (x[0] ? 14 : -14), y: cy + (x[1] ? -12 : 22), "text-anchor": x[0] ? "start" : "end", "class": "pt-label" }, plane, x.join(""));
+                });
+            }
+            // the error per sweep up to where the slider is, on an axis as long as the run, drawn at its real width
+            function drawChart() {
+                var cur = at(st.v).n;
+                clear(chart);
+                var W = width(chart, 260, 460), H = 150, L = 34, R = 10, top = 10, bottom = 24;
+                chart.setAttribute("viewBox", "0 0 " + W + " " + H);
+                var data = st.E, ymax = sig() ? 0.6 : 2, n = Math.max(1, st.max);
+                var X = function (i) { return L + (W - L - R) * i / n; };
+                var Yp = function (v) { return top + (H - top - bottom) * (1 - Math.min(v, ymax) / ymax); };
+                el("line", { x1: L, y1: Yp(0), x2: W - R, y2: Yp(0), "class": "axis" }, chart);
+                el("line", { x1: L, y1: top, x2: L, y2: Yp(0), "class": "axis" }, chart);
+                el("text", { x: L - 6, y: Yp(0) + 4, "text-anchor": "end", "class": "tick" }, chart, "0");
+                el("text", { x: L - 6, y: Yp(sig() ? 0.5 : 2) + 4, "text-anchor": "end", "class": "tick" }, chart, sig() ? "0.5" : "2");
+                el("text", { x: W - R, y: H - 6, "text-anchor": "end", "class": "tick" }, chart, int(st.max));
+                el("text", { x: L, y: H - 6, "class": "tick" }, chart, "0");
+                if (st.hidden && sig()) el("line", { x1: L, y1: Yp(GOAL), x2: W - R, y2: Yp(GOAL), "class": "goal" }, chart);
+                var pts = [], stride = Math.max(1, Math.floor(cur / 600));
+                for (var i = 0; i < cur; i += stride) pts.push(X(i).toFixed(1) + "," + Yp(data[i]).toFixed(1));
+                pts.push(X(cur).toFixed(1) + "," + Yp(data[cur]).toFixed(1));
+                if (pts.length > 1) el("polyline", { points: pts.join(" "), "class": "curve" }, chart);
+                el("line", { x1: X(cur), y1: top, x2: X(cur), y2: Yp(0), "class": "now" }, chart);
+                el("circle", { cx: X(cur), cy: Yp(data[cur]), r: 3.5, "class": "dot" }, chart);
+            }
+            // 03: E along the chosen weight with the others where they are. First sweep: the error of the case being
+            // learned, its slope from ③-3, and at ④ the way the step goes. Right part: the four cases' total and its slope.
+            function drawSlope(v) {
+                clear(slope);
+                var W = width(slope, 260, 460), H = 150, L = 34, R = 12, top = 10, bottom = 24;
+                slope.setAttribute("viewBox", "0 0 " + W + " " + H);
+                var k = st.pick, lim = st.lim[k], base = v.fine ? v.c.before : v.shown;
+                var ymax = v.fine ? 0.5 : (sig() ? 1 : 2);
+                var X = function (u) { return L + (W - L - R) * (u + lim) / (2 * lim); };
+                var Y = function (e) { return top + (H - top - bottom) * (1 - Math.min(e, ymax) / ymax); };
+                var defs = el("defs", {}, slope), clip = el("clipPath", { id: "pb-slope-clip" }, defs);
+                el("rect", { x: L, y: top - 4, width: W - L - R, height: H - top - bottom + 4 }, clip);
+                var tip = el("marker", { id: "pb-slope-tip", viewBox: "0 0 10 10", refX: 8, refY: 5, markerWidth: 6, markerHeight: 6, orient: "auto" }, defs);
+                el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" }, tip);
+                el("line", { x1: L, y1: Y(0), x2: W - R, y2: Y(0), "class": "axis" }, slope);
+                el("line", { x1: L, y1: top, x2: L, y2: Y(0), "class": "axis" }, slope);
+                el("line", { x1: X(0), y1: Y(0), x2: X(0), y2: Y(0) + 4, "class": "axis" }, slope);
+                el("text", { x: L - 6, y: Y(0) + 4, "text-anchor": "end", "class": "tick" }, slope, "0");
+                el("text", { x: L - 6, y: Y(ymax) + 4, "text-anchor": "end", "class": "tick" }, slope, String(ymax));
+                el("text", { x: L + 6, y: top + 10, "class": "tick" }, slope, T.axisE);
+                el("text", { x: L, y: H - 6, "class": "tick" }, slope, "−" + lim);
+                el("text", { x: X(0), y: H - 6, "text-anchor": "middle", "class": "tick" }, slope, "0");
+                el("text", { x: W - R, y: H - 6, "text-anchor": "end", "class": "tick" }, slope, String(lim));
+                el("text", { x: W - R, y: Y(0) - 6, "text-anchor": "end", "class": "tick name" }, slope, names()[k]);
+                var us = [];
+                for (var j = 0; j <= SAMPLES; j++) us.push(-lim + 2 * lim * j / SAMPLES);
+                var es = PB.curve(base, k, us, v.fine ? v.i : null, st.targets, st.hidden, st.act);
+                el("polyline", { points: us.map(function (u, j) { return X(u).toFixed(1) + "," + Y(es[j]).toFixed(1); }).join(" "), "class": "curve", "clip-path": "url(#pb-slope-clip)" }, slope);
+                var u0 = base[k], e0 = v.fine ? 0.5 * v.c.dy * v.c.dy : total(base), px = X(u0), py = Y(e0);
+                if (!v.fine || v.s >= 4) {
+                    var g = v.fine ? v.c.grad[k] : PB.gradTotal(base, st.targets, st.hidden, st.act)[k];
+                    var ps = -g * ((H - top - bottom) / ymax) / ((W - L - R) / (2 * lim)), dx = 30 / Math.sqrt(1 + ps * ps);  // ps: pixels down per pixel right
+                    el("line", { x1: px - dx, y1: py - ps * dx, x2: px + dx, y2: py + ps * dx, "class": "tangent", "clip-path": "url(#pb-slope-clip)" }, slope);
+                    if (v.fine && v.s === 5 && g !== 0) {
+                        var ux = (g > 0 ? -1 : 1) / Math.sqrt(1 + ps * ps), uy = ps * ux;  // along the slope, downhill
+                        el("line", { x1: px + 8 * ux, y1: py + 8 * uy, x2: px + 34 * ux, y2: py + 34 * uy, "class": "step", "marker-end": "url(#pb-slope-tip)" }, slope);
+                    }
+                }
+                el("circle", { cx: px, cy: py, r: 4.5, "class": "dot" }, slope);
+            }
+
+            // ---- words
+            function outputs(p) {
+                return PB.INPUTS.map(function (x) { return num(out(p, x), 2); }).join(", ");
+            }
+            function lines(v) {
+                var hv = function (x) { return sig() ? num(x, 3) : String(x); };
+                if (!v.fine) {
+                    var rows = PB.INPUTS.map(function (x, k) { return fmt(T.outRow, { x: x.join(""), y: hv(out(v.shown, x)), d: st.targets[k] }); });
+                    return [fmt(T.outs, { n: int(v.n) }), { grid: rows }];
+                }
+                var c = v.c, sg = v.s, two = st.hidden, p = c.before, xs = c.x.join(""), fn = sig() ? "σ" : T.fStep;
+                if (sg === 0) {
+                    var lead = fmt(sig() ? T.fwd : T.fwdStep, { x: xs });
+                    if (!two) return [lead, "y = " + fn + "(" + lin([p[0], p[1]], c.x, p[2], 2) + ") = " + hv(c.y)];
+                    return [lead,
+                        "h₁ = " + fn + "(" + lin([p[0], p[1]], c.x, p[2], 2) + ") = " + hv(c.h[0]),
+                        "h₂ = " + fn + "(" + lin([p[3], p[4]], c.x, p[5], 2) + ") = " + hv(c.h[1]),
+                        "y = " + fn + "(" + lin([p[6], p[7]], c.h, p[8], 2) + ") = " + hv(c.y)];
+                }
+                if (sg === 1) return [fmt(T.err, { d: c.d, y: hv(c.y), dy: sig() ? num(c.dy, 3) : num(c.dy, 0), E: num(0.5 * c.dy * c.dy, sig() ? 3 : 1) })];
+                var dy = two ? c.delta[2] : c.delta[0];
+                if (sg === 2) {
+                    if (!sig()) return [T.s1];
+                    return [T.b1, "δy = (y − d)·y(1 − y) = " + num(c.dy, 3) + "·" + num(c.y, 3) + "·" + num(1 - c.y, 3) + " = " + num(dy, 4)];
+                }
+                if (sg === 3) {
+                    if (!sig()) return [T.s2];
+                    return [T.b2, "δh₁ = δy·v₁·h₁(1 − h₁) = " + num(dy, 4) + "·" + num(p[6], 2) + "·" + num(c.h[0] * (1 - c.h[0]), 3) + " = " + num(c.delta[0], 4),
+                        "δh₂ = δy·v₂·h₂(1 − h₂) = " + num(dy, 4) + "·" + num(p[7], 2) + "·" + num(c.h[1] * (1 - c.h[1]), 3) + " = " + num(c.delta[1], 4)];
+                }
+                var nm = names(), grid = [], j;
+                if (sg === 4) {
+                    var ex = two ? EXPR9 : EXPR3;
+                    for (j = 0; j < st.size; j++) grid.push(nm[j] + " " + ex[j] + " = " + num(c.grad[j], 4));
+                    return sig() ? [T.b3, { grid: grid, long: true }] : [T.b3, { grid: grid, long: true }, T.s3];
+                }
+                if (!sig()) return [fmt(T.sFix, { m: st.size })];
+                for (j = 0; j < st.size; j++) grid.push(nm[j] + " " + num(p[j], 3) + " → " + num(c.after[j], 3));
+                return [T.fix, { grid: grid }];
+            }
+            function verdict(v) {
+                if (v.fine) return T.start;
+                var n = v.n, E = st.E[n], p = st.traj[n];
+                if (!sig()) return fmt(T.still, { n: int(n), m: st.size });
+                if (n === st.max && st.done === "solved") return fmt(T.gSolved, { n: int(n), E: num(E, 5) });
+                if (n === st.max && st.done === "stuck") return fmt(T.gStuck, { n: int(n), E: num(E, 3) });
+                if (n === st.max && st.done === "flat") return fmt(T.flat, { n: int(n), E: num(E, 3), ys: outputs(p) });
+                return fmt(T.at, { n: int(n), E: num(E, 3), k: rightCount(p) });
+            }
+            // under the slope plot: what it shows, then the slope and the step in numbers
+            function slopeWords(v) {
+                var k = st.pick, w = names()[k], said = [];
+                if (v.fine) {
+                    var c = v.c, g = c.grad[k];
+                    $("pb-slope-label").textContent = fmt(T.slopeCase, { x: c.x.join(""), w: w });
+                    if (v.s < 4) said.push(fmt(T.slopeWait, { w: w, w0: num(c.before[k], 4), e: num(0.5 * c.dy * c.dy, 4) }));
+                    else if (v.s === 4) {
+                        var r = PB.nudge(c.before, c.x, c.d, k, NUDGE, st.hidden, st.act);
+                        said.push(fmt(T.check, { w: w, up: num(r.up, 6), down: num(r.down, 6), rate: num(r.rate, 6), g: num(g, 6) }));
+                        said.push(fmt(T.cost, { m: st.size, k: 2 * st.size }));
+                    } else {
+                        said.push(fmt(T.stepTo, { w: w, w0: num(c.before[k], 4), g: g < 0 ? "(" + num(g, 4) + ")" : num(g, 4), w1: num(c.after[k], 4) }) + " " +
+                            (g > 0 ? fmt(T.stepDown, { d: num(ETA * g, 4) }) : g < 0 ? fmt(T.stepUp, { d: num(-ETA * g, 4) }) : T.stepFlat));
+                        if (sig()) said.push(fmt(T.stepAll, { m: st.size, e0: num(0.5 * c.dy * c.dy, 4), e1: num(one(c.after, c.x, c.d), 4) }));
+                    }
+                } else {
+                    $("pb-slope-label").textContent = fmt(T.slopeTotal, { n: int(v.n), w: w });
+                    said.push(fmt(T.slopeNow, { w: w, w0: num(v.shown[k], 4), g: num(PB.gradTotal(v.shown, st.targets, st.hidden, st.act)[k], 4) }));
+                }
+                var box = $("pb-slope-out");
+                clear(box);
+                said.forEach(function (s) { var e = document.createElement("span"); e.textContent = s; box.appendChild(e); });
+            }
+            function render() {
+                document.querySelectorAll("#pb-shape button").forEach(function (b) { b.setAttribute("aria-pressed", (b.getAttribute("data-v") === "mlp") === st.hidden ? "true" : "false"); });
+                document.querySelectorAll("#pb-act button").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-v") === st.act ? "true" : "false"); });
+                $("pb-scene-text").textContent = T.scene[(st.hidden ? "mlp" : "none") + "-" + st.act];
+                var v = view(), sg = v.fine ? v.s : -1;
+                var label = v.fine ? fmt(T.posFirst, { x: v.c.x.join(""), s: T.stage[sg] }) : fmt(T.posLater, { n: int(v.n) });
+                $("pb-t-out").textContent = label;
+                tIn.setAttribute("aria-valuetext", label);
+                var chip = sg < 0 ? -1 : sg <= 1 ? sg : sg <= 4 ? 2 : 3, chips = $("pb-stages").children;
+                for (var i = 0; i < 4; i++) chips[i].className = chip === i ? (i === 2 ? "on-back" : "on") : "";
+                $("pb-sub").textContent = chip === 2 ? (st.hidden ? (sg - 1) + "/3" : (sg === 2 ? "1/2" : "2/2")) : "";
+                calc.className = "pb-calc" + (chip === 2 ? " back" : "");
+                clear(calc);
+                lines(v).forEach(function (l) {
+                    if (typeof l === "string") { var e = document.createElement("p"); e.textContent = l; calc.appendChild(e); return; }
+                    var g = document.createElement("div"); g.className = l.long ? "grid long" : "grid";
+                    l.grid.forEach(function (s) { var e = document.createElement("span"); e.textContent = s; g.appendChild(e); });
+                    calc.appendChild(g);
+                });
+                $("pb-verdict").textContent = verdict(v);
+                var status = $("pb-status");
+                clear(status);
+                function item(name, value) {
+                    var s = document.createElement("span"), b = document.createElement("b");
+                    s.appendChild(document.createTextNode(name + " ")); b.textContent = value; s.appendChild(b); status.appendChild(s);
+                }
+                item(T.errNow, num(total(v.shown), 3));
+                item(T.rightNow, rightCount(v.shown) + "/4");
+                item(T.seedNo, String(st.seed));
+                $("pb-chart-label").textContent = st.hidden && sig() ? T.chartGoal : T.chart;
+                var sel = $("pb-pick");
+                if (sel.value !== String(st.pick)) sel.value = String(st.pick);
+                slopeWords(v);
+                drawNet(v); drawPlane(v); drawChart(); drawSlope(v);
+            }
+
+            document.querySelectorAll("#pb-shape button").forEach(function (b) {
+                b.addEventListener("click", function () { st.hidden = b.getAttribute("data-v") === "mlp"; reset(false); });
+            });
+            document.querySelectorAll("#pb-act button").forEach(function (b) {
+                b.addEventListener("click", function () { st.act = b.getAttribute("data-v"); reset(false); });
+            });
+            tIn.addEventListener("input", function () { stop(); st.v = Number(tIn.value); render(); });
+            // keys move one step (left part) or one sweep (right part)
+            tIn.addEventListener("keydown", function (e) {
+                var a = at(st.v), k = e.key, v = null;
+                if (k === "ArrowRight" || k === "ArrowUp") v = a.fine ? (a.pos + 1 < steps() ? valueOfPos(a.pos + 1) : valueOfN(1)) : valueOfN(Math.min(st.max, a.n + 1));
+                else if (k === "ArrowLeft" || k === "ArrowDown") v = a.fine ? valueOfPos(Math.max(0, a.pos - 1)) : (a.n > 1 ? valueOfN(a.n - 1) : valueOfPos(steps() - 1));
+                else if (k === "PageUp") v = st.v + 100;
+                else if (k === "PageDown") v = st.v - 100;
+                else if (k === "Home") v = 0;
+                else if (k === "End") v = TOTAL;
+                if (v == null) return;
+                e.preventDefault();
+                stop();
+                setV(v);
+            });
+            // pressing a line or a bias in the network picks that weight for the slope plot
+            net.addEventListener("click", function (e) {
+                var k = e.target.getAttribute && e.target.getAttribute("data-k");
+                if (k != null) { st.pick = Number(k); render(); }
+            });
+            $("pb-pick").addEventListener("change", function () { st.pick = Number($("pb-pick").value); render(); });
+            $("pb-auto").addEventListener("click", auto);
+            $("pb-seed").addEventListener("click", function () { st.seed++; reset(true); });
+            // the theme toggle changes the colours the shading reads
+            new MutationObserver(function () { if (!timer) render(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+            reset(false);
+            if ("ResizeObserver" in window) {
+                var lastW = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round($("pb-grid").getBoundingClientRect().width);
+                    if (w && w !== lastW) { lastW = w; if (layout()) render(); else { var v = view(); drawChart(); drawSlope(v); } }
+                }).observe($("pb-grid"));
+            }
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-10-19","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"},{"id":"ml","name":"기계 학습","name_en":"Machine learning"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"},{"id":"train-val-calib-test","title":"train·val·calib·test","title_en":"train/val/calib/test","domain":"ml","status":"published","href":"../train-val-calib-test/","summary":"학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold를 위해 칸 하나를 더 두기","summary_en":"Keep one more split for what is fitted after training: the temperature T and the threshold"},{"id":"error-backpropagation","title":"역전파","title_en":"Backpropagation","domain":"ml","status":"published","href":"../error-backpropagation/","summary":"출력의 오차를 뒤로 전해 다층 퍼셉트론의 가운데 층까지 고치기","summary_en":"Pass the output's error backward to correct the middle layer of a multilayer perceptron too"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            MAP.nodes.forEach(function (n) { n.title = n.title_en || n.title; n.summary = n.summary_en || n.summary; });
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 100 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (coming soon)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "coming soon";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "you are here";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>

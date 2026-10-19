@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>역전파, 정답이 없는 가운데 층은 어떻게 배우나 | Hugh Q Lee</title>
+    <meta name="description" content="역전파는 출력이 틀린 정도를 거꾸로 전해, 정답이 없는 가운데 층의 뉴런마다 오차에 대한 몫을 구한다. XOR를 배우는 신경망 하나로 MLP와 단일 퍼셉트론, 시그모이드와 계단 함수, 경사 하강법이 비탈을 내려가는 모습을 함께 본다.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="역전파, 오차 역전파, backpropagation, 다층 퍼셉트론, MLP, multilayer perceptron, 단일 퍼셉트론, 경사 하강법, gradient descent, 학습률, 연쇄 법칙, chain rule, 기울기, 은닉층, XOR 문제, 시그모이드, 계단 함수, 신경망 학습">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/error-backpropagation/">
+    <!-- 영문판(/knowledge/en/error-backpropagation/)은 System/build_en.py가 이 페이지에서 만든다. 두 판이 서로를 가리킨다. -->
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/error-backpropagation/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/error-backpropagation/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/error-backpropagation/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:title" content="역전파, 정답이 없는 가운데 층은 어떻게 배우나">
+    <meta property="og:description" content="역전파는 출력이 틀린 정도를 거꾸로 전해, 정답이 없는 가운데 층의 뉴런마다 오차에 대한 몫을 구한다. XOR를 배우는 신경망 하나로 MLP와 단일 퍼셉트론, 시그모이드와 계단 함수, 경사 하강법이 비탈을 내려가는 모습을 함께 본다.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/error-backpropagation/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/error-backpropagation/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="입력 둘, 은닉 뉴런 둘, 출력 하나인 다층 퍼셉트론. 계산은 왼쪽에서 오른쪽으로 가고, 오차 신호 δ는 오른쪽에서 왼쪽으로 돌아온다.">
+    <meta property="article:published_time" content="2026-10-19">
+    <meta property="article:modified_time" content="2026-10-19">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta property="article:tag" content="역전파">
+    <meta property="article:tag" content="다층 퍼셉트론">
+    <meta property="article:tag" content="경사 하강법">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="역전파, 정답이 없는 가운데 층은 어떻게 배우나">
+    <meta name="twitter:description" content="역전파는 출력이 틀린 정도를 거꾸로 전해, 정답이 없는 가운데 층의 뉴런마다 오차에 대한 몫을 구한다. XOR를 배우는 신경망 하나로 MLP와 단일 퍼셉트론, 시그모이드와 계단 함수, 경사 하강법이 비탈을 내려가는 모습을 함께 본다.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/error-backpropagation/og.png">
+    <meta name="twitter:image:alt" content="입력 둘, 은닉 뉴런 둘, 출력 하나인 다층 퍼셉트론. 계산은 왼쪽에서 오른쪽으로 가고, 오차 신호 δ는 오른쪽에서 왼쪽으로 돌아온다.">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage는 빌드 스크립트가 본문 "자주 묻는 질문"에서 글자 그대로 옮긴다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/error-backpropagation/#article",
+          "workTranslation": {
+            "@id": "https://hughqlee.com/knowledge/en/error-backpropagation/#article"
+          },
+          "headline": "역전파, 정답이 없는 가운데 층은 어떻게 배우나",
+          "alternativeHeadline": "역전파는 정답이 없는 가운데 층을 어떻게 가르치나?",
+          "description": "역전파는 출력이 틀린 정도를 거꾸로 전해, 정답이 없는 가운데 층의 뉴런마다 오차에 대한 몫을 구한다. XOR를 배우는 신경망 하나로 MLP와 단일 퍼셉트론, 시그모이드와 계단 함수, 경사 하강법이 비탈을 내려가는 모습을 함께 본다.",
+          "abstract": "출력이 틀린 정도를 연결을 거꾸로 따라 전하면, 정답이 없는 가운데 층의 뉴런도 오차에 대한 자기 몫(δ)을 얻는다. 가중치마다 기울기는 그 몫 × 들어온 값이고, 경사 하강법이 가중치를 그 반대쪽으로 조금씩 고친다.",
+          "inLanguage": "ko",
+          "datePublished": "2026-10-19",
+          "dateModified": "2026-10-19",
+          "url": "https://hughqlee.com/knowledge/error-backpropagation/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/error-backpropagation/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/error-backpropagation/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/#collection"
+          },
+          "isAccessibleForFree": true,
+          "about": [
+            "역전파",
+            "다층 퍼셉트론",
+            "경사 하강법"
+          ],
+          "citation": [
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Rumelhart, Hinton, Williams, Learning representations by back-propagating errors (Nature 323, 1986)",
+              "url": "https://doi.org/10.1038/323533a0"
+            },
+            {
+              "@type": "Chapter",
+              "name": "Rumelhart, Hinton, Williams, Learning Internal Representations by Error Propagation (Parallel Distributed Processing Vol. 1, ch. 8, 1986)",
+              "url": "https://apps.dtic.mil/sti/pdfs/ADA164453.pdf"
+            },
+            {
+              "@type": "Book",
+              "name": "Bishop, Pattern Recognition and Machine Learning (Springer, 2006), §5.2, §5.3, §4.1.7",
+              "url": "https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Griewank, Who Invented the Reverse Mode of Differentiation? (Documenta Mathematica, Extra Volume ISMP, 2012)",
+              "url": "https://emis.muni.cz/journals/DMJDMV/vol-ismp/52_griewank-andreas-b.html"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Rosenblatt, The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain (Psychological Review 65(6), 1958)",
+              "url": "https://doi.org/10.1037/h0042519"
+            }
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "역전파, 정답이 없는 가운데 층은 어떻게 배우나",
+              "item": "https://hughqlee.com/knowledge/error-backpropagation/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/error-backpropagation/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "역전파(backpropagation)란?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "신경망 출력의 오차를 연쇄 법칙으로 출력에서 입력 쪽으로 거꾸로 전해, 모든 가중치에 대한 오차의 기울기를 한 번에 구하는 방법이다. 정답이 없는 은닉 뉴런도 뒤 뉴런들의 오차 신호에 연결 가중치를 곱해 받아 자기 오차 신호를 얻고, 그것으로 자기 가중치의 기울기를 구한다. Rumelhart·Hinton·Williams가 1986년 Nature에 은닉층을 가진 망의 학습으로 발표해 널리 알려졌다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "역전파와 경사 하강법은 어떻게 다른가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "역전파는 기울기를 구하는 계산이고, 경사 하강법은 그 기울기의 반대 방향으로 가중치를 조금씩(학습률 η만큼) 옮기는 방법이다. Bishop 2006 §5.3은 이 둘을 구분하고, 역전파로 구한 기울기를 경사 하강법보다 강력한 다른 최적화 방법에도 쓸 수 있다고 적는다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "역전파에서 연쇄 법칙은 무슨 일을 하나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "가중치가 오차에 주는 영향을, 가중치가 총입력을, 총입력이 출력을, 출력이 오차를 바꾸는 비율의 곱으로 구하게 한다. 은닉 뉴런의 오차 신호는 뒤 뉴런들의 오차 신호에 연결 가중치를 곱해 더하고, 자기 활성 함수의 기울기를 곱한 값이다(Rumelhart·Hinton·Williams 1986 식 5–7)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "역전파는 왜 출력에서 거꾸로 계산하나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "출력 쪽 오차 신호를 한 번 구해 두면 그 앞 층의 오차 신호를 곱셈 몇 번으로 얻기 때문이다. 앞으로 한 번, 뒤로 한 번이면 모든 가중치의 기울기가 나온다. 가중치를 하나씩 바꿔 보는 유한 차분은 가중치가 W개면 앞으로 계산이 W번, 중심 차분이면 2W번 든다(Bishop 2006 §5.3.3)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "역전파에서 활성 함수는 왜 미분할 수 있어야 하나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "계단 함수는 거의 모든 곳에서 평평해(가파르기 0), 오차를 줄이려면 가중치를 어느 쪽으로 바꿔야 하는지 알려 주지 않는다. 시그모이드 σ(s) = 1 / (1 + e⁻ˢ)처럼 미분할 수 있는 함수는 가파르기 σ(1 − σ)가 0이 아니어서 오차가 뒤로 전해진다. 원 논문은 도함수가 유계인 함수면 된다고 적었다(Rumelhart·Hinton·Williams 1986 식 2, 5)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "역전파는 언제나 답을 찾나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "아니다. 오차 곡면에 국소 최솟값이 있어 경사 하강법이 거기서 멈출 수 있다(Rumelhart·Hinton·Williams 1986). 은닉 뉴런 둘로 XOR를 배울 때 PDP 8장은 수백 번 가운데 두 번 갇혔다고 적었고, 이 페이지의 계산(학습률 0.5, 시작 가중치 −0.3~0.3)에서는 시작점 100개 중 6개가 30,000바퀴 안에 풀리지 않았다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "다층 퍼셉트론(MLP)이란?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "뉴런을 입력층, 하나 이상의 은닉층, 출력층으로 쌓고 앞 층에서 뒤 층으로만 잇는 신경망이다. 각 뉴런은 앞 층의 출력에 가중치를 곱해 더하고 편향을 더한 값을 활성 함수에 넣는다. 은닉층의 가중치는 역전파로 구한 기울기로 학습한다(Rumelhart·Hinton·Williams 1986 p. 533)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "XOR에는 왜 은닉층이 필요한가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "뉴런 하나는 입력 평면을 직선 하나로 나누는데, XOR는 00과 11을 한쪽에, 01과 10을 다른 쪽에 두어야 해서 그런 직선이 없다. 은닉 뉴런을 두면 선이 여럿이 되어 나눌 수 있다(PDP 8장 pp. 318–321). 이 페이지에서 은닉층을 빼면 같은 학습 규칙으로도 오차가 0.50에서 멈춘다."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --warn-soft: rgba(240, 198, 116, 0.13);
+            --danger: #ff8c8c;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            --wide: 980px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --warn-soft: rgba(150, 106, 16, 0.12);
+            --danger: #b42323;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+        .wide { width: min(var(--wide), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle, .btn {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-family: var(--mono);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover, .btn:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 8px; }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0 0 20px; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        .step { padding: 40px 0 8px; border-top: 1px solid var(--line); margin-top: 28px; }
+        .step-no { margin: 0 0 6px; color: var(--accent); font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; }
+        h2 { margin: 0 0 14px; font-size: clamp(22px, 4vw, 30px); line-height: 1.35; letter-spacing: -0.01em; }
+        h3 { margin: 28px 0 8px; font-size: 18px; line-height: 1.45; }
+        h3 .no { margin-right: 8px; color: var(--danger); font-family: var(--mono); font-size: 15px; }
+        .source { margin-top: 12px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+        .panel {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .fig-label { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+        .pb-toggles { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+        .control { display: grid; gap: 4px; }
+        .control .label { color: var(--muted); font-size: 14px; }
+        .seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+        .seg button {
+            min-height: 36px;
+            padding: 4px 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .seg button:hover { border-color: var(--line-strong); color: var(--text); }
+        .seg button[aria-pressed="true"] { border-color: var(--accent); color: var(--text); background: var(--accent-soft); }
+        .numbers { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 8px 0 0; font-family: var(--mono); font-size: 14px; color: var(--muted); }
+        .numbers b { color: var(--text); font-weight: 600; }
+        .formula {
+            margin: 14px 0;
+            padding: 10px 14px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+            font-family: var(--mono);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .formula p { margin: 0; }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            margin: 24px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+        .toc a { display: block; height: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); text-decoration: none; font-size: 15px; line-height: 1.5; }
+        .toc a:hover { border-color: var(--line-strong); }
+        .toc span { display: block; color: var(--accent); font-family: var(--mono); font-size: 12px; }
+
+        /* 직접 해보기: one MLP, one learning step = forward, error, backward (three steps), update */
+        .try { margin-top: 8px; }
+        .toc-nav { padding-top: 4px; }
+        .scene-text { min-height: 3.4em; margin: 12px 0 0; }
+        /* the panel: the slider stays on top while the figures scroll under it, and the network, the slope plot and the
+           calculation sit together (three columns on wide screens, two on tablets, one on phones) */
+        .pb-bar { position: sticky; top: 0; z-index: 3; margin: 12px -16px 0; padding: 8px 16px 6px; background: var(--panel); border-bottom: 1px solid var(--line); }
+        .pb-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px 20px; margin-top: 12px;
+            grid-template-areas: "net" "slope" "calc" "verdict" "status" "controls" "plane" "chart"; }
+        .panel .pb-grid > * { min-width: 0; margin: 0; }
+        .pb-cell-net { grid-area: net; }
+        .pb-cell-slope { grid-area: slope; }
+        .pb-cell-plane { grid-area: plane; }
+        .pb-cell-chart { grid-area: chart; align-self: start; }
+        #pb-calc { grid-area: calc; }
+        #pb-verdict { grid-area: verdict; }
+        #pb-status { grid-area: status; }
+        .pb-grid .pb-controls { grid-area: controls; }
+        @media (min-width: 640px) {
+            .pb-grid { grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-template-areas: "net slope" "calc calc" "verdict verdict" "status controls" "plane chart"; }
+        }
+        @media (min-width: 960px) {
+            .pb-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(0, 0.9fr);
+                grid-template-areas: "net slope plane" "calc calc chart" "verdict verdict chart" "status status chart" "controls controls chart"; }
+        }
+        svg.pb-net, svg.pb-plane { display: block; width: 100%; height: auto; overflow: visible; }
+        .pb-node circle { fill: var(--panel-strong); stroke: var(--line-strong); stroke-width: 1.5; }
+        .pb-node.active circle { stroke: var(--accent); stroke-width: 2.5; }
+        .pb-node.active-back circle { stroke: var(--danger); stroke-width: 2.5; }
+        .pb-node .v { fill: var(--text); font-family: var(--mono); font-size: 13px; }
+        .pb-node .n { fill: var(--muted); font-family: var(--sans); font-size: 13px; }
+        .pb-node .b { fill: var(--faint); font-family: var(--mono); font-size: 11px; }
+        .pb-node .dl { fill: var(--danger); font-family: var(--mono); font-size: 11.5px; font-weight: 600; }
+        .pb-node .b { cursor: pointer; }
+        .pb-node .b.picked { fill: var(--text); text-decoration: underline; }
+        .pb-edge line { stroke-linecap: round; }
+        .pb-edge.pos line.w { stroke: var(--accent); }
+        .pb-edge.neg line.w { stroke: var(--accent-warn); }
+        .pb-edge.back line.w { stroke-dasharray: 6 5; }
+        .pb-edge line.halo { stroke: var(--text); stroke-opacity: 0.28; }
+        .pb-edge line.hit { stroke: transparent; stroke-width: 18; cursor: pointer; }
+        .pb-edge text { fill: var(--muted); font-family: var(--mono); font-size: 11.5px; paint-order: stroke; stroke: var(--panel); stroke-width: 4px; stroke-linejoin: round; pointer-events: none; }
+        .pb-edge text.grad { fill: var(--danger); font-weight: 600; }
+        .pb-edge.changed text { fill: var(--text); font-weight: 700; }
+        .pb-edge.picked text { fill: var(--text); text-decoration: underline; }
+        .pb-flow { fill: var(--faint); font-family: var(--sans); font-size: 11.5px; }
+        .pb-flow.back { fill: var(--danger); font-weight: 600; }
+        .pb-plane .cell { fill: var(--accent); }
+        .pb-plane .frame { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+        .pb-plane .tick { fill: var(--faint); font-family: var(--mono); font-size: 11px; }
+        .pb-plane .main-line { stroke: var(--accent); stroke-width: 2.5; }
+        .pb-plane .h-line { stroke: var(--accent-green); stroke-width: 1.8; stroke-dasharray: 7 5; }
+        .pb-plane .h-label { fill: var(--accent-green); font-family: var(--mono); font-size: 12px; font-weight: 600; paint-order: stroke; stroke: var(--panel); stroke-width: 4px; }
+        .pb-plane .pt1 { fill: var(--accent-green); stroke: var(--panel); stroke-width: 1.5; }
+        .pb-plane .pt0 { fill: var(--panel); stroke: var(--text); stroke-width: 2; }
+        .pb-plane .wrong { fill: none; stroke: var(--danger); stroke-width: 2.5; }
+        .pb-plane .now { fill: none; stroke: var(--text); stroke-width: 1.4; stroke-dasharray: 3 3; }
+        .pb-plane .pt-label { fill: var(--text); font-family: var(--mono); font-size: 12px; paint-order: stroke; stroke: var(--panel); stroke-width: 4px; }
+        .legend { display: flex; flex-wrap: wrap; gap: 2px 12px; margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+        .legend i { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 50%; vertical-align: -1px; }
+        .legend .k1 { background: var(--accent-green); }
+        .legend .k0 { border: 2px solid var(--text); }
+        .legend .kw { border: 2px solid var(--danger); }
+        .legend .kl { width: 16px; height: 0; border-radius: 0; border-top: 2.5px solid var(--accent); vertical-align: 3px; }
+        .legend .kh { width: 16px; height: 0; border-radius: 0; border-top: 2px dashed var(--accent-green); vertical-align: 3px; }
+        .pb-stages { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; padding: 0; list-style: none; }
+        .pb-stages li { padding: 2px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 14px; }
+        .pb-stages li.on { border-color: var(--accent); background: var(--accent-soft); color: var(--text); font-weight: 600; }
+        .pb-stages li.on-back { border-color: var(--danger); color: var(--text); font-weight: 600; }
+        .pb-stages .sub { margin-left: 6px; color: var(--danger); font-family: var(--mono); font-size: 12px; }
+        .pb-calc { min-height: 8.6em; margin: 10px 0 0; padding: 10px 12px; border-left: 3px solid var(--accent); background: var(--panel-soft); font-family: var(--mono); font-size: 13.5px; line-height: 1.7; }
+        .pb-calc.back { border-left-color: var(--danger); }
+        .pb-calc p { margin: 0; }
+        .pb-calc .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 14px; }
+        .pb-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+        .pb-slider { display: grid; gap: 2px; }
+        .pb-slider label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 8px; color: var(--muted); font-size: 14px; }
+        .pb-slider output { color: var(--text); font-family: var(--mono); }
+        .pb-slider input[type="range"] { width: 100%; min-height: 40px; margin: 0; accent-color: var(--accent); }
+        .pb-scale { --fine: 40%; display: grid; grid-template-columns: repeat(4, calc(var(--fine) / 4)) minmax(0, 1fr); margin-top: -6px; color: var(--faint); font-family: var(--mono); font-size: 12px; text-align: center; }
+        .pb-scale .later { padding-left: 8px; border-left: 1px solid var(--line-strong); font-family: var(--sans); text-align: left; }
+        .pb-scale .later b { color: var(--muted); font-family: var(--mono); font-weight: 500; }
+        .pb-scale.narrow .later-words { display: none; }  /* the right part is only 30% wide on phones */
+        .pb-verdict { min-height: 3.4em; margin: 8px 0 0; padding-left: 12px; border-left: 3px solid var(--accent-green); }
+        /* the two plots: the error per sweep, and the slope along one weight (03) */
+        .pb-pick, .pb-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-height: 36px; margin: 0 0 4px; color: var(--muted); font-size: 14px; }
+        .pb-pick select { min-height: 36px; padding: 4px 8px; border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--panel); color: var(--text); font: inherit; font-family: var(--mono); font-size: 14px; }
+        svg.pb-chart, svg.pb-slope { display: block; width: 100%; height: 150px; overflow: visible; }
+        .pb-chart .axis, .pb-slope .axis { stroke: var(--line-strong); stroke-width: 1; }
+        .pb-chart .tick, .pb-slope .tick { fill: var(--faint); font-family: var(--mono); font-size: 11px; }
+        .pb-slope .tick.name { fill: var(--muted); font-size: 12px; }
+        .pb-chart .curve, .pb-slope .curve { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linejoin: round; }
+        .pb-chart .goal { stroke: var(--accent-green); stroke-width: 1; stroke-dasharray: 4 3; }
+        .pb-chart .now { stroke: var(--text); stroke-opacity: 0.35; stroke-dasharray: 2 3; }
+        .pb-chart .dot { fill: var(--accent); }
+        .pb-slope .tangent { stroke: var(--danger); stroke-width: 2.2; stroke-linecap: round; }
+        .pb-slope .step { stroke: var(--text); stroke-width: 1.8; }
+        .pb-slope .tip { fill: var(--text); }
+        .pb-slope .dot { fill: var(--text); stroke: var(--panel); stroke-width: 1.5; }
+        .pb-slope-out { min-height: 4.8em; margin: 6px 0 0; font-family: var(--mono); font-size: 13px; line-height: 1.6; }
+        .pb-slope-out span { display: block; }
+
+        /* 더 보기: formulas, the papers' numbers and history fold away so the main text stays plain */
+        .more { margin: 14px 0 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .more summary { min-height: 40px; padding: 9px 14px; color: var(--muted); font-size: 15px; cursor: pointer; }
+        .more summary:hover { color: var(--text); }
+        .more[open] summary { border-bottom: 1px solid var(--line); }
+        .more > p, .more > .formula { margin: 10px 14px; }
+        .more > :last-child { margin-bottom: 14px; }
+        .limits { margin: 0; padding-left: 1.2em; }
+        .limits li { margin: 8px 0; }
+        .steps { margin: 0; padding-left: 1.4em; }
+        .steps li { margin: 8px 0; }
+        .steps li::marker { color: var(--accent); font-family: var(--mono); }
+        .note {
+            margin-top: 16px;
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+        .tag {
+            display: inline-block;
+            margin-right: 6px;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.known { color: var(--accent-green); }
+        .tag.guess { color: var(--accent-warn); }
+        .tag.unknown { color: var(--muted); }
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        footer {
+            padding: 24px 0 48px;
+            margin-top: 40px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (max-width: 760px) {
+            .pb-calc .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 520px) {
+            .pb-calc .grid.long { grid-template-columns: 1fr; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="위치">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/en/error-backpropagation/" hreflang="en" lang="en">English</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="wrap hero" aria-labelledby="page-title">
+            <nav class="kmap" aria-label="지식 지도" data-current="error-backpropagation">
+                <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">기계 학습</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">먼저 읽을 글과 이어서 읽을 글은 아직 없다 · 같은 분야: <a href="../train-val-calib-test/">train·val·calib·test</a></p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE · 기계 학습</p>
+            <h1 id="page-title">역전파는 정답이 없는 가운데 층을 어떻게 가르치나?</h1>
+            <p class="answer">출력이 틀린 정도를 연결을 거꾸로 따라 전하면, 정답이 없는 가운데 층의 뉴런도 오차에 대한 자기 몫(δ)을 얻는다. 가중치마다 기울기는 그 몫 × 들어온 값이고, 경사 하강법이 가중치를 그 반대쪽으로 조금씩 고친다.</p>
+            <p>다층 퍼셉트론(MLP)은 뉴런을 여러 층으로 쌓은 신경망이다. 학습 데이터에는 입력과 출력의 정답만 있고, 가운데 층(은닉층)의 뉴런이 무엇을 내야 하는지는 없다. 1986년 Rumelhart·Hinton·Williams가 보인 역전파는 출력이 틀린 정도를 거꾸로 전해 이 가운데 층까지 가르친다. 아래 그림의 작은 MLP는 XOR를 배운다. 입력은 네 꼭짓점 00, 01, 10, 11이고, XOR는 두 입력이 다른 01과 10에서만 1이다.</p>
+            <p class="source">출처: 은닉 단위에는 원하는 상태가 주어지지 않는다, 역전파: Rumelhart·Hinton·Williams 1986, Nature 323 p. 533</p>
+        </section>
+
+        <section id="try" class="wide try" aria-label="직접 해보기">
+            <div class="panel">
+                <div class="pb-toggles">
+                    <div class="control">
+                        <span class="label" id="pb-shape-label">구조</span>
+                        <div class="seg" id="pb-shape" role="group" aria-labelledby="pb-shape-label">
+                            <button type="button" data-v="mlp" aria-pressed="true">MLP (은닉 뉴런 2개)</button>
+                            <button type="button" data-v="none" aria-pressed="false">단일 퍼셉트론 (은닉층 없음)</button>
+                        </div>
+                    </div>
+                    <div class="control">
+                        <span class="label" id="pb-act-label">활성 함수</span>
+                        <div class="seg" id="pb-act" role="group" aria-labelledby="pb-act-label">
+                            <button type="button" data-v="sigmoid" aria-pressed="true">시그모이드</button>
+                            <button type="button" data-v="step" aria-pressed="false">계단 함수</button>
+                        </div>
+                    </div>
+                </div>
+                <p class="scene-text" id="pb-scene-text">다층 퍼셉트론(입력 2 → 은닉 2 → 출력 1)이 XOR를 배운다. 네 예시를 한 번씩 보는 것이 한 바퀴다. ‘학습’을 끌어 오차가 뒤로 전해지는 길을 따라가 보자.</p>
+                <div class="pb-bar">
+                    <div class="pb-slider">
+                        <label for="pb-t"><span>학습</span><output id="pb-t-out" for="pb-t">첫 바퀴 · 예시 00 · ① 앞으로</output></label>
+                        <input id="pb-t" type="range" min="0" max="1000" step="any" value="0" aria-valuetext="첫 바퀴 · 예시 00 · ① 앞으로">
+                        <div class="pb-scale" id="pb-scale" aria-hidden="true"><span>00</span><span>01</span><span>10</span><span>11</span><span class="later"><span class="later-words">그 뒤, 바퀴마다 </span>→ <b id="pb-max">2,097</b>바퀴</span></div>
+                    </div>
+                </div>
+                <ol class="pb-stages" id="pb-stages" aria-label="한 예시를 배우는 네 단계">
+                    <li class="on">① 앞으로</li>
+                    <li>② 오차</li>
+                    <li>③ 뒤로<span class="sub" id="pb-sub"></span></li>
+                    <li>④ 고치기</li>
+                </ol>
+                <div class="pb-grid" id="pb-grid">
+                    <div class="pb-cell pb-cell-net">
+                        <svg class="pb-net" id="pb-net" viewBox="0 0 340 250" role="img" aria-label="신경망 그림: 입력, 은닉, 출력 뉴런과 연결 가중치. 글로 된 계산은 아래 상자에 있다."></svg>
+                        <p class="fig-label">동그라미: 지금 예시에서 뉴런이 낸 값. 선 위의 수: 가중치(파란 선은 +, 노란 선은 −). b: 편향. ③에서 빨간 수: 몫 δ와 기울기. 선이나 b를 누르면 비탈 그림이 그 가중치로 바뀐다.</p>
+                    </div>
+                    <figure class="pb-cell pb-cell-slope">
+                        <div class="pb-pick"><label for="pb-pick">비탈을 볼 가중치</label><select id="pb-pick"><option value="0">w₁₁</option><option value="1">w₁₂</option><option value="2">b₁</option><option value="3">w₂₁</option><option value="4">w₂₂</option><option value="5">b₂</option><option value="6" selected>v₁</option><option value="7">v₂</option><option value="8">c</option></select></div>
+                        <svg class="pb-slope" id="pb-slope" role="img" aria-labelledby="pb-slope-label"></svg>
+                        <figcaption class="fig-label" id="pb-slope-label">예시 00의 오차를 v₁ 하나만 바꿔 가며 그렸다(나머지 가중치는 그대로).</figcaption>
+                        <p class="pb-slope-out" id="pb-slope-out" aria-live="polite"><span>점이 지금 자리다(v₁ = 0.0700, 오차 0.1321). 빨간 선(기울기)은 ③-3에서 나온다.</span></p>
+                    </figure>
+                    <div class="pb-calc" id="pb-calc" aria-live="polite"><p>예시 00: 왼쪽에서 오른쪽으로 계산한다(σ는 시그모이드).</p><p>h₁ = σ(0.08·0 − 0.30·0 + 0.02) = 0.505</p><p>h₂ = σ(0.29·0 + 0.28·0 − 0.13) = 0.468</p><p>y = σ(0.07·0.505 + 0.13·0.468 − 0.04) = 0.514</p></div>
+                    <p class="pb-verdict" id="pb-verdict" aria-live="polite">왼쪽 구간은 첫 바퀴를 한 걸음씩 보여 준다. 오른쪽 구간으로 끌면 같은 걸음을 바퀴마다 되풀이한 결과를 본다.</p>
+                    <p class="numbers" id="pb-status"><span>오차 E <b>0.500</b></span><span>맞힌 예시 <b>2/4</b></span><span>시작점 <b>1</b></span></p>
+                    <div class="pb-controls">
+                        <button type="button" class="btn" id="pb-auto">자동으로</button>
+                        <button type="button" class="btn" id="pb-seed">다른 시작점</button>
+                    </div>
+                    <div class="pb-cell pb-cell-plane">
+                        <svg class="pb-plane" id="pb-plane" viewBox="0 0 268 268" role="img" aria-label="입력 평면: 네 꼭짓점, 출력이 1에 가까운 곳, 뉴런마다 그은 선"></svg>
+                        <p class="legend"><span><i class="k1"></i>정답 1</span><span><i class="k0"></i>정답 0</span><span><i class="kw"></i>지금 틀림</span><span><i class="kl"></i>출력 뉴런의 선</span><span><i class="kh"></i>은닉 뉴런의 선</span></p>
+                        <p class="fig-label">칠한 곳은 출력이 1인 곳이다(시그모이드면 진할수록 1에 가깝다).</p>
+                    </div>
+                    <figure class="pb-cell pb-cell-chart">
+                        <figcaption class="fig-label pb-head" id="pb-chart-label">바퀴마다 네 예시의 오차 합 E (점선: 0.05)</figcaption>
+                        <svg class="pb-chart" id="pb-chart" role="img" aria-labelledby="pb-chart-label"></svg>
+                    </figure>
+                </div>
+            </div>
+            <p class="source" style="max-width: var(--measure);">계산: 이 페이지가 브라우저에서 직접 한다. 한 바퀴는 네 예시를 00, 01, 10, 11 순서로 한 번씩 보는 것이다. 가중치와 편향은 −0.3~0.3에서 뽑아 시작하고(시작점 1, 2, 3, …), 예시마다 학습률 η = 0.5로 고친다. ‘학습’ 슬라이더의 오른쪽 구간이 고르는 가중치는 처음에 미리 계산해 둔다(풀릴 때까지, 풀리지 않으면 30,000바퀴, 단일 퍼셉트론은 3,000바퀴, 계단 함수는 100바퀴). 비탈 그림은 고른 가중치 하나만 바꿔 가며 오차를 241번 다시 계산한다. 가로축은 그 가중치가 이번 학습 내내 닿는 범위보다 조금 넓다. 기울기 확인은 고른 가중치에 0.001을 더하고 빼서 그 예시의 오차를 다시 계산한다. 같은 계산을 파이썬으로 따로 해 숫자가 같은지 확인했다.</p>
+        </section>
+
+        <nav class="wrap toc-nav" aria-label="자세히 보기">
+            <ol class="toc">
+                <li><a href="#mlp"><span>01 MLP vs. 단일 퍼셉트론</span>은닉층이 있어야 XOR를 나눈다</a></li>
+                <li><a href="#activation"><span>02 시그모이드 vs. 계단 함수</span>계단 함수는 뒤로 가는 길을 끊는다</a></li>
+                <li><a href="#descent"><span>03 경사 하강법</span>기울기의 반대쪽으로 한 걸음씩</a></li>
+            </ol>
+        </nav>
+
+        <section id="mlp" class="wrap step" aria-labelledby="mlp-title">
+            <p class="step-no">01 MLP vs. 단일 퍼셉트론</p>
+            <h2 id="mlp-title">은닉층이 있어야 XOR를 나눈다</h2>
+            <p>뉴런 하나는 입력마다 가중치를 곱해 더하고, 편향 b를 더한다. 이 합이 0보다 크면 켜지고(1에 가까운 값), 작으면 꺼진다(0에 가까운 값). 입력 평면에서 합이 딱 0인 곳을 이으면 직선이 된다. 그래서 뉴런 하나는 평면을 직선 하나로 나눈다.</p>
+            <div class="formula"><p>합 s = w₁x₁ + w₂x₂ + b,  출력 y = f(s)</p></div>
+            <h3>단일 퍼셉트론: 선 하나</h3>
+            <p>그림의 ‘단일 퍼셉트론’은 은닉층 없이 출력 뉴런 하나만 있는 망이다. 선 하나로는 XOR를 나눌 수 없다. 01과 10은 한쪽에, 00과 11은 다른 쪽에 두어야 하는데, 01과 10을 잇는 대각선과 00과 11을 잇는 대각선이 가운데에서 엇갈리기 때문이다. 그래서 ‘단일 퍼셉트론’을 고르면 오차가 0.50에서 더 줄지 않고, 끝까지 둘만 맞힌다.</p>
+            <details class="more">
+                <summary>식으로 보면, 그리고 1958년의 퍼셉트론</summary>
+                <p>00이 0이려면 b &lt; 0, 01과 10이 1이려면 w₂ + b ≥ 0, w₁ + b ≥ 0이어야 한다. 뒤의 둘을 더하면 w₁ + w₂ + b ≥ −b &gt; 0이라 11도 1이 된다. 그러니 그런 선은 없다.</p>
+                <p>1958년 Rosenblatt의 퍼셉트론은 감각, 연합, 반응의 세 층이었다. 하지만 앞 연결은 무작위로 고정되어 있었고 배우는 것은 반응 쪽 한 층뿐이어서, 배우는 층으로 치면 한 층이다.</p>
+            </details>
+            <h3>MLP: 은닉 뉴런마다 선 하나</h3>
+            <p>뉴런을 층으로 쌓은 것이 다층 퍼셉트론(MLP)이다. 가운데 층의 뉴런(은닉 뉴런)이 저마다 선을 하나씩 긋고, 출력 뉴런이 그 결과를 다시 나눈다. 선이 둘이면 XOR도 나뉜다. 손으로 정한다면 h₁은 ‘하나라도 켜짐’(OR), h₂는 ‘둘 다 켜짐’(AND)으로 두고, 출력은 h₁이 켜지고 h₂가 꺼질 때 켜지게 하면 된다. 그림의 초록 점선이 학습으로 찾은 두 선이다.</p>
+            <details class="more">
+                <summary>시작점 1이 스스로 찾은 답</summary>
+                <p>시작점 1의 MLP가 2,097바퀴 뒤에 찾은 답은 손으로 정한 것과 다르다. h₁은 두 입력이 모두 꺼졌을 때, h₂는 두 입력이 모두 켜지지는 않았을 때 켜지고, 출력은 h₂가 켜지고 h₁이 꺼질 때 켜진다. 길은 달라도 같은 일을 한다.</p>
+            </details>
+            <h3>그런데 은닉 뉴런에는 정답이 없다</h3>
+            <p>학습 데이터에는 출력의 정답만 있다. h₁과 h₂가 무엇을 내야 하는지는 아무도 알려 주지 않는다. 그래서 은닉 뉴런으로 들어가는 가중치를 무엇을 보고 고칠지가 오래 문제였다. 은닉층 없는 망에는 퍼셉트론 수렴 절차처럼 단순하고 보장된 규칙이 있었지만, 은닉층이 있는 망에는 그런 규칙이 없었다. 이 빈자리를 채운 것이 역전파다(03).</p>
+            <p class="source">출처: 뉴런 하나와 계단 함수: Rosenblatt 1958, Bishop 2006 §4.1.7 식 4.52–4.53 · 1958년 퍼셉트론의 세 층과 고정된 앞 연결: Rosenblatt 1958 pp. 389–392, Rumelhart·Hinton·Williams 1986, Nature p. 533 · 은닉 단위 없이는 XOR를 풀 수 없다, 은닉층이 있으면 나타낼 수 있다, 은닉 단위가 있는 망에는 그만한 규칙이 없었다: PDP 8장 pp. 318–321 · 0.50에서 멈춤, 둘뿐, 시작점 1이 찾은 두 선: 이 페이지의 계산</p>
+        </section>
+
+        <section id="activation" class="wrap step" aria-labelledby="activation-title">
+            <p class="step-no">02 시그모이드 vs. 계단 함수</p>
+            <h2 id="activation-title">계단 함수는 뒤로 가는 길을 끊는다</h2>
+            <p>활성 함수는 뉴런에 들어온 합 s를 출력으로 바꾼다. 계단 함수는 s가 0 이상이면 1, 아니면 0만 낸다(1958년 퍼셉트론). 시그모이드는 0과 1 사이를 매끄러운 S자로 잇는다.</p>
+            <h3>계단 함수: 평평해서 신호가 끊긴다</h3>
+            <p>역전파는 오차를 뒤로 전할 때마다, 활성 함수가 그 자리에서 얼마나 가파른지를 곱한다(03의 ③). 계단 함수는 뛰는 한 점을 빼면 어디서나 평평해서 가파르기가 0이다. 0을 곱하니 뒤로 가는 몫이 모두 0이 되고, 가중치는 하나도 바뀌지 않는다. 그림에서 ‘계단 함수’를 고르면 100바퀴를 돌아도 가중치가 처음과 똑같다.</p>
+            <p>비탈 그림에서 보면 더 분명하다. 계단 함수의 오차는 평평하다가 어느 점에서 0.5씩 뛴다. 첫 바퀴의 예시 00에서 v₁을 0.04보다 작게 하면 이 예시의 오차가 0이 되는데도, 지금 자리(0.07)는 평평해서 그쪽으로 가라고 알려 줄 기울기가 없다.</p>
+            <h3>시그모이드: 어디서나 조금씩 기운다</h3>
+            <p>시그모이드는 어디서나 조금이라도 기울어 있다. 가운데(s = 0)에서 가장 가파르고, 양 끝으로 갈수록 완만해진다. 그래서 뒤로 가는 몫이 끊기지 않고, 모든 가중치가 고칠 방향을 받는다. 꼭 시그모이드가 아니어도 이렇게 매끄럽게 기우는 함수면 된다.</p>
+            <details class="more">
+                <summary>식으로 보면, 그리고 퍼셉트론은 어떻게 배웠나</summary>
+                <div class="formula"><p>계단 함수: f(s) = 1 (s ≥ 0), 0 (s &lt; 0)</p><p>시그모이드: σ(s) = 1 / (1 + e⁻ˢ),  가파르기 σ(1 − σ)</p></div>
+                <p>시그모이드의 가파르기 σ(1 − σ)는 s = 0에서 0.25로 가장 크다. 원 논문은 꼭 시그모이드일 필요는 없고 도함수가 유계인 함수면 된다고 적었다.</p>
+                <p>1958년 퍼셉트론은 계단 함수로도 배웠다. 틀린 예시가 나오면 그 입력만큼 가중치를 더하거나 빼는 규칙이다. 이 규칙은 그 뉴런의 정답과 견주어 고치므로, 정답이 있는 출력 한 층에만 쓸 수 있다. 이 페이지의 그림은 이 규칙이 아니라 기울기(경사 하강법)로 배우므로, 계단 함수에서는 움직이지 않는다. 퍼셉트론 규칙으로 XOR를 배우면 끝나지 않고 같은 가중치로 되돌아오며 맴돈다(따로 해 본 계산에서는 4바퀴째부터).</p>
+            </details>
+            <p class="source">출처: 계단 함수: Bishop 2006 식 4.52–4.53 · 틀린 개수는 계단처럼 평평해 기울기가 거의 모든 곳에서 0, 퍼셉트론 기준과 그 규칙: Bishop 2006 p. 193, 식 4.54–4.55 · 시그모이드, 도함수가 유계면 된다: Rumelhart·Hinton·Williams 1986, Nature 식 2, p. 534 · 은닉 단위에는 그만한 규칙이 없었다: PDP 8장 p. 321 · 100바퀴 뒤에도 그대로, 0.5씩 뛰는 오차, 예시 00의 0.04: 이 페이지의 계산 · 퍼셉트론 규칙이 XOR에서 맴돎: 따로 한 계산(시작 0.25, −0.5, 0.25, 학습률 0.5)</p>
+        </section>
+
+        <section id="descent" class="wrap step" aria-labelledby="descent-title">
+            <p class="step-no">03 경사 하강법</p>
+            <h2 id="descent-title">기울기의 반대쪽으로 한 걸음씩</h2>
+            <p>안개 낀 산에서 골짜기로 내려가려면, 발밑이 어느 쪽으로 기울었는지 보고 내리막 쪽으로 한 걸음씩 디디면 된다. 경사 하강법이 하는 일이 이것이다. 땅의 높이는 오차이고, 서 있는 자리는 가중치들의 값이다.</p>
+            <p>비탈 그림은 가중치 하나만 움직일 때 오차가 어떻게 변하는지 그린 것이다. 빨간 선이 지금 자리의 기울기다. 오른쪽이 오르막(기울기가 양수)이면 가중치를 줄이고, 내리막(음수)이면 늘린다. 경사 하강법은 모든 가중치를 저마다의 기울기 반대쪽으로 조금씩 함께 옮긴다.</p>
+            <div class="formula"><p>새 가중치 = 지금 가중치 − 0.5 × 기울기</p></div>
+            <p>0.5는 한 걸음의 크기를 정하는 수로, 학습률이라 한다. 한 걸음은 작다. 첫 바퀴의 예시 00에서 v₁은 0.032만 움직인다. 이 걸음을 되풀이해 시작점 1의 MLP는 2,097바퀴에 XOR를 풀었다. 처음 1,000바퀴쯤은 오차가 거의 줄지 않는다. 오른쪽 구간 앞쪽에서 비탈 그림의 가중치를 은닉 가중치(예: w₁₁)로 바꿔 보면 비탈이 거의 평평한데, 처음 가중치가 작아 은닉 뉴런이 변해도 출력이 거의 변하지 않기 때문일 것이다(가설).</p>
+            <h3>모든 가중치의 기울기: 역전파</h3>
+            <p>출력에 바로 이어진 가중치는 출력이 틀린 정도에서 기울기를 바로 구할 수 있다. 은닉 뉴런으로 들어가는 가중치는 그 뉴런에 정답이 없어 막힌다. 역전파는 틀린 정도를 뒤로 전해 뉴런마다 오차에 대한 몫 δ를 만든다. 그림의 ③이 그 세 걸음이다.</p>
+            <ol class="steps">
+                <li><b>③-1 출력의 몫:</b> 출력이 틀린 정도(y − d)에 출력 뉴런의 가파르기 y(1 − y)를 곱한다. 이것이 출력 뉴런의 몫 δy다.</li>
+                <li><b>③-2 은닉 뉴런의 몫:</b> δy에 연결 가중치 v를 곱해 은닉 뉴런으로 보내고, 은닉 뉴런의 가파르기 h(1 − h)를 곱한다. 정답이 없는 은닉 뉴런도 이렇게 자기 몫 δh를 얻는다.</li>
+                <li><b>③-3 연결마다 기울기:</b> 연결 끝 쪽 뉴런의 몫 δ에 그 연결로 들어온 값을 곱한다. 들어온 값이 0이면 기울기도 0이다.</li>
+            </ol>
+            <div class="formula"><p>δy = (y − d) · y(1 − y)</p><p>δh = δy · v · h(1 − h)</p><p>기울기 = δ × (들어온 값)</p></div>
+            <p>비탈 그림에서 빨간 선의 기울기가 이렇게 구한 값이다. 가중치를 0.001만큼 늘리고 줄여 직접 재 봐도 소수 여섯째 자리까지 거의 언제나 같다(그림의 ③-3).</p>
+            <p>가중치를 하나씩 흔들어 직접 재도 기울기는 나온다. 하지만 가중치 9개면 계산을 18번 다시 해야 하고, 가중치가 많을수록 그만큼 늘어난다. 역전파는 앞으로 한 번, 뒤로 한 번 계산하면 모든 기울기가 나온다.</p>
+            <details class="more">
+                <summary>몫 δ와 연쇄 법칙을 조금 더</summary>
+                <p>δ는 그 뉴런에 들어온 합이 조금 변할 때 오차가 변하는 비율이다(오차 신호라고도 한다). 변화가 여러 단계를 거쳐 전해지면 단계마다의 변화율을 곱하는데, 이것이 연쇄 법칙이다. 은닉 뉴런 h가 조금 변하면 출력의 합은 v배 변하므로, h가 변할 때 오차가 변하는 비율은 δy · v다. 여기에 h의 가파르기를 곱한 것이 δh다. 은닉 뉴런이 여러 뉴런으로 이어져 있으면 뒤 뉴런마다 (δ × 연결 가중치)를 더한 뒤 가파르기를 곱하고, 층이 더 있으면 같은 식을 한 층씩 되풀이한다.</p>
+                <p>몫이라 해도 나눠 가진 조각은 아니다. 가중치를 곱해 보낼 뿐이라, 은닉 뉴런들의 몫을 더해도 δy가 되지 않는다.</p>
+                <p>기울기를 식으로 쓰면 ∂E/∂w, 곧 가중치 w를 조금 늘릴 때 오차 E가 변하는 비율이다. 경사 하강법은 w ← w − η · ∂E/∂w이고, η가 학습률이다. 편향도 늘 1인 입력의 가중치로 친다.</p>
+                <p>이 페이지의 계산에서 역전파와 직접 잰 기울기의 차이는 가장 커도 1.4 × 10⁻¹¹이었다. 출력에서 거꾸로 미분을 모으는 이 계산은 1960~70년대 여러 분야에서 따로 나왔고(역방향 자동 미분), 1986년 논문은 이것으로 은닉 뉴런이 쓸모 있는 특징을 스스로 배운다는 것을 보였다.</p>
+            </details>
+            <h3>예시마다 한 걸음</h3>
+            <p>이 페이지는 예시 하나를 볼 때마다 바로 가중치를 고친다. 그래서 첫 바퀴의 비탈 그림은 그 예시 하나의 오차이고, 예시마다 당기는 쪽이 다르다. 첫 바퀴에서 00과 11은 v₁을 줄이고, 01과 10은 늘린다. 오른쪽 구간의 비탈 그림은 네 예시를 합친 오차이고, 빨간 선은 네 기울기를 더한 것이다.</p>
+            <details class="more">
+                <summary>예시마다 고치면 무엇이 다른가</summary>
+                <p>예시마다 고치면 진짜 경사 하강에서 조금 벗어나지만, 학습률이 충분히 작으면 그 차이는 무시할 만하다고 PDP 8장은 적었다. 이 페이지의 계산에서 오차가 내려가는 1,000바퀴 뒤에는 한 바퀴 동안 가중치들이 움직인 쪽이 네 기울기를 더한 반대쪽과 거의 같았다. 처음 500바퀴에는 예시마다의 기울기가 서로 반대 방향이고 그 합보다 훨씬 커서, 둘이 거의 상관이 없었다. 단일 퍼셉트론은 3,000바퀴 뒤 한 바퀴를 더 돌아도 가중치가 그대로인데, 비탈 그림의 기울기는 0이 아니다. 예시마다의 걸음이 한 바퀴 안에서 서로 지워지는 곳에 멈춘 것이다.</p>
+            </details>
+            <h3>걸음의 크기와 멈추는 곳</h3>
+            <p>학습률이 크면 걸음이 커져 빨리 내려가지만, 너무 크면 골짜기를 넘나들며 흔들린다. 그래서 흔들리지 않는 한 크게 잡는다.</p>
+            <p>기울기가 0에 가까워지면 더 내려갈 쪽이 없어 거의 멈춘다. 그곳이 가장 낮은 곳이라는 보장은 없다. 둘레보다만 낮은 골짜기(국소 최솟값)일 수 있다. ‘다른 시작점’을 한 번 누르고(시작점 2) 끝까지 끌어 보자. 오차가 0.33에서 멈추고, 비탈 그림에서 어느 가중치를 골라도 점이 바닥에 있다. 이 페이지의 설정에서는 시작점 100개 중 6개가 30,000바퀴 안에 풀리지 않았다.</p>
+            <p>모든 가중치를 같은 값에서 시작하면 은닉 뉴런들이 똑같이 배워 늘 같은 선을 긋는다. 그래서 작은 무작위 값에서 시작한다.</p>
+            <details class="more">
+                <summary>학습률과 모멘텀을 조금 더</summary>
+                <p>진짜 경사 하강은 아주 작은 걸음을 가정한다. PDP 8장은 흔들리지 않는 한 가장 큰 학습률을 고른다고 적었다. 은닉 뉴런 8개로 XOR를 배울 때 η = 0.1이면 평균 약 450번, η = 0.75면 약 68번 보여 주어(원문의 presentations) 풀렸고, 그보다 크면 불안정했다. 앞 걸음의 일부를 더해 걸음을 키우는 모멘텀(Nature 식 9)도 있지만, 이 페이지는 쓰지 않는다.</p>
+            </details>
+            <p class="source">출처: 경사 하강법의 식: Rumelhart·Hinton·Williams 1986, Nature 식 8, Bishop 2006 식 5.41 · 편향은 늘 1인 입력의 가중치: Nature 식 1 · 오차 곡면과 기울기, 기울기가 0인 곳, 전역·국소 최솟값: Bishop 2006 §5.2.1 그림 5.5, 식 5.26 · 앞으로·뒤로 두 단계와 식 4–7: Nature pp. 534–535 · δ의 식과 기울기 = δ × 들어온 값: Bishop 2006 식 5.53–5.56 · 유한 차분의 비용: Bishop 2006 §5.3.3 · 역방향 미분의 역사: Griewank 2012 pp. 389–390 · 예시마다 고치기: Bishop 2006 식 5.43, Nature p. 535, PDP 8장 p. 324 · 학습률과 모멘텀: PDP 8장 pp. 329–330, 333–334, Nature 식 9 · 국소 최솟값, 대칭 깨기: Nature p. 535, PDP 8장 pp. 330–332 · 0.0648과 0.032, 2,097바퀴, 1.4 × 10⁻¹¹, 예시마다 당기는 쪽, 한 바퀴의 움직임(코사인 가운데값: 1,000바퀴 뒤 0.96 이상, 처음 500바퀴 0 근처), 단일 퍼셉트론이 멈춘 곳의 기울기, 은닉 가중치의 평평한 첫 비탈, 100개 중 6개, 시작점 2의 0.33, 기울기 확인: 이 페이지의 계산</p>
+        </section>
+
+        <section id="summary" class="wrap step" aria-labelledby="summary-title">
+            <p class="step-no">정리</p>
+            <h2 id="summary-title">역전파가 일하려면</h2>
+            <ol class="steps">
+                <li>은닉층이 있어야 한다(01). 은닉 뉴런마다 선을 하나씩 그어 XOR를 나눈다. 그런데 은닉 뉴런에는 정답이 없다.</li>
+                <li>활성 함수가 매끄러워야 한다(02). 평평한 계단 함수는 뒤로 가는 몫을 0으로 끊는다.</li>
+                <li>역전파가 뉴런마다 몫 δ를 구해 모든 가중치의 기울기(δ × 들어온 값)를 내고, 경사 하강법이 그 반대쪽으로 조금씩 고친다(03). 가장 낮은 곳에 닿는다는 보장은 없다.</li>
+            </ol>
+            <div class="note">
+                <p><strong>오해</strong>역전파는 신경망을 학습시키는 알고리즘이다.</p>
+                <p class="fact"><strong>실제로는</strong>역전파는 기울기를 구하는 부분이다. 그 기울기로 가중치를 고치는 것은 경사 하강법 같은 최적화 방법이고, 같은 기울기를 다른 방법에도 쓸 수 있다.</p>
+            </div>
+            <div class="note">
+                <p><strong>오해</strong>역전파는 뇌가 배우는 방식이다.</p>
+                <p class="fact"><strong>실제로는</strong>1986년 논문 스스로 지금 꼴로는 뇌의 학습을 그럴듯하게 설명하는 모형이 아니라고 적었다. 다만 경사 하강으로 쓸모 있는 내부 표현을 만들 수 있으니, 더 생물학적인 방법을 찾을 가치가 있다고 맺었다.</p>
+            </div>
+            <h3>확인됨 · 가설 · 모름</h3>
+            <ul class="limits">
+                <li><span class="tag known">확인됨</span>식과 절 번호는 원문과 대조했다. 역전파와 수치 미분이 같다는 것(차이 1.4 × 10⁻¹¹), 비탈 그림의 기울기가 역전파의 기울기와 같다는 것, 계단 함수 망의 기울기가 0이라는 것, 단일 퍼셉트론이 오차 0.50에서 멈춘다는 것은 이 페이지의 계산으로 확인했다.</li>
+                <li><span class="tag guess">가설</span>MLP가 국소 최솟값에 갇히는 일이 원 논문보다 잦았던 것(시작점 100개 중 6개, 원 논문은 수백 번 중 두 번)은 모멘텀이 없고, 멈추는 기준과 시작 가중치의 범위가 달라서일 것이다. 처음 1,000바퀴쯤 오차가 거의 줄지 않는 것은, 시작 가중치가 작아 은닉 가중치의 기울기가 출력 쪽의 20분의 1도 안 되고 예시마다 당기는 쪽이 엇갈리기 때문일 것이다.</li>
+                <li><span class="tag unknown">모름</span>원 논문의 XOR 실행에서 학습률 말고 다른 설정(시작 범위, 멈추는 기준)은 적혀 있지 않다. Werbos의 1974년 박사 논문은 읽지 않았다.</li>
+            </ul>
+            <p class="source">출처: 역전파와 경사 하강의 구분: Bishop 2006 §5.3 · 뇌의 학습 모형이 아니다: Rumelhart·Hinton·Williams 1986, Nature p. 536 · 국소 최솟값: Nature p. 535, PDP 8장 pp. 331–332 · 처음 기울기의 크기: 이 페이지의 계산</p>
+        </section>
+
+        <section id="faq" class="wrap step" aria-labelledby="faq-title">
+            <p class="step-no">질문</p>
+            <h2 id="faq-title">자주 묻는 질문</h2>
+            <!-- 검색·AI 답변용. head의 FAQPage는 빌드 스크립트가 아래 문장에서 글자 그대로 옮긴다. -->
+            <div class="faq" id="faq-list">
+                <details>
+                    <summary>역전파(backpropagation)란?</summary>
+                    <p>신경망 출력의 오차를 연쇄 법칙으로 출력에서 입력 쪽으로 거꾸로 전해, 모든 가중치에 대한 오차의 기울기를 한 번에 구하는 방법이다. 정답이 없는 은닉 뉴런도 뒤 뉴런들의 오차 신호에 연결 가중치를 곱해 받아 자기 오차 신호를 얻고, 그것으로 자기 가중치의 기울기를 구한다. Rumelhart·Hinton·Williams가 1986년 Nature에 은닉층을 가진 망의 학습으로 발표해 널리 알려졌다.</p>
+                </details>
+                <details>
+                    <summary>역전파와 경사 하강법은 어떻게 다른가?</summary>
+                    <p>역전파는 기울기를 구하는 계산이고, 경사 하강법은 그 기울기의 반대 방향으로 가중치를 조금씩(학습률 η만큼) 옮기는 방법이다. Bishop 2006 §5.3은 이 둘을 구분하고, 역전파로 구한 기울기를 경사 하강법보다 강력한 다른 최적화 방법에도 쓸 수 있다고 적는다.</p>
+                </details>
+                <details>
+                    <summary>역전파에서 연쇄 법칙은 무슨 일을 하나?</summary>
+                    <p>가중치가 오차에 주는 영향을, 가중치가 총입력을, 총입력이 출력을, 출력이 오차를 바꾸는 비율의 곱으로 구하게 한다. 은닉 뉴런의 오차 신호는 뒤 뉴런들의 오차 신호에 연결 가중치를 곱해 더하고, 자기 활성 함수의 기울기를 곱한 값이다(Rumelhart·Hinton·Williams 1986 식 5–7).</p>
+                </details>
+                <details>
+                    <summary>역전파는 왜 출력에서 거꾸로 계산하나?</summary>
+                    <p>출력 쪽 오차 신호를 한 번 구해 두면 그 앞 층의 오차 신호를 곱셈 몇 번으로 얻기 때문이다. 앞으로 한 번, 뒤로 한 번이면 모든 가중치의 기울기가 나온다. 가중치를 하나씩 바꿔 보는 유한 차분은 가중치가 W개면 앞으로 계산이 W번, 중심 차분이면 2W번 든다(Bishop 2006 §5.3.3).</p>
+                </details>
+                <details>
+                    <summary>역전파에서 활성 함수는 왜 미분할 수 있어야 하나?</summary>
+                    <p>계단 함수는 거의 모든 곳에서 평평해(가파르기 0), 오차를 줄이려면 가중치를 어느 쪽으로 바꿔야 하는지 알려 주지 않는다. 시그모이드 σ(s) = 1 / (1 + e⁻ˢ)처럼 미분할 수 있는 함수는 가파르기 σ(1 − σ)가 0이 아니어서 오차가 뒤로 전해진다. 원 논문은 도함수가 유계인 함수면 된다고 적었다(Rumelhart·Hinton·Williams 1986 식 2, 5).</p>
+                </details>
+                <details>
+                    <summary>역전파는 언제나 답을 찾나?</summary>
+                    <p>아니다. 오차 곡면에 국소 최솟값이 있어 경사 하강법이 거기서 멈출 수 있다(Rumelhart·Hinton·Williams 1986). 은닉 뉴런 둘로 XOR를 배울 때 PDP 8장은 수백 번 가운데 두 번 갇혔다고 적었고, 이 페이지의 계산(학습률 0.5, 시작 가중치 −0.3~0.3)에서는 시작점 100개 중 6개가 30,000바퀴 안에 풀리지 않았다.</p>
+                </details>
+                <details>
+                    <summary>다층 퍼셉트론(MLP)이란?</summary>
+                    <p>뉴런을 입력층, 하나 이상의 은닉층, 출력층으로 쌓고 앞 층에서 뒤 층으로만 잇는 신경망이다. 각 뉴런은 앞 층의 출력에 가중치를 곱해 더하고 편향을 더한 값을 활성 함수에 넣는다. 은닉층의 가중치는 역전파로 구한 기울기로 학습한다(Rumelhart·Hinton·Williams 1986 p. 533).</p>
+                </details>
+                <details>
+                    <summary>XOR에는 왜 은닉층이 필요한가?</summary>
+                    <p>뉴런 하나는 입력 평면을 직선 하나로 나누는데, XOR는 00과 11을 한쪽에, 01과 10을 다른 쪽에 두어야 해서 그런 직선이 없다. 은닉 뉴런을 두면 선이 여럿이 되어 나눌 수 있다(PDP 8장 pp. 318–321). 이 페이지에서 은닉층을 빼면 같은 학습 규칙으로도 오차가 0.50에서 멈춘다.</p>
+                </details>
+            </div>
+            <p class="source">출처: Rumelhart·Hinton·Williams 1986(Nature 323 식 2, 5–7, pp. 533, 535) · Bishop 2006 §5.3, §5.3.3 · PDP 8장 pp. 318–321, 331–332</p>
+        </section>
+
+        <section class="wrap step" aria-labelledby="more-title">
+            <h2 id="more-title">더 보기</h2>
+            <ul class="links">
+                <li><a href="https://doi.org/10.1038/323533a0">Rumelhart, Hinton, Williams, Learning representations by back-propagating errors (Nature, 1986)</a></li>
+                <li><a href="https://apps.dtic.mil/sti/pdfs/ADA164453.pdf">Rumelhart, Hinton, Williams, Learning Internal Representations by Error Propagation (PDP 8장의 보고서판, 1985)</a></li>
+                <li><a href="https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf">Bishop, Pattern Recognition and Machine Learning (2006), §5.2 학습과 경사 하강법, §5.3 오차 역전파, §4.1.7 퍼셉트론</a></li>
+                <li><a href="https://emis.muni.cz/journals/DMJDMV/vol-ismp/52_griewank-andreas-b.html">Griewank, Who Invented the Reverse Mode of Differentiation? (2012)</a></li>
+                <li><a href="https://doi.org/10.1037/h0042519">Rosenblatt, The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain (Psychological Review, 1958)</a></li>
+                <li>계산: 다층 퍼셉트론의 역전파, 단일 퍼셉트론, 계단 함수 망, 기울기 확인, 비탈 그림을 파이썬 표준 라이브러리로 따로 구현해 이 페이지의 스크립트와 숫자를 맞췄다.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        마지막 업데이트 <time datetime="2026-10-19">2026-10-19</time> · <a href="/">Hugh Q Lee</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+            });
+            render();
+        })();
+    </script>
+    <script>
+        // pb-core: the arithmetic of knowledge-lab/perceptron-backprop/pb/core.py, in the same order.
+        // MLP (9 numbers): w11 w12 b1 | w21 w22 b2 | v1 v2 c. No hidden layer (3): w1 w2 b.
+        var PB = (function () {
+            "use strict";
+            var INPUTS = [[0, 0], [0, 1], [1, 0], [1, 1]];
+            var TASKS = { XOR: [0, 1, 1, 0] };
+            function step(s) { return s >= 0 ? 1 : 0; }
+            function sigmoid(s) { return 1 / (1 + Math.exp(-s)); }
+            function forward(p, x, f) {
+                var a1 = p[0] * x[0] + p[1] * x[1] + p[2];
+                var a2 = p[3] * x[0] + p[4] * x[1] + p[5];
+                var h1 = f(a1), h2 = f(a2);
+                var a3 = p[6] * h1 + p[7] * h2 + p[8];
+                return { a: [a1, a2, a3], h: [h1, h2], y: f(a3) };
+            }
+            // Rumelhart et al. 1986 eqs. 4-7. With the step function the slope is 0, so every delta is 0.
+            function backward(p, x, d, kind) {
+                var o = forward(p, x, kind === "sigmoid" ? sigmoid : step);
+                var h1 = o.h[0], h2 = o.h[1], y = o.y;
+                var dy = y - d, d3, e1, e2, d1, d2;
+                if (kind === "sigmoid") {
+                    d3 = dy * (y * (1 - y));
+                    e1 = d3 * p[6];
+                    e2 = d3 * p[7];
+                    d1 = e1 * (h1 * (1 - h1));
+                    d2 = e2 * (h2 * (1 - h2));
+                } else {
+                    d3 = 0;
+                    e1 = d3 * p[6];
+                    e2 = d3 * p[7];
+                    d1 = 0;
+                    d2 = 0;
+                }
+                return { a: o.a, h: o.h, y: y, dy: dy, delta: [d1, d2, d3], dh: [e1, e2],
+                    grad: [d1 * x[0], d1 * x[1], d1, d2 * x[0], d2 * x[1], d2, d3 * h1, d3 * h2, d3] };
+            }
+            function forward1(p, x, f) {
+                var a = p[0] * x[0] + p[1] * x[1] + p[2];
+                return { a: [a], y: f(a) };
+            }
+            function backward1(p, x, d, kind) {
+                var o = forward1(p, x, kind === "sigmoid" ? sigmoid : step);
+                var y = o.y, dy = y - d;
+                var d3 = kind === "sigmoid" ? dy * (y * (1 - y)) : 0;
+                return { a: o.a, y: y, dy: dy, delta: [d3], grad: [d3 * x[0], d3 * x[1], d3] };
+            }
+            function update(p, g, eta) {
+                var q = [];
+                for (var k = 0; k < p.length; k++) q.push(p[k] - eta * g[k]);
+                return q;
+            }
+            function error(p, x, d, f) {
+                var y = forward(p, x, f).y;
+                return 0.5 * (y - d) * (y - d);
+            }
+            function error1(p, x, d, f) {
+                var y = forward1(p, x, f).y;
+                return 0.5 * (y - d) * (y - d);
+            }
+            function totalError(p, t, f) {
+                var s = 0;
+                for (var i = 0; i < 4; i++) s += error(p, INPUTS[i], t[i], f);
+                return s;
+            }
+            function totalError1(p, t, f) {
+                var s = 0;
+                for (var i = 0; i < 4; i++) s += error1(p, INPUTS[i], t[i], f);
+                return s;
+            }
+            function allRight(p, t, f) {
+                for (var i = 0; i < 4; i++) if ((forward(p, INPUTS[i], f).y >= 0.5) !== (t[i] === 1)) return false;
+                return true;
+            }
+            function sweep(p, t, eta, kind) {
+                for (var i = 0; i < 4; i++) p = update(p, backward(p, INPUTS[i], t[i], kind).grad, eta);
+                return p;
+            }
+            function sweep1(p, t, eta, kind) {
+                for (var i = 0; i < 4; i++) p = update(p, backward1(p, INPUTS[i], t[i], kind).grad, eta);
+                return p;
+            }
+            // the gradient check: E of this case with weight k moved by +eps and -eps
+            function nudge(p, x, d, k, eps, hidden, kind) {
+                var f = kind === "sigmoid" ? sigmoid : step, err = hidden ? error : error1;
+                var up = p.slice(), dn = p.slice();
+                up[k] = p[k] + eps;
+                dn[k] = p[k] - eps;
+                var eu = err(up, x, d, f), ed = err(dn, x, d, f);
+                return { up: eu, down: ed, rate: (eu - ed) / (2 * eps) };
+            }
+            // the slope plot: E with weight k set to each value in us, the others as they are; one case i, or (i null) all four
+            function curve(p, k, us, i, t, hidden, kind) {
+                var f = kind === "sigmoid" ? sigmoid : step, err = hidden ? error : error1, out = [];
+                for (var j = 0; j < us.length; j++) {
+                    var q = p.slice(), s = 0;
+                    q[k] = us[j];
+                    if (i == null) { for (var c = 0; c < 4; c++) s += err(q, INPUTS[c], t[c], f); out.push(s); }
+                    else out.push(err(q, INPUTS[i], t[i], f));
+                }
+                return out;
+            }
+            // dE/dw of the total error: the four cases' gradients added, case 00 first
+            function gradTotal(p, t, hidden, kind) {
+                var g = null;
+                for (var c = 0; c < 4; c++) {
+                    var b = hidden ? backward(p, INPUTS[c], t[c], kind) : backward1(p, INPUTS[c], t[c], kind);
+                    if (!g) g = b.grad.slice(); else for (var k = 0; k < g.length; k++) g[k] += b.grad[k];
+                }
+                return g;
+            }
+            function mulberry32(a) {
+                return function () {
+                    a |= 0; a = a + 0x6D2B79F5 | 0;
+                    var t = Math.imul(a ^ a >>> 15, 1 | a);
+                    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+                    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+                };
+            }
+            function start(seed, n, scale) {
+                var r = mulberry32(seed), out = [];
+                for (var i = 0; i < n; i++) out.push(Math.floor((2 * r() - 1) * scale * 100 + 0.5) / 100);
+                return out;
+            }
+            return { INPUTS: INPUTS, TASKS: TASKS, step: step, sigmoid: sigmoid, forward: forward, backward: backward,
+                forward1: forward1, backward1: backward1, update: update, error: error, error1: error1,
+                totalError: totalError, totalError1: totalError1, allRight: allRight, sweep: sweep, sweep1: sweep1,
+                nudge: nudge, curve: curve, gradTotal: gradTotal, start: start };
+        })();
+    </script>
+    <script>
+        // 직접 해보기: 오차 신호가 뒤로 가는 길. ‘학습’ 슬라이더 하나가 모든 것을 정한다.
+        // 왼쪽 40%: 첫 바퀴를 한 걸음씩(예시 00·01·10·11 × ① 앞으로 → ② 오차 → ③ 뒤로(세 걸음) → ④ 고치기).
+        // 오른쪽 60%: 그 뒤를 바퀴마다(1바퀴 → 끝). 바퀴마다의 가중치는 처음에 한 번 계산해 둔다.
+        // 아래 두 그림: 바퀴마다의 오차(01·02의 결과)와, 고른 가중치 하나의 비탈(03 경사 하강법).
+        (function () {
+            "use strict";
+            var T = {
+                scene: {
+                    "mlp-sigmoid": "다층 퍼셉트론(입력 2 → 은닉 2 → 출력 1)이 XOR를 배운다. 네 예시를 한 번씩 보는 것이 한 바퀴다. ‘학습’을 끌어 오차가 뒤로 전해지는 길을 따라가 보자.",
+                    "none-sigmoid": "은닉층을 뺀 단일 퍼셉트론이다. 출력 뉴런 하나가 입력을 바로 받는다. 같은 규칙으로 배워도 XOR를 풀까?",
+                    "mlp-step": "활성 함수를 0과 1만 내는 계단 함수로 바꿨다(1958년 퍼셉트론의 함수). 오차가 뒤로 전해질까?",
+                    "none-step": "은닉층 없이 계단 함수를 쓰는 뉴런 하나다(1958년 퍼셉트론과 같은 꼴). 이 그림은 기울기로 배우는데, 여기서도 기울기는 0이다."
+                },
+                stage: ["① 앞으로", "② 오차", "③-1 출력의 몫", "③-2 은닉 뉴런의 몫", "③-3 연결마다 기울기", "④ 고치기"],
+                posFirst: "첫 바퀴 · 예시 {x} · {s}",
+                posLater: "{n}바퀴 뒤",
+                start: "왼쪽 구간은 첫 바퀴를 한 걸음씩 보여 준다. 오른쪽 구간으로 끌면 같은 걸음을 바퀴마다 되풀이한 결과를 본다.",
+                outs: "{n}바퀴 뒤 네 예시의 출력:",
+                outRow: "{x} → {y} (정답 {d})",
+                fwd: "예시 {x}: 왼쪽에서 오른쪽으로 계산한다(σ는 시그모이드).",
+                fwdStep: "예시 {x}: 왼쪽에서 오른쪽으로 계산한다.",
+                fStep: "계단",
+                err: "정답 {d}, 출력 {y}. 틀린 정도 y − d = {dy}, 오차 E = ½(y − d)² = {E}.",
+                b1: "출력 뉴런의 몫 δy: 틀린 정도(y − d)에 출력 뉴런의 가파르기 y(1 − y)를 곱한다.",
+                s1: "계단 함수는 평평해서 가파르기가 0이다. 그래서 δy = (y − d)·0 = 0이다.",
+                b2: "δy에 연결 가중치 v₁, v₂를 곱해 은닉 뉴런으로 보내고, 은닉 뉴런의 가파르기를 곱했다. 정답이 없는 h₁, h₂도 이렇게 자기 몫 δ를 얻는다.",
+                s2: "δh₁ = δy·v₁·0 = 0, δh₂ = 0. 뒤로 보낼 것이 없다.",
+                b3: "연결마다 기울기 = 끝 쪽 뉴런의 몫 δ × 들어온 값:",
+                s3: "기울기가 모두 0이다.",
+                fix: "가중치마다 0.5 × 기울기만큼 반대쪽으로 옮긴다(w ← w − 0.5·기울기):",
+                sFix: "w ← w − 0.5·0: 가중치 {m}개가 그대로다.",
+                check: "확인: {w}에 0.001을 더하면 이 예시의 오차 {up}, 빼면 {down}. 직접 잰 기울기 (E₊ − E₋) ÷ 0.002 = {rate}, 역전파가 구한 기울기 = {g}.",
+                cost: "가중치 {m}개를 이렇게 하나씩 재면 앞으로 계산이 {k}번 든다. 역전파는 앞으로 한 번, 뒤로 한 번이다.",
+                at: "{n}바퀴 뒤: 네 예시의 오차 합 E = {E}, 맞힌 예시 {k}/4.",
+                gSolved: "{n}바퀴에 풀렸다. 네 예시가 모두 맞고 E가 0.05 아래로 내려갔다(E = {E}). 은닉 뉴런의 두 선이 꼭짓점을 나눈다.",
+                gStuck: "{n}바퀴를 돌아도 E = {E}에서 더 줄지 않는다. 국소 최솟값에 갇혔다. ‘다른 시작점’을 눌러 보자.",
+                flat: "{n}바퀴를 돌아도 E가 {E}에서 줄지 않는다. 네 출력이 모두 0.5 근처({ys})다. 은닉층이 없으면 선 하나라 XOR를 나눌 수 없다.",
+                still: "{n}바퀴를 돌아도 가중치 {m}개가 처음과 똑같다. 기울기가 0이라 고칠 방향이 없다.",
+                errNow: "오차 E",
+                rightNow: "맞힌 예시",
+                seedNo: "시작점",
+                auto: "자동으로",
+                pause: "멈춤",
+                chart: "바퀴마다 네 예시의 오차 합 E",
+                chartGoal: "바퀴마다 네 예시의 오차 합 E (점선: 0.05)",
+                slopeCase: "예시 {x}의 오차를 {w} 하나만 바꿔 가며 그렸다(나머지 가중치는 그대로).",
+                slopeTotal: "{n}바퀴 뒤, 네 예시를 합친 오차를 {w} 하나만 바꿔 가며 그렸다(나머지는 그대로).",
+                slopeWait: "점이 지금 자리다({w} = {w0}, 오차 {e}). 빨간 선(기울기)은 ③-3에서 나온다.",
+                stepTo: "{w} ← {w0} − 0.5 × {g} = {w1}.",
+                stepDown: "오른쪽이 오르막(기울기 > 0)이라 줄인다(한 걸음 {d}). 화살표는 가는 쪽이다.",
+                stepUp: "오른쪽이 내리막(기울기 < 0)이라 늘린다(한 걸음 {d}). 화살표는 가는 쪽이다.",
+                stepFlat: "평평해서(기울기 0) 그대로다.",
+                stepAll: "가중치 {m}개가 모두 자기 기울기만큼 함께 움직여, 이 예시의 오차는 {e0} → {e1}.",
+                slopeNow: "{w} = {w0}, 기울기 {g}(네 예시의 기울기를 더한 값).",
+                axisE: "오차",
+                flowF: "앞으로 →",
+                flowB: "← 뒤로"
+            };
+            var ETA = 0.5, SCALE = 0.3, GOAL = 0.05, MAX_SWEEPS = 30000, NONE_AUTO = 3000, STEP_AUTO = 100, NUDGE = 0.001;
+            var NAMES9 = ["w₁₁", "w₁₂", "b₁", "w₂₁", "w₂₂", "b₂", "v₁", "v₂", "c"];
+            var EXPR9 = ["δh₁·x₁", "δh₁·x₂", "δh₁·1", "δh₂·x₁", "δh₂·x₂", "δh₂·1", "δy·h₁", "δy·h₂", "δy·1"];
+            var NAMES3 = ["w₁", "w₂", "b"], EXPR3 = ["δy·x₁", "δy·x₂", "δy·1"];
+            var NS = "http://www.w3.org/2000/svg";
+            var $ = function (id) { return document.getElementById(id); };
+            var net = $("pb-net"), plane = $("pb-plane"), chart = $("pb-chart"), slope = $("pb-slope"), calc = $("pb-calc"), tIn = $("pb-t");
+            var st = { hidden: true, act: "sigmoid", seed: 1, pick: 6, pickFor: true, v: 0 }, timer = null;
+            var FINE = 400, TOTAL = 1000;  // the slider runs 0-1000: 0-FINE the first sweep step by step, FINE-1000 the sweeps after it
+            var SAMPLES = 240;  // the slope plot computes E at 241 values of the chosen weight
+            var SHADE = 96, shade = document.createElement("canvas"), shadeCtx;
+            shade.width = shade.height = SHADE;
+            shadeCtx = shade.getContext("2d");
+            function accent() {
+                var c = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+                var m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(c);
+                return m ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)] : [105, 210, 255];
+            }
+
+            function fmt(s, o) { return s.replace(/\{(\w+)\}/g, function (m, k) { return o[k]; }); }
+            function num(v, k) {
+                var s = (Math.abs(v) < 0.5 * Math.pow(10, -k) ? 0 : v).toFixed(k);
+                return s.charAt(0) === "-" ? "−" + s.slice(1) : s;
+            }
+            function int(n) { return n.toLocaleString("ko-KR"); }
+            // "0.25·0 − 0.50·1 + 0.25": weights with k decimals, inputs as 0/1 or with 3 decimals
+            function lin(ws, xs, b, k) {
+                var fx = function (v) { return v === Math.round(v) ? String(v) : num(v, 3); };
+                var out = num(ws[0], k) + "·" + fx(xs[0]);
+                for (var i = 1; i < ws.length; i++) out += (ws[i] < 0 ? " − " : " + ") + num(Math.abs(ws[i]), k) + "·" + fx(xs[i]);
+                return out + (b < 0 ? " − " : " + ") + num(Math.abs(b), k);
+            }
+            function el(tag, attrs, parent, text) {
+                var e = document.createElementNS(NS, tag);
+                for (var a in attrs) e.setAttribute(a, attrs[a]);
+                if (text != null) e.textContent = text;
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+            function width(svg, least, fallback) { return Math.max(least, Math.round(svg.getBoundingClientRect().width) || fallback); }
+
+            // the network on stage: an MLP (9 numbers) or one output unit, the single-layer perceptron (3)
+            function sig() { return st.act === "sigmoid"; }
+            function f() { return sig() ? PB.sigmoid : PB.step; }
+            function names() { return st.hidden ? NAMES9 : NAMES3; }
+            function back(p, x, d) { return st.hidden ? PB.backward(p, x, d, st.act) : PB.backward1(p, x, d, st.act); }
+            function total(p) { return st.hidden ? PB.totalError(p, st.targets, f()) : PB.totalError1(p, st.targets, f()); }
+            function one(p, x, d) { return st.hidden ? PB.error(p, x, d, f()) : PB.error1(p, x, d, f()); }
+            function out(p, x) { return st.hidden ? PB.forward(p, x, f()).y : PB.forward1(p, x, f()).y; }
+            function rightCount(p) {
+                var n = 0;
+                for (var i = 0; i < 4; i++) if ((out(p, PB.INPUTS[i]) >= 0.5) === (st.targets[i] === 1)) n++;
+                return n;
+            }
+            // the stages of one case: with no hidden layer ③-2 has nothing to do
+            function order() { return st.hidden ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 4, 5]; }
+
+            // every sweep's starting weights, until it is solved or for the scene's length
+            function train() {
+                var p = PB.start(st.seed, st.size, SCALE), traj = [p], E = [total(p)];
+                var limit = !sig() ? STEP_AUTO : (st.hidden ? MAX_SWEEPS : NONE_AUTO);
+                st.done = null;
+                for (var k = 1; k <= limit; k++) {
+                    p = st.hidden ? PB.sweep(p, st.targets, ETA, st.act) : PB.sweep1(p, st.targets, ETA, st.act);
+                    traj.push(p);
+                    E.push(total(p));
+                    if (sig() && st.hidden && rightCount(p) === 4 && E[k] < GOAL) { st.done = "solved"; break; }
+                }
+                if (!st.done) st.done = !sig() ? "still" : (st.hidden ? "stuck" : "flat");
+                st.traj = traj; st.E = E; st.max = traj.length - 1;
+                // the slope plot's axis for each weight: a little wider than everywhere the weight goes in this run
+                st.lim = [];
+                for (var j = 0; j < st.size; j++) {
+                    var far = 0;
+                    for (var n = 0; n < traj.length; n++) far = Math.max(far, Math.abs(traj[n][j]));
+                    st.lim.push(Math.max(2, Math.ceil(far) + 1));
+                }
+            }
+            function reset(keep) {
+                stop();
+                st.targets = PB.TASKS.XOR;
+                st.size = st.hidden ? 9 : 3;
+                if (st.pickFor !== st.hidden) { st.pick = st.hidden ? 6 : 2; st.pickFor = st.hidden; }  // v₁ or b: their input is never 0
+                train();
+                if (!keep) st.v = 0;
+                tIn.value = String(st.v);
+                layout();
+                $("pb-max").textContent = int(st.max);
+                var sel = $("pb-pick");
+                clear(sel);
+                names().forEach(function (name, k) {
+                    var o = document.createElement("option");
+                    o.value = String(k); o.textContent = name;
+                    sel.appendChild(o);
+                });
+                render();
+            }
+            // where the slider is: a step of the first sweep (left part) or the end of sweep n (right part)
+            function steps() { return 4 * order().length; }
+            function at(v) {
+                if (v < FINE) return { fine: true, n: 0, pos: Math.min(steps() - 1, Math.floor(v / FINE * steps())) };
+                return { fine: false, pos: 0, n: Math.max(1, Math.min(st.max, 1 + Math.round((v - FINE) / (TOTAL - FINE) * (st.max - 1)))) };
+            }
+            function valueOfPos(pos) { return (pos + 0.5) / steps() * FINE; }
+            function valueOfN(n) { return st.max > 1 ? FINE + (n - 1) / (st.max - 1) * (TOTAL - FINE) : TOTAL; }
+            function view() {
+                var a = at(st.v);
+                if (!a.fine) return { fine: false, n: a.n, shown: st.traj[a.n] };
+                var o = order(), i = Math.floor(a.pos / o.length), s = o[a.pos % o.length], p = st.traj[0];
+                for (var j = 0; j < i; j++) p = PB.update(p, back(p, PB.INPUTS[j], st.targets[j]).grad, ETA);
+                var c = back(p, PB.INPUTS[i], st.targets[i]);
+                c.x = PB.INPUTS[i]; c.d = st.targets[i]; c.before = p; c.after = PB.update(p, c.grad, ETA);
+                return { fine: true, n: 0, i: i, s: s, c: c, shown: s === 5 ? c.after : c.before };
+            }
+            function setV(v) { st.v = Math.max(0, Math.min(TOTAL, v)); tIn.value = String(st.v); render(); }
+            // narrow screens give the first sweep 70% of the slider, so each step stays wide enough for a finger
+            function layout() {
+                var a = at(st.v), fine = (tIn.getBoundingClientRect().width || 600) < 520 ? 700 : 400;
+                if (fine === FINE) return false;
+                FINE = fine;
+                $("pb-scale").style.setProperty("--fine", FINE / 10 + "%");
+                $("pb-scale").classList.toggle("narrow", FINE === 700);
+                st.v = a.fine ? valueOfPos(a.pos) : valueOfN(a.n);
+                tIn.value = String(st.v);
+                return true;
+            }
+
+            function quiet(on) {
+                calc.setAttribute("aria-live", on ? "off" : "polite");
+                $("pb-slope-out").setAttribute("aria-live", on ? "off" : "polite");
+            }
+            function stop() {
+                if (timer) { clearTimeout(timer); timer = null; }
+                quiet(false);
+                $("pb-auto").textContent = T.auto;
+            }
+            // ‘자동으로’ drags the slider to its end: the first sweep a step at a time, then sweep after sweep
+            function auto() {
+                if (timer) { stop(); return; }
+                var a = at(st.v);
+                if (!a.fine && a.n >= st.max) setV(0);
+                quiet(true);
+                $("pb-auto").textContent = T.pause;
+                var frame = function () {
+                    var a = at(st.v), delay = 30;
+                    if (a.fine) { setV(a.pos + 1 < steps() ? valueOfPos(a.pos + 1) : valueOfN(1)); delay = 320; }
+                    else setV(valueOfN(Math.min(st.max, a.n + (sig() ? Math.min(40, 1 + Math.floor(a.n / 40)) : 2))));
+                    var b = at(st.v);
+                    if (!b.fine && b.n >= st.max) { stop(); render(); return; }
+                    timer = setTimeout(frame, delay);
+                };
+                timer = setTimeout(frame, 30);
+            }
+
+            // ---- drawing
+            var LAYOUT = {
+                X2: [{ x: 44, y: 80 }, { x: 44, y: 188 }], X1: [{ x: 60, y: 80 }, { x: 60, y: 188 }],
+                H: [{ x: 170, y: 80 }, { x: 170, y: 188 }], Y2: { x: 296, y: 134 }, Y1: { x: 260, y: 134 }
+            };
+            function edgesOf() {
+                var X = st.hidden ? LAYOUT.X2 : LAYOUT.X1, H = LAYOUT.H, Y = st.hidden ? LAYOUT.Y2 : LAYOUT.Y1;
+                return st.hidden
+                    ? [[X[0], H[0], 0], [X[1], H[0], 1], [X[0], H[1], 3], [X[1], H[1], 4], [H[0], Y, 6], [H[1], Y, 7]]
+                    : [[X[0], Y, 0], [X[1], Y, 1]];
+            }
+            // a bias under its neuron; pressing it picks that bias for the slope plot
+            function bias(g, pt, k, w) {
+                el("text", { x: pt.x, y: pt.y + 55, "text-anchor": "middle", "class": "b" + (st.pick === k ? " picked" : ""), "data-k": k }, g, "b " + num(w, 2));
+            }
+            function edge(e, w, cls, label, labelCls) {
+                var k = e[2], picked = st.pick === k;
+                var g = el("g", { "class": "pb-edge " + (w < 0 ? "neg" : "pos") + cls + (picked ? " picked" : "") }, net), sw = 1 + Math.min(Math.abs(w), 6) * 0.9;
+                if (picked) el("line", { x1: e[0].x, y1: e[0].y, x2: e[1].x, y2: e[1].y, "class": "halo", "stroke-width": (sw + 6).toFixed(2) }, g);
+                el("line", { x1: e[0].x, y1: e[0].y, x2: e[1].x, y2: e[1].y, "class": "w", "stroke-width": sw.toFixed(2) }, g);
+                var t = st.hidden && k < 6 ? 0.36 : 0.45;
+                el("text", { x: e[0].x + (e[1].x - e[0].x) * t, y: e[0].y + (e[1].y - e[0].y) * t - 6, "text-anchor": "middle", "class": labelCls || "" }, g, label);
+                el("line", { x1: e[0].x, y1: e[0].y, x2: e[1].x, y2: e[1].y, "class": "hit", "data-k": k }, g);
+            }
+            function drawNet(v) {
+                clear(net);
+                if (!v.fine) return drawWeights(v.shown);
+                var two = st.hidden, c = v.c, sg = v.s;
+                var X = two ? LAYOUT.X2 : LAYOUT.X1, H = LAYOUT.H, Y = two ? LAYOUT.Y2 : LAYOUT.Y1;
+                var before = c.before, now = c.after, shown = v.shown;
+                edgesOf().forEach(function (e) {
+                    var k = e[2], backNow = (sg === 3 && k >= 6) || sg === 4;
+                    var cls = (backNow ? " back" : "") + (sg === 5 && before[k] !== now[k] ? " changed" : "");
+                    if (sg === 4) edge(e, shown[k], cls, num(c.grad[k], 4), "grad");
+                    else edge(e, shown[k], cls, num(shown[k], 2));
+                });
+                function node(pt, name, value, b, delta, cls) {
+                    var g = el("g", { "class": "pb-node" + (cls ? " " + cls : "") }, net);
+                    el("circle", { cx: pt.x, cy: pt.y, r: 22 }, g);
+                    el("text", { x: pt.x, y: pt.y + 4.5, "text-anchor": "middle", "class": "v" }, g, value);
+                    el("text", { x: pt.x, y: pt.y + 40, "text-anchor": "middle", "class": "n" }, g, name);
+                    if (b != null) bias(g, pt, b, shown[b]);
+                    if (delta != null) el("text", { x: pt.x, y: pt.y - 30, "text-anchor": "middle", "class": "dl" }, g, "δ " + num(delta, 4));
+                }
+                var hv = function (x) { return sig() ? num(x, 2) : String(x); };
+                node(X[0], "x₁", String(c.x[0]), null, null, sg === 0 ? "active" : "");
+                node(X[1], "x₂", String(c.x[1]), null, null, sg === 0 ? "active" : "");
+                if (two) {
+                    node(H[0], "h₁", hv(c.h[0]), 2, sg >= 3 ? c.delta[0] : null, sg === 3 ? "active-back" : (sg === 0 ? "active" : ""));
+                    node(H[1], "h₂", hv(c.h[1]), 5, sg >= 3 ? c.delta[1] : null, sg === 3 ? "active-back" : (sg === 0 ? "active" : ""));
+                    node(Y, "y", hv(c.y), 8, sg >= 2 ? c.delta[2] : null, sg === 2 ? "active-back" : (sg <= 1 ? "active" : ""));
+                } else {
+                    node(Y, "y", hv(c.y), 2, sg >= 2 ? c.delta[0] : null, sg === 2 ? "active-back" : (sg <= 1 ? "active" : ""));
+                }
+                el("text", { x: X[0].x - 22, y: 16, "class": "pb-flow" }, net, T.flowF);
+                if (sg >= 2 && sg <= 4) el("text", { x: Y.x + 22, y: 16, "text-anchor": "end", "class": "pb-flow back" }, net, T.flowB);
+            }
+            // right part of the slider: the weights at the end of a sweep, with no case flowing through
+            function drawWeights(w) {
+                var two = st.hidden, X = two ? LAYOUT.X2 : LAYOUT.X1, H = LAYOUT.H, Y = two ? LAYOUT.Y2 : LAYOUT.Y1;
+                edgesOf().forEach(function (e) { edge(e, w[e[2]], "", num(w[e[2]], 2)); });
+                var nodes = two ? [[X[0], "x₁"], [X[1], "x₂"], [H[0], "h₁", 2], [H[1], "h₂", 5], [Y, "y", 8]] : [[X[0], "x₁"], [X[1], "x₂"], [Y, "y", 2]];
+                nodes.forEach(function (n) {
+                    var g = el("g", { "class": "pb-node" }, net);
+                    el("circle", { cx: n[0].x, cy: n[0].y, r: 22 }, g);
+                    el("text", { x: n[0].x, y: n[0].y + 40, "text-anchor": "middle", "class": "n" }, g, n[1]);
+                    if (n[2] != null) bias(g, n[0], n[2], w[n[2]]);
+                });
+                el("text", { x: X[0].x - 22, y: 16, "class": "pb-flow" }, net, T.flowF);
+            }
+            function drawPlane(v) {
+                clear(plane);
+                var L = 24, S = 232, lo = -0.5, hi = 1.5;
+                var px = function (u) { return L + (u - lo) / (hi - lo) * S; };
+                var py = function (y) { return L + S - (y - lo) / (hi - lo) * S; };
+                var p = v.shown;
+                if (!st.hidden && !sig()) {
+                    // the half-plane s >= 0, clipped to the frame
+                    var box = [[lo, lo], [hi, lo], [hi, hi], [lo, hi]], poly = [];
+                    var side = function (q) { return p[0] * q[0] + p[1] * q[1] + p[2]; };
+                    box.forEach(function (q, i) {
+                        var r = box[(i + 1) % 4], sq = side(q), sr = side(r);
+                        if (sq >= 0) poly.push(q);
+                        if ((sq >= 0) !== (sr >= 0)) { var t = sq / (sq - sr); poly.push([q[0] + t * (r[0] - q[0]), q[1] + t * (r[1] - q[1])]); }
+                    });
+                    if (poly.length > 2) el("polygon", { points: poly.map(function (q) { return px(q[0]).toFixed(1) + "," + py(q[1]).toFixed(1); }).join(" "), "class": "cell", "fill-opacity": "0.34" }, plane);
+                } else {
+                    // the network's output on a 96 x 96 grid, drawn as a smoothed image
+                    var rgb = accent(), img = shadeCtx.createImageData(SHADE, SHADE);
+                    for (var j = 0; j < SHADE; j++) for (var a = 0; a < SHADE; a++) {
+                        var y = out(p, [lo + (a + 0.5) * (hi - lo) / SHADE, hi - (j + 0.5) * (hi - lo) / SHADE]), o = 4 * (j * SHADE + a);
+                        img.data[o] = rgb[0]; img.data[o + 1] = rgb[1]; img.data[o + 2] = rgb[2]; img.data[o + 3] = Math.round(255 * 0.4 * y);
+                    }
+                    shadeCtx.putImageData(img, 0, 0);
+                    el("image", { href: shade.toDataURL(), x: L, y: L, width: S, height: S, preserveAspectRatio: "none" }, plane);
+                }
+                el("rect", { x: L, y: L, width: S, height: S, "class": "frame" }, plane);
+                [0, 1].forEach(function (t) {
+                    el("text", { x: px(t), y: L + S + 16, "text-anchor": "middle", "class": "tick" }, plane, String(t));
+                    el("text", { x: L - 8, y: py(t) + 4, "text-anchor": "end", "class": "tick" }, plane, String(t));
+                });
+                el("text", { x: L + S, y: L + S + 16, "text-anchor": "end", "class": "tick" }, plane, "x₁");
+                el("text", { x: L - 8, y: L + 10, "text-anchor": "end", "class": "tick" }, plane, "x₂");
+                // a·u + b·v + c = 0, clipped to the frame
+                function line(A, B, C, cls, label) {
+                    var pts = [];
+                    if (Math.abs(B) > 1e-12) [lo, hi].forEach(function (u) { var w = -(A * u + C) / B; if (w >= lo - 1e-9 && w <= hi + 1e-9) pts.push([u, w]); });
+                    if (Math.abs(A) > 1e-12) [lo, hi].forEach(function (w) { var u = -(B * w + C) / A; if (u >= lo - 1e-9 && u <= hi + 1e-9) pts.push([u, w]); });
+                    if (pts.length < 2) return;
+                    var s = pts[0], e = pts[1];
+                    for (var i = 1; i < pts.length; i++) if (Math.abs(pts[i][0] - s[0]) + Math.abs(pts[i][1] - s[1]) > 1e-6) { e = pts[i]; break; }
+                    el("line", { x1: px(s[0]), y1: py(s[1]), x2: px(e[0]), y2: py(e[1]), "class": cls }, plane);
+                    if (label) {
+                        var m = s[0] > e[0] || (s[0] === e[0] && s[1] > e[1]) ? s : e;
+                        el("text", { x: Math.min(L + S - 4, Math.max(L + 4, px(m[0]) - 6)), y: Math.min(L + S - 6, Math.max(L + 14, py(m[1]) + (m[1] > 1 ? 16 : -6))), "text-anchor": "end", "class": "h-label" }, plane, label);
+                    }
+                }
+                if (st.hidden) { line(p[0], p[1], p[2], "h-line", "h₁"); line(p[3], p[4], p[5], "h-line", "h₂"); }
+                else line(p[0], p[1], p[2], "main-line");
+                PB.INPUTS.forEach(function (x, i) {
+                    var d = st.targets[i], y = out(p, x);
+                    var cx = px(x[0]), cy = py(x[1]);
+                    if ((y >= 0.5) !== (d === 1)) el("circle", { cx: cx, cy: cy, r: 13, "class": "wrong" }, plane);
+                    if (v.fine && v.i === i) el("circle", { cx: cx, cy: cy, r: 18, "class": "now" }, plane);
+                    el("circle", { cx: cx, cy: cy, r: 7, "class": d ? "pt1" : "pt0" }, plane);
+                    el("text", { x: cx + (x[0] ? 14 : -14), y: cy + (x[1] ? -12 : 22), "text-anchor": x[0] ? "start" : "end", "class": "pt-label" }, plane, x.join(""));
+                });
+            }
+            // the error per sweep up to where the slider is, on an axis as long as the run, drawn at its real width
+            function drawChart() {
+                var cur = at(st.v).n;
+                clear(chart);
+                var W = width(chart, 260, 460), H = 150, L = 34, R = 10, top = 10, bottom = 24;
+                chart.setAttribute("viewBox", "0 0 " + W + " " + H);
+                var data = st.E, ymax = sig() ? 0.6 : 2, n = Math.max(1, st.max);
+                var X = function (i) { return L + (W - L - R) * i / n; };
+                var Yp = function (v) { return top + (H - top - bottom) * (1 - Math.min(v, ymax) / ymax); };
+                el("line", { x1: L, y1: Yp(0), x2: W - R, y2: Yp(0), "class": "axis" }, chart);
+                el("line", { x1: L, y1: top, x2: L, y2: Yp(0), "class": "axis" }, chart);
+                el("text", { x: L - 6, y: Yp(0) + 4, "text-anchor": "end", "class": "tick" }, chart, "0");
+                el("text", { x: L - 6, y: Yp(sig() ? 0.5 : 2) + 4, "text-anchor": "end", "class": "tick" }, chart, sig() ? "0.5" : "2");
+                el("text", { x: W - R, y: H - 6, "text-anchor": "end", "class": "tick" }, chart, int(st.max));
+                el("text", { x: L, y: H - 6, "class": "tick" }, chart, "0");
+                if (st.hidden && sig()) el("line", { x1: L, y1: Yp(GOAL), x2: W - R, y2: Yp(GOAL), "class": "goal" }, chart);
+                var pts = [], stride = Math.max(1, Math.floor(cur / 600));
+                for (var i = 0; i < cur; i += stride) pts.push(X(i).toFixed(1) + "," + Yp(data[i]).toFixed(1));
+                pts.push(X(cur).toFixed(1) + "," + Yp(data[cur]).toFixed(1));
+                if (pts.length > 1) el("polyline", { points: pts.join(" "), "class": "curve" }, chart);
+                el("line", { x1: X(cur), y1: top, x2: X(cur), y2: Yp(0), "class": "now" }, chart);
+                el("circle", { cx: X(cur), cy: Yp(data[cur]), r: 3.5, "class": "dot" }, chart);
+            }
+            // 03: E along the chosen weight with the others where they are. First sweep: the error of the case being
+            // learned, its slope from ③-3, and at ④ the way the step goes. Right part: the four cases' total and its slope.
+            function drawSlope(v) {
+                clear(slope);
+                var W = width(slope, 260, 460), H = 150, L = 34, R = 12, top = 10, bottom = 24;
+                slope.setAttribute("viewBox", "0 0 " + W + " " + H);
+                var k = st.pick, lim = st.lim[k], base = v.fine ? v.c.before : v.shown;
+                var ymax = v.fine ? 0.5 : (sig() ? 1 : 2);
+                var X = function (u) { return L + (W - L - R) * (u + lim) / (2 * lim); };
+                var Y = function (e) { return top + (H - top - bottom) * (1 - Math.min(e, ymax) / ymax); };
+                var defs = el("defs", {}, slope), clip = el("clipPath", { id: "pb-slope-clip" }, defs);
+                el("rect", { x: L, y: top - 4, width: W - L - R, height: H - top - bottom + 4 }, clip);
+                var tip = el("marker", { id: "pb-slope-tip", viewBox: "0 0 10 10", refX: 8, refY: 5, markerWidth: 6, markerHeight: 6, orient: "auto" }, defs);
+                el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" }, tip);
+                el("line", { x1: L, y1: Y(0), x2: W - R, y2: Y(0), "class": "axis" }, slope);
+                el("line", { x1: L, y1: top, x2: L, y2: Y(0), "class": "axis" }, slope);
+                el("line", { x1: X(0), y1: Y(0), x2: X(0), y2: Y(0) + 4, "class": "axis" }, slope);
+                el("text", { x: L - 6, y: Y(0) + 4, "text-anchor": "end", "class": "tick" }, slope, "0");
+                el("text", { x: L - 6, y: Y(ymax) + 4, "text-anchor": "end", "class": "tick" }, slope, String(ymax));
+                el("text", { x: L + 6, y: top + 10, "class": "tick" }, slope, T.axisE);
+                el("text", { x: L, y: H - 6, "class": "tick" }, slope, "−" + lim);
+                el("text", { x: X(0), y: H - 6, "text-anchor": "middle", "class": "tick" }, slope, "0");
+                el("text", { x: W - R, y: H - 6, "text-anchor": "end", "class": "tick" }, slope, String(lim));
+                el("text", { x: W - R, y: Y(0) - 6, "text-anchor": "end", "class": "tick name" }, slope, names()[k]);
+                var us = [];
+                for (var j = 0; j <= SAMPLES; j++) us.push(-lim + 2 * lim * j / SAMPLES);
+                var es = PB.curve(base, k, us, v.fine ? v.i : null, st.targets, st.hidden, st.act);
+                el("polyline", { points: us.map(function (u, j) { return X(u).toFixed(1) + "," + Y(es[j]).toFixed(1); }).join(" "), "class": "curve", "clip-path": "url(#pb-slope-clip)" }, slope);
+                var u0 = base[k], e0 = v.fine ? 0.5 * v.c.dy * v.c.dy : total(base), px = X(u0), py = Y(e0);
+                if (!v.fine || v.s >= 4) {
+                    var g = v.fine ? v.c.grad[k] : PB.gradTotal(base, st.targets, st.hidden, st.act)[k];
+                    var ps = -g * ((H - top - bottom) / ymax) / ((W - L - R) / (2 * lim)), dx = 30 / Math.sqrt(1 + ps * ps);  // ps: pixels down per pixel right
+                    el("line", { x1: px - dx, y1: py - ps * dx, x2: px + dx, y2: py + ps * dx, "class": "tangent", "clip-path": "url(#pb-slope-clip)" }, slope);
+                    if (v.fine && v.s === 5 && g !== 0) {
+                        var ux = (g > 0 ? -1 : 1) / Math.sqrt(1 + ps * ps), uy = ps * ux;  // along the slope, downhill
+                        el("line", { x1: px + 8 * ux, y1: py + 8 * uy, x2: px + 34 * ux, y2: py + 34 * uy, "class": "step", "marker-end": "url(#pb-slope-tip)" }, slope);
+                    }
+                }
+                el("circle", { cx: px, cy: py, r: 4.5, "class": "dot" }, slope);
+            }
+
+            // ---- words
+            function outputs(p) {
+                return PB.INPUTS.map(function (x) { return num(out(p, x), 2); }).join(", ");
+            }
+            function lines(v) {
+                var hv = function (x) { return sig() ? num(x, 3) : String(x); };
+                if (!v.fine) {
+                    var rows = PB.INPUTS.map(function (x, k) { return fmt(T.outRow, { x: x.join(""), y: hv(out(v.shown, x)), d: st.targets[k] }); });
+                    return [fmt(T.outs, { n: int(v.n) }), { grid: rows }];
+                }
+                var c = v.c, sg = v.s, two = st.hidden, p = c.before, xs = c.x.join(""), fn = sig() ? "σ" : T.fStep;
+                if (sg === 0) {
+                    var lead = fmt(sig() ? T.fwd : T.fwdStep, { x: xs });
+                    if (!two) return [lead, "y = " + fn + "(" + lin([p[0], p[1]], c.x, p[2], 2) + ") = " + hv(c.y)];
+                    return [lead,
+                        "h₁ = " + fn + "(" + lin([p[0], p[1]], c.x, p[2], 2) + ") = " + hv(c.h[0]),
+                        "h₂ = " + fn + "(" + lin([p[3], p[4]], c.x, p[5], 2) + ") = " + hv(c.h[1]),
+                        "y = " + fn + "(" + lin([p[6], p[7]], c.h, p[8], 2) + ") = " + hv(c.y)];
+                }
+                if (sg === 1) return [fmt(T.err, { d: c.d, y: hv(c.y), dy: sig() ? num(c.dy, 3) : num(c.dy, 0), E: num(0.5 * c.dy * c.dy, sig() ? 3 : 1) })];
+                var dy = two ? c.delta[2] : c.delta[0];
+                if (sg === 2) {
+                    if (!sig()) return [T.s1];
+                    return [T.b1, "δy = (y − d)·y(1 − y) = " + num(c.dy, 3) + "·" + num(c.y, 3) + "·" + num(1 - c.y, 3) + " = " + num(dy, 4)];
+                }
+                if (sg === 3) {
+                    if (!sig()) return [T.s2];
+                    return [T.b2, "δh₁ = δy·v₁·h₁(1 − h₁) = " + num(dy, 4) + "·" + num(p[6], 2) + "·" + num(c.h[0] * (1 - c.h[0]), 3) + " = " + num(c.delta[0], 4),
+                        "δh₂ = δy·v₂·h₂(1 − h₂) = " + num(dy, 4) + "·" + num(p[7], 2) + "·" + num(c.h[1] * (1 - c.h[1]), 3) + " = " + num(c.delta[1], 4)];
+                }
+                var nm = names(), grid = [], j;
+                if (sg === 4) {
+                    var ex = two ? EXPR9 : EXPR3;
+                    for (j = 0; j < st.size; j++) grid.push(nm[j] + " " + ex[j] + " = " + num(c.grad[j], 4));
+                    return sig() ? [T.b3, { grid: grid, long: true }] : [T.b3, { grid: grid, long: true }, T.s3];
+                }
+                if (!sig()) return [fmt(T.sFix, { m: st.size })];
+                for (j = 0; j < st.size; j++) grid.push(nm[j] + " " + num(p[j], 3) + " → " + num(c.after[j], 3));
+                return [T.fix, { grid: grid }];
+            }
+            function verdict(v) {
+                if (v.fine) return T.start;
+                var n = v.n, E = st.E[n], p = st.traj[n];
+                if (!sig()) return fmt(T.still, { n: int(n), m: st.size });
+                if (n === st.max && st.done === "solved") return fmt(T.gSolved, { n: int(n), E: num(E, 5) });
+                if (n === st.max && st.done === "stuck") return fmt(T.gStuck, { n: int(n), E: num(E, 3) });
+                if (n === st.max && st.done === "flat") return fmt(T.flat, { n: int(n), E: num(E, 3), ys: outputs(p) });
+                return fmt(T.at, { n: int(n), E: num(E, 3), k: rightCount(p) });
+            }
+            // under the slope plot: what it shows, then the slope and the step in numbers
+            function slopeWords(v) {
+                var k = st.pick, w = names()[k], said = [];
+                if (v.fine) {
+                    var c = v.c, g = c.grad[k];
+                    $("pb-slope-label").textContent = fmt(T.slopeCase, { x: c.x.join(""), w: w });
+                    if (v.s < 4) said.push(fmt(T.slopeWait, { w: w, w0: num(c.before[k], 4), e: num(0.5 * c.dy * c.dy, 4) }));
+                    else if (v.s === 4) {
+                        var r = PB.nudge(c.before, c.x, c.d, k, NUDGE, st.hidden, st.act);
+                        said.push(fmt(T.check, { w: w, up: num(r.up, 6), down: num(r.down, 6), rate: num(r.rate, 6), g: num(g, 6) }));
+                        said.push(fmt(T.cost, { m: st.size, k: 2 * st.size }));
+                    } else {
+                        said.push(fmt(T.stepTo, { w: w, w0: num(c.before[k], 4), g: g < 0 ? "(" + num(g, 4) + ")" : num(g, 4), w1: num(c.after[k], 4) }) + " " +
+                            (g > 0 ? fmt(T.stepDown, { d: num(ETA * g, 4) }) : g < 0 ? fmt(T.stepUp, { d: num(-ETA * g, 4) }) : T.stepFlat));
+                        if (sig()) said.push(fmt(T.stepAll, { m: st.size, e0: num(0.5 * c.dy * c.dy, 4), e1: num(one(c.after, c.x, c.d), 4) }));
+                    }
+                } else {
+                    $("pb-slope-label").textContent = fmt(T.slopeTotal, { n: int(v.n), w: w });
+                    said.push(fmt(T.slopeNow, { w: w, w0: num(v.shown[k], 4), g: num(PB.gradTotal(v.shown, st.targets, st.hidden, st.act)[k], 4) }));
+                }
+                var box = $("pb-slope-out");
+                clear(box);
+                said.forEach(function (s) { var e = document.createElement("span"); e.textContent = s; box.appendChild(e); });
+            }
+            function render() {
+                document.querySelectorAll("#pb-shape button").forEach(function (b) { b.setAttribute("aria-pressed", (b.getAttribute("data-v") === "mlp") === st.hidden ? "true" : "false"); });
+                document.querySelectorAll("#pb-act button").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-v") === st.act ? "true" : "false"); });
+                $("pb-scene-text").textContent = T.scene[(st.hidden ? "mlp" : "none") + "-" + st.act];
+                var v = view(), sg = v.fine ? v.s : -1;
+                var label = v.fine ? fmt(T.posFirst, { x: v.c.x.join(""), s: T.stage[sg] }) : fmt(T.posLater, { n: int(v.n) });
+                $("pb-t-out").textContent = label;
+                tIn.setAttribute("aria-valuetext", label);
+                var chip = sg < 0 ? -1 : sg <= 1 ? sg : sg <= 4 ? 2 : 3, chips = $("pb-stages").children;
+                for (var i = 0; i < 4; i++) chips[i].className = chip === i ? (i === 2 ? "on-back" : "on") : "";
+                $("pb-sub").textContent = chip === 2 ? (st.hidden ? (sg - 1) + "/3" : (sg === 2 ? "1/2" : "2/2")) : "";
+                calc.className = "pb-calc" + (chip === 2 ? " back" : "");
+                clear(calc);
+                lines(v).forEach(function (l) {
+                    if (typeof l === "string") { var e = document.createElement("p"); e.textContent = l; calc.appendChild(e); return; }
+                    var g = document.createElement("div"); g.className = l.long ? "grid long" : "grid";
+                    l.grid.forEach(function (s) { var e = document.createElement("span"); e.textContent = s; g.appendChild(e); });
+                    calc.appendChild(g);
+                });
+                $("pb-verdict").textContent = verdict(v);
+                var status = $("pb-status");
+                clear(status);
+                function item(name, value) {
+                    var s = document.createElement("span"), b = document.createElement("b");
+                    s.appendChild(document.createTextNode(name + " ")); b.textContent = value; s.appendChild(b); status.appendChild(s);
+                }
+                item(T.errNow, num(total(v.shown), 3));
+                item(T.rightNow, rightCount(v.shown) + "/4");
+                item(T.seedNo, String(st.seed));
+                $("pb-chart-label").textContent = st.hidden && sig() ? T.chartGoal : T.chart;
+                var sel = $("pb-pick");
+                if (sel.value !== String(st.pick)) sel.value = String(st.pick);
+                slopeWords(v);
+                drawNet(v); drawPlane(v); drawChart(); drawSlope(v);
+            }
+
+            document.querySelectorAll("#pb-shape button").forEach(function (b) {
+                b.addEventListener("click", function () { st.hidden = b.getAttribute("data-v") === "mlp"; reset(false); });
+            });
+            document.querySelectorAll("#pb-act button").forEach(function (b) {
+                b.addEventListener("click", function () { st.act = b.getAttribute("data-v"); reset(false); });
+            });
+            tIn.addEventListener("input", function () { stop(); st.v = Number(tIn.value); render(); });
+            // keys move one step (left part) or one sweep (right part)
+            tIn.addEventListener("keydown", function (e) {
+                var a = at(st.v), k = e.key, v = null;
+                if (k === "ArrowRight" || k === "ArrowUp") v = a.fine ? (a.pos + 1 < steps() ? valueOfPos(a.pos + 1) : valueOfN(1)) : valueOfN(Math.min(st.max, a.n + 1));
+                else if (k === "ArrowLeft" || k === "ArrowDown") v = a.fine ? valueOfPos(Math.max(0, a.pos - 1)) : (a.n > 1 ? valueOfN(a.n - 1) : valueOfPos(steps() - 1));
+                else if (k === "PageUp") v = st.v + 100;
+                else if (k === "PageDown") v = st.v - 100;
+                else if (k === "Home") v = 0;
+                else if (k === "End") v = TOTAL;
+                if (v == null) return;
+                e.preventDefault();
+                stop();
+                setV(v);
+            });
+            // pressing a line or a bias in the network picks that weight for the slope plot
+            net.addEventListener("click", function (e) {
+                var k = e.target.getAttribute && e.target.getAttribute("data-k");
+                if (k != null) { st.pick = Number(k); render(); }
+            });
+            $("pb-pick").addEventListener("change", function () { st.pick = Number($("pb-pick").value); render(); });
+            $("pb-auto").addEventListener("click", auto);
+            $("pb-seed").addEventListener("click", function () { st.seed++; reset(true); });
+            // the theme toggle changes the colours the shading reads
+            new MutationObserver(function () { if (!timer) render(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+            reset(false);
+            if ("ResizeObserver" in window) {
+                var lastW = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round($("pb-grid").getBoundingClientRect().width);
+                    if (w && w !== lastW) { lastW = w; if (layout()) render(); else { var v = view(); drawChart(); drawSlope(v); } }
+                }).observe($("pb-grid"));
+            }
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-10-19","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"},{"id":"ml","name":"기계 학습","name_en":"Machine learning"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"},{"id":"train-val-calib-test","title":"train·val·calib·test","title_en":"train/val/calib/test","domain":"ml","status":"published","href":"../train-val-calib-test/","summary":"학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold를 위해 칸 하나를 더 두기","summary_en":"Keep one more split for what is fitted after training: the temperature T and the threshold"},{"id":"error-backpropagation","title":"역전파","title_en":"Backpropagation","domain":"ml","status":"published","href":"../error-backpropagation/","summary":"출력의 오차를 뒤로 전해 다층 퍼셉트론의 가운데 층까지 고치기","summary_en":"Pass the output's error backward to correct the middle layer of a multilayer perceptron too"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 64 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (준비 중)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "준비 중";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "지금 이 글";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
