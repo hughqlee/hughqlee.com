@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로봇의 종류, 무엇을 어떤 자세로 옮기나 | Hugh Q Lee</title>
+    <meta name="description" content="로봇의 종류는 관절을 잇는 구조로 나뉘고, 구조가 손끝이 닿는 곳과 손끝의 자세를 정한다. 직교, 스카라, 다관절, 델타, 평행 링크형 팔, 스튜어트 플랫폼이 실험실 일 다섯을 해낼 수 있는지 손끝의 자세를 바꿔 가며 본다.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="로봇 종류, 산업용 로봇 종류, 직교 로봇, 카르테시안 로봇, 갠트리 로봇, 스카라, SCARA, 수평 다관절 로봇, 다관절 로봇, 6축 로봇, 5축 로봇, 수직 다관절 로봇, 델타 로봇, 병렬 로봇, 패러렐 링크 로봇, 평행 링크 로봇, 스튜어트 플랫폼, 헥사포드, 자유도, 작업 공간, 실험실 자동화, 랩 오토메이션, 플레이트 핸들러, 마이크로플레이트, 협동 로봇, 반복 정밀도">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/robot-types/">
+    <!-- 영문판(/knowledge/en/robot-types/)은 System/build_en.py가 이 페이지에서 만든다. 두 판이 서로를 가리킨다. -->
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/robot-types/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/robot-types/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/robot-types/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:title" content="로봇의 종류, 무엇을 어떤 자세로 옮기나">
+    <meta property="og:description" content="로봇의 종류는 관절을 잇는 구조로 나뉘고, 구조가 손끝이 닿는 곳과 손끝의 자세를 정한다. 직교, 스카라, 다관절, 델타, 평행 링크형 팔, 스튜어트 플랫폼이 실험실 일 다섯을 해낼 수 있는지 손끝의 자세를 바꿔 가며 본다.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/robot-types/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/robot-types/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="직교, 스카라, 6축 다관절, 델타 로봇의 짜임을 나란히 그린 그림">
+    <meta property="article:published_time" content="2026-10-21">
+    <meta property="article:modified_time" content="2026-10-21">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta property="article:tag" content="로봇의 종류">
+    <meta property="article:tag" content="실험실 자동화">
+    <meta property="article:tag" content="자유도">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="로봇의 종류, 무엇을 어떤 자세로 옮기나">
+    <meta name="twitter:description" content="로봇의 종류는 관절을 잇는 구조로 나뉘고, 구조가 손끝이 닿는 곳과 손끝의 자세를 정한다. 직교, 스카라, 다관절, 델타, 평행 링크형 팔, 스튜어트 플랫폼이 실험실 일 다섯을 해낼 수 있는지 손끝의 자세를 바꿔 가며 본다.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/robot-types/og.png">
+    <meta name="twitter:image:alt" content="직교, 스카라, 6축 다관절, 델타 로봇의 짜임을 나란히 그린 그림">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage는 빌드 스크립트가 본문 "자주 묻는 질문"에서 글자 그대로 옮긴다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/robot-types/#article",
+          "workTranslation": {
+            "@id": "https://hughqlee.com/knowledge/en/robot-types/#article"
+          },
+          "headline": "로봇의 종류, 무엇을 어떤 자세로 옮기나",
+          "alternativeHeadline": "로봇의 종류, 무엇을 어떤 자세로 옮기나",
+          "description": "로봇의 종류는 관절을 잇는 구조로 나뉘고, 구조가 손끝이 닿는 곳과 손끝의 자세를 정한다. 직교, 스카라, 다관절, 델타, 평행 링크형 팔, 스튜어트 플랫폼이 실험실 일 다섯을 해낼 수 있는지 손끝의 자세를 바꿔 가며 본다.",
+          "abstract": "로봇의 종류는 관절을 잇는 구조로 나뉜다. 구조는 손끝이 닿는 곳(작업 공간)과 손끝이 취할 수 있는 자세(자유도)를 정한다. 그래서 실험실에서 로봇을 고르는 질문은 하나다. 무엇을, 어떤 자세로, 어디서 어디로 옮기나?",
+          "inLanguage": "ko",
+          "datePublished": "2026-10-21",
+          "dateModified": "2026-10-21",
+          "url": "https://hughqlee.com/knowledge/robot-types/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/robot-types/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/robot-types/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/#collection"
+          },
+          "isAccessibleForFree": true,
+          "about": [
+            "로봇의 종류",
+            "실험실 자동화",
+            "자유도"
+          ],
+          "citation": [
+            {
+              "@type": "Report",
+              "name": "IFR, World Robotics 2016 Industrial Robots, 1.2 Industrial robots: definition and classification",
+              "url": "https://ifr.org/img/office/Industrial_Robots_2016_Chapter_1_2.pdf"
+            },
+            {
+              "@type": "Article",
+              "name": "Bonev, Delta Parallel Robot: the Story of Success (ParalleMIC, 2001)",
+              "url": "https://www.parallemic.org/Reviews/Review002.html"
+            },
+            {
+              "@type": "Article",
+              "name": "Bonev, The True Origins of Parallel Robots (ParalleMIC, 2003)",
+              "url": "https://www.parallemic.org/Reviews/Review007.html"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Makino, Development of the SCARA (Journal of Robotics and Mechatronics 26(1), 2014)",
+              "url": "https://www.jstage.jst.go.jp/article/jrobomech/26/1/26_5/_article"
+            },
+            {
+              "@type": "Article",
+              "name": "Minner, 4 Types of Robots Every Manufacturer Should Know (NIST Manufacturing Innovation Blog, 2019)",
+              "url": "https://www.nist.gov/blogs/manufacturing-innovation-blog/4-types-robots-every-manufacturer-should-know"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "ANSI SLAS 1-2004 (R2012), Microplates: Footprint Dimensions",
+              "url": "https://www.slas.org/education/ansi-slas-microplate-standards/"
+            },
+            {
+              "@type": "TechArticle",
+              "name": "Universal Robots, DH parameters for calculations of kinematics and dynamics",
+              "url": "https://www.universal-robots.com/articles/ur/application-installation/dh-parameters-for-calculations-of-kinematics-and-dynamics/"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Holland, Davies, Automation in the Life Science Research Laboratory (Frontiers in Bioengineering and Biotechnology 8, 2020)",
+              "url": "https://doi.org/10.3389/fbioe.2020.571777"
+            }
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "로봇의 종류, 무엇을 어떤 자세로 옮기나",
+              "item": "https://hughqlee.com/knowledge/robot-types/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/robot-types/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "로봇의 종류에는 무엇이 있나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "국제로봇연맹(IFR)은 산업용 로봇을 기구 구조로 나눈다. 직교(선형·갠트리), 스카라, 다관절, 병렬(델타), 원통형이다(IFR World Robotics 2016 §1.2.2). 구조가 손끝이 닿는 곳과 손끝이 취할 수 있는 자세를 정한다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "델타 로봇은 원래 이름인가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "그렇다. 1980년대 초 EPFL의 Reymond Clavel이 평행사변형으로 만든 병렬 로봇을 Delta robot이라 불렀다(Bonev 2001). 왜 델타인지 밝힌 자료는 찾지 못했다. ABB는 FlexPicker, FANUC은 패러렐 링크 로봇이라는 이름으로 판다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "스카라(SCARA)는 무엇의 줄임말인가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Selective Compliance Assembly Robot Arm이다. 수평으로는 조금 낭창하고 수직으로는 단단해서, 핀을 구멍에 꽂는 조립에 맞는다. 1978년 야마나시 대학의 마키노 히로시가 첫 시제품을 만들었다(Makino 2014)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "5축 로봇과 6축 로봇은 어떻게 다른가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "공간에서 물체의 자세는 위치 셋과 방향 셋, 자유도 6이다(Lynch·Park 2017 §2.1). 6축이면 닿는 곳 대부분에서 아무 자세나 되고, 5축은 방향 하나를 정하지 못한다. 손끝이 제 축 둘레로 대칭이거나 자세 하나가 늘 고정이면 5축으로도 된다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "실험실에서 마이크로플레이트를 옮기는 로봇은 무엇인가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "플레이트는 기울이면 안 되니 필요한 자유도는 위치 셋과 수직축 둘레의 돌림 하나, 모두 넷이다. 그래서 수평 관절과 높은 위아래 기둥을 가진 스카라형 플레이트 핸들러가 이 일에 맞는다(예: Brooks PreciseFlex 400, 4축). 기울이거나 장비 옆문으로 넣어야 하면 6축 협동 로봇을 쓴다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "스튜어트 플랫폼(헥사포드)이란?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "길이가 바뀌는 다리 여섯으로 윗판을 6자유도로 움직이는 병렬 로봇이다. 단단하고 정밀하지만 범위가 좁다(PI의 소형 헥사포드는 반복 정밀도가 수평 ±0.15 µm, 위아래 ±0.06 µm이고 X 범위는 ±17 mm). 먼저 만든 사람은 1954년 타이어 시험기를 돌린 Eric Gough다(Bonev 2003)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "로봇의 반복 정밀도와 정확도는 어떻게 다른가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "반복 정밀도는 같은 점으로 돌아올 때의 흩어짐이고, 정확도는 좌표로 시킨 곳에 얼마나 맞게 가는지다(ISO 9283은 둘을 따로 잰다). UR5e의 공식 치수로 만든 모델에 링크 길이 0.2~0.3 mm, 관절 영점 0.02°의 오차를 넣자 손끝이 95%에서 0.86 mm 안으로 어긋나, 반복 정밀도 ±0.03 mm의 약 28배였다(가정한 오차로 든 계산). 카메라로 찾은 좌표로 로봇을 보내는 일에 보정이 필요한 까닭이다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "직교 로봇과 갠트리 로봇은 같은가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "직교 로봇은 직선 축 셋이 X·Y·Z와 일치하는 로봇이다(IFR 2016 §1.2.2). 두 레일 위에 걸친 높은 틀에 매달면 갠트리 로봇이라 부른다(NIST 2019). 분주기와 현미경 스테이지가 이 짜임이다."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --warn-soft: rgba(240, 198, 116, 0.13);
+            --danger: #ff8c8c;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            --wide: 980px;
+            /* 구조 그림의 색: 그림 파일의 회색 단계를 테마에 맞춰 바꾼다 */
+            --f-ink: #e7edf2;
+            --f-dark: #c5d0d8;
+            --f-mid: #9aa9b4;
+            --f-gray: #7d8c97;
+            --f-light: #4a5a66;
+            --f-pale: #24303a;
+            --f-steel: #5d6e7a;
+            --f-pale2: #2e3b46;
+            --f-paper: #111820;
+            --f-white: #0d1216;
+            --f-sub: #8b9aa6;
+            --f-acc: #ff9d6b;
+            --f-ws: #69d2ff;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --warn-soft: rgba(150, 106, 16, 0.12);
+            --danger: #b42323;
+            --f-ink: #1f2328;
+            --f-dark: #343a40;
+            --f-mid: #495057;
+            --f-gray: #6c757d;
+            --f-light: #adb5bd;
+            --f-pale: #dee2e6;
+            --f-steel: #868e96;
+            --f-pale2: #ced4da;
+            --f-paper: #f1f3f5;
+            --f-white: #ffffff;
+            --f-sub: #57606a;
+            --f-acc: #c2410c;
+            --f-ws: #2563eb;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+        .wide { width: min(var(--wide), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle, .btn {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-family: var(--mono);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover, .btn:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 8px; }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0 0 20px; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        .step { padding: 40px 0 8px; border-top: 1px solid var(--line); margin-top: 28px; }
+        .step-no { margin: 0 0 6px; color: var(--accent); font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; }
+        h2 { margin: 0 0 14px; font-size: clamp(22px, 4vw, 30px); line-height: 1.35; letter-spacing: -0.01em; }
+        h3 { margin: 28px 0 8px; font-size: 18px; line-height: 1.45; }
+        .source { margin-top: 12px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+
+        .panel {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .hint { margin: 0 0 12px; color: var(--muted); }
+        .control { display: grid; gap: 4px; margin: 0 0 14px; }
+        .control .label { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 14px; }
+        .control output { color: var(--text); font-family: var(--mono); font-size: 14px; }
+        .control input[type="range"] { width: 100%; min-height: 36px; margin: 0; accent-color: var(--accent); }
+        .seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+        .seg button {
+            min-height: 36px;
+            padding: 4px 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .seg button:hover { border-color: var(--line-strong); color: var(--text); }
+        .seg button[aria-pressed="true"] { border-color: var(--accent); color: var(--text); background: var(--accent-soft); }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            margin: 24px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+        .toc a { display: block; height: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); text-decoration: none; font-size: 15px; line-height: 1.5; }
+        .toc a:hover { border-color: var(--line-strong); }
+        .toc span { display: block; color: var(--accent); font-family: var(--mono); font-size: 12px; }
+        .try { margin-top: 8px; }
+        .toc-nav { padding-top: 4px; }
+        .scene-text { min-height: 3.4em; margin: 14px 0 0; }
+
+        /* 손끝 자세 맞추기 */
+        .rt-jobs { margin: 0 0 16px; }
+        .rt-grid { display: grid; gap: 16px; }
+        .rt-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+        .rt-card { padding: 8px 10px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); transition: opacity 0.2s ease, border-color 0.2s ease; }
+        .rt-card.on { border-color: var(--accent); background: var(--accent-soft); }
+        .rt-card.off svg { opacity: 0.45; }
+        .rt-card .rt-name { margin: 2px 0 0; font-size: 15px; font-weight: 600; line-height: 1.4; }
+        .rt-card .rt-why { margin: 2px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+        .rt-card.off .rt-why { color: var(--danger); }
+        svg.rt-icon { display: block; width: 100%; height: auto; }
+        svg.rt-pose { display: block; width: 100%; max-width: 280px; height: auto; margin: 4px 0 0; }
+        .rt-note { margin: 6px 0 0; color: var(--accent-warn); font-size: 15px; }
+        .rt-note:empty { display: none; }
+        .rt-small { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
+        .ic-ground { stroke: var(--line-strong); stroke-width: 1.5; }
+        .ic-frame { fill: none; stroke: var(--muted); stroke-width: 3; stroke-linecap: round; }
+        .ic-body { fill: var(--panel-strong); stroke: var(--muted); stroke-width: 1.5; }
+        .ic-link { fill: none; stroke: var(--text); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+        .ic-thin { fill: none; stroke: var(--text); stroke-width: 2; stroke-linecap: round; }
+        .ic-joint { fill: var(--panel); stroke: var(--text); stroke-width: 2; }
+        .ic-tool { fill: none; stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round; }
+        .ic-plate { fill: var(--panel); stroke: var(--accent); stroke-width: 2; }
+        .ic-shelf { fill: var(--warn-soft); stroke: var(--accent-warn); stroke-width: 1.5; }
+        .ic-hit { fill: none; stroke: var(--danger); stroke-width: 4; stroke-linecap: round; }
+        .ic-arrow { fill: none; stroke: var(--accent); stroke-width: 2; }
+        .ic-arrowhead { fill: var(--accent); }
+        .ic-ws { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1; stroke-dasharray: 4 3; }
+        .rt-card .ic-move { transition: transform 0.25s ease; }
+
+        /* 구조 그림: 볼트 Attachment/로봇 구조 1~7의 회색 단계를 테마 색으로 */
+        figure.fig { margin: 18px 0 0; }
+        svg.fig { display: block; width: 100%; max-width: 640px; height: auto; margin: 0 auto; font-family: var(--sans); }
+        svg.fig [fill="#FAFAF7"] { fill: var(--panel-soft); }
+        svg.fig [stroke="#E2E0D8"] { stroke: var(--line); }
+        svg.fig [fill="#1F2328"] { fill: var(--f-ink); }
+        svg.fig [stroke="#1F2328"] { stroke: var(--f-ink); }
+        svg.fig [fill="#343A40"] { fill: var(--f-dark); }
+        svg.fig [stroke="#343A40"] { stroke: var(--f-dark); }
+        svg.fig [fill="#495057"] { fill: var(--f-mid); }
+        svg.fig [stroke="#495057"] { stroke: var(--f-mid); }
+        svg.fig [fill="#6C757D"] { fill: var(--f-gray); }
+        svg.fig [stroke="#6C757D"] { stroke: var(--f-gray); }
+        svg.fig [fill="#ADB5BD"] { fill: var(--f-light); }
+        svg.fig [stroke="#ADB5BD"] { stroke: var(--f-light); }
+        svg.fig [fill="#DEE2E6"] { fill: var(--f-pale); }
+        svg.fig [stroke="#DEE2E6"] { stroke: var(--f-pale); }
+        svg.fig [fill="#868E96"] { fill: var(--f-steel); }
+        svg.fig [stroke="#868E96"] { stroke: var(--f-steel); }
+        svg.fig [fill="#CED4DA"] { fill: var(--f-pale2); }
+        svg.fig [fill="#F1F3F5"] { fill: var(--f-paper); }
+        svg.fig [fill="#FFFFFF"] { fill: var(--f-white); }
+        svg.fig [stroke="#FFFFFF"] { stroke: var(--f-white); }
+        svg.fig [fill="#EEF0F2"] { fill: var(--f-paper); }
+        svg.fig [fill="#57606A"] { fill: var(--f-sub); }
+        svg.fig [fill="#C2410C"] { fill: var(--f-acc); }
+        svg.fig [stroke="#C2410C"] { stroke: var(--f-acc); }
+        svg.fig [fill="#2563EB"] { fill: var(--f-ws); }
+        svg.fig [stroke="#2563EB"] { stroke: var(--f-ws); }
+
+        .more { margin: 14px 0 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .more summary { min-height: 40px; padding: 9px 14px; color: var(--muted); font-size: 15px; cursor: pointer; }
+        .more summary:hover { color: var(--text); }
+        .more[open] summary { border-bottom: 1px solid var(--line); }
+        .more > p { margin: 10px 14px; }
+        .more > :last-child { margin-bottom: 14px; }
+        .limits { margin: 0; padding-left: 1.2em; }
+        .limits li { margin: 8px 0; }
+
+        .table-wrap { margin: 14px 0 0; overflow-x: auto; }
+        table.rt-table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.5; }
+        table.rt-table th, table.rt-table td { padding: 6px 6px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+        table.rt-table thead th { color: var(--muted); font-weight: 600; }
+        table.rt-table tbody th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+        table.rt-jobs-table td { text-align: center; font-family: var(--mono); font-size: 13px; }
+        table.rt-jobs-table td.ok { color: var(--accent-green); }
+        table.rt-jobs-table td.no { color: var(--faint); }
+
+        .steps { margin: 0; padding-left: 1.4em; }
+        .steps li { margin: 8px 0; }
+        .steps li::marker { color: var(--accent); font-family: var(--mono); }
+
+        .note {
+            margin: 14px 0 0;
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+
+        /* 확인됨 · 가설 · 모름 표시: <span class="tag known">확인됨</span> */
+        .tag {
+            display: inline-block;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.known { color: var(--accent-green); }
+        .tag.guess { color: var(--accent-warn); }
+        .tag.unknown { color: var(--muted); }
+
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        footer {
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (min-width: 560px) {
+            .rt-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+        @media (min-width: 860px) {
+            .rt-grid { grid-template-columns: 290px minmax(0, 1fr); align-items: start; }
+        }
+        @media (max-width: 559px) {
+            svg.rt-pose { display: none; }
+            .control { margin-bottom: 8px; }
+            .rt-controls .scene-text { min-height: 0; margin-top: 4px; }
+        }
+        @media (max-width: 520px) {
+            table.rt-table { font-size: 13px; }
+            table.rt-table th, table.rt-table td { padding: 5px 3px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="위치">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/en/robot-types/" hreflang="en" lang="en">English</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="wrap hero" aria-labelledby="page-title">
+            <nav class="kmap" aria-label="지식 지도" data-current="robot-types">
+                <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">로봇·자동화</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">이 분야의 첫 글이다. 먼저 읽을 글과 이어서 읽을 글은 아직 없다.</p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE · 로봇·자동화</p>
+            <h1 id="page-title">로봇의 종류, 무엇을 어떤 자세로 옮기나</h1>
+            <p class="answer">로봇의 종류는 관절을 잇는 구조로 나뉜다. 구조는 손끝이 닿는 곳(작업 공간)과 손끝이 취할 수 있는 자세(자유도)를 정한다. 그래서 실험실에서 로봇을 고르는 질문은 하나다. 무엇을, 어떤 자세로, 어디서 어디로 옮기나?</p>
+            <p>로봇의 손끝(엔드 이펙터)이 따로따로 바꿀 수 있는 값의 수를 자유도라 한다. 공간의 물체는 위치 셋(X·Y·Z)과 방향 셋(앞뒤 기울기, 옆 기울기, 돌림), 모두 여섯이다. 국제로봇연맹(IFR)은 산업용 로봇을 관절을 잇는 구조로 나누는데, 이 페이지는 그중 넷을 본다. 직선 축 셋의 직교, 수평으로 꺾이는 스카라, 사람 팔 같은 다관절, 위에서 팔 셋이 끝판을 잡는 델타다. 가족으로 평행 링크형 팔과 스튜어트 플랫폼을 함께 본다.</p>
+            <p>실험실에는 조건이 하나 있다. 액체가 든 열린 플레이트는 기울이면 안 된다. 그러면 플레이트를 옮기는 데 필요한 자유도는 위치 셋과 수직축 둘레의 돌림 하나, 모두 넷이다. 플레이트의 바닥 크기도 127.76 × 85.48 mm로 정해져 있어, 로봇은 같은 자세로 집어 같은 자세로 놓으면 된다.</p>
+            <p class="source">출처: 구조에 따른 분류: IFR World Robotics 2016 §1.2.2 · 물체의 자유도 6: Lynch·Park 2017 §2.1 · 플레이트 크기: ANSI SLAS 1-2004 §4.1.1</p>
+        </section>
+
+        <section id="try" class="wide try" aria-labelledby="try-title">
+            <div class="panel">
+                <p class="step-no">직접 해보기</p>
+                <h2 id="try-title">손끝 자세 맞추기</h2>
+                <p class="hint">실험실 일을 하나 고르거나, 손끝이 다가가는 방향과 기울기, 움직이는 범위, 필요한 정밀도를 바꿔 보자. 그 자세를 낼 수 있는 로봇만 남는다.</p>
+                <div class="seg rt-jobs" role="group" aria-label="실험실 일">
+                    <button type="button" data-job="A" aria-pressed="false">분주</button>
+                    <button type="button" data-job="B" aria-pressed="true">선반에 넣기</button>
+                    <button type="button" data-job="C" aria-pressed="false">옆문에 비스듬히</button>
+                    <button type="button" data-job="D" aria-pressed="false">빠른 분류</button>
+                    <button type="button" data-job="E" aria-pressed="false">광학 정밀 정렬</button>
+                </div>
+                <div class="rt-grid">
+                    <div class="rt-controls">
+                        <div class="control">
+                            <span class="label" id="rt-approach-label">다가가는 방향</span>
+                            <div class="seg" role="group" aria-labelledby="rt-approach-label">
+                                <button type="button" data-approach="down" aria-pressed="false">위에서</button>
+                                <button type="button" data-approach="side" aria-pressed="true">막힌 칸에 옆으로</button>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <label class="label" for="rt-tilt"><span>기울기</span><output id="rt-tilt-out" for="rt-tilt">0°</output></label>
+                            <input id="rt-tilt" type="range" min="0" max="60" step="1" value="0">
+                        </div>
+                        <div class="control">
+                            <label class="label" for="rt-travel"><span>움직이는 범위</span><output id="rt-travel-out" for="rt-travel">180 mm</output></label>
+                            <input id="rt-travel" type="range" min="0" max="14" step="1" value="10">
+                        </div>
+                        <div class="control">
+                            <label class="label" for="rt-prec"><span>필요한 정밀도</span><output id="rt-prec-out" for="rt-prec">따지지 않음</output></label>
+                            <input id="rt-prec" type="range" min="0" max="6" step="1" value="0">
+                        </div>
+                        <svg class="rt-pose" id="rt-pose" viewBox="0 0 200 120" aria-hidden="true" focusable="false"></svg>
+                        <p id="rt-verdict" class="scene-text" aria-live="polite">남은 로봇: 스카라, 다관절 6축. 로봇 셋은 위 선반에 부딪히고, 스튜어트 플랫폼은 범위가 모자란다.</p>
+                        <p id="rt-note" class="rt-note">기둥형 직교(보관고의 승강기)는 위아래 축이 옆에 서 있어 이 일을 한다.</p>
+                    </div>
+                    <ul class="rt-cards" id="rt-cards">
+                        <li class="rt-card off" data-robot="gantry"><svg class="rt-icon" viewBox="0 0 160 110" aria-hidden="true" focusable="false"></svg><p class="rt-name">직교(갠트리형)</p><p class="rt-why">Z 막대가 위 선반에 부딪힌다</p></li>
+                        <li class="rt-card on" data-robot="scara"><svg class="rt-icon" viewBox="0 0 160 110" aria-hidden="true" focusable="false"></svg><p class="rt-name">스카라</p><p class="rt-why">수평 그리퍼를 플레이트 높이로 밀어 넣는다</p></li>
+                        <li class="rt-card on" data-robot="ur5e"><svg class="rt-icon" viewBox="0 0 160 110" aria-hidden="true" focusable="false"></svg><p class="rt-name">다관절 6축</p><p class="rt-why">손끝을 눕혀 옆으로 밀어 넣는다</p></li>
+                        <li class="rt-card off" data-robot="delta"><svg class="rt-icon" viewBox="0 0 160 110" aria-hidden="true" focusable="false"></svg><p class="rt-name">델타</p><p class="rt-why">위에서 내려온 팔이 위 선반에 부딪힌다</p></li>
+                        <li class="rt-card off" data-robot="plink"><svg class="rt-icon" viewBox="0 0 160 110" aria-hidden="true" focusable="false"></svg><p class="rt-name">평행 링크형 팔</p><p class="rt-why">위에서 내려온 손끝이 위 선반에 부딪힌다</p></li>
+                        <li class="rt-card off" data-robot="stewart"><svg class="rt-icon" viewBox="0 0 160 110" aria-hidden="true" focusable="false"></svg><p class="rt-name">스튜어트 플랫폼</p><p class="rt-why">범위가 ±17 mm쯤이라 모자란다</p></li>
+                    </ul>
+                </div>
+                <p class="rt-small">판정은 로봇마다 흔한 손끝(위에서 쓰는 그리퍼와 피펫, 플레이트 높이의 수평 그리퍼)만 본다. 범위는 손끝이 닿는 지름의 대략값이다. 따로 만든 기구학 모델로 다섯 일을 계산해 같은 답이 나오는 것을 확인했다.</p>
+                <p class="source">출처: 범위와 정밀도: Brooks c3, ABB IRB 360, UR5e 데이터시트, PI 제품 자료 · 판정: 이 페이지의 계산(모델의 치수는 대부분 가정)</p>
+            </div>
+        </section>
+
+        <nav class="wrap toc-nav" aria-label="자세히 보기">
+            <ol class="toc">
+                <li><a href="#cartesian"><span>01 직교 로봇</span>위에서 내려가는, 장비 안의 손</a></li>
+                <li><a href="#scara"><span>02 스카라</span>플레이트를 수평으로 옮긴다</a></li>
+                <li><a href="#articulated"><span>03 다관절 로봇</span>기울이고, 옆에서 넣는다</a></li>
+                <li><a href="#delta"><span>04 델타 로봇</span>위에서, 가장 빠르게</a></li>
+            </ol>
+        </nav>
+
+        <section id="cartesian" class="wrap step" aria-labelledby="cartesian-title">
+            <p class="step-no">01 직교 로봇</p>
+            <h2 id="cartesian-title">위에서 내려가는, 장비 안의 손</h2>
+            <p>직선 축 셋이 X·Y·Z와 그대로 겹친다. 축 하나가 좌표 하나라 다루기 쉽고, 표준 직선 액추에이터를 이어 일에 맞는 크기로 짓는다. 두 레일 위에 걸친 틀에 매달면 갠트리라 부른다.</p>
+            <figure class="fig" data-fig="1">
+<svg class="fig" role="img" aria-labelledby="f1-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" width="640" height="500" font-family="Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, sans-serif">
+<title id="f1-title">직교 로봇 · 갠트리</title>
+<defs>
+  <marker id="f1-ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2410C"/></marker>
+  <marker id="f1-as" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#C2410C"/></marker>
+  <marker id="f1-ge" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+</defs>
+<rect x="1" y="1" width="638" height="498" rx="18" fill="#FAFAF7" stroke="#E2E0D8" stroke-width="2"/>
+<text x="28" y="44" font-size="26" font-weight="700" fill="#1F2328">직교 로봇 · 갠트리</text>
+<text x="28" y="74" font-size="18" fill="#57606A">직선 축 3개가 곧 X · Y · Z</text>
+<polygon points="90.0,400.0 470.0,400.0 560.0,330.0 180.0,330.0" fill="#EEF0F2" stroke="#ADB5BD" stroke-width="2" />
+<polygon points="90.0,400.0 470.0,400.0 560.0,330.0 560.0,181.5 180.0,181.5 90.0,251.5" fill="#2563EB" stroke="none" stroke-width="0" fill-opacity="0.06"/>
+<line x1="90.0" y1="400.0" x2="90.0" y2="251.5" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5" fill="none"/>
+<line x1="470.0" y1="400.0" x2="470.0" y2="251.5" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5" fill="none"/>
+<line x1="560.0" y1="330.0" x2="560.0" y2="181.5" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5" fill="none"/>
+<line x1="180.0" y1="330.0" x2="180.0" y2="181.5" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5" fill="none"/>
+<polygon points="90.0,251.5 470.0,251.5 560.0,181.5 180.0,181.5" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5" fill="none"/>
+<polygon points="226.5,382.5 348.1,382.5 348.1,390.5 226.5,390.5" fill="#DEE2E6" stroke="none" stroke-width="0" />
+<polygon points="348.1,382.5 381.4,356.6 381.4,364.6 348.1,390.5" fill="#CED4DA" stroke="none" stroke-width="0" />
+<polygon points="226.5,382.5 348.1,382.5 381.4,356.6 259.8,356.6" fill="#FFFFFF" stroke="#495057" stroke-width="2" />
+<ellipse cx="243.3" cy="378.3" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="257.4" cy="378.3" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="271.5" cy="378.3" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="285.6" cy="378.3" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="299.8" cy="378.3" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="313.9" cy="378.3" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="328.0" cy="378.3" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="342.1" cy="378.3" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="250.8" cy="372.5" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="264.9" cy="372.5" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="279.0" cy="372.5" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="293.1" cy="372.5" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="307.3" cy="372.5" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="321.4" cy="372.5" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="335.5" cy="372.5" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="349.6" cy="372.5" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="258.3" cy="366.6" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="272.4" cy="366.6" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="286.5" cy="366.6" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="300.6" cy="366.6" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="314.8" cy="366.6" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="328.9" cy="366.6" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="343.0" cy="366.6" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="357.1" cy="366.6" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="265.8" cy="360.8" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="279.9" cy="360.8" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="294.0" cy="360.8" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="308.1" cy="360.8" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="322.3" cy="360.8" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="336.4" cy="360.8" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="350.5" cy="360.8" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<ellipse cx="364.6" cy="360.8" rx="4.2" ry="2.4" fill="#ADB5BD"/>
+<text x="398.0" y="372.0" font-size="15" font-weight="400" fill="#6C757D" text-anchor="start">플레이트</text>
+<rect x="172.0" y="124" width="16" height="206.0" fill="#868E96"/>
+<rect x="552.0" y="124" width="16" height="206.0" fill="#868E96"/>
+<rect x="168" y="104" width="404" height="20" rx="4" fill="#495057"/>
+<rect x="333.0" y="100.0" width="36" height="28" rx="4" fill="#1F2328"/>
+<line x1="351.0" y1="114.0" x2="271.8" y2="175.6" stroke="#343A40" stroke-width="14" stroke-linecap="round"/>
+<line x1="298.8" y1="172.6" x2="298.8" y2="282.0" stroke="#343A40" stroke-width="8" stroke-linecap="round"/>
+<polygon points="292.8,282.0 304.8,282.0 298.8,300.0" fill="#343A40" stroke="none" stroke-width="0" />
+<rect x="283.8" y="134.6" width="30" height="40" rx="4" fill="#1F2328"/>
+<line x1="250.0" y1="90.0" x2="452.0" y2="90.0" stroke="#C2410C" stroke-width="2.5" marker-start="url(#f1-as)" marker-end="url(#f1-ae)"/>
+<text x="462.0" y="97.0" font-size="22" font-weight="700" fill="#C2410C" text-anchor="start">X</text>
+<line x1="369.4" y1="137.7" x2="328.3" y2="169.6" stroke="#C2410C" stroke-width="2.5" marker-start="url(#f1-as)" marker-end="url(#f1-ae)"/>
+<text x="379.4" y="141.7" font-size="22" font-weight="700" fill="#C2410C" text-anchor="start">Y</text>
+<line x1="322.8" y1="205.0" x2="322.8" y2="282.0" stroke="#C2410C" stroke-width="2.5" marker-start="url(#f1-as)" marker-end="url(#f1-ae)"/>
+<text x="332.8" y="252.0" font-size="22" font-weight="700" fill="#C2410C" text-anchor="start">Z</text>
+<text x="28" y="462" font-size="17" fill="#343A40">작업 공간: 틀 안의 상자 · 손끝은 위에서 내려간다</text>
+<text x="28" y="486" font-size="15" fill="#6C757D">분주기 데크, 현미경 스테이지, 미세주사 스테이지가 이 짜임이다</text>
+</svg>
+            </figure>
+            <p>그래서 장비 안의 움직임은 대개 이 짜임이다. 분주기의 데크, 현미경의 전동 스테이지(XY)와 초점(Z), 제브라피시 배아의 자동 미세주사 스테이지가 그렇다.</p>
+            <p>약점은 손을 넣는 방향이다. Z 막대가 위에서 내려오니 물체 속이나 장애물 둘레로 손을 넣지 못한다. 틀이 작업 공간을 둘러싸 로봇이 일하는 공간보다 크다. 위아래 축을 옆 기둥에 세우고 수평 포크를 내미는 기둥형(자동 보관고의 승강기)은 선반에 옆으로도 넣는다.</p>
+            <details class="more">
+                <summary>숫자로 보면</summary>
+                <p>Tecan Fluent는 8채널 분주 팔, 96·384채널 분주 팔, 그리퍼 팔 가운데 셋까지 한 데크에 달고 따로 동시에 움직인다. 제브라피시 배아를 자동으로 주사한 Wang 외 2007은 3축 마이크로로봇 두 대(축마다 이동 25 mm, 분해능 0.04 µm)로 하나는 배아 받침을, 하나는 바늘을 움직였다.</p>
+                <p>리뷰 Holland·Davies 2020은 실험실 자동화가 사람의 움직임을 흉내 내는 다축 팔에 많이 기대지만, 그것이 늘 가장 효율적이지는 않고 많은 연구실에는 공간과 값이 맞지 않는다고 본다.</p>
+            </details>
+            <p class="source">출처: 정의: IFR 2016 §1.2.2 · 갠트리, 강점과 약점: NIST 2019 · Fluent의 팔: Tecan 제품 페이지 · 미세주사: Wang 외 2007 · 연구실의 자동화: Holland·Davies 2020 · 기둥형이 옆으로 넣는다: 이 페이지의 계산</p>
+        </section>
+
+        <section id="scara" class="wrap step" aria-labelledby="scara-title">
+            <p class="step-no">02 스카라</p>
+            <h2 id="scara-title">플레이트를 수평으로 옮긴다</h2>
+            <p>수직축으로 도는 관절 둘이 나란하고, 위아래와 손끝 돌림을 더해 4축이다. 손끝은 늘 수평이고, 수직축 둘레로만 돈다. 플레이트를 옮기는 데 필요한 자유도 넷과 꼭 같다.</p>
+            <figure class="fig" data-fig="2">
+<svg class="fig" role="img" aria-labelledby="f2-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" width="640" height="500" font-family="Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, sans-serif">
+<title id="f2-title">스카라 · 수평 다관절</title>
+<defs>
+  <marker id="f2-ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2410C"/></marker>
+  <marker id="f2-as" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#C2410C"/></marker>
+  <marker id="f2-ge" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+</defs>
+<rect x="1" y="1" width="638" height="498" rx="18" fill="#FAFAF7" stroke="#E2E0D8" stroke-width="2"/>
+<text x="28" y="44" font-size="26" font-weight="700" fill="#1F2328">스카라 · 수평 다관절</text>
+<text x="28" y="74" font-size="18" fill="#57606A">수직축 둘레의 회전 3 + 위아래 1 = 4축 (실험실형)</text>
+<line x1="40" y1="420" x2="600" y2="420" stroke="#DEE2E6" stroke-width="2"/>
+<rect x="530" y="150" width="82" height="270" fill="none" stroke="#495057" stroke-width="2"/>
+<line x1="530" y1="190" x2="612" y2="190" stroke="#495057" stroke-width="2"/>
+<rect x="538" y="181" width="66" height="8" fill="#FFFFFF" stroke="#495057" stroke-width="1.5"/>
+<line x1="530" y1="230" x2="612" y2="230" stroke="#495057" stroke-width="2"/>
+<rect x="538" y="221" width="66" height="8" fill="#FFFFFF" stroke="#495057" stroke-width="1.5"/>
+<line x1="530" y1="270" x2="612" y2="270" stroke="#495057" stroke-width="2"/>
+<rect x="538" y="261" width="66" height="8" fill="#FFFFFF" stroke="#495057" stroke-width="1.5"/>
+<line x1="530" y1="310" x2="612" y2="310" stroke="#495057" stroke-width="2"/>
+<line x1="530" y1="350" x2="612" y2="350" stroke="#495057" stroke-width="2"/>
+<rect x="538" y="341" width="66" height="8" fill="#FFFFFF" stroke="#495057" stroke-width="1.5"/>
+<line x1="530" y1="390" x2="612" y2="390" stroke="#495057" stroke-width="2"/>
+<rect x="538" y="381" width="66" height="8" fill="#FFFFFF" stroke="#495057" stroke-width="1.5"/>
+<text x="571.0" y="138.0" font-size="15" font-weight="400" fill="#6C757D" text-anchor="middle">플레이트 선반</text>
+<rect x="70" y="404" width="90" height="16" rx="3" fill="#868E96"/>
+<rect x="96" y="120" width="38" height="284" rx="6" fill="#DEE2E6" stroke="#868E96" stroke-width="2"/>
+<line x1="300" y1="186" x2="300" y2="292" stroke="#C2410C" stroke-width="1.5" stroke-dasharray="5 5"/>
+<line x1="450" y1="208" x2="450" y2="336" stroke="#C2410C" stroke-width="1.5" stroke-dasharray="5 5"/>
+<rect x="105" y="222" width="205" height="24" rx="12" fill="#495057"/>
+<rect x="88" y="216" width="54" height="36" rx="5" fill="#343A40"/>
+<rect x="290" y="244" width="170" height="22" rx="11" fill="#6C757D"/>
+<rect x="284" y="220" width="32" height="34" rx="4" fill="#343A40"/>
+<rect x="438" y="244" width="24" height="42" rx="3" fill="#343A40"/>
+<rect x="425" y="284" width="74" height="12" rx="2" fill="#343A40"/>
+<rect x="425" y="296" width="6" height="18" fill="#343A40"/><rect x="493" y="296" width="6" height="18" fill="#343A40"/>
+<rect x="431" y="301" width="62" height="9" fill="#FFFFFF" stroke="#495057" stroke-width="1.5"/>
+<line x1="503" y1="305" x2="526" y2="305" stroke="#6C757D" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#f2-ge)"/>
+<path d="M77.4,200.6 A40,10 0.0 0 1 154.4,202.3 A40,10 0.0 0 1 84.4,210.4" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f2-ae)"/>
+<text x="115.0" y="188.0" font-size="15" font-weight="400" fill="#C2410C" text-anchor="middle">어깨</text>
+<path d="M271.8,202.3 A30,8 0.0 0 1 329.5,203.6 A30,8 0.0 0 1 277.0,210.1" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f2-ae)"/>
+<text x="300.0" y="189.0" font-size="15" font-weight="400" fill="#C2410C" text-anchor="middle">팔꿈치</text>
+<path d="M425.6,227.6 A26,7 0.0 0 1 475.6,228.8 A26,7 0.0 0 1 430.1,234.5" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f2-ae)"/>
+<text x="450.0" y="214.0" font-size="15" font-weight="400" fill="#C2410C" text-anchor="middle">손목</text>
+<line x1="70.0" y1="140.0" x2="70.0" y2="330.0" stroke="#C2410C" stroke-width="2.5" marker-start="url(#f2-as)" marker-end="url(#f2-ae)"/>
+<text x="44.0" y="244.0" font-size="22" font-weight="700" fill="#C2410C" text-anchor="start">Z</text>
+<text x="452.0" y="348.0" font-size="15" font-weight="400" fill="#6C757D" text-anchor="middle">늘 수평</text>
+<text x="28" y="462" font-size="17" fill="#343A40">손끝은 기울지 않는다 · 높이를 바꿔 선반에 수평으로 넣는다</text>
+<text x="28" y="486" font-size="15" fill="#6C757D">고전형 스카라는 위아래 축이 팔 끝에 있다</text>
+</svg>
+            </figure>
+            <p>실험실의 플레이트 핸들러는 위아래 축이 기둥이라 팔 전체가 기둥을 오르내린다. Brooks PreciseFlex 400은 4축, 수평 도달 433 mm(확장 588 mm), 기둥 400~1,160 mm이고, SBS 플레이트를 가로·세로로 집는다. 얇은 팔이 플레이트 높이로 들어가니 위가 막힌 선반(호텔)에도 손을 넣는다. 대신 손끝을 기울이지는 못한다.</p>
+            <h3>위에서 보면: 평면 로봇</h3>
+            <figure class="fig" data-fig="6">
+<svg class="fig" role="img" aria-labelledby="f6-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" width="640" height="500" font-family="Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, sans-serif">
+<title id="f6-title">평면 로봇 · 직렬과 병렬</title>
+<defs>
+  <marker id="f6-ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2410C"/></marker>
+  <marker id="f6-as" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#C2410C"/></marker>
+  <marker id="f6-ge" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+</defs>
+<rect x="1" y="1" width="638" height="498" rx="18" fill="#FAFAF7" stroke="#E2E0D8" stroke-width="2"/>
+<text x="28" y="44" font-size="26" font-weight="700" fill="#1F2328">평면 로봇 · 직렬과 병렬</text>
+<text x="28" y="74" font-size="18" fill="#57606A">손끝이 한 평면 안에서만 움직인다 (위에서 본 그림)</text>
+<line x1="320" y1="104" x2="320" y2="430" stroke="#DEE2E6" stroke-width="2"/>
+<path d="M30,400 A140,140 0 0 1 310,400 Z" fill="#2563EB" fill-opacity="0.06" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5"/>
+<path d="M150,400 A20,20 0 0 1 190,400 Z" fill="#FAFAF7" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5"/>
+<line x1="30" y1="400" x2="310" y2="400" stroke="#495057" stroke-width="2"/>
+<line x1="170.0" y1="400.0" x2="210.0" y2="330.7" stroke="#495057" stroke-width="16" stroke-linecap="round"/>
+<line x1="210.0" y1="330.7" x2="269.1" y2="320.3" stroke="#6C757D" stroke-width="12" stroke-linecap="round"/>
+<path d="M145.6,391.1 A26,26 0.0 0 1 167.7,374.1 A26,26 0.0 0 1 192.5,387.0" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f6-ae)"/>
+<path d="M190.9,341.7 A22,22 0.0 0 1 210.0,308.7 A22,22 0.0 0 1 229.1,341.7" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f6-ae)"/>
+<circle cx="170" cy="400" r="13" fill="#343A40"/><circle cx="170" cy="400" r="4.9" fill="#ADB5BD"/>
+<circle cx="210.0" cy="330.71796769724494" r="11" fill="#343A40"/><circle cx="210.0" cy="330.71796769724494" r="4.2" fill="#ADB5BD"/>
+<circle cx="269.1" cy="320.3" r="6" fill="#C2410C"/>
+<text x="36.0" y="132.0" font-size="20" font-weight="700" fill="#1F2328" text-anchor="start">직렬: 2링크 팔</text>
+<text x="36.0" y="156.0" font-size="15" font-weight="400" fill="#343A40" text-anchor="start">관절이 한 줄 · 스카라를 위에서 본 모습</text>
+<path d="M340,400 A180,180 0 0 1 470.0,227.1 A180,180 0 0 1 600,400 Z" fill="#2563EB" fill-opacity="0.06" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5"/>
+<path d="M380,400 A40,40 0 0 1 460,400 Z" fill="#FAFAF7" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5"/>
+<path d="M480,400 A40,40 0 0 1 560,400 Z" fill="#FAFAF7" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5"/>
+<line x1="336" y1="400" x2="612" y2="400" stroke="#495057" stroke-width="2"/>
+<line x1="420.0" y1="400.0" x2="520.0" y2="400.0" stroke="#868E96" stroke-width="8" stroke-linecap="round"/>
+<line x1="420.0" y1="400.0" x2="385.0" y2="339.4" stroke="#495057" stroke-width="14" stroke-linecap="round"/>
+<line x1="520.0" y1="400.0" x2="555.0" y2="339.4" stroke="#495057" stroke-width="14" stroke-linecap="round"/>
+<line x1="385.0" y1="339.4" x2="470.0" y2="269.6" stroke="#6C757D" stroke-width="9" stroke-linecap="round"/>
+<line x1="555.0" y1="339.4" x2="470.0" y2="269.6" stroke="#6C757D" stroke-width="9" stroke-linecap="round"/>
+<path d="M397.4,391.8 A24,24 0.0 0 1 417.9,376.1 A24,24 0.0 0 1 440.8,388.0" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f6-ae)"/>
+<path d="M499.2,388.0 A24,24 0.0 0 1 522.1,376.1 A24,24 0.0 0 1 542.6,391.8" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f6-ae)"/>
+<circle cx="420" cy="400" r="12" fill="#343A40"/><circle cx="420" cy="400" r="4.6" fill="#ADB5BD"/>
+<circle cx="520" cy="400" r="12" fill="#343A40"/><circle cx="520" cy="400" r="4.6" fill="#ADB5BD"/>
+<circle cx="385.0" cy="339.4" r="6" fill="#343A40"/><circle cx="555.0" cy="339.4" r="6" fill="#343A40"/>
+<circle cx="470.0" cy="269.6" r="6" fill="#C2410C"/>
+<text x="340.0" y="132.0" font-size="20" font-weight="700" fill="#1F2328" text-anchor="start">병렬: 5절 링크</text>
+<text x="340.0" y="156.0" font-size="15" font-weight="400" fill="#343A40" text-anchor="start">팔 둘이 한 점을 함께 잡는다 · 모터 둘은 바닥에</text>
+<text x="170.0" y="424.0" font-size="15" font-weight="400" fill="#2563EB" text-anchor="middle">닿는 곳</text>
+<text x="470.0" y="424.0" font-size="15" font-weight="400" fill="#2563EB" text-anchor="middle">닿는 곳</text>
+<text x="28" y="462" font-size="17" fill="#343A40">IFR 구조 분류에는 따로 없다 · 종류라기보다 움직임의 성질</text>
+<text x="28" y="486" font-size="15" fill="#6C757D">실험실의 '평면'은 자기 부상 평면 이송(XPlanar, ACOPOS 6D)에서 더 자주 보인다</text>
+</svg>
+            </figure>
+            <p>스카라에서 위아래와 손끝 돌림을 빼면 평면 2링크 팔이다. 같은 평면 일을 팔 둘이 한 점을 함께 잡는 5절 링크로도 한다. 왼쪽이 직렬(관절이 한 줄), 오른쪽이 병렬(팔 여럿이 끝을 함께)이다. 점선 반원 안은 손끝이 닿지 않는 곳이다.</p>
+            <details class="more">
+                <summary>이름과 내력</summary>
+                <p>SCARA는 Selective Compliance Assembly Robot Arm의 머리글자다. 수평으로는 조금 낭창하고 수직으로는 단단해서, 둥근 핀을 둥근 구멍에 꽂을 때 옆으로 비켜 맞으며 들어간다. 1978년 야마나시 대학의 마키노 히로시가 첫 시제품을 만들었고, 1981년부터 함께 연구한 회사들이 팔았다.</p>
+            </details>
+            <p class="source">출처: 정의: IFR 2016 §1.2.2 · 이름과 내력: Makino 2014 · 선택적 유연성: Wikipedia “SCARA” · PF400: PreciseFlex 제품 페이지 · 5절 링크: Wikipedia “Parallel manipulator” · 닿지 않는 안쪽: 이 페이지의 계산</p>
+        </section>
+
+        <section id="articulated" class="wrap step" aria-labelledby="articulated-title">
+            <p class="step-no">03 다관절 로봇</p>
+            <h2 id="articulated-title">기울이고, 옆에서 넣는다</h2>
+            <p>회전 관절이 셋 이상인 팔이고, 가장 흔한 것은 6축이다. 허리·어깨·팔꿈치가 손목의 자리를, 손목 셋이 손끝의 방향을 맡는다. 공간의 자세는 자유도 6이라, 6축이면 닿는 곳 대부분에서 아무 자세나 된다. 5축은 방향 하나를 정하지 못하고, 7축은 남는 축으로 팔꿈치를 옮겨 장애물을 피한다.</p>
+            <figure class="fig" data-fig="3">
+<svg class="fig" role="img" aria-labelledby="f3-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" width="640" height="500" font-family="Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, sans-serif">
+<title id="f3-title">수직 다관절 · 6축 로봇 팔</title>
+<defs>
+  <marker id="f3-ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2410C"/></marker>
+  <marker id="f3-as" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#C2410C"/></marker>
+  <marker id="f3-ge" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+</defs>
+<rect x="1" y="1" width="638" height="498" rx="18" fill="#FAFAF7" stroke="#E2E0D8" stroke-width="2"/>
+<text x="28" y="44" font-size="26" font-weight="700" fill="#1F2328">수직 다관절 · 6축 로봇 팔</text>
+<text x="28" y="74" font-size="18" fill="#57606A">회전 축 6개 · 1~3은 손목의 자리, 4~6은 손끝의 방향</text>
+<line x1="40" y1="430" x2="600" y2="430" stroke="#DEE2E6" stroke-width="2"/>
+<rect x="505" y="232" width="110" height="140" rx="6" fill="#F1F3F5" stroke="#495057" stroke-width="2"/>
+<rect x="500" y="282" width="12" height="52" fill="#FAFAF7"/>
+<line x1="505" y1="282" x2="520" y2="282" stroke="#495057" stroke-width="2"/><line x1="505" y1="334" x2="520" y2="334" stroke="#495057" stroke-width="2"/>
+<line x1="520" y1="282" x2="520" y2="334" stroke="#ADB5BD" stroke-width="1.5" stroke-dasharray="3 3"/>
+<text x="560.0" y="394.0" font-size="15" font-weight="400" fill="#6C757D" text-anchor="middle">장비 (옆문)</text>
+<line x1="505" y1="372" x2="505" y2="430" stroke="#495057" stroke-width="2"/><line x1="615" y1="372" x2="615" y2="430" stroke="#495057" stroke-width="2"/>
+<rect x="70" y="410" width="110" height="20" rx="4" fill="#868E96"/>
+<rect x="92" y="345" width="66" height="65" rx="8" fill="#DEE2E6" stroke="#868E96" stroke-width="2"/>
+<path d="M76.1,371.9 A52,12 0.0 0 1 176.2,373.9 A52,12 0.0 0 1 85.2,383.7" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f3-ae)"/>
+<text x="188.0" y="384.0" font-size="20" font-weight="700" fill="#C2410C" text-anchor="start">1</text>
+<line x1="125.0" y1="328.0" x2="235.0" y2="175.0" stroke="#495057" stroke-width="30" stroke-linecap="round"/>
+<line x1="235.0" y1="175.0" x2="420.0" y2="205.0" stroke="#6C757D" stroke-width="22" stroke-linecap="round"/>
+<line x1="420.0" y1="205.0" x2="455.6" y2="255.8" stroke="#495057" stroke-width="14" stroke-linecap="round"/>
+<line x1="455.6" y1="255.8" x2="493.4" y2="309.9" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+<line x1="455.6" y1="255.8" x2="493.4" y2="309.9" stroke="#495057" stroke-width="12" stroke-linecap="round" stroke-opacity="0.35"/>
+<line x1="462.9" y1="250.6" x2="473.3" y2="265.4" stroke="#343A40" stroke-width="4" stroke-linecap="round"/>
+<line x1="448.2" y1="260.9" x2="458.5" y2="275.7" stroke="#343A40" stroke-width="4" stroke-linecap="round"/>
+<circle cx="125" cy="328" r="20" fill="#343A40"/><circle cx="125" cy="328" r="7.6" fill="#ADB5BD"/>
+<circle cx="235" cy="175" r="18" fill="#343A40"/><circle cx="235" cy="175" r="6.8" fill="#ADB5BD"/>
+<circle cx="420" cy="205" r="14" fill="#343A40"/><circle cx="420" cy="205" r="5.3" fill="#ADB5BD"/>
+<path d="M97.3,344.0 A32,32 0.0 0 1 125.0,296.0 A32,32 0.0 0 1 152.7,344.0" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f3-ae)"/>
+<text x="78.0" y="312.0" font-size="20" font-weight="700" fill="#C2410C" text-anchor="start">2</text>
+<path d="M220.0,201.0 A30,30 0.0 0 1 220.0,149.0 A30,30 0.0 0 1 265.0,175.0" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f3-ae)"/>
+<text x="226.0" y="136.0" font-size="20" font-weight="700" fill="#C2410C" text-anchor="start">3</text>
+<path d="M346.7,185.5 A7,22 9 0 1 359.4,191.3 A7,22 9 0 1 344.5,207.1" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f3-ae)"/>
+<text x="346.0" y="160.0" font-size="20" font-weight="700" fill="#C2410C" text-anchor="start">4</text>
+<path d="M433.0,182.5 A26,26 0.0 0 1 434.9,226.3 A26,26 0.0 0 1 394.4,209.5" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f3-ae)"/>
+<text x="428.0" y="170.0" font-size="20" font-weight="700" fill="#C2410C" text-anchor="start">5</text>
+<path d="M446.8,233.1 A6,17 55 0 1 451.0,244.2 A6,17 55 0 1 433.6,243.5" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f3-ae)"/>
+<text x="482.0" y="236.0" font-size="20" font-weight="700" fill="#C2410C" text-anchor="start">6</text>
+<text x="28" y="462" font-size="17" fill="#343A40">손끝을 기울이고 옆에서 넣는다 · 작업 공간: 몸 둘레의 공 모양</text>
+<text x="28" y="486" font-size="15" fill="#6C757D">5축은 방향 하나가 빠지고, 7축은 남는 축으로 팔꿈치를 옮겨 장애물을 피한다</text>
+</svg>
+            </figure>
+            <p>그래서 튜브를 기울이거나, 장비 옆문으로 넣거나, 사람이 쓰는 도구를 그대로 쓰는 일에 맞는다. 협동 로봇 UR5e는 관절 6개, 하중 5 kg, 도달 850 mm, 반복 정밀도 ±0.03 mm다. 사람의 실험 장비를 두 팔 로봇 둘레에 그대로 놓은 시스템도 있고(Maholo LabDroid), 이동 받침에 올린 팔이 장비 사이를 다니며 8일 동안 실험 688번을 하기도 했다.</p>
+            <p>대가도 있다. 값이 비싸고, 아주 빠른 일에는 덜 맞는다. 한 자세에 관절의 풀이가 여럿이고(UR5e의 치수로 계산하면 8개), 특이 자세에서는 손끝을 어떤 방향으로 움직이지 못해 경로를 신경 써야 한다. 범위가 큰 다축 팔은 보호 울타리도 커진다.</p>
+            <h3>가족: 평행 링크형 팔</h3>
+            <figure class="fig" data-fig="5">
+<svg class="fig" role="img" aria-labelledby="f5-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" width="640" height="500" font-family="Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, sans-serif">
+<title id="f5-title">평행 링크형 팔 · 4축</title>
+<defs>
+  <marker id="f5-ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2410C"/></marker>
+  <marker id="f5-as" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#C2410C"/></marker>
+  <marker id="f5-ge" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+</defs>
+<rect x="1" y="1" width="638" height="498" rx="18" fill="#FAFAF7" stroke="#E2E0D8" stroke-width="2"/>
+<text x="28" y="44" font-size="26" font-weight="700" fill="#1F2328">평행 링크형 팔 · 4축</text>
+<text x="28" y="74" font-size="18" fill="#57606A">다관절의 몸 + 평행사변형 링크 = 손끝이 늘 수평</text>
+<line x1="40" y1="430" x2="600" y2="430" stroke="#DEE2E6" stroke-width="2"/>
+<rect x="70" y="410" width="120" height="20" rx="4" fill="#868E96"/>
+<rect x="95" y="330" width="70" height="80" rx="8" fill="#DEE2E6" stroke="#868E96" stroke-width="2"/>
+<path d="M79.3,367.9 A54,12 0.0 0 1 183.2,369.9 A54,12 0.0 0 1 88.6,379.7" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f5-ae)"/>
+<text x="194.0" y="380.0" font-size="20" font-weight="700" fill="#C2410C" text-anchor="start">1</text>
+<polygon points="130.0,320.0 250.0,170.0 231.3,155.0 111.3,305.0" fill="#C2410C" stroke="#C2410C" stroke-width="1.6" fill-opacity="0.10" stroke-dasharray="5 4"/>
+<polygon points="250.0,170.0 450.0,190.0 450.0,164.0 250.0,144.0" fill="#C2410C" stroke="#C2410C" stroke-width="1.6" fill-opacity="0.10" stroke-dasharray="5 4"/>
+<line x1="130.0" y1="320.0" x2="250.0" y2="170.0" stroke="#495057" stroke-width="26" stroke-linecap="round"/>
+<line x1="250.0" y1="170.0" x2="450.0" y2="190.0" stroke="#6C757D" stroke-width="20" stroke-linecap="round"/>
+<line x1="111.3" y1="305.0" x2="231.3" y2="155.0" stroke="#343A40" stroke-width="6" stroke-linecap="round"/>
+<line x1="250.0" y1="144.0" x2="450.0" y2="164.0" stroke="#343A40" stroke-width="6" stroke-linecap="round"/>
+<polygon points="250.0,170.0 231.3,155.0 250.0,144.0" fill="#343A40" stroke="none" stroke-width="0" />
+<line x1="450.0" y1="190.0" x2="450.0" y2="164.0" stroke="#343A40" stroke-width="10" stroke-linecap="round"/>
+<line x1="450.0" y1="190.0" x2="450.0" y2="238.0" stroke="#495057" stroke-width="12" stroke-linecap="round"/>
+<rect x="413" y="236" width="74" height="12" rx="2" fill="#343A40"/>
+<rect x="413" y="248" width="6" height="18" fill="#343A40"/><rect x="481" y="248" width="6" height="18" fill="#343A40"/>
+<rect x="419" y="253" width="62" height="9" fill="#FFFFFF" stroke="#495057" stroke-width="1.5"/>
+<path d="M427.4,219.6 A24,7 0.0 0 1 473.6,220.8 A24,7 0.0 0 1 431.6,226.5" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f5-ae)"/>
+<text x="482.0" y="226.0" font-size="20" font-weight="700" fill="#C2410C" text-anchor="start">4</text>
+<circle cx="130" cy="320" r="18" fill="#343A40"/><circle cx="130" cy="320" r="6.8" fill="#ADB5BD"/>
+<circle cx="250" cy="170" r="14" fill="#343A40"/><circle cx="250" cy="170" r="5.3" fill="#ADB5BD"/>
+<circle cx="450" cy="190" r="12" fill="#343A40"/><circle cx="450" cy="190" r="4.6" fill="#ADB5BD"/>
+<circle cx="111.3" cy="305.0" r="5" fill="#343A40"/>
+<circle cx="231.3" cy="155.0" r="5" fill="#343A40"/>
+<circle cx="250.0" cy="144.0" r="5" fill="#343A40"/>
+<circle cx="450.0" cy="164.0" r="5" fill="#343A40"/>
+<path d="M104.0,335.0 A30,30 0.0 0 1 130.0,290.0 A30,30 0.0 0 1 156.0,335.0" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f5-ae)"/>
+<text x="84.0" y="304.0" font-size="20" font-weight="700" fill="#C2410C" text-anchor="start">2</text>
+<path d="M264.0,145.8 A28,28 0.0 0 1 268.0,191.4 A28,28 0.0 0 1 223.7,179.6" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f5-ae)"/>
+<text x="274.0" y="214.0" font-size="20" font-weight="700" fill="#C2410C" text-anchor="start">3</text>
+<text x="450.0" y="288.0" font-size="15" font-weight="400" fill="#6C757D" text-anchor="middle">늘 수평</text>
+<text x="300.0" y="112.0" font-size="15" font-weight="400" fill="#C2410C" text-anchor="middle">평행사변형 둘이 손끝 방향을 붙잡는다</text>
+<text x="28" y="462" font-size="17" fill="#343A40">자유도는 스카라와 같은 넷: 위치 3 + 수직축 돌림 · 기울이지는 못한다</text>
+<text x="28" y="486" font-size="15" fill="#6C757D">팔레타이징 로봇과 탁상 로봇(Dobot)이 이 짜임이다 · IFR 분류로는 다관절</text>
+</svg>
+            </figure>
+            <p>다관절의 몸에 평행사변형 링크를 넣어 손끝을 늘 수평으로 붙잡는다. 자유도는 스카라와 같은 넷이라 플레이트를 옮기는 일에 맞고, 기울이지는 못한다. 팔레타이징 로봇과 값싼 탁상 로봇(Dobot)이 이 짜임이다.</p>
+            <p class="source">출처: 정의: IFR 2016 §1.2.2 · 강점과 약점: NIST 2019 · UR5e: UR5e 데이터시트 · Maholo LabDroid: JST 연구 성과 소개 · 이동 로봇 화학자: Burger 외 2020 · 울타리와 연구실: Holland·Davies 2020 · 풀이와 특이 자세: Lynch·Park 2017 §5.3, 6장, UR5e 공식 DH로 한 이 페이지의 계산 · 평행 링크: Sanjuan 외 2020 1절</p>
+        </section>
+
+        <section id="delta" class="wrap step" aria-labelledby="delta-title">
+            <p class="step-no">04 델타 로봇</p>
+            <h2 id="delta-title">위에서, 가장 빠르게</h2>
+            <p>델타는 원래 이름이다. 1980년대 초 EPFL의 Reymond Clavel이 평행사변형으로 병렬 로봇을 만드는 생각을 했고, 그 로봇을 Delta robot이라 불렀다. 시작은 초콜릿 공장에서 본 단조로운 손일이었다. 왜 델타인지는 밝힌 자료를 찾지 못했다.</p>
+            <figure class="fig" data-fig="4">
+<svg class="fig" role="img" aria-labelledby="f4-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" width="640" height="500" font-family="Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, sans-serif">
+<title id="f4-title">델타 · 병렬 로봇</title>
+<defs>
+  <marker id="f4-ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2410C"/></marker>
+  <marker id="f4-as" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#C2410C"/></marker>
+  <marker id="f4-ge" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+</defs>
+<rect x="1" y="1" width="638" height="498" rx="18" fill="#FAFAF7" stroke="#E2E0D8" stroke-width="2"/>
+<text x="28" y="44" font-size="26" font-weight="700" fill="#1F2328">델타 · 병렬 로봇</text>
+<text x="28" y="74" font-size="18" fill="#57606A">위에 고정한 모터 3개 = X · Y · Z (+ 가운데 돌림 1)</text>
+<rect x="40" y="92" width="560" height="14" fill="#868E96"/>
+<rect x="180" y="106" width="280" height="40" rx="10" fill="#DEE2E6" stroke="#868E96" stroke-width="2"/>
+<path d="M150,384 A170,13 0 0 0 490,384 L490,414 A170,13 0 0 1 150,414 Z" fill="#2563EB" fill-opacity="0.07"/>
+<ellipse cx="320" cy="384" rx="170" ry="13" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5" fill="none"/>
+<path d="M150,414 A170,13 0 0 0 490,414" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5" fill="none"/>
+<line x1="150" y1="384" x2="150" y2="414" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5" fill="none"/><line x1="490" y1="384" x2="490" y2="414" stroke="#2563EB" stroke-width="1.6" stroke-dasharray="6 5" fill="none"/>
+<line x1="320.0" y1="144.0" x2="320.0" y2="214.0" stroke="#ADB5BD" stroke-width="12" stroke-linecap="round"/>
+<line x1="313" y1="216" x2="313" y2="346" stroke="#ADB5BD" stroke-width="3"/><line x1="327" y1="216" x2="327" y2="346" stroke="#ADB5BD" stroke-width="3"/>
+<circle cx="320" cy="144" r="13" fill="#868E96"/>
+<line x1="320" y1="150" x2="320" y2="348" stroke="#C2410C" stroke-width="2" stroke-dasharray="6 5"/>
+<text x="328.0" y="262.0" font-size="18" font-weight="700" fill="#C2410C" text-anchor="start">④</text>
+<line x1="215.0" y1="152.0" x2="140.0" y2="227.0" stroke="#495057" stroke-width="16" stroke-linecap="round"/>
+<line x1="132.0" y1="231.0" x2="292.0" y2="361.0" stroke="#343A40" stroke-width="4"/>
+<line x1="148.0" y1="223.0" x2="308.0" y2="353.0" stroke="#343A40" stroke-width="4"/>
+<line x1="132.0" y1="231.0" x2="148.0" y2="223.0" stroke="#343A40" stroke-width="5"/>
+<circle cx="215" cy="152" r="16" fill="#343A40"/><circle cx="215" cy="152" r="6" fill="#ADB5BD"/>
+<circle cx="140" cy="227" r="6" fill="#343A40"/>
+<line x1="425.0" y1="152.0" x2="500.0" y2="227.0" stroke="#495057" stroke-width="16" stroke-linecap="round"/>
+<line x1="508.0" y1="231.0" x2="348.0" y2="361.0" stroke="#343A40" stroke-width="4"/>
+<line x1="492.0" y1="223.0" x2="332.0" y2="353.0" stroke="#343A40" stroke-width="4"/>
+<line x1="508.0" y1="231.0" x2="492.0" y2="223.0" stroke="#343A40" stroke-width="5"/>
+<circle cx="425" cy="152" r="16" fill="#343A40"/><circle cx="425" cy="152" r="6" fill="#ADB5BD"/>
+<circle cx="500" cy="227" r="6" fill="#343A40"/>
+<rect x="288" y="350" width="64" height="14" rx="4" fill="#1F2328"/>
+<polygon points="312.0,364.0 328.0,364.0 334.0,376.0 306.0,376.0" fill="#495057" stroke="none" stroke-width="0" />
+<text x="30.0" y="136.0" font-size="15" font-weight="400" fill="#343A40" text-anchor="start">모터 3개: 위에 고정</text>
+<text x="36.0" y="300.0" font-size="15" font-weight="400" fill="#343A40" text-anchor="start">평행사변형 →</text>
+<text x="36.0" y="320.0" font-size="15" font-weight="400" fill="#343A40" text-anchor="start">끝판은 늘 수평</text>
+<text x="476.0" y="300.0" font-size="15" font-weight="400" fill="#343A40" text-anchor="start">팔이 가벼워</text>
+<text x="476.0" y="320.0" font-size="15" font-weight="400" fill="#343A40" text-anchor="start">아주 빠르다</text>
+<text x="28" y="462" font-size="17" fill="#343A40">작업 공간: 로봇 아래의 납작한 원통 · 위에 매달아 쓴다</text>
+<text x="28" y="486" font-size="15" fill="#6C757D">④ 가운데 축은 끝판을 돌린다 (4축 모델) · 기본은 3축</text>
+</svg>
+            </figure>
+            <p>위에 고정한 모터 셋이 위팔 셋을 돌리고, 평행사변형 막대가 끝판을 늘 수평으로 묶는다. 그래서 끝판은 X·Y·Z로만 움직이고, 기본이 3축이다. 가운데 축으로 돌림을 더한 4축과 6축도 있다.</p>
+            <p>모터가 위에 있고 팔이 가벼워 가장 빠르다. ABB IRB 360은 0.1 kg을 들고 25/305/25 mm 왕복을 0.30초에 한다(1분에 약 200번). 대신 작업 공간은 로봇 아래의 납작한 원통(대개 지름 1 m, 높이 0.2 m쯤)이고, 위에 거꾸로 매달아 쓰며, 하중이 작고(1~8 kg), 옆으로 장비 안에 손을 넣지 못한다.</p>
+            <p>포장·식품·제약 라인에서 많이 쓰지만, 실험실 자동화에서 쓴 사례는 찾지 못했다. 실험실의 일은 속도보다 자세와 정밀이 먼저이기 때문으로 보인다(가설). 이름도 회사마다 달라 낯설다. ABB는 FlexPicker, FANUC은 패러렐 링크 로봇이라 부르고, 별명은 스파이더 로봇이다.</p>
+            <h3>가족: 스튜어트 플랫폼</h3>
+            <figure class="fig" data-fig="7">
+<svg class="fig" role="img" aria-labelledby="f7-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" width="640" height="500" font-family="Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, sans-serif">
+<title id="f7-title">스튜어트 플랫폼 · 헥사포드</title>
+<defs>
+  <marker id="f7-ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2410C"/></marker>
+  <marker id="f7-as" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#C2410C"/></marker>
+  <marker id="f7-ge" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+</defs>
+<rect x="1" y="1" width="638" height="498" rx="18" fill="#FAFAF7" stroke="#E2E0D8" stroke-width="2"/>
+<text x="28" y="44" font-size="26" font-weight="700" fill="#1F2328">스튜어트 플랫폼 · 헥사포드</text>
+<text x="28" y="74" font-size="18" fill="#57606A">길이가 바뀌는 다리 6개 = 위치 3 + 방향 3</text>
+<ellipse cx="300" cy="388" rx="200" ry="32" fill="#CED4DA"/>
+<ellipse cx="300" cy="378" rx="200" ry="32" fill="#DEE2E6" stroke="#868E96" stroke-width="2"/>
+<line x1="441.4" y1="355.4" x2="378.6" y2="252.9" stroke="#ADB5BD" stroke-width="13" stroke-linecap="round"/>
+<line x1="398.1" y1="284.7" x2="333.1" y2="178.7" stroke="#868E96" stroke-width="6" stroke-linecap="round"/>
+<circle cx="441.4" cy="355.4" r="5.5" fill="#868E96"/>
+<line x1="158.6" y1="355.4" x2="221.4" y2="252.9" stroke="#ADB5BD" stroke-width="13" stroke-linecap="round"/>
+<line x1="201.9" y1="284.7" x2="266.9" y2="178.7" stroke="#868E96" stroke-width="6" stroke-linecap="round"/>
+<circle cx="158.6" cy="355.4" r="5.5" fill="#868E96"/>
+<line x1="493.2" y1="369.7" x2="452.8" y2="274.6" stroke="#ADB5BD" stroke-width="13" stroke-linecap="round"/>
+<line x1="465.4" y1="304.1" x2="423.6" y2="205.7" stroke="#868E96" stroke-width="6" stroke-linecap="round"/>
+<circle cx="493.2" cy="369.7" r="5.5" fill="#868E96"/>
+<line x1="106.8" y1="369.7" x2="147.2" y2="274.6" stroke="#495057" stroke-width="13" stroke-linecap="round"/>
+<line x1="134.6" y1="304.1" x2="176.4" y2="205.7" stroke="#343A40" stroke-width="6" stroke-linecap="round"/>
+<circle cx="106.8" cy="369.7" r="5.5" fill="#343A40"/>
+<line x1="351.8" y1="408.9" x2="374.2" y2="296.8" stroke="#495057" stroke-width="13" stroke-linecap="round"/>
+<line x1="367.3" y1="331.6" x2="390.5" y2="215.6" stroke="#343A40" stroke-width="6" stroke-linecap="round"/>
+<circle cx="351.8" cy="408.9" r="5.5" fill="#343A40"/>
+<line x1="248.2" y1="408.9" x2="225.8" y2="296.8" stroke="#495057" stroke-width="13" stroke-linecap="round"/>
+<line x1="232.7" y1="331.6" x2="209.5" y2="215.6" stroke="#343A40" stroke-width="6" stroke-linecap="round"/>
+<circle cx="248.2" cy="408.9" r="5.5" fill="#343A40"/>
+<ellipse cx="300" cy="207" rx="128" ry="22" fill="#CED4DA"/>
+<ellipse cx="300" cy="200" rx="128" ry="22" fill="#F1F3F5" stroke="#343A40" stroke-width="2"/>
+<circle cx="423.6" cy="205.7" r="5" fill="#343A40"/>
+<circle cx="176.4" cy="205.7" r="5" fill="#343A40"/>
+<circle cx="390.5" cy="215.6" r="5" fill="#343A40"/>
+<circle cx="209.5" cy="215.6" r="5" fill="#343A40"/>
+<rect x="274" y="170" width="52" height="22" rx="4" fill="#FFFFFF" stroke="#495057" stroke-width="1.6"/>
+<ellipse cx="300" cy="170" rx="26" ry="6" fill="#FFFFFF" stroke="#495057" stroke-width="1.6"/>
+<line x1="300.0" y1="158.0" x2="300.0" y2="108.0" stroke="#C2410C" stroke-width="2.5" marker-start="url(#f7-as)" marker-end="url(#f7-ae)"/>
+<text x="310.0" y="126.0" font-size="22" font-weight="700" fill="#C2410C" text-anchor="start">Z</text>
+<line x1="450.0" y1="200.0" x2="518.0" y2="200.0" stroke="#C2410C" stroke-width="2.5" marker-start="url(#f7-as)" marker-end="url(#f7-ae)"/>
+<text x="526.0" y="207.0" font-size="22" font-weight="700" fill="#C2410C" text-anchor="start">X</text>
+<line x1="440.0" y1="170.0" x2="480.0" y2="138.0" stroke="#C2410C" stroke-width="2.5" marker-start="url(#f7-as)" marker-end="url(#f7-ae)"/>
+<text x="486.0" y="138.0" font-size="22" font-weight="700" fill="#C2410C" text-anchor="start">Y</text>
+<path d="M256.8,130.9 A46,9 0.0 0 1 345.3,132.4 A46,9 0.0 0 1 264.8,139.8" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f7-ae)"/>
+<text x="238.0" y="138.0" font-size="15" font-weight="400" fill="#C2410C" text-anchor="end">돌림</text>
+<path d="M142.5,191.1 A8,26 0.0 0 1 157.9,195.5 A8,26 0.0 0 1 143.9,216.7" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f7-ae)"/>
+<text x="134.0" y="170.0" font-size="15" font-weight="400" fill="#C2410C" text-anchor="end">기울기</text>
+<text x="510.0" y="330.0" font-size="15" font-weight="400" fill="#343A40" text-anchor="start">다리 6개:</text>
+<text x="510.0" y="350.0" font-size="15" font-weight="400" fill="#343A40" text-anchor="start">길이가 바뀐다</text>
+<text x="88.0" y="384.0" font-size="15" font-weight="400" fill="#6C757D" text-anchor="end">바닥판</text>
+<text x="28" y="462" font-size="17" fill="#343A40">단단하고 아주 정밀하다 · 대신 움직이는 범위가 좁다</text>
+<text x="28" y="486" font-size="15" fill="#6C757D">먼저 만든 사람은 Gough(1954), 이름은 Stewart(1965)에서 왔다</text>
+</svg>
+            </figure>
+            <p>길이가 바뀌는 다리 여섯이 윗판을 6자유도로 움직인다. 흔히 헥사포드라 부른다. 델타가 병렬 로봇의 ‘빠른 3축’이라면 스튜어트는 ‘단단하고 정밀한 6축’이다. 소형 헥사포드는 반복 정밀도가 수평 ±0.15 µm, 위아래 ±0.06 µm지만 범위는 X ±17 mm, 기울기 ±10°쯤이라, 실험실에서는 시료를 옮기기보다 광학이나 시료를 정밀하게 맞추는 데 맞는다(가설).</p>
+            <p>이름에도 사연이 있다. 먼저 만든 사람은 1954년 타이어 시험기를 돌린 Eric Gough이고, Stewart가 1965년에 낸 플랫폼은 짜임이 달랐다.</p>
+            <details class="more">
+                <summary>자유도를 세어 보면</summary>
+                <p>기계의 자유도는 막대와 관절을 세어 구한다(Gruebler 식). 델타를 그대로 세면 9가 나온다. 평행사변형 막대 여섯이 저마다 제 축으로 헛돌 수 있기 때문이다. 이 6을 빼면 3이다. 스튜어트는 그대로 세어 6이다.</p>
+            </details>
+            <p class="source">출처: 이름, 내력, 구조: Bonev 2001, EPFL 부고 2025 · IRB 360: ABB 데이터시트(2022) · 회사마다 다른 이름: ABB·FANUC 제품 자료, NIST 2019 · 헥사포드: Wikipedia “Stewart platform”, PI 제품 자료 · 헥사포드의 내력: Bonev 2003 · 자유도 셈: 이 페이지의 계산</p>
+        </section>
+
+        <section id="summary" class="wrap step" aria-labelledby="summary-title">
+            <p class="step-no">정리</p>
+            <h2 id="summary-title">구조가 자세를, 자세가 쓰임을 정한다</h2>
+            <ol class="steps">
+                <li>장비 안에서 위로부터 내려가는 일은 직교가 맡는다. 분주기 데크, 현미경 스테이지, 미세주사 스테이지다.</li>
+                <li>플레이트를 수평으로 장비와 선반 사이에 옮기는 일은 스카라가 맡는다. 필요한 자유도 넷과 꼭 같다.</li>
+                <li>기울이거나 옆문으로 넣으면 6축, 가벼운 것을 아주 빨리 옮기면 델타, 작은 범위를 아주 정밀하게 맞추면 스튜어트 플랫폼이다.</li>
+            </ol>
+            <h3>한눈에</h3>
+            <div class="table-wrap">
+                <table class="rt-table">
+                    <thead>
+                        <tr><th scope="col"></th><th scope="col">직교</th><th scope="col">스카라</th><th scope="col">다관절(6축)</th><th scope="col">델타</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">기본 축 수</th><td>3</td><td>4</td><td>6 (5·7축도)</td><td>3 (4·6축도)</td></tr>
+                        <tr><th scope="row">손끝의 자세</th><td>방향 고정</td><td>늘 수평, 수직축 돌림만</td><td>아무 자세</td><td>늘 수평(+돌림)</td></tr>
+                        <tr><th scope="row">작업 공간</th><td>틀 안의 상자</td><td>기둥 둘레의 원통 조각</td><td>몸 둘레의 공</td><td>아래의 납작한 원통</td></tr>
+                        <tr><th scope="row">다가가는 방향</th><td>위(갠트리형), 옆(기둥형)</td><td>위, 같은 높이에서 옆</td><td>어느 쪽이든</td><td>위</td></tr>
+                        <tr><th scope="row">실험실 자리</th><td>분주기, 현미경 스테이지</td><td>플레이트 핸들러</td><td>협동 로봇, 두 팔 로봇</td><td>사례를 찾지 못함</td></tr>
+                        <tr><th scope="row">가족</th><td></td><td>위에서 보면 평면 2링크 팔</td><td>평행 링크형 팔</td><td>스튜어트 플랫폼</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3>직접 해보기의 다섯 일</h3>
+            <div class="table-wrap">
+                <table class="rt-table rt-jobs-table">
+                    <thead>
+                        <tr><th scope="col">일</th><th scope="col">직교</th><th scope="col">스카라</th><th scope="col">6축</th><th scope="col">델타</th><th scope="col">링크</th><th scope="col">스튜어트</th></tr>
+                    </thead>
+                    <tbody id="rt-job-rows">
+                        <tr><th scope="row">분주</th><td class="ok">됨</td><td class="ok">됨</td><td class="ok">됨</td><td class="ok">됨</td><td class="ok">됨</td><td class="no">범위</td></tr>
+                        <tr><th scope="row">선반에 넣기</th><td class="no">부딪힘</td><td class="ok">됨</td><td class="ok">됨</td><td class="no">부딪힘</td><td class="no">부딪힘</td><td class="no">범위</td></tr>
+                        <tr><th scope="row">옆문에 비스듬히</th><td class="no">자세</td><td class="no">자세</td><td class="ok">됨</td><td class="no">자세</td><td class="no">자세</td><td class="no">자세</td></tr>
+                        <tr><th scope="row">빠른 분류</th><td class="ok">됨</td><td class="ok">됨</td><td class="ok">됨</td><td class="ok">됨</td><td class="ok">됨</td><td class="no">범위</td></tr>
+                        <tr><th scope="row">광학 정밀 정렬</th><td class="no">자세</td><td class="no">자세</td><td class="no">정밀도</td><td class="no">자세</td><td class="no">자세</td><td class="ok">됨</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="rt-small">"자세"는 손끝 자세가 안 됨, "부딪힘"은 몸통이 위 선반에 부딪힘, "범위"는 닿지 않음, "정밀도"는 정밀도가 모자람이다. 빠른 분류는 다섯이 모두 되지만, 가장 빠른 것은 델타다. 기둥형 직교는 선반에 넣기만 된다.</p>
+            <h3>실험실의 세 겹</h3>
+            <p>장비 안은 직교, 장비 사이는 스카라나 6축, 실험대 사이는 이동 받침 위의 팔이 맡는다. 겹마다 요구하는 자세와 정밀이 달라 종류가 갈린다(가설: 공개 사례 몇 개를 묶은 틀). 장비 사이의 이송은 로봇 팔 대신, 판 위로 이동판을 띄워 옮기는 자기 부상 평면 이송으로 하기도 한다.</p>
+            <div class="note">
+                <p><strong>오해</strong>축이 많은 로봇이 더 좋은 로봇이다.</p>
+                <p class="fact"><strong>실제로는</strong>필요한 자세만큼의 축이면 된다. 플레이트를 수평으로 옮기는 일은 4축 스카라로 충분하고, 6축은 값이 비싸고 경로와 특이 자세를 더 신경 써야 한다.</p>
+            </div>
+            <div class="note">
+                <p><strong>오해</strong>가장 빠른 델타가 실험실에도 가장 좋다.</p>
+                <p class="fact"><strong>실제로는</strong>델타는 위에서만 손을 넣고 작업 공간이 납작하다. 실험실의 일은 대개 속도보다 자세와 정밀이 먼저다(가설).</p>
+            </div>
+            <h3>확인됨 · 가설 · 모름</h3>
+            <ul class="limits">
+                <li><span class="tag known">확인됨</span>분류와 정의, 델타·스카라·헥사포드의 내력, 제조사 수치는 원문과 대조했다. 다섯 일의 판정, UR5e의 풀이 8개, 델타의 자유도 셈, 정확도와 반복 정밀도의 예는 따로 만든 모델로 계산했다(모델의 치수는 대부분 가정이다).</li>
+                <li><span class="tag guess">가설</span>델타가 실험실에서 드문 까닭, 실험실의 세 겹, 헥사포드가 정밀 정렬에 맞는다는 것.</li>
+                <li><span class="tag unknown">모름</span>델타라는 이름의 까닭. 실제 선반의 틈과 그리퍼의 두께에서도 스카라와 6축이 들어가는지(제품마다 다르다). 속도는 계산하지 않았다.</li>
+            </ul>
+            <p class="source">출처: 축과 값, 경로: NIST 2019 · 자기 부상 평면 이송: Beckhoff의 Biosero 사례 글(2026) · 다섯 일의 판정: 이 페이지의 계산</p>
+        </section>
+
+        <section id="faq" class="wrap step" aria-labelledby="faq-title">
+            <p class="step-no">질문</p>
+            <h2 id="faq-title">자주 묻는 질문</h2>
+            <!-- 검색·AI 답변용. 독자가 검색창에 칠 질문과, 출처가 있는 사실만 담은 두세 문장의 답. head의 FAQPage와 문장이 같아야 한다. -->
+            <div class="faq" id="faq-list">
+                <details>
+                    <summary>로봇의 종류에는 무엇이 있나?</summary>
+                    <p>국제로봇연맹(IFR)은 산업용 로봇을 기구 구조로 나눈다. 직교(선형·갠트리), 스카라, 다관절, 병렬(델타), 원통형이다(IFR World Robotics 2016 §1.2.2). 구조가 손끝이 닿는 곳과 손끝이 취할 수 있는 자세를 정한다.</p>
+                </details>
+                <details>
+                    <summary>델타 로봇은 원래 이름인가?</summary>
+                    <p>그렇다. 1980년대 초 EPFL의 Reymond Clavel이 평행사변형으로 만든 병렬 로봇을 Delta robot이라 불렀다(Bonev 2001). 왜 델타인지 밝힌 자료는 찾지 못했다. ABB는 FlexPicker, FANUC은 패러렐 링크 로봇이라는 이름으로 판다.</p>
+                </details>
+                <details>
+                    <summary>스카라(SCARA)는 무엇의 줄임말인가?</summary>
+                    <p>Selective Compliance Assembly Robot Arm이다. 수평으로는 조금 낭창하고 수직으로는 단단해서, 핀을 구멍에 꽂는 조립에 맞는다. 1978년 야마나시 대학의 마키노 히로시가 첫 시제품을 만들었다(Makino 2014).</p>
+                </details>
+                <details>
+                    <summary>5축 로봇과 6축 로봇은 어떻게 다른가?</summary>
+                    <p>공간에서 물체의 자세는 위치 셋과 방향 셋, 자유도 6이다(Lynch·Park 2017 §2.1). 6축이면 닿는 곳 대부분에서 아무 자세나 되고, 5축은 방향 하나를 정하지 못한다. 손끝이 제 축 둘레로 대칭이거나 자세 하나가 늘 고정이면 5축으로도 된다.</p>
+                </details>
+                <details>
+                    <summary>실험실에서 마이크로플레이트를 옮기는 로봇은 무엇인가?</summary>
+                    <p>플레이트는 기울이면 안 되니 필요한 자유도는 위치 셋과 수직축 둘레의 돌림 하나, 모두 넷이다. 그래서 수평 관절과 높은 위아래 기둥을 가진 스카라형 플레이트 핸들러가 이 일에 맞는다(예: Brooks PreciseFlex 400, 4축). 기울이거나 장비 옆문으로 넣어야 하면 6축 협동 로봇을 쓴다.</p>
+                </details>
+                <details>
+                    <summary>스튜어트 플랫폼(헥사포드)이란?</summary>
+                    <p>길이가 바뀌는 다리 여섯으로 윗판을 6자유도로 움직이는 병렬 로봇이다. 단단하고 정밀하지만 범위가 좁다(PI의 소형 헥사포드는 반복 정밀도가 수평 ±0.15 µm, 위아래 ±0.06 µm이고 X 범위는 ±17 mm). 먼저 만든 사람은 1954년 타이어 시험기를 돌린 Eric Gough다(Bonev 2003).</p>
+                </details>
+                <details>
+                    <summary>로봇의 반복 정밀도와 정확도는 어떻게 다른가?</summary>
+                    <p>반복 정밀도는 같은 점으로 돌아올 때의 흩어짐이고, 정확도는 좌표로 시킨 곳에 얼마나 맞게 가는지다(ISO 9283은 둘을 따로 잰다). UR5e의 공식 치수로 만든 모델에 링크 길이 0.2~0.3 mm, 관절 영점 0.02°의 오차를 넣자 손끝이 95%에서 0.86 mm 안으로 어긋나, 반복 정밀도 ±0.03 mm의 약 28배였다(가정한 오차로 든 계산). 카메라로 찾은 좌표로 로봇을 보내는 일에 보정이 필요한 까닭이다.</p>
+                </details>
+                <details>
+                    <summary>직교 로봇과 갠트리 로봇은 같은가?</summary>
+                    <p>직교 로봇은 직선 축 셋이 X·Y·Z와 일치하는 로봇이다(IFR 2016 §1.2.2). 두 레일 위에 걸친 높은 틀에 매달면 갠트리 로봇이라 부른다(NIST 2019). 분주기와 현미경 스테이지가 이 짜임이다.</p>
+                </details>
+            </div>
+        </section>
+
+        <section class="wrap step" aria-labelledby="more-title">
+            <h2 id="more-title">더 보기</h2>
+            <ul class="links">
+                <li><a href="https://ifr.org/img/office/Industrial_Robots_2016_Chapter_1_2.pdf">IFR, World Robotics 2016 Industrial Robots, 1.2 산업용 로봇의 정의와 분류</a></li>
+                <li><a href="https://www.parallemic.org/Reviews/Review002.html">Bonev, Delta Parallel Robot: the Story of Success (2001)</a></li>
+                <li><a href="https://www.parallemic.org/Reviews/Review007.html">Bonev, The True Origins of Parallel Robots (2003)</a></li>
+                <li><a href="https://www.jstage.jst.go.jp/article/jrobomech/26/1/26_5/_article">Makino, Development of the SCARA (Journal of Robotics and Mechatronics, 2014)</a></li>
+                <li><a href="https://www.nist.gov/blogs/manufacturing-innovation-blog/4-types-robots-every-manufacturer-should-know">NIST, 4 Types of Robots Every Manufacturer Should Know (2019)</a></li>
+                <li><a href="https://www.slas.org/education/ansi-slas-microplate-standards/">ANSI SLAS 1-2004 (R2012), Microplates: Footprint Dimensions</a></li>
+                <li><a href="https://www.universal-robots.com/articles/ur/application-installation/dh-parameters-for-calculations-of-kinematics-and-dynamics/">Universal Robots, UR5e의 DH 파라미터</a></li>
+                <li><a href="https://doi.org/10.3389/fbioe.2020.571777">Holland, Davies, Automation in the Life Science Research Laboratory (2020)</a></li>
+                <li><a href="https://doi.org/10.1371/journal.pone.0000862">Wang 외, A Fully Automated Robotic System for Microinjection of Zebrafish Embryos (PLoS ONE, 2007)</a></li>
+                <li><a href="https://doi.org/10.11591/ijra.v9i3.pp153-159">Sanjuan 외, Forward kinematic analysis of Dobot using closed-loop method (2020)</a></li>
+                <li>계산: 로봇 일곱의 기구학 모델(UR5e는 공식 DH)과 충돌 검사를 파이썬으로 따로 만들어, 이 페이지의 판정 규칙이 다섯 일에서 같은 답을 내는지 맞췄다. 모델의 치수는 대부분 가정이다.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        마지막 업데이트 <time datetime="2026-10-21">2026-10-21</time> · <a href="/">Hugh Q Lee</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+            });
+            render();
+        })();
+    </script>
+    <script>
+        // rt-rules: the table of knowledge-lab/robot-types/rt/rules.py (CAPS, can), with the reasons checked in the
+        // order tilt, range, approach, precision. Pure: no page access, so node can run it in the tests.
+        var RT = (function () {
+            "use strict";
+            var CAPS = {
+                gantry: { down: true, side: false, tilt: 0, travel: 900, rep: null },
+                scara: { down: true, side: true, tilt: 0, travel: 860, rep: 50 },
+                ur5e: { down: true, side: true, tilt: 180, travel: 1700, rep: 30 },
+                delta: { down: true, side: false, tilt: 0, travel: 1130, rep: 100 },
+                plink: { down: true, side: false, tilt: 0, travel: 880, rep: 50 },
+                stewart: { down: true, side: false, tilt: 10, travel: 34, rep: 0.15 },
+                column: { down: false, side: true, tilt: 0, travel: 800, rep: null }
+            };
+            var ORDER = ["gantry", "scara", "ur5e", "delta", "plink", "stewart"];
+            var TRAVEL = [1, 2, 5, 10, 20, 34, 50, 100, 117, 120, 180, 200, 361, 400, 600];
+            var PRECISION = [null, 100, 50, 30, 10, 1, 0.1];
+            var JOBS = {
+                A: { approach: "down", tilt: 0, travel: 117, precision: null },
+                B: { approach: "side", tilt: 0, travel: 180, precision: null },
+                C: { approach: "side", tilt: 45, travel: 120, precision: null },
+                D: { approach: "down", tilt: 0, travel: 361, precision: null },
+                E: { approach: "down", tilt: 2, travel: 2, precision: 1 }
+            };
+            var NAME = {
+                gantry: "직교(갠트리형)", scara: "스카라", ur5e: "다관절 6축",
+                delta: "델타", plink: "평행 링크형 팔", stewart: "스튜어트 플랫폼"
+            };
+            var TOPIC = { gantry: "는", scara: "는", ur5e: "은", delta: "는", plink: "은", stewart: "은" };
+            var COUNT = { 2: "둘은", 3: "셋은", 4: "넷은", 5: "다섯은", 6: "여섯은" };
+            // the order the verdict names the reasons in, with the joining and the final form of each clause
+            var CLAUSE = {
+                approach: ["위 선반에 부딪히고", "위 선반에 부딪힌다"],
+                tilt: ["손끝을 기울이지 못하고", "손끝을 기울이지 못한다"],
+                range: ["범위가 모자라고", "범위가 모자란다"],
+                precision: ["정밀도가 모자라고", "정밀도가 모자란다"],
+                nodata: ["정밀도 자료가 없고", "정밀도 자료가 없다"]
+            };
+            var CLAUSE_ORDER = ["approach", "tilt", "range", "precision", "nodata"];
+
+            function why(key, s) {
+                var c = CAPS[key];
+                if (s.tilt > c.tilt) return "tilt";
+                if (s.travel > c.travel) return "range";
+                if (s.approach === "side" ? !c.side : !c.down) return "approach";
+                if (s.precision != null && (c.rep == null || c.rep > s.precision)) return c.rep == null ? "nodata" : "precision";
+                return null;
+            }
+
+            function can(key, s) { return why(key, s) === null; }
+
+            function reason(key, s) {
+                var w = why(key, s);
+                if (w === null) {
+                    if (key === "gantry") return "Z 막대가 위에서 내려간다";
+                    if (key === "scara") return s.approach === "side" ? "수평 그리퍼를 플레이트 높이로 밀어 넣는다" : "피펫을 위에서 내린다";
+                    if (key === "ur5e") return s.tilt > 0 ? "손목을 기울여 맞춘다" : (s.approach === "side" ? "손끝을 눕혀 옆으로 밀어 넣는다" : "위에서 내려간다");
+                    if (key === "delta") return "가벼운 팔로 위에서 빠르게 집는다";
+                    if (key === "plink") return "평행사변형이 손끝을 수평으로 붙잡는다";
+                    return "다리 여섯이 윗판을 조금씩 맞춘다";
+                }
+                if (w === "tilt") return key === "stewart" ? "기울기가 ±10°쯤까지다" : "손끝을 기울이지 못한다";
+                if (w === "range") return key === "stewart" ? "범위가 ±17 mm쯤이라 모자란다" : "손이 닿는 범위가 모자란다";
+                if (w === "approach") {
+                    if (key === "gantry") return "Z 막대가 위 선반에 부딪힌다";
+                    if (key === "delta") return "위에서 내려온 팔이 위 선반에 부딪힌다";
+                    if (key === "plink") return "위에서 내려온 손끝이 위 선반에 부딪힌다";
+                    return "옆으로 손을 넣지 못한다";
+                }
+                if (w === "precision") return "반복 정밀도가 ±" + CAPS[key].rep + " µm라 모자란다";
+                return "정밀도 자료를 찾지 못했다";
+            }
+
+            function verdict(s) {
+                var left = ORDER.filter(function (k) { return can(k, s); });
+                var groups = {};
+                ORDER.forEach(function (k) {
+                    var w = why(k, s);
+                    if (w) (groups[w] = groups[w] || []).push(k);
+                });
+                var kinds = CLAUSE_ORDER.filter(function (w) { return groups[w]; });
+                var parts = kinds.map(function (w, i) {
+                    var g = groups[w];
+                    var who = g.length === 1 ? NAME[g[0]] + TOPIC[g[0]] : (i === 0 ? "로봇 " : "") + COUNT[g.length];
+                    return who + " " + CLAUSE[w][i === kinds.length - 1 ? 1 : 0];
+                });
+                var head = left.length === ORDER.length ? "여섯 모두 된다." : left.length ? "남은 로봇: " + left.map(function (k) { return NAME[k]; }).join(", ") + "." : "남은 로봇이 없다.";
+                return parts.length ? head + " " + parts.join(", ") + "." : head;
+            }
+
+            function note(s) {
+                return s.approach === "side" && can("column", s) ? "기둥형 직교(보관고의 승강기)는 위아래 축이 옆에 서 있어 이 일을 한다." : "";
+            }
+
+            function label(kind, value) {
+                if (kind === "tilt") return value + "°";
+                if (kind === "travel") return value + " mm";
+                return value == null ? "따지지 않음" : value + " µm";
+            }
+
+            return { CAPS: CAPS, ORDER: ORDER, TRAVEL: TRAVEL, PRECISION: PRECISION, JOBS: JOBS, NAME: NAME,
+                     why: why, can: can, reason: reason, verdict: verdict, note: note, label: label };
+        })();
+    </script>
+    <script>
+        // 손끝 자세 맞추기: controls → RT → cards, icons, verdict
+        (function () {
+            "use strict";
+            if (typeof RT === "undefined") return;
+            var NS = "http://www.w3.org/2000/svg";
+            var state = { approach: "side", tilt: 0, travel: 180, precision: null };
+            var tilt = document.getElementById("rt-tilt");
+            var travel = document.getElementById("rt-travel");
+            var prec = document.getElementById("rt-prec");
+            var verdictEl = document.getElementById("rt-verdict");
+            var noteEl = document.getElementById("rt-note");
+            var pose = document.getElementById("rt-pose");
+            var jobButtons = Array.prototype.slice.call(document.querySelectorAll("[data-job]"));
+            var approachButtons = Array.prototype.slice.call(document.querySelectorAll("[data-approach]"));
+            var cards = Array.prototype.slice.call(document.querySelectorAll(".rt-card"));
+            if (!tilt || !travel || !prec) return;
+
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+            function rad(d) { return d * Math.PI / 180; }
+            function line(svg, x1, y1, x2, y2, cls) { return el("line", { x1: x1, y1: y1, x2: x2, y2: y2, "class": cls }, svg); }
+            function poly(svg, pts, cls) { return el("polyline", { points: pts.map(function (p) { return p[0] + "," + p[1]; }).join(" "), "class": cls }, svg); }
+            function joint(svg, x, y, r) { return el("circle", { cx: x, cy: y, r: r || 4, "class": "ic-joint" }, svg); }
+            function plate(svg, cx, cy, deg, w) {
+                var g = el("g", { transform: "rotate(" + (-deg) + " " + cx + " " + cy + ")" }, svg);
+                el("rect", { x: cx - (w || 26) / 2, y: cy - 3, width: w || 26, height: 6, rx: 1.5, "class": "ic-plate" }, g);
+                return g;
+            }
+            // a shelf slot: a shelf above and below the plate at (x0..x1, y)
+            function shelf(svg, x0, x1, y) {
+                el("rect", { x: x0, y: y - 30, width: x1 - x0, height: 22, "class": "ic-shelf" }, svg);
+                el("rect", { x: x0, y: y + 6, width: x1 - x0, height: 8, "class": "ic-shelf" }, svg);
+            }
+            function ground(svg) { line(svg, 6, 104, 154, 104, "ic-ground"); }
+
+            // two-link reach in the icon plane: from shoulder s to target t with links a, b (elbow up)
+            function reach(s, t, a, b) {
+                var dx = t[0] - s[0], dy = t[1] - s[1], d = Math.min(Math.hypot(dx, dy), a + b - 0.01);
+                var base = Math.atan2(dy, dx), k = Math.acos((a * a + d * d - b * b) / (2 * a * d));
+                return [s[0] + a * Math.cos(base - k), s[1] + a * Math.sin(base - k)];
+            }
+
+            var DRAW = {
+                gantry: function (svg, s, ok, w) {
+                    ground(svg);
+                    line(svg, 16, 12, 144, 12, "ic-frame");
+                    line(svg, 22, 12, 22, 104, "ic-frame");
+                    line(svg, 138, 12, 138, 104, "ic-frame");
+                    var side = s.approach === "side";
+                    if (side) shelf(svg, 70, 136, 72);
+                    var x = side ? 104 : 80, y = side ? 66 : 84;
+                    line(svg, x, 14, x, y - 10, w === "approach" ? "ic-hit" : "ic-link");
+                    line(svg, x, y - 10, x, y - 3, "ic-tool");
+                    plate(svg, x, y, 0);
+                },
+                scara: function (svg, s) {
+                    ground(svg);
+                    el("rect", { x: 18, y: 18, width: 12, height: 86, rx: 2, "class": "ic-body" }, svg);
+                    var side = s.approach === "side";
+                    var y = side ? 64 : 46;
+                    if (side) shelf(svg, 104, 154, 72);
+                    poly(svg, [[24, y], [72, y], [108, y]], "ic-link");
+                    joint(svg, 24, y); joint(svg, 72, y);
+                    if (side) {
+                        line(svg, 108, y, 118, y + 4, "ic-tool");
+                        plate(svg, 128, 72, 0);
+                    } else {
+                        line(svg, 108, y, 108, 80, "ic-tool");
+                        plate(svg, 108, 86, 0);
+                    }
+                },
+                ur5e: function (svg, s) {
+                    ground(svg);
+                    el("rect", { x: 22, y: 92, width: 28, height: 12, rx: 2, "class": "ic-body" }, svg);
+                    var sh = [36, 80];
+                    var side = s.approach === "side";
+                    var t = Math.min(s.tilt, 80);
+                    // tool direction: down (90°) or into the shelf (0°), tilted by t
+                    var dirDeg = side ? -t : 90 - t;
+                    var tip = side ? [128, 72] : [96, 86];
+                    if (side) shelf(svg, 112, 154, 72);
+                    var L = 18;
+                    var wrist = [tip[0] - L * Math.cos(rad(dirDeg)), tip[1] - L * Math.sin(rad(dirDeg))];
+                    var elbow = reach(sh, wrist, 40, 44);
+                    poly(svg, [sh, elbow, wrist], "ic-link");
+                    joint(svg, sh[0], sh[1], 5); joint(svg, elbow[0], elbow[1]); joint(svg, wrist[0], wrist[1], 3.5);
+                    line(svg, wrist[0], wrist[1], tip[0] - 4 * Math.cos(rad(dirDeg)), tip[1] - 4 * Math.sin(rad(dirDeg)), "ic-tool");
+                    plate(svg, tip[0] + 6 * Math.cos(rad(dirDeg)), tip[1] + 6 * Math.sin(rad(dirDeg)), side ? t : t, side ? 22 : 22);
+                },
+                delta: function (svg, s, ok, w) {
+                    ground(svg);
+                    el("rect", { x: 48, y: 8, width: 64, height: 12, rx: 3, "class": "ic-body" }, svg);
+                    var side = s.approach === "side";
+                    if (side) shelf(svg, 52, 112, 76);
+                    var py = side ? 70 : 74;
+                    var cls = w === "approach" ? "ic-hit" : "ic-thin";
+                    poly(svg, [[58, 20], [40, 40], [74, py]], "ic-link");
+                    poly(svg, [[102, 20], [120, 40], [86, py]], "ic-link");
+                    line(svg, 40, 40, 74, py, cls); line(svg, 120, 40, 86, py, cls);
+                    el("rect", { x: 70, y: py - 3, width: 20, height: 6, rx: 2, "class": "ic-body" }, svg);
+                    line(svg, 80, py + 3, 80, py + 8, "ic-tool");
+                    plate(svg, 80, py + 12, 0);
+                },
+                plink: function (svg, s, ok, w) {
+                    ground(svg);
+                    el("rect", { x: 24, y: 84, width: 22, height: 20, rx: 2, "class": "ic-body" }, svg);
+                    var side = s.approach === "side";
+                    if (side) shelf(svg, 96, 150, 76);
+                    var sh = [35, 82], el1 = [62, 40], wr = [116, 46];
+                    poly(svg, [sh, el1, wr], "ic-link");
+                    line(svg, sh[0] - 6, sh[1] - 4, el1[0] - 6, el1[1] - 4, "ic-thin");
+                    line(svg, el1[0], el1[1] - 6, wr[0], wr[1] - 6, "ic-thin");
+                    joint(svg, sh[0], sh[1]); joint(svg, el1[0], el1[1]); joint(svg, wr[0], wr[1], 3.5);
+                    line(svg, wr[0], wr[1], wr[0], 64, w === "approach" ? "ic-hit" : "ic-tool");
+                    plate(svg, wr[0], 70, 0);
+                },
+                stewart: function (svg, s, ok) {
+                    ground(svg);
+                    el("ellipse", { cx: 80, cy: 94, rx: 50, ry: 7, "class": "ic-body" }, svg);
+                    var t = ok ? Math.min(s.tilt, 10) : 0;
+                    var g = el("g", { "class": "ic-move", transform: "rotate(" + (-t) + " 80 54)" }, svg);
+                    var legs = [[40, 92, 58, 56], [66, 94, 52, 56], [94, 94, 108, 56], [120, 92, 102, 56]];
+                    legs.forEach(function (L) { line(svg, L[0], L[1], L[2], L[3], "ic-thin"); });
+                    el("ellipse", { cx: 80, cy: 54, rx: 34, ry: 5, "class": "ic-body" }, g);
+                    plate(g, 80, 46, 0, 22);
+                }
+            };
+
+            function drawPose() {
+                if (!pose) return;
+                clear(pose);
+                line(pose, 10, 108, 190, 108, "ic-ground");
+                var side = state.approach === "side";
+                var cx = 100, cy = 62;
+                if (side) {
+                    el("rect", { x: 92, y: 22, width: 96, height: 26, "class": "ic-shelf" }, pose);
+                    el("rect", { x: 92, y: 74, width: 96, height: 10, "class": "ic-shelf" }, pose);
+                    cx = 132;
+                }
+                plate(pose, cx, cy, Math.min(state.tilt, 80), 40);
+                if (side) {
+                    line(pose, 20, cy, 92, cy, "ic-arrow");
+                    el("path", { d: "M92," + (cy - 6) + " L104," + cy + " L92," + (cy + 6) + " z", "class": "ic-arrowhead" }, pose);
+                } else {
+                    line(pose, cx, 6, cx, cy - 18, "ic-arrow");
+                    el("path", { d: "M" + (cx - 6) + "," + (cy - 18) + " L" + cx + "," + (cy - 8) + " L" + (cx + 6) + "," + (cy - 18) + " z", "class": "ic-arrowhead" }, pose);
+                }
+                // travel: a bracket whose width grows with the range (log scale)
+                var w = 12 + 160 * Math.log(state.travel) / Math.log(600);
+                var x0 = 100 - w / 2;
+                poly(pose, [[x0, 96], [x0, 100], [x0 + w, 100], [x0 + w, 96]], "ic-thin");
+            }
+
+            function render() {
+                var s = state;
+                tilt.value = String(s.tilt);
+                travel.value = String(RT.TRAVEL.indexOf(s.travel));
+                prec.value = String(RT.PRECISION.indexOf(s.precision));
+                document.getElementById("rt-tilt-out").textContent = RT.label("tilt", s.tilt);
+                document.getElementById("rt-travel-out").textContent = RT.label("travel", s.travel);
+                document.getElementById("rt-prec-out").textContent = RT.label("precision", s.precision);
+                approachButtons.forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-approach") === s.approach)); });
+                jobButtons.forEach(function (b) {
+                    var j = RT.JOBS[b.getAttribute("data-job")];
+                    var same = j.approach === s.approach && j.tilt === s.tilt && j.travel === s.travel && j.precision === s.precision;
+                    b.setAttribute("aria-pressed", String(same));
+                });
+                cards.forEach(function (card) {
+                    var key = card.getAttribute("data-robot");
+                    var ok = RT.can(key, s);
+                    card.classList.toggle("on", ok);
+                    card.classList.toggle("off", !ok);
+                    card.querySelector(".rt-why").textContent = RT.reason(key, s);
+                    var svg = card.querySelector("svg");
+                    clear(svg);
+                    DRAW[key](svg, s, ok, RT.why(key, s));
+                });
+                drawPose();
+                verdictEl.textContent = RT.verdict(s);
+                noteEl.textContent = RT.note(s);
+            }
+
+            jobButtons.forEach(function (b) {
+                b.addEventListener("click", function () {
+                    var j = RT.JOBS[b.getAttribute("data-job")];
+                    state = { approach: j.approach, tilt: j.tilt, travel: j.travel, precision: j.precision };
+                    render();
+                });
+            });
+            approachButtons.forEach(function (b) {
+                b.addEventListener("click", function () { state.approach = b.getAttribute("data-approach"); render(); });
+            });
+            tilt.addEventListener("input", function () { state.tilt = Number(tilt.value); render(); });
+            travel.addEventListener("input", function () { state.travel = RT.TRAVEL[Number(travel.value)]; render(); });
+            prec.addEventListener("input", function () { state.precision = RT.PRECISION[Number(prec.value)]; render(); });
+            render();
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-10-21","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"},{"id":"ml","name":"기계 학습","name_en":"Machine learning"},{"id":"rob","name":"로봇·자동화","name_en":"Robotics and automation"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"},{"id":"train-val-calib-test","title":"train·val·calib·test","title_en":"train/val/calib/test","domain":"ml","status":"published","href":"../train-val-calib-test/","summary":"학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold를 위해 칸 하나를 더 두기","summary_en":"Keep one more split for what is fitted after training: the temperature T and the threshold"},{"id":"error-backpropagation","title":"역전파","title_en":"Backpropagation","domain":"ml","status":"published","href":"../error-backpropagation/","summary":"출력의 오차를 뒤로 전해 다층 퍼셉트론의 가운데 층까지 고치기","summary_en":"Pass the output's error backward to correct the middle layer of a multilayer perceptron too"},{"id":"robot-types","title":"로봇의 종류","title_en":"Robot types","domain":"rob","status":"published","href":"../robot-types/","summary":"관절을 잇는 구조가 손끝의 자세를 정하고, 그 자세가 실험실에서 로봇의 쓰임을 정한다","summary_en":"How the joints are joined sets the hand's posture, and the posture sets what a robot does in the lab"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 64 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (준비 중)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "준비 중";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "지금 이 글";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
