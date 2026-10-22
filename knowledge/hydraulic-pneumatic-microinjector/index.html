@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>유압식과 공압식 마이크로인젝터, 압력을 정하나 부피를 정하나 | Hugh Q Lee</title>
+    <meta name="description" content="마이크로인젝터는 바늘 뒤에서 시료를 공기로 밀거나(공압식) 기름으로 민다(유압식). 공기는 잘 눌리고 기름은 거의 안 눌려, 공압식은 압력과 시간을, 유압식은 부피를 정한다. 바늘 끝과 시료를 바꿔 가며 두 방식이 내보내는 양과 걸리는 압력을 본다.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="마이크로인젝터, 미세주입기, 미세주입, 마이크로인젝션, 공압식 인젝터, 유압식 인젝터, 오일 인젝터, 용적식 인젝터, 양변위, 보정압, 주입압, 주입 시간, 방울 보정, FemtoJet, CellTram, Nanoject, 피코펌프, 제브라피시 미세주입, ICSI, 전핵 주입, 실험실 자동화">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/hydraulic-pneumatic-microinjector/">
+    <!-- 영문판(/knowledge/en/hydraulic-pneumatic-microinjector/)은 System/build_en.py가 이 페이지에서 만든다. 두 판이 서로를 가리킨다. -->
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/hydraulic-pneumatic-microinjector/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/hydraulic-pneumatic-microinjector/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/hydraulic-pneumatic-microinjector/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:title" content="유압식과 공압식 마이크로인젝터, 압력을 정하나 부피를 정하나">
+    <meta property="og:description" content="마이크로인젝터는 바늘 뒤에서 시료를 공기로 밀거나(공압식) 기름으로 민다(유압식). 공기는 잘 눌리고 기름은 거의 안 눌려, 공압식은 압력과 시간을, 유압식은 부피를 정한다. 바늘 끝과 시료를 바꿔 가며 두 방식이 내보내는 양과 걸리는 압력을 본다.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/hydraulic-pneumatic-microinjector/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/hydraulic-pneumatic-microinjector/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="공기로 미는 바늘과 기름으로 미는 바늘이 내보낸 방울을 나란히 그린 그림">
+    <meta property="article:published_time" content="2026-10-23">
+    <meta property="article:modified_time" content="2026-10-23">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta property="article:tag" content="마이크로인젝터">
+    <meta property="article:tag" content="미세주입">
+    <meta property="article:tag" content="실험실 자동화">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="유압식과 공압식 마이크로인젝터, 압력을 정하나 부피를 정하나">
+    <meta name="twitter:description" content="마이크로인젝터는 바늘 뒤에서 시료를 공기로 밀거나(공압식) 기름으로 민다(유압식). 공기는 잘 눌리고 기름은 거의 안 눌려, 공압식은 압력과 시간을, 유압식은 부피를 정한다. 바늘 끝과 시료를 바꿔 가며 두 방식이 내보내는 양과 걸리는 압력을 본다.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/hydraulic-pneumatic-microinjector/og.png">
+    <meta name="twitter:image:alt" content="공기로 미는 바늘과 기름으로 미는 바늘이 내보낸 방울을 나란히 그린 그림">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage는 빌드 스크립트가 본문 "자주 묻는 질문"에서 글자 그대로 옮긴다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/hydraulic-pneumatic-microinjector/#article",
+          "workTranslation": {
+            "@id": "https://hughqlee.com/knowledge/en/hydraulic-pneumatic-microinjector/#article"
+          },
+          "headline": "유압식과 공압식 마이크로인젝터, 압력을 정하나 부피를 정하나",
+          "alternativeHeadline": "유압식과 공압식 마이크로인젝터, 압력을 정하나 부피를 정하나",
+          "description": "마이크로인젝터는 바늘 뒤에서 시료를 공기로 밀거나(공압식) 기름으로 민다(유압식). 공기는 잘 눌리고 기름은 거의 안 눌려, 공압식은 압력과 시간을, 유압식은 부피를 정한다. 바늘 끝과 시료를 바꿔 가며 두 방식이 내보내는 양과 걸리는 압력을 본다.",
+          "abstract": "바늘 뒤에서 시료를 미는 것이 다르다. 공압식은 공기로, 유압식은 기름으로 민다. 공기는 잘 눌리고 기름은 거의 눌리지 않는다. 그래서 공압식은 압력을 정하고, 나가는 부피는 바늘 끝이 정한다. 유압식은 부피를 정하고, 민 만큼 나간다.",
+          "inLanguage": "ko",
+          "datePublished": "2026-10-23",
+          "dateModified": "2026-10-23",
+          "url": "https://hughqlee.com/knowledge/hydraulic-pneumatic-microinjector/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/hydraulic-pneumatic-microinjector/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/hydraulic-pneumatic-microinjector/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/#collection"
+          },
+          "isAccessibleForFree": true,
+          "about": [
+            "마이크로인젝터",
+            "미세주입",
+            "실험실 자동화"
+          ],
+          "citation": [
+            {
+              "@type": "CreativeWork",
+              "name": "Eppendorf, Smooth Operator: micromanipulators TransferMan 4r and InjectMan 4 (brochure, 2017)",
+              "url": "https://www.agarscientific.com/media/import/CS_CMI_Smooth_Operator_Global_Brochure_online.pdf"
+            },
+            {
+              "@type": "TechArticle",
+              "name": "World Precision Instruments, µPUMP Microinjector with Internal Pressure Source, Instruction Manual (2024)",
+              "url": "https://www.wpi-europe.com/downloads/content/uPUMP.pdf"
+            },
+            {
+              "@type": "TechArticle",
+              "name": "Drummond Scientific, Nanoject III Instruction Manual (Rev. 1023, 2023)",
+              "url": "https://drummondsci.com/resources/instructions/nanoject-iii-manual"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Forman et al., Openspritzer: an open hardware pressure ejection system for reliably delivering picolitre volumes (Scientific Reports 7, 2017)",
+              "url": "https://doi.org/10.1038/s41598-017-02301-2"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Wang X. et al., Effect of Cell Inner Pressure on Deposition Volume in Microinjection (Langmuir 34, 2018)",
+              "url": "https://doi.org/10.1021/acs.langmuir.8b02102"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Wang W. et al., A Fully Automated Robotic System for Microinjection of Zebrafish Embryos (PLoS ONE 2, 2007)",
+              "url": "https://doi.org/10.1371/journal.pone.0000862"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Yuan, Sun, Microinjection of mRNA and Morpholino Antisense Oligonucleotides in Zebrafish Embryos (J Vis Exp, 2009)",
+              "url": "https://doi.org/10.3791/1113"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Guo et al., Design of an automated robotic microinjection system for batch injection of zebrafish embryos and larvae (Microsystems & Nanoengineering 10, 2024)",
+              "url": "https://doi.org/10.1038/s41378-023-00645-6"
+            }
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "유압식과 공압식 마이크로인젝터, 압력을 정하나 부피를 정하나",
+              "item": "https://hughqlee.com/knowledge/hydraulic-pneumatic-microinjector/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/hydraulic-pneumatic-microinjector/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "마이크로인젝터는 무엇을 하나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "유리 바늘 안의 액체를 밀고 당겨, 세포나 배아에 nL에서 fL의 용액이나 세포를 넣는 장치다. 바늘을 옮기는 매니퓰레이터와 함께 쓴다. 공기로 미는 공압식과 기름으로 미는 유압식이 있다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "공압식과 유압식 마이크로인젝터는 어떻게 다른가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "공압식은 조절한 공기 압력을 정한 시간만큼 걸어 시료를 민다. 나가는 부피는 바늘 끝 크기, 점도, 받는 쪽 압력에 따라 변한다. 유압식은 피스톤이나 플런저가 기름을 밀어, 민 부피만큼 바늘 끝의 시료를 움직인다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "보정압(compensation pressure)은 왜 거나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "주입 사이에 거는 낮은 양압이다. 바늘 속 공기-시료 경계의 표면 장력이 배양액을 바늘로 끌어들이는 것을 막는다(WPI μPUMP 매뉴얼). 필요한 압력은 바늘 끝이 아니라 경계가 있는 곳의 안지름이 정한다. 안지름 0.5 µm에서 약 80 psi, 0.5 mm에서 0.08 psi다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "미세주입량은 어떻게 맞추나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "광유 위에 시료 방울을 쏘아 지름 d를 재고 V = πd³/6으로 부피를 구한다. 지름 124 µm가 1 nL다(WPI μPUMP 매뉴얼). 공압식은 바늘을 바꿀 때마다 이 방울 보정으로 주입 시간이나 압력을 다시 맞춘다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "세포 안의 압력이 주입량을 바꾸나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "주입압이 낮을 때 그렇다. 배양 세포 두 종(RT4, T24)의 안쪽 압력은 평균 341 Pa와 405 Pa였다. 1 kPa로 넣자 실제 부피가 열린 배지에서 맞춘 것보다 20~35% 적었다(Wang X 외 2018). 주입압이 100 kPa(약 15 psi)면 이 몫은 0.3~0.4%다(이 페이지의 계산)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Nanoject 같은 용적식 인젝터는 어떻게 작동하나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "모터가 철사 플런저를 기름을 채운 유리 바늘 속으로 정한 거리만큼 밀어, 그만큼의 시료를 끝으로 내보낸다. Nanoject III는 0.6~999.9 nL를 0.1 nL 단위로 넣는다(Drummond). 부피를 플런저가 정해 바늘마다 방울을 재지 않아도 된다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "ICSI에는 왜 기름식 인젝터를 쓰나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "정자나 핵 하나를 바늘 안에서 빨아들이고, 세우고, 내보내야 해서다. 주입과 탈핵에는 기름식을 쓰고, 잡는 쪽은 공기식이어도 된다(Ogura 2017). 기름 인젝터는 같은 손놀림에 압력이 공기 인젝터의 16~160배로 바뀐다(이 페이지의 계산)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "FemtoJet 4i와 4x는 어떻게 다른가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "둘 다 주입압, 보정압, 주입 시간을 정하는 전자식 공압 인젝터다. 4i는 압축기를 품고 fL~100 pL의 연속 주입에 권한다. 4x는 바깥 압력원을 쓰고 1 µL까지의 부피와 긴 주입 연속(예쁜꼬마선충, 이른 물고기 배아, 개구리 난모세포)에 권한다(Eppendorf 2017 p.12)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --warn-soft: rgba(240, 198, 116, 0.13);
+            --danger: #ff8c8c;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            --wide: 980px;
+            /* 구조 그림의 색: 그림 파일의 회색 단계를 테마에 맞춰 바꾼다 */
+            --f-ink: #e7edf2;
+            --f-dark: #c5d0d8;
+            --f-mid: #9aa9b4;
+            --f-gray: #7d8c97;
+            --f-light: #4a5a66;
+            --f-pale: #24303a;
+            --f-steel: #5d6e7a;
+            --f-pale2: #2e3b46;
+            --f-paper: #111820;
+            --f-white: #0d1216;
+            --f-sub: #8b9aa6;
+            --f-acc: #ff9d6b;
+            /* 공기·기름·시료의 색: 그림과 직접 해보기가 함께 쓴다 */
+            --mi-air: rgba(105, 210, 255, 0.30);
+            --mi-air-line: #69d2ff;
+            --mi-air-ink: #69d2ff;
+            --mi-oil: rgba(240, 198, 116, 0.45);
+            --mi-oil-line: #f0c674;
+            --mi-oil-ink: #f0c674;
+            --mi-sample: rgba(244, 114, 182, 0.45);
+            --mi-sample-soft: rgba(244, 114, 182, 0.22);
+            --mi-sample-ink: #f49ac8;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --warn-soft: rgba(150, 106, 16, 0.12);
+            --danger: #b42323;
+            --f-ink: #1f2328;
+            --f-dark: #343a40;
+            --f-mid: #495057;
+            --f-gray: #6c757d;
+            --f-light: #adb5bd;
+            --f-pale: #dee2e6;
+            --f-steel: #868e96;
+            --f-pale2: #ced4da;
+            --f-paper: #f1f3f5;
+            --f-white: #ffffff;
+            --f-sub: #57606a;
+            --f-acc: #c2410c;
+            --mi-air: #bfdbfe;
+            --mi-air-line: #60a5fa;
+            --mi-air-ink: #1d4ed8;
+            --mi-oil: #fde68a;
+            --mi-oil-line: #d97706;
+            --mi-oil-ink: #92400e;
+            --mi-sample: #f9a8d4;
+            --mi-sample-soft: #fbcfe8;
+            --mi-sample-ink: #be185d;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+        .wide { width: min(var(--wide), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle, .btn {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-family: var(--mono);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover, .btn:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 8px; }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0 0 20px; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        .step { padding: 40px 0 8px; border-top: 1px solid var(--line); margin-top: 28px; }
+        .step-no { margin: 0 0 6px; color: var(--accent); font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; }
+        h2 { margin: 0 0 14px; font-size: clamp(22px, 4vw, 30px); line-height: 1.35; letter-spacing: -0.01em; }
+        h3 { margin: 28px 0 8px; font-size: 18px; line-height: 1.45; }
+        .source { margin-top: 12px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+
+        .panel {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .hint { margin: 0 0 12px; color: var(--muted); }
+        .control { display: grid; gap: 4px; margin: 0 0 14px; }
+        .control .label { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 14px; }
+        .control output { color: var(--text); font-family: var(--mono); font-size: 14px; }
+        .control input[type="range"] { width: 100%; min-height: 36px; margin: 0; accent-color: var(--accent); }
+        .seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+        .seg button {
+            min-height: 36px;
+            padding: 4px 12px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .seg button:hover { border-color: var(--line-strong); color: var(--text); }
+        .seg button[aria-pressed="true"] { border-color: var(--accent); color: var(--text); background: var(--accent-soft); }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            margin: 24px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+        .toc a { display: block; height: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); text-decoration: none; font-size: 15px; line-height: 1.5; }
+        .toc a:hover { border-color: var(--line-strong); }
+        .toc span { display: block; color: var(--accent); font-family: var(--mono); font-size: 12px; }
+        .try { margin-top: 8px; }
+        .toc-nav { padding-top: 4px; }
+        .scene-text { min-height: 3.4em; margin: 14px 0 0; }
+
+        /* 바늘 바꿔 보기 */
+        .mi-controls { display: grid; gap: 4px 24px; }
+        .mi-sides { display: grid; gap: 12px; margin: 4px 0 0; padding: 0; list-style: none; }
+        .mi-side { padding: 12px 14px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .mi-side h3 { margin: 0; font-size: 16px; }
+        .mi-side .mi-sets { margin: 0 0 4px; color: var(--muted); font-size: 14px; }
+        .mi-side.pneu h3 { color: var(--mi-air-ink); }
+        .mi-side.disp h3 { color: var(--mi-oil-ink); }
+        svg.mi-scene { display: block; width: 100%; max-width: 360px; height: auto; margin: 4px 0 6px; }
+        .mi-lines { margin: 0; padding: 0; list-style: none; font-size: 15px; line-height: 1.6; }
+        .mi-lines li { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; border-bottom: 1px dashed var(--line); }
+        .mi-lines li:last-child { border-bottom: 0; }
+        .mi-lines .k { color: var(--muted); }
+        .mi-lines .v { font-family: var(--mono); font-size: 14px; text-align: right; }
+        .mi-lines .v b { font-size: 16px; }
+        .mi-meter { position: relative; height: 8px; margin: 2px 0 6px; border-radius: 4px; background: var(--panel-strong); }
+        .mi-meter span.bar { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: var(--accent); transition: width 0.25s ease; }
+        .mi-side.disp .mi-meter span.bar { background: var(--mi-oil-line); }
+        .mi-meter span.one { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--text); }
+        .mi-small { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
+        .mi-glass { fill: var(--panel); stroke: var(--muted); stroke-width: 1.4; }
+        .mi-air { fill: var(--mi-air); }
+        .mi-oil { fill: var(--mi-oil); }
+        .mi-sample { fill: var(--mi-sample); }
+        .mi-plunger { stroke: var(--text); stroke-width: 3; stroke-linecap: round; }
+        .mi-holder { fill: var(--panel-strong); stroke: var(--muted); stroke-width: 1.2; }
+        .mi-drop { fill: var(--mi-sample); stroke: var(--mi-sample-ink); stroke-width: 1.5; transition: r 0.25s ease, cx 0.25s ease, cy 0.25s ease; }
+        .mi-ref { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 4 3; }
+        .mi-ruler { stroke: var(--line-strong); stroke-width: 1.5; }
+        .mi-tick { stroke: var(--line-strong); stroke-width: 1; }
+        .mi-scene text { fill: var(--faint); font-family: var(--mono); font-size: 11px; }
+        .mi-scene text.mi-label { fill: var(--muted); font-family: var(--sans); font-size: 12px; }
+
+        /* 구조 그림: 볼트 Attachment/인젝터 구조 1~3의 색을 테마 색으로 */
+        figure.fig { margin: 18px 0 0; }
+        svg.fig { display: block; width: 100%; max-width: 640px; height: auto; margin: 0 auto; font-family: var(--sans); }
+        svg.fig [fill="#FAFAF7"] { fill: var(--panel-soft); }
+        svg.fig [stroke="#E2E0D8"] { stroke: var(--line); }
+        svg.fig [fill="#1F2328"] { fill: var(--f-ink); }
+        svg.fig [fill="#343A40"] { fill: var(--f-dark); }
+        svg.fig [stroke="#343A40"] { stroke: var(--f-dark); }
+        svg.fig [fill="#495057"] { fill: var(--f-mid); }
+        svg.fig [stroke="#495057"] { stroke: var(--f-mid); }
+        svg.fig [fill="#6C757D"] { fill: var(--f-gray); }
+        svg.fig [stroke="#6C757D"] { stroke: var(--f-gray); }
+        svg.fig [fill="#ADB5BD"] { fill: var(--f-light); }
+        svg.fig [stroke="#ADB5BD"] { stroke: var(--f-light); }
+        svg.fig [fill="#DEE2E6"] { fill: var(--f-pale); }
+        svg.fig [stroke="#DEE2E6"] { stroke: var(--f-pale); }
+        svg.fig [fill="#868E96"] { fill: var(--f-steel); }
+        svg.fig [stroke="#868E96"] { stroke: var(--f-steel); }
+        svg.fig [fill="#CED4DA"] { fill: var(--f-pale2); }
+        svg.fig [fill="#E9ECEF"] { fill: var(--f-paper); }
+        svg.fig [fill="#F8F9FA"] { fill: var(--f-white); }
+        svg.fig [fill="#FFF8E7"] { fill: var(--f-paper); }
+        svg.fig [fill="#FFFFFF"] { fill: var(--f-white); }
+        svg.fig [fill="#57606A"] { fill: var(--f-sub); }
+        svg.fig [fill="#C2410C"] { fill: var(--f-acc); }
+        svg.fig [stroke="#C2410C"] { stroke: var(--f-acc); }
+        svg.fig [fill="#BFDBFE"] { fill: var(--mi-air); }
+        svg.fig [stroke="#DBEAFE"] { stroke: var(--mi-air); }
+        svg.fig [stroke="#60A5FA"] { stroke: var(--mi-air-line); }
+        svg.fig [fill="#1D4ED8"] { fill: var(--mi-air-ink); }
+        svg.fig [stroke="#1D4ED8"] { stroke: var(--mi-air-ink); }
+        svg.fig [fill="#FDE68A"] { fill: var(--mi-oil); }
+        svg.fig [stroke="#FDE68A"] { stroke: var(--mi-oil); }
+        svg.fig [stroke="#D97706"] { stroke: var(--mi-oil-line); }
+        svg.fig [fill="#92400E"] { fill: var(--mi-oil-ink); }
+        svg.fig [stroke="#92400E"] { stroke: var(--mi-oil-ink); }
+        svg.fig [fill="#F9A8D4"] { fill: var(--mi-sample); }
+        svg.fig [fill="#FBCFE8"] { fill: var(--mi-sample-soft); }
+        svg.fig [fill="#BE185D"] { fill: var(--mi-sample-ink); }
+        svg.fig [stroke="#BE185D"] { stroke: var(--mi-sample-ink); }
+        svg.fig [fill="#EC4899"] { fill: var(--mi-sample-ink); }
+        svg.fig [stroke="#9D174D"] { stroke: var(--mi-sample-ink); }
+
+        .more { margin: 14px 0 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .more summary { min-height: 40px; padding: 9px 14px; color: var(--muted); font-size: 15px; cursor: pointer; }
+        .more summary:hover { color: var(--text); }
+        .more[open] summary { border-bottom: 1px solid var(--line); }
+        .more > p { margin: 10px 14px; }
+        .more > figure { margin: 10px 14px; }
+        .more > :last-child { margin-bottom: 14px; }
+        .limits { margin: 0; padding-left: 1.2em; }
+        .limits li { margin: 8px 0; }
+        .uses { margin: 0; padding-left: 1.2em; }
+        .uses li { margin: 8px 0; }
+
+        .table-wrap { margin: 14px 0 0; overflow-x: auto; }
+        table.mi-table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.5; }
+        table.mi-table th, table.mi-table td { padding: 6px 6px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+        table.mi-table thead th { color: var(--muted); font-weight: 600; }
+        table.mi-table tbody th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+
+        /* 공압식과 유압식을 같은 항목으로 견준다 */
+        .traits { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 16px; margin: 18px 0 0; }
+        .traits dt { color: var(--muted); font-size: 15px; font-weight: 600; }
+        .traits dd { margin: 0; }
+
+        .note {
+            margin: 14px 0 0;
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+
+        /* 확인됨 · 가설 · 모름 표시: <span class="tag known">확인됨</span> */
+        .tag {
+            display: inline-block;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.known { color: var(--accent-green); }
+        .tag.guess { color: var(--accent-warn); }
+        .tag.unknown { color: var(--muted); }
+
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        footer {
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (min-width: 720px) {
+            .mi-controls { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+            .mi-sides { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 520px) {
+            table.mi-table { font-size: 13px; }
+            table.mi-table th, table.mi-table td { padding: 5px 3px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="위치">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/en/hydraulic-pneumatic-microinjector/" hreflang="en" lang="en">English</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="wrap hero" aria-labelledby="page-title">
+            <nav class="kmap" aria-label="지식 지도" data-current="hydraulic-pneumatic-microinjector">
+                <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">로봇·자동화</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">먼저 읽을 글과 이어서 읽을 글은 아직 없다 · 같은 분야: <a href="../robot-types/">로봇의 종류</a></p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE · 로봇·자동화</p>
+            <h1 id="page-title">유압식과 공압식 마이크로인젝터, 압력을 정하나 부피를 정하나</h1>
+            <p class="answer">바늘 뒤에서 시료를 미는 것이 다르다. 공압식은 공기로, 유압식은 기름으로 민다. 공기는 잘 눌리고 기름은 거의 눌리지 않는다. 그래서 공압식은 압력을 정하고, 나가는 부피는 바늘 끝이 정한다. 유압식은 부피를 정하고, 민 만큼 나간다.</p>
+            <p>마이크로인젝터(미세주입기)는 유리 바늘로 세포나 배아에 nL(10⁻⁹ L)에서 fL(10⁻¹⁵ L)의 액체를 넣는 장치다. 손으로는 밀 수 없는 양이라, 공압식은 압력과 시간으로, 유압식은 피스톤이 민 부피로 양을 맞춘다. 유압식을 모터로 밀고 관을 없앤 것이 용적식(Nanoject)이다.</p>
+            <p class="source">출처: 사양: Eppendorf 2017 브로슈어 p.11·p.12 · 용적식: Drummond Nanoject III 매뉴얼</p>
+        </section>
+
+        <section id="try" class="wide try" aria-labelledby="try-title">
+            <div class="panel">
+                <p class="step-no">직접 해보기</p>
+                <h2 id="try-title">바늘 바꿔 보기</h2>
+                <p class="hint">두 인젝터를 끝 10 µm 바늘에서 1.0 nL로 맞춰 두었다. 바늘 끝과 시료를 바꿔 보자.</p>
+                <div class="mi-controls">
+                    <div class="control">
+                        <label class="label" for="mi-tip"><span>바늘 끝 지름</span><output id="mi-tip-out" for="mi-tip">9 µm</output></label>
+                        <input id="mi-tip" type="range" min="6" max="14" step="0.5" value="9">
+                    </div>
+                    <div class="control">
+                        <span class="label" id="mi-sample-label">시료</span>
+                        <div class="seg" role="group" aria-labelledby="mi-sample-label">
+                            <button type="button" data-sample="solution" aria-pressed="true">용액</button>
+                            <button type="button" data-sample="suspension" aria-pressed="false">세포 현탁액(점도 2배, 가정)</button>
+                        </div>
+                    </div>
+                </div>
+                <ul class="mi-sides">
+                    <li class="mi-side pneu">
+                        <h3>공압식</h3>
+                        <p class="mi-sets">정한 것: 주입압과 주입 시간</p>
+                        <svg class="mi-scene" id="mi-pn-scene" viewBox="0 0 340 200" aria-hidden="true" focusable="false"></svg>
+                        <ul class="mi-lines">
+                            <li><span class="k">나간 부피</span><span class="v"><b id="mi-pn-v">0.73 nL</b> (방울 <span id="mi-pn-d">112</span> µm)</span></li>
+                            <li><span class="k">바늘 뒤 압력</span><span class="v">×<span id="mi-pn-p">1.00</span> 그대로</span></li>
+                        </ul>
+                        <div class="mi-meter" aria-hidden="true"><span class="bar" id="mi-pn-bar" style="width: 33.3%"></span><span class="one" style="left: 33.3%"></span></div>
+                        <p class="mi-sets">1.0 nL로 되돌리려면 방울을 재고 주입 시간을 ×<span id="mi-pn-t">1.37</span>로</p>
+                    </li>
+                    <li class="mi-side disp">
+                        <h3>유압식(용적식)</h3>
+                        <p class="mi-sets">정한 것: 플런저가 미는 부피</p>
+                        <svg class="mi-scene" id="mi-dp-scene" viewBox="0 0 340 200" aria-hidden="true" focusable="false"></svg>
+                        <ul class="mi-lines">
+                            <li><span class="k">나간 부피</span><span class="v"><b id="mi-dp-v">1.00 nL</b> (방울 <span id="mi-dp-d">124</span> µm)</span></li>
+                            <li><span class="k">바늘 뒤 압력</span><span class="v">×<span id="mi-dp-p">1.37</span></span></li>
+                        </ul>
+                        <div class="mi-meter" aria-hidden="true"><span class="bar" id="mi-dp-bar" style="width: 45.7%"></span><span class="one" style="left: 33.3%"></span></div>
+                        <p class="mi-sets">바늘이 바뀌어도 다시 맞출 것이 없다</p>
+                    </li>
+                </ul>
+                <p id="mi-verdict" class="scene-text" aria-live="polite">끝이 9 µm로 10% 작아지자, 공압식은 0.73 nL(27% 적게)를 내보낸다. 용적식은 1.00 nL 그대로이고, 바늘 뒤 압력이 1.37배가 된다.</p>
+                <p class="mi-small">방울은 광유 위에 쏜 모습이고, 점선 원이 1.0 nL(124 µm)다. 끝을 원뿔로 보면 흐름은 끝 반지름의 세제곱에 비례하고 점도에 반비례한다. 그래서 공압식이 다시 맞출 주입 시간과 용적식에 걸리는 압력은 같은 배수로 바뀐다.</p>
+                <p class="source">출처: 세제곱 법칙: 이 페이지의 계산(하겐–푸아죄유, 덩어리 모델로 확인) · 끝 크기에 크게 좌우된다: WPI μPUMP 매뉴얼 p.16 · 세포 현탁액의 점도가 고르지 않다: Ding 외 2024(2배는 가정)</p>
+            </div>
+        </section>
+
+        <nav class="wrap toc-nav" aria-label="자세히 보기">
+            <ol class="toc">
+                <li><a href="#fluids"><span>01 공기와 기름</span>공기는 눌리고 기름은 거의 안 눌린다</a></li>
+                <li><a href="#pneumatic"><span>02 공압식</span>압력과 시간을 정한다</a></li>
+                <li><a href="#displacement"><span>03 유압식</span>부피를 정한다</a></li>
+                <li><a href="#uses"><span>04 쓰임</span>압력을 정하는 일, 부피를 정하는 일</a></li>
+            </ol>
+        </nav>
+
+        <section id="fluids" class="wrap step" aria-labelledby="fluids-title">
+            <p class="step-no">01 공기와 기름</p>
+            <h2 id="fluids-title">공기는 눌리고 기름은 거의 안 눌린다</h2>
+            <p>부피 탄성률은 1기압의 공기가 약 0.1 MPa, 광유 계열 작동유가 약 1.4~1.7 GPa다. 공기가 1만 배 넘게 잘 눌린다.</p>
+            <p>손으로 돌리는 인젝터로 100 hPa를 만들려면, 갇힌 공기 10 mL는 미세 손잡이 15바퀴(천천히 돌릴 때), 기름은 약 0.1바퀴가 든다.</p>
+            <p>그래서 공기는 밀어서 만든 압력을 담아 두고, 바늘 끝은 그 압력에 맞춰 흘려보낸다. 기름은 압력을 거의 담지 않아, 민 부피가 바늘 끝으로 나간다.</p>
+            <p class="source">출처: 작동유의 압축성: Casey(Machinery Lubrication), Gholizadeh 외 2011 · 손잡이: CellTram 4r 사양(Eppendorf 2017 p.11)으로 이 페이지의 계산</p>
+        </section>
+
+        <section id="pneumatic" class="wrap step" aria-labelledby="pneumatic-title">
+            <p class="step-no">02 공압식</p>
+            <h2 id="pneumatic-title">압력과 시간을 정한다</h2>
+            <p>압력원에서 조절기 둘(주입압·보정압)과 밸브를 거쳐, 공기가 바늘 속 시료를 바로 민다.</p>
+            <figure class="fig" data-fig="1">
+<svg class="fig" role="img" aria-labelledby="f1-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" width="640" height="500" font-family="Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, sans-serif">
+<title id="f1-title">공압식 인젝터 · 전자식</title>
+<defs>
+  <marker id="f1-ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2410C"/></marker>
+  <marker id="f1-as" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#C2410C"/></marker>
+  <marker id="f1-ge" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6C757D"/></marker>
+</defs>
+<rect x="1" y="1" width="638" height="498" rx="18" fill="#FAFAF7" stroke="#E2E0D8" stroke-width="2"/>
+<text x="28" y="44" font-size="26" font-weight="700" fill="#1F2328">공압식 인젝터 · 전자식</text>
+<text x="28" y="74" font-size="18" fill="#57606A">정하는 것: 압력 둘과 시간 · 부피는 바늘 끝이 정한다</text>
+<rect x="28" y="106" width="96" height="72" rx="8" fill="#FFFFFF" stroke="#495057" stroke-width="2"/>
+<text x="76" y="134" font-size="16" font-weight="700" fill="#343A40" text-anchor="middle">압력원</text>
+<text x="76" y="154" font-size="12" fill="#57606A" text-anchor="middle">압축기·탱크</text>
+<text x="76" y="170" font-size="12" fill="#57606A" text-anchor="middle">또는 가스통</text>
+<path d="M124,142 L135,142 L135,121 L143,121" fill="none" stroke="#6C757D" stroke-width="2" marker-end="url(#f1-ge)"/>
+<path d="M135,142 L135,163 L143,163" fill="none" stroke="#6C757D" stroke-width="2" marker-end="url(#f1-ge)"/>
+<text x="204" y="98" font-size="12" fill="#6C757D" text-anchor="middle">조절기 둘</text>
+<rect x="146" y="104" width="116" height="34" rx="6" fill="#FFFFFF" stroke="#495057" stroke-width="2"/>
+<text x="204" y="126" font-size="15" fill="#343A40" text-anchor="middle">주입압 pi</text>
+<rect x="146" y="146" width="116" height="34" rx="6" fill="#FFFFFF" stroke="#495057" stroke-width="2"/>
+<text x="204" y="168" font-size="15" fill="#343A40" text-anchor="middle">보정압 pc</text>
+<path d="M262,121 L274,121 L274,142 L283,142" fill="none" stroke="#6C757D" stroke-width="2" marker-end="url(#f1-ge)"/>
+<path d="M262,163 L274,163 L274,142" fill="none" stroke="#6C757D" stroke-width="2"/>
+<rect x="286" y="110" width="90" height="64" rx="8" fill="#FFFFFF" stroke="#495057" stroke-width="2"/>
+<text x="331" y="136" font-size="16" font-weight="700" fill="#343A40" text-anchor="middle">밸브</text>
+<text x="331" y="156" font-size="12" fill="#57606A" text-anchor="middle">타이머 · TTL</text>
+<line x1="376" y1="142" x2="424" y2="142" stroke="#60A5FA" stroke-width="10"/>
+<line x1="376" y1="142" x2="424" y2="142" stroke="#DBEAFE" stroke-width="6"/>
+<text x="398" y="128" font-size="12" fill="#57606A" text-anchor="middle">공기 관</text>
+<circle cx="593.2" cy="315.2" r="34" fill="#FFF8E7" stroke="#868E96" stroke-width="2"/>
+<g transform="translate(420,142) rotate(45)">
+  <polygon points="60,-12 220,-1.5 220,1.5 60,12" fill="#F8F9FA" stroke="#495057" stroke-width="1.4"/>
+  <polygon points="60,-9 130,-5.41 130,5.41 60,9" fill="#BFDBFE"/>
+  <polygon points="130,-5.41 219,-0.85 219,0.85 130,5.41" fill="#F9A8D4"/>
+  <path d="M130,-5.41 Q136,0 130,5.41" fill="none" stroke="#BE185D" stroke-width="1.4"/>
+  <rect x="0" y="-14" width="62" height="28" rx="3" fill="#ADB5BD" stroke="#495057" stroke-width="1.6"/>
+</g>
+<circle cx="581.9" cy="303.9" r="6" fill="#F9A8D4" stroke="#BE185D" stroke-width="1"/>
+<text x="462" y="150" font-size="13" fill="#57606A">홀더</text>
+<text x="508" y="193" font-size="14" font-weight="700" fill="#1D4ED8">공기</text>
+<text x="562" y="252" font-size="14" font-weight="700" fill="#BE185D">시료</text>
+<text x="494" y="258" font-size="13" fill="#57606A" text-anchor="end">공기-시료 경계</text>
+<text x="593" y="368" font-size="13" fill="#6C757D" text-anchor="middle">배아·세포</text>
+<text x="60" y="226" font-size="14" font-weight="700" fill="#343A40">밸브 뒤 압력, 주입 한 번</text>
+<line x1="60" y1="400" x2="60" y2="244" stroke="#6C757D" stroke-width="1.6" marker-end="url(#f1-ge)"/>
+<line x1="60" y1="400" x2="396" y2="400" stroke="#6C757D" stroke-width="1.6" marker-end="url(#f1-ge)"/>
+<text x="68" y="252" font-size="13" fill="#6C757D">압력</text>
+<text x="398" y="420" font-size="13" fill="#6C757D" text-anchor="end">시간</text>
+<line x1="60" y1="284" x2="186" y2="284" stroke="#ADB5BD" stroke-width="1.4" stroke-dasharray="5 4"/>
+<path d="M60,360 L168,360 C177,360 177,284 186,284 L292,284 C301,284 301,360 310,360 L390,360" fill="none" stroke="#1D4ED8" stroke-width="3"/>
+<text x="68" y="276" font-size="14" fill="#343A40">주입압 pi</text>
+<text x="68" y="352" font-size="14" fill="#343A40">보정압 pc</text>
+<line x1="190" y1="342" x2="288" y2="342" stroke="#C2410C" stroke-width="2" marker-start="url(#f1-as)" marker-end="url(#f1-ae)"/>
+<text x="239" y="330" font-size="14" fill="#C2410C" text-anchor="middle">주입 시간 ti</text>
+<text x="318" y="300" font-size="13" fill="#6C757D">올라가는 데 시간이 걸린다</text>
+<text x="318" y="318" font-size="13" fill="#6C757D">밸브 6~10 ms + 관 속 공기</text>
+<text x="28" y="462" font-size="17" fill="#343A40">부피 ≈ 유량 × 시간 · 유량 ∝ 압력차 × (끝 반지름)³ ÷ 점도 (원뿔 근사)</text>
+<text x="28" y="486" font-size="15" fill="#6C757D">보정압은 꺼진 동안 배양액이 바늘로 빨려 들어오는 것을 막는다</text>
+</svg>
+            </figure>
+            <dl class="traits">
+                <dt>정하는 것</dt>
+                <dd>주입압과 주입 시간. FemtoJet은 압력 5~6,000 hPa, 시간 0.01 s 단위다.</dd>
+                <dt>맞추는 일</dt>
+                <dd>방울 보정. 바늘을 바꿀 때마다 광유 위에 쏜 방울의 지름으로 부피를 잰다(V = πd³/6, 124 µm가 1 nL). 쏘지 않는 동안에는 보정압을 걸어 배양액이 바늘로 빨려 들지 않게 한다.</dd>
+                <dt>한계</dt>
+                <dd>아주 짧은 주입. 밸브가 반응하는 데 6~10 ms가 걸려, WPI는 주입 시간을 10~15 ms 밑으로 두지 말라고 쓴다.</dd>
+                <dt>켜는 법</dt>
+                <dd>발판, TTL, RS-232. 로봇과 묶기 쉽다.</dd>
+            </dl>
+            <details class="more">
+                <summary>숫자로 보면</summary>
+                <p>짧은 펄스는 흐름이 최대에 이르기 전에 끊긴다. 그래도 압력이 늦게 오르는 것만으로는 양이 줄지 않는다. 늦게 오른 만큼 늦게 내려가서다. 양이 모자라는 것은 밸브가 열릴 때 닫힐 때보다 늦을 때다. 열림 6 ms, 닫힘 2 ms로 가정하면 10 ms 펄스는 60%만 나간다.</p>
+                <p>WPI 매뉴얼은 끝이 몇 % 작아지면 흐름이 열 배까지 달라질 수 있다고 쓴다. 끝의 모양만으로는 끝이 44~68% 작아져야 열 배다. 주입압이 넘어야 할 문턱 가까이 있으면 된다. 기름 속으로 방울을 내려면 끝에서 물-기름 경계의 압력을 넘어야 한다(끝 10 µm에 20 kPa). 주입압이 이 문턱의 1.1배면, 끝이 8% 작아질 때 흐름이 열 배 준다.</p>
+            </details>
+            <p class="source">출처: 구조와 사양: Eppendorf 2017 p.6·p.12, WPI μPUMP 매뉴얼 p.1·p.10·p.14·p.17 · 방울 보정: Yuan·Sun 2009, μPUMP 매뉴얼 p.22 · 짧은 펄스: Forman 외 2017 · 펄스의 양, 문턱: 이 페이지의 계산(밸브의 지연은 가정)</p>
+        </section>
+
+        <section id="displacement" class="wrap step" aria-labelledby="displacement-title">
+            <p class="step-no">03 유압식</p>
+            <h2 id="displacement-title">부피를 정한다</h2>
+            <p>자동화한 유압식이 용적식이다. 모터와 나사가 철사 플런저를 밀고, 플런저가 바늘 속 기름을 바로 민다. 관이 없어, 권하는 바늘에서는 민 부피가 1 ms 안에 바늘 끝으로 나간다.</p>
+            <figure class="fig" data-fig="3">
+<svg class="fig" role="img" aria-labelledby="f3-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" width="640" height="500" font-family="Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, sans-serif">
+<title id="f3-title">용적식 인젝터 · 나노젝트</title>
+<defs>
+  <marker id="f3-ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2410C"/></marker>
+</defs>
+<rect x="1" y="1" width="638" height="498" rx="18" fill="#FAFAF7" stroke="#E2E0D8" stroke-width="2"/>
+<text x="28" y="44" font-size="26" font-weight="700" fill="#1F2328">용적식 인젝터 · 나노젝트</text>
+<text x="28" y="74" font-size="18" fill="#57606A">철사 플런저가 바늘 속 기름을 직접 민다 · 관이 없다</text>
+<rect x="40" y="118" width="250" height="64" rx="10" fill="#E9ECEF" stroke="#495057" stroke-width="2"/>
+<text x="150" y="146" font-size="15" font-weight="700" fill="#343A40" text-anchor="middle">모터 · 나사</text>
+<text x="150" y="166" font-size="12" fill="#57606A" text-anchor="middle">한 번에 정한 거리만큼 민다</text>
+<text x="150" y="206" font-size="13" fill="#6C757D" text-anchor="middle">발판 · TTL로 한 번씩</text>
+<rect x="290" y="132" width="28" height="36" fill="#ADB5BD" stroke="#495057" stroke-width="1.6"/>
+<text x="304" y="124" font-size="12" fill="#57606A" text-anchor="middle">봉인</text>
+<polygon points="318,139 470,139 600,148.8 600,151.2 470,161 318,161" fill="#F8F9FA" stroke="#495057" stroke-width="1.4"/>
+<polygon points="318,142 470,142 530,145.42 530,154.58 470,158 318,158" fill="#FDE68A"/>
+<polygon points="530,145.42 598,149.3 598,150.7 530,154.58" fill="#F9A8D4"/>
+<path d="M530,145.42 Q535,150 530,154.58" fill="none" stroke="#92400E" stroke-width="1.4"/>
+<line x1="276" y1="150" x2="430" y2="150" stroke="#343A40" stroke-width="3.5"/>
+<text x="322" y="108" font-size="14" fill="#C2410C">들어간 철사 부피 = 나간 시료 부피</text>
+<line x1="380" y1="124" x2="450" y2="124" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f3-ae)"/>
+<line x1="345" y1="190" x2="345" y2="154" stroke="#868E96" stroke-width="1"/>
+<text x="345" y="206" font-size="13" fill="#343A40" text-anchor="middle">철사 플런저</text>
+<line x1="460" y1="190" x2="460" y2="160" stroke="#868E96" stroke-width="1"/>
+<text x="460" y="206" font-size="13" fill="#92400E" text-anchor="middle">기름 (광유·실리콘유)</text>
+<line x1="568" y1="190" x2="568" y2="154" stroke="#868E96" stroke-width="1"/>
+<text x="568" y="206" font-size="13" fill="#BE185D" text-anchor="middle">시료</text>
+<text x="40" y="244" font-size="15" font-weight="700" fill="#343A40">Nanoject III 사양 (Drummond)</text>
+<text x="40" y="272" font-size="14" fill="#343A40">주입 부피 0.6 ~ 999.9 nL, 0.1 nL 단계</text>
+<text x="40" y="298" font-size="14" fill="#343A40">주입 속도 최대 200 nL/s</text>
+<text x="40" y="324" font-size="14" fill="#343A40">담는 양 4.2 µL · 플런저 이동 23 mm</text>
+<text x="40" y="350" font-size="14" fill="#343A40">바늘 바깥지름 1.14 mm · 안지름 0.53 mm</text>
+<text x="40" y="376" font-size="14" fill="#343A40">권장 끝 지름 10 ~ 30 µm</text>
+<line x1="380" y1="230" x2="380" y2="384" stroke="#DEE2E6" stroke-width="1.2"/>
+<text x="400" y="244" font-size="15" font-weight="700" fill="#C2410C">계산</text>
+<text x="400" y="272" font-size="14" fill="#343A40">단면적 = 4.2 µL ÷ 23 mm</text>
+<text x="414" y="298" font-size="14" fill="#343A40">≈ 0.18 mm²</text>
+<text x="400" y="324" font-size="14" fill="#343A40">0.1 nL → 플런저 0.55 µm</text>
+<text x="400" y="350" font-size="14" fill="#343A40">0.6 nL → 플런저 3.3 µm</text>
+<text x="28" y="462" font-size="17" fill="#343A40">부피는 플런저 이동이 정한다 · 바늘 끝과 점도는 압력만 바꾼다</text>
+<text x="28" y="486" font-size="15" fill="#6C757D">바늘 안에 공기 방울이 있으면 정확히 넣지 못한다 (Nanoject III 매뉴얼)</text>
+</svg>
+            </figure>
+            <dl class="traits">
+                <dt>정하는 것</dt>
+                <dd>플런저가 미는 부피. Nanoject III는 0.6~999.9 nL를 0.1 nL 단위로 넣는다(플런저 0.55 µm).</dd>
+                <dt>맞추는 일</dt>
+                <dd>기름 채우기. 바늘 뒤를 광유나 실리콘유로 채우고 공기 방울을 뺀다. 공기 방울이 있으면 정확히 넣지 못한다. 방울 보정은 필요 없다.</dd>
+                <dt>한계</dt>
+                <dd>적은 양과 가는 끝. 0.6 nL보다 적게는 못 넣고, 끝 10~30 µm를 권한다.</dd>
+                <dt>켜는 법</dt>
+                <dd>발판, TTL. 자동 주입에도 쓴다.</dd>
+            </dl>
+            <h3>손으로 돌리는 기름 인젝터</h3>
+            <p>손잡이로 피스톤을 밀어 기름 관을 거쳐 민다(CellTram 4r Oil, Narishige IM-21). 관이 부풀어, 가는 ICSI 바늘에서는 민 부피가 다 나가는 데 13~32분이 걸린다. 그래서 같은 손놀림에 큰 압력을 내는 도구에 가깝다.</p>
+            <details class="more">
+                <summary>손 기름 인젝터의 짜임</summary>
+                <figure class="fig" data-fig="2">
+<svg class="fig" role="img" aria-labelledby="f2-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500" width="640" height="500" font-family="Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, sans-serif">
+<title id="f2-title">유압식 인젝터 · 손으로 돌림</title>
+<defs>
+  <marker id="f2-ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2410C"/></marker>
+</defs>
+<rect x="1" y="1" width="638" height="498" rx="18" fill="#FAFAF7" stroke="#E2E0D8" stroke-width="2"/>
+<text x="28" y="44" font-size="26" font-weight="700" fill="#1F2328">유압식 인젝터 · 손으로 돌림</text>
+<text x="28" y="74" font-size="18" fill="#57606A">정하는 것: 피스톤이 민 부피 · 기름은 거의 눌리지 않는다</text>
+<circle cx="70" cy="142" r="32" fill="#E9ECEF" stroke="#495057" stroke-width="2"/>
+<circle cx="70" cy="142" r="18" fill="#DEE2E6" stroke="#868E96" stroke-width="1.4"/>
+<path d="M44,116 A36,36 0 0 1 96,116" fill="none" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f2-ae)"/>
+<text x="70" y="196" font-size="13" fill="#57606A" text-anchor="middle">손잡이</text>
+<text x="70" y="213" font-size="12" fill="#6C757D" text-anchor="middle">거친 · 미세</text>
+<rect x="102" y="136" width="48" height="12" fill="#CED4DA" stroke="#868E96" stroke-width="1.2"/>
+<path d="M108,136 L104,148 M116,136 L112,148 M124,136 L120,148 M132,136 L128,148 M140,136 L136,148 M148,136 L144,148" stroke="#868E96" stroke-width="1"/>
+<rect x="150" y="112" width="180" height="60" rx="4" fill="#FFFFFF" stroke="#495057" stroke-width="2"/>
+<rect x="206" y="114" width="122" height="56" fill="#FDE68A"/>
+<line x1="150" y1="142" x2="196" y2="142" stroke="#868E96" stroke-width="8"/>
+<rect x="196" y="114" width="10" height="56" fill="#868E96"/>
+<text x="267" y="147" font-size="15" font-weight="700" fill="#92400E" text-anchor="middle">기름</text>
+<text x="240" y="190" font-size="13" fill="#57606A" text-anchor="middle">피스톤 · 실린더</text>
+<text x="150" y="96" font-size="14" fill="#C2410C">민 부피만큼 바늘 속 경계가 움직인다</text>
+<line x1="210" y1="104" x2="300" y2="104" stroke="#C2410C" stroke-width="2.2" marker-end="url(#f2-ae)"/>
+<line x1="330" y1="142" x2="424" y2="142" stroke="#D97706" stroke-width="10"/>
+<line x1="330" y1="142" x2="424" y2="142" stroke="#FDE68A" stroke-width="6"/>
+<circle cx="372" cy="142" r="4" fill="#FFFFFF" stroke="#495057" stroke-width="1.2"/>
+<text x="372" y="128" font-size="12" fill="#C2410C" text-anchor="middle">공기 방울 금지</text>
+<circle cx="598.2" cy="320.2" r="36" fill="#FFF8E7" stroke="#868E96" stroke-width="2"/>
+<g transform="translate(420,142) rotate(45)">
+  <polygon points="60,-12 150,-5 220,-5 220,5 150,5 60,12" fill="#F8F9FA" stroke="#495057" stroke-width="1.4"/>
+  <polygon points="60,-9 120,-5.33 120,5.33 60,9" fill="#FDE68A"/>
+  <polygon points="120,-5.33 150,-3.5 219,-3.5 219,3.5 150,3.5 120,5.33" fill="#FBCFE8"/>
+  <path d="M120,-5.33 Q125,0 120,5.33" fill="none" stroke="#92400E" stroke-width="1.4"/>
+  <ellipse cx="200" cy="0" rx="6" ry="2.8" fill="#EC4899" stroke="#9D174D" stroke-width="0.8"/>
+  <rect x="0" y="-14" width="62" height="28" rx="3" fill="#ADB5BD" stroke="#495057" stroke-width="1.6"/>
+</g>
+<text x="462" y="150" font-size="13" fill="#57606A">홀더</text>
+<text x="503" y="191" font-size="14" font-weight="700" fill="#92400E">기름</text>
+<text x="552" y="248" font-size="14" font-weight="700" fill="#BE185D">배양액</text>
+<text x="578" y="274" font-size="13" font-weight="700" fill="#BE185D">세포</text>
+<text x="488" y="250" font-size="13" fill="#57606A" text-anchor="end">기름-배양액 경계</text>
+<text x="598" y="374" font-size="13" fill="#6C757D" text-anchor="middle">난자</text>
+<text x="48" y="236" font-size="14" font-weight="700" fill="#343A40">CellTram 4r 사양 (Eppendorf 2017)</text>
+<line x1="44" y1="246" x2="372" y2="246" stroke="#ADB5BD" stroke-width="1.2"/>
+<text x="214" y="266" font-size="14" font-weight="700" fill="#92400E" text-anchor="middle">Oil · 기름</text>
+<text x="324" y="266" font-size="14" font-weight="700" fill="#1D4ED8" text-anchor="middle">Air · 공기</text>
+<line x1="44" y1="276" x2="372" y2="276" stroke="#DEE2E6" stroke-width="1"/>
+<text x="52" y="298" font-size="14" fill="#343A40">한 바퀴</text>
+<text x="214" y="298" font-size="14" fill="#343A40" text-anchor="middle">1 · 10 µL</text>
+<text x="324" y="298" font-size="14" fill="#343A40" text-anchor="middle">60 · 600 µL</text>
+<text x="52" y="324" font-size="14" fill="#343A40">실린더</text>
+<text x="214" y="324" font-size="14" fill="#343A40" text-anchor="middle">1,000 µL</text>
+<text x="324" y="324" font-size="14" fill="#343A40" text-anchor="middle">10 mL</text>
+<text x="52" y="350" font-size="14" fill="#343A40">최소 조절</text>
+<text x="214" y="350" font-size="14" fill="#343A40" text-anchor="middle">1.5 nL 미만</text>
+<text x="324" y="350" font-size="14" fill="#343A40" text-anchor="middle">100 nL 미만</text>
+<text x="52" y="376" font-size="14" fill="#343A40">최대 압력</text>
+<text x="214" y="376" font-size="14" fill="#343A40" text-anchor="middle">20,000 hPa</text>
+<text x="324" y="376" font-size="14" fill="#343A40" text-anchor="middle">3,000 hPa</text>
+<line x1="44" y1="388" x2="372" y2="388" stroke="#ADB5BD" stroke-width="1.2"/>
+<text x="28" y="462" font-size="17" fill="#343A40">나가는 부피 ≈ 피스톤이 민 부피 · 세포를 빨아들이고 내보내며 자리를 잡는다</text>
+<text x="28" y="486" font-size="15" fill="#6C757D">공기 판은 같은 압력을 만들려고 훨씬 많이 밀어야 한다 · 공기가 눌리기 때문</text>
+</svg>
+                </figure>
+            </details>
+            <p class="source">출처: Nanoject III 브로슈어와 매뉴얼 p.6~9·p.14 · 켜는 법: Forman 외 2017 표 S1 · 자동 주입: Guo 외 2024 · 손 기름 인젝터: Eppendorf 2017 p.11, Narishige IM-21 · 나가는 시간: 이 페이지의 계산(관의 탄성은 가정)</p>
+        </section>
+
+        <section id="uses" class="wrap step" aria-labelledby="uses-title">
+            <p class="step-no">04 쓰임</p>
+            <h2 id="uses-title">압력을 정하는 일, 부피를 정하는 일</h2>
+            <h3>공압식: 같은 양을 많은 개체에</h3>
+            <ul class="uses">
+                <li>제브라피시 배아: 1세포기에 mRNA나 모폴리노 1~3 nL. 자동 시스템은 분당 15개를 넣었다.</li>
+                <li>제브라피시 치어 이종이식: 로봇이 암세포를 넣는다.</li>
+                <li>부착 세포, 예쁜꼬마선충, 초파리: fL~100 pL(FemtoJet 4i, 끝 안지름 0.5 µm).</li>
+                <li>생쥐 전핵 주입, 신경 조직의 약물 분사.</li>
+            </ul>
+            <p>바늘 하나로 같은 주입을 되풀이하니, 그 바늘만 맞추면 된다.</p>
+            <h3>유압식: 세포 하나, 또는 정한 부피</h3>
+            <ul class="uses">
+                <li>ICSI, 핵치환, ES 세포 주입, 생검: 정자나 핵, 세포 하나를 바늘 안에서 빨아들이고, 세우고, 내보낸다. 주입과 탈핵에는 기름식을 쓴다.</li>
+                <li>식물 세포: 높은 압력이 필요하다(손 기름 인젝터는 20,000 hPa).</li>
+                <li>정한 nL를 되풀이: 제브라피시 자동 주입에 Nanoject III를 쓴 예가 있다.</li>
+            </ul>
+            <p>잡는 쪽(홀딩 피펫)은 공기로 충분하다. 제조사의 작업대도 잡는 쪽에 공기 인젝터를 둔다. 공기는 작은 압력을 곱게 맞추고 담아 두어, 붙잡는 힘이 일정하다.</p>
+            <p class="source">출처: 제브라피시 배아: Yuan·Sun 2009, Wang 외 2007 · 이종이식: Ding 외 2024 · 부착 세포·선충·초파리와 작업대: Eppendorf 2017 p.7·p.12 · 전핵 주입: Liu 외 2013 · 약물 분사: Forman 외 2017 · ICSI와 핵치환: Ogura 2017, Eppendorf 2017 p.7·p.11 · 식물 세포: Eppendorf 2017 p.8·p.11 · 용적식 자동 주입: Guo 외 2024 · 잡는 쪽: Ogura 2017, Eppendorf 2017 p.7</p>
+        </section>
+
+        <section id="summary" class="wrap step" aria-labelledby="summary-title">
+            <p class="step-no">정리</p>
+            <h2 id="summary-title">압력을 정하나, 부피를 정하나</h2>
+            <div class="table-wrap">
+                <table class="mi-table">
+                    <thead>
+                        <tr><th scope="col"></th><th scope="col">공압식</th><th scope="col">유압식</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">미는 것</th><td>공기</td><td>기름</td></tr>
+                        <tr><th scope="row">정하는 것</th><td>압력과 시간</td><td>민 부피</td></tr>
+                        <tr><th scope="row">바늘이 바뀌면</th><td>부피가 바뀐다</td><td>걸리는 압력이 바뀐다</td></tr>
+                        <tr><th scope="row">맞추는 일</th><td>바늘마다 방울 보정</td><td>기름 채우기, 공기 방울 빼기</td></tr>
+                        <tr><th scope="row">가장 적은 양</th><td>fL</td><td>0.6 nL(용적식)</td></tr>
+                        <tr><th scope="row">최대 압력</th><td>6,000 hPa 안팎</td><td>20,000 hPa(손 기름 인젝터)</td></tr>
+                        <tr><th scope="row">켜는 법</th><td>발판, TTL, RS-232</td><td>손, 용적식은 발판과 TTL</td></tr>
+                        <tr><th scope="row">쓰임</th><td>같은 양을 많은 개체에</td><td>세포 하나, 정한 nL</td></tr>
+                        <tr><th scope="row">대표 장비</th><td>FemtoJet 4i/4x, WPI μPUMP·PV820, Narishige IM-401</td><td>CellTram 4r Oil, Narishige IM-21, Nanoject III</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="note">
+                <p><strong>오해</strong>기름 인젝터가 공기 인젝터보다 늘 더 정밀하다.</p>
+                <p class="fact"><strong>실제로는</strong>정하는 것이 다르다. 손잡이를 0.5° 돌릴 때 기름은 약 150 Pa, 공기는 1~10 Pa가 바뀐다. 기름은 큰 압력을 빨리 내고, 공기는 작은 압력을 곱게 맞춘다. 정한 부피를 그대로 내는 것은 관이 없는 용적식이다.</p>
+            </div>
+            <h3>확인됨 · 가설 · 모름</h3>
+            <ul class="limits">
+                <li><span class="tag known">확인됨</span>구조와 사양은 제조사 자료(Eppendorf, WPI, Drummond, Narishige)와, 쓰임은 논문과 절차와 대조했다. 세제곱 법칙, 손잡이의 압력, 나가는 시간, 문턱은 따로 만든 덩어리 모델로 계산했다.</li>
+                <li><span class="tag guess">가설</span>관의 탄성과 바늘의 원뿔 각(손 기름 인젝터가 내보내는 시간이 여기에 달린다), 밸브가 열리고 닫히는 시간, 세포 현탁액의 점도 2배, WPI의 "몇 %에 열 배"가 문턱 가까이의 경우라는 해석, 04의 까닭 둘(바늘 하나만 맞추면 된다, 공기가 붙잡는 힘을 일정하게 한다).</li>
+                <li><span class="tag unknown">모름</span>제브라피시 배아와 치어 안쪽의 압력. 공압식과 유압식의 정확도를 같은 조건에서 견준 연구는 찾지 못했다.</li>
+            </ul>
+            <p class="source">출처: 사양: Eppendorf 2017 p.11·p.12, Drummond Nanoject III · 손잡이와 나가는 시간: 이 페이지의 계산</p>
+        </section>
+
+        <section id="faq" class="wrap step" aria-labelledby="faq-title">
+            <p class="step-no">질문</p>
+            <h2 id="faq-title">자주 묻는 질문</h2>
+            <!-- 검색·AI 답변용. 독자가 검색창에 칠 질문과, 출처가 있는 사실만 담은 두세 문장의 답. head의 FAQPage와 문장이 같아야 한다. -->
+            <div class="faq" id="faq-list">
+                <details>
+                    <summary>마이크로인젝터는 무엇을 하나?</summary>
+                    <p>유리 바늘 안의 액체를 밀고 당겨, 세포나 배아에 nL에서 fL의 용액이나 세포를 넣는 장치다. 바늘을 옮기는 매니퓰레이터와 함께 쓴다. 공기로 미는 공압식과 기름으로 미는 유압식이 있다.</p>
+                </details>
+                <details>
+                    <summary>공압식과 유압식 마이크로인젝터는 어떻게 다른가?</summary>
+                    <p>공압식은 조절한 공기 압력을 정한 시간만큼 걸어 시료를 민다. 나가는 부피는 바늘 끝 크기, 점도, 받는 쪽 압력에 따라 변한다. 유압식은 피스톤이나 플런저가 기름을 밀어, 민 부피만큼 바늘 끝의 시료를 움직인다.</p>
+                </details>
+                <details>
+                    <summary>보정압(compensation pressure)은 왜 거나?</summary>
+                    <p>주입 사이에 거는 낮은 양압이다. 바늘 속 공기-시료 경계의 표면 장력이 배양액을 바늘로 끌어들이는 것을 막는다(WPI μPUMP 매뉴얼). 필요한 압력은 바늘 끝이 아니라 경계가 있는 곳의 안지름이 정한다. 안지름 0.5 µm에서 약 80 psi, 0.5 mm에서 0.08 psi다.</p>
+                </details>
+                <details>
+                    <summary>미세주입량은 어떻게 맞추나?</summary>
+                    <p>광유 위에 시료 방울을 쏘아 지름 d를 재고 V = πd³/6으로 부피를 구한다. 지름 124 µm가 1 nL다(WPI μPUMP 매뉴얼). 공압식은 바늘을 바꿀 때마다 이 방울 보정으로 주입 시간이나 압력을 다시 맞춘다.</p>
+                </details>
+                <details>
+                    <summary>세포 안의 압력이 주입량을 바꾸나?</summary>
+                    <p>주입압이 낮을 때 그렇다. 배양 세포 두 종(RT4, T24)의 안쪽 압력은 평균 341 Pa와 405 Pa였다. 1 kPa로 넣자 실제 부피가 열린 배지에서 맞춘 것보다 20~35% 적었다(Wang X 외 2018). 주입압이 100 kPa(약 15 psi)면 이 몫은 0.3~0.4%다(이 페이지의 계산).</p>
+                </details>
+                <details>
+                    <summary>Nanoject 같은 용적식 인젝터는 어떻게 작동하나?</summary>
+                    <p>모터가 철사 플런저를 기름을 채운 유리 바늘 속으로 정한 거리만큼 밀어, 그만큼의 시료를 끝으로 내보낸다. Nanoject III는 0.6~999.9 nL를 0.1 nL 단위로 넣는다(Drummond). 부피를 플런저가 정해 바늘마다 방울을 재지 않아도 된다.</p>
+                </details>
+                <details>
+                    <summary>ICSI에는 왜 기름식 인젝터를 쓰나?</summary>
+                    <p>정자나 핵 하나를 바늘 안에서 빨아들이고, 세우고, 내보내야 해서다. 주입과 탈핵에는 기름식을 쓰고, 잡는 쪽은 공기식이어도 된다(Ogura 2017). 기름 인젝터는 같은 손놀림에 압력이 공기 인젝터의 16~160배로 바뀐다(이 페이지의 계산).</p>
+                </details>
+                <details>
+                    <summary>FemtoJet 4i와 4x는 어떻게 다른가?</summary>
+                    <p>둘 다 주입압, 보정압, 주입 시간을 정하는 전자식 공압 인젝터다. 4i는 압축기를 품고 fL~100 pL의 연속 주입에 권한다. 4x는 바깥 압력원을 쓰고 1 µL까지의 부피와 긴 주입 연속(예쁜꼬마선충, 이른 물고기 배아, 개구리 난모세포)에 권한다(Eppendorf 2017 p.12).</p>
+                </details>
+            </div>
+        </section>
+
+        <section class="wrap step" aria-labelledby="more-title">
+            <h2 id="more-title">더 보기</h2>
+            <ul class="links">
+                <li><a href="https://www.agarscientific.com/media/import/CS_CMI_Smooth_Operator_Global_Brochure_online.pdf">Eppendorf, Smooth Operator: 미세조작기와 인젝터 브로슈어 (2017)</a></li>
+                <li><a href="https://www.wpi-europe.com/downloads/content/uPUMP.pdf">WPI, µPUMP 매뉴얼 (2024)</a></li>
+                <li><a href="https://drummondsci.com/resources/instructions/nanoject-iii-manual">Drummond, Nanoject III 매뉴얼 (2023)</a></li>
+                <li><a href="https://doi.org/10.1038/s41598-017-02301-2">Forman 외, Openspritzer: an open hardware pressure ejection system (Scientific Reports, 2017)</a></li>
+                <li><a href="https://doi.org/10.1021/acs.langmuir.8b02102">Wang X 외, Effect of Cell Inner Pressure on Deposition Volume in Microinjection (Langmuir, 2018)</a></li>
+                <li><a href="https://doi.org/10.1371/journal.pone.0000862">Wang W 외, A Fully Automated Robotic System for Microinjection of Zebrafish Embryos (PLoS ONE, 2007)</a></li>
+                <li><a href="https://doi.org/10.3791/1113">Yuan, Sun, Microinjection of mRNA and Morpholino Antisense Oligonucleotides in Zebrafish Embryos (JoVE, 2009)</a></li>
+                <li><a href="https://doi.org/10.1101/2024.08.13.607596">Ding 외, Automated microinjection for zebrafish xenograft models (bioRxiv, 2024)</a></li>
+                <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3820376/">Liu 외, Pronuclear Microinjection and Oviduct Transfer Procedures for Transgenic Mouse Production (2013)</a></li>
+                <li><a href="https://doi.org/10.1101/pdb.prot094425">Ogura, Cloning Mice (Cold Spring Harbor Protocols, 2017)</a></li>
+                <li><a href="https://doi.org/10.1038/s41378-023-00645-6">Guo 외, Design of an automated robotic microinjection system for batch injection of zebrafish embryos and larvae (2024)</a></li>
+                <li><a href="https://journals.riverpublishers.com/index.php/IJFP/article/download/430/211/1087">Gholizadeh 외, Fluid Bulk Modulus: A Literature Survey (International Journal of Fluid Power, 2011)</a></li>
+                <li><a href="https://www.machinerylubrication.com/Articles/Print/1314">Casey, In Search of the Perfect Hydraulic Fluid – Part II (Machinery Lubrication)</a></li>
+                <li>계산: 공기·기름·관의 압축성과 바늘 끝의 저항을 넣은 덩어리 모델(파이썬)로 이 페이지의 숫자와 직접 해보기를 확인했다. 관의 탄성과 바늘의 원뿔 각은 가정이다.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        마지막 업데이트 <time datetime="2026-10-23">2026-10-23</time> · <a href="/">Hugh Q Lee</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+            });
+            render();
+        })();
+    </script>
+    <script>
+        // mi-model: knowledge-lab/microinjector/mi/page.py. Both injectors are set on a 10 µm tip to give 1.0 nL;
+        // pneumatic keeps pressure and time (volume ∝ tip³ / viscosity), displacement keeps the volume
+        // (pressure ∝ viscosity / tip³). Pure: no page access, so node can run it in the tests.
+        var MI = (function () {
+            "use strict";
+            var REF_TIP = 10;
+            var REF_NL = 1;
+            var VISCOSITY = { solution: 1, suspension: 2 };
+            var TXT = {
+                ref: "기준 바늘이다. 두 인젝터 모두 1.00 nL(방울 124 µm)를 내보낸다.",
+                tip: function (tip, smaller, p) { return "끝이 " + tip + " µm로 " + p + "% " + (smaller ? "작아지" : "커지"); },
+                sample: "시료가 세포 현탁액(점도 2배, 가정)이 되",
+                join: function (causes) { return causes.join("고 ") + "자"; },
+                pneu: function (v, diff) { return "공압식은 " + v + " nL(" + diff + ")를 내보낸다."; },
+                less: function (p) { return p + "% 적게"; },
+                more: function (p) { return p + "% 많게"; },
+                same: "그대로",
+                disp: function (p) { return "용적식은 1.00 nL 그대로이고, 바늘 뒤 압력이 " + p + "배가 된다."; },
+                unit: " µm"
+            };
+
+            function droplet(nL) { return Math.cbrt(6 * nL * 1e6 / Math.PI); }
+
+            function pneumatic(tip, sample) {
+                var v = REF_NL * Math.pow(tip / REF_TIP, 3) / VISCOSITY[sample];
+                return { nL: v, um: droplet(v), pressure: 1, time: REF_NL / v };
+            }
+
+            function displacement(tip, sample) {
+                return { nL: REF_NL, um: droplet(REF_NL), pressure: Math.pow(REF_TIP / tip, 3) * VISCOSITY[sample] };
+            }
+
+            function f2(x) { return x.toFixed(2); }
+            function pct(x) { return Math.round(Math.abs(x) * 100); }
+            function tipText(tip) { return tip % 1 === 0 ? String(tip) : tip.toFixed(1); }
+
+            function verdict(tip, sample) {
+                var causes = [];
+                if (tip !== REF_TIP) causes.push(TXT.tip(tipText(tip), tip < REF_TIP, pct(tip / REF_TIP - 1)));
+                if (sample === "suspension") causes.push(TXT.sample);
+                if (!causes.length) return TXT.ref;
+                var pn = pneumatic(tip, sample), dp = displacement(tip, sample);
+                var d = pct(pn.nL - 1);
+                var diff = d === 0 ? TXT.same : (pn.nL < 1 ? TXT.less(d) : TXT.more(d));
+                return TXT.join(causes) + ", " + TXT.pneu(f2(pn.nL), diff) + " " + TXT.disp(f2(dp.pressure));
+            }
+
+            function tipLabel(tip) { return tipText(tip) + TXT.unit; }
+
+            return { REF_TIP: REF_TIP, REF_NL: REF_NL, VISCOSITY: VISCOSITY, droplet: droplet, pneumatic: pneumatic,
+                     displacement: displacement, verdict: verdict, tipLabel: tipLabel, f2: f2 };
+        })();
+    </script>
+    <script>
+        // 바늘 바꿔 보기: controls → MI → two scenes, numbers, verdict
+        (function () {
+            "use strict";
+            var NS = "http://www.w3.org/2000/svg";
+            var tipInput = document.getElementById("mi-tip");
+            var tipOut = document.getElementById("mi-tip-out");
+            var sampleButtons = Array.prototype.slice.call(document.querySelectorAll("[data-sample]"));
+            var verdictEl = document.getElementById("mi-verdict");
+            var state = { tip: Number(tipInput.value), sample: "solution" };
+            var SCALE = 0.9;              // px per µm of droplet diameter
+            var RULER = { x: 150, y: 182, um: 200 };
+            var LABEL = { air: "공기", oil: "기름", sample: "시료" };
+
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+
+            // The needle from the left (holder, glass taper) with what fills it, a ruler as on a micrometer slide,
+            // the 1.0 nL ring and the droplet that came out.
+            function scene(svg, kind) {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                el("rect", { x: 0, y: 26, width: 26, height: 28, rx: 3, "class": "mi-holder" }, svg);
+                var g = el("g", {}, svg);
+                var glass = el("polygon", { "class": "mi-glass" }, g);
+                var back = el("polygon", { "class": kind === "pneu" ? "mi-air" : "mi-oil" }, g);
+                var front = el("polygon", { "class": "mi-sample" }, g);
+                if (kind === "disp") el("line", { x1: 4, y1: 40, x2: 62, y2: 40, "class": "mi-plunger" }, g);
+                el("text", { x: 52, y: 70, "text-anchor": "middle", "class": "mi-label" }, svg).textContent = kind === "pneu" ? LABEL.air : LABEL.oil;
+                el("text", { x: 104, y: 70, "text-anchor": "middle", "class": "mi-label" }, svg).textContent = LABEL.sample;
+                el("line", { x1: RULER.x, y1: RULER.y, x2: RULER.x + RULER.um * SCALE, y2: RULER.y, "class": "mi-ruler" }, svg);
+                for (var u = 0; u <= RULER.um; u += 20) {
+                    var x = RULER.x + u * SCALE, last = u === RULER.um;
+                    el("line", { x1: x, y1: RULER.y, x2: x, y2: RULER.y + (u % 100 === 0 ? 7 : 4), "class": "mi-tick" }, svg);
+                    if (u % 100 === 0) el("text", { x: x, y: RULER.y + 17, "text-anchor": last ? "end" : "middle" }, svg).textContent = last ? u + " µm" : String(u);
+                }
+                var ref = MI.droplet(MI.REF_NL) * SCALE / 2;
+                el("circle", { cx: RULER.x + ref, cy: RULER.y - ref, r: ref, "class": "mi-ref" }, svg);
+                var drop = el("circle", { "class": "mi-drop" }, svg);
+                return { glass: glass, back: back, front: front, drop: drop };
+            }
+
+            function needle(parts, tip) {
+                // taper from half-width 12 at x 26 to the opening at x 128; the opening grows with the tip
+                var h = 1 + tip * 0.3, y = 40, x0 = 26, x1 = 128, cut = 78;
+                var at = function (x) { return 12 + (h - 12) * (x - x0) / (x1 - x0); };
+                var hc = at(cut), w = 1.6;
+                parts.glass.setAttribute("points", [x0, y - 12, x1, y - h, x1, y + h, x0, y + 12].join(" "));
+                parts.back.setAttribute("points", [x0, y - 12 + w, cut, y - hc + w, cut, y + hc - w, x0, y + 12 - w].join(" "));
+                parts.front.setAttribute("points", [cut, y - hc + w, x1 - 1, y - h + w * 0.6, x1 - 1, y + h - w * 0.6, cut, y + hc - w].join(" "));
+            }
+
+            function dropAt(parts, um) {
+                var r = um * SCALE / 2;
+                parts.drop.setAttribute("r", r.toFixed(2));
+                parts.drop.setAttribute("cx", (RULER.x + r).toFixed(2));
+                parts.drop.setAttribute("cy", (RULER.y - r).toFixed(2));
+            }
+
+            var pn = scene(document.getElementById("mi-pn-scene"), "pneu");
+            var dp = scene(document.getElementById("mi-dp-scene"), "disp");
+
+            function bar(id, ratio) {
+                document.getElementById(id).style.width = Math.min(100, ratio / 3 * 100).toFixed(1) + "%";
+            }
+
+            function update() {
+                var a = MI.pneumatic(state.tip, state.sample), b = MI.displacement(state.tip, state.sample);
+                tipOut.textContent = MI.tipLabel(state.tip);
+                needle(pn, state.tip);
+                needle(dp, state.tip);
+                dropAt(pn, a.um);
+                dropAt(dp, b.um);
+                document.getElementById("mi-pn-v").textContent = MI.f2(a.nL) + " nL";
+                document.getElementById("mi-pn-d").textContent = String(Math.round(a.um));
+                document.getElementById("mi-pn-p").textContent = MI.f2(a.pressure);
+                document.getElementById("mi-pn-t").textContent = MI.f2(a.time);
+                document.getElementById("mi-dp-v").textContent = MI.f2(b.nL) + " nL";
+                document.getElementById("mi-dp-d").textContent = String(Math.round(b.um));
+                document.getElementById("mi-dp-p").textContent = MI.f2(b.pressure);
+                bar("mi-pn-bar", a.pressure);
+                bar("mi-dp-bar", b.pressure);
+                verdictEl.textContent = MI.verdict(state.tip, state.sample);
+                sampleButtons.forEach(function (btn) {
+                    btn.setAttribute("aria-pressed", btn.getAttribute("data-sample") === state.sample ? "true" : "false");
+                });
+            }
+
+            tipInput.addEventListener("input", function () {
+                state.tip = Number(tipInput.value);
+                update();
+            });
+            sampleButtons.forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    state.sample = btn.getAttribute("data-sample");
+                    update();
+                });
+            });
+            update();
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-10-23","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"},{"id":"ml","name":"기계 학습","name_en":"Machine learning"},{"id":"rob","name":"로봇·자동화","name_en":"Robotics and automation"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"},{"id":"train-val-calib-test","title":"train·val·calib·test","title_en":"train/val/calib/test","domain":"ml","status":"published","href":"../train-val-calib-test/","summary":"학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold를 위해 칸 하나를 더 두기","summary_en":"Keep one more split for what is fitted after training: the temperature T and the threshold"},{"id":"error-backpropagation","title":"역전파","title_en":"Backpropagation","domain":"ml","status":"published","href":"../error-backpropagation/","summary":"출력의 오차를 뒤로 전해 다층 퍼셉트론의 가운데 층까지 고치기","summary_en":"Pass the output's error backward to correct the middle layer of a multilayer perceptron too"},{"id":"robot-types","title":"로봇의 종류","title_en":"Robot types","domain":"rob","status":"published","href":"../robot-types/","summary":"관절을 잇는 구조가 손끝의 자세를 정하고, 그 자세가 실험실에서 로봇의 쓰임을 정한다","summary_en":"How the joints are joined sets the hand's posture, and the posture sets what a robot does in the lab"},{"id":"hydraulic-pneumatic-microinjector","title":"마이크로인젝터","title_en":"Microinjectors","domain":"rob","status":"published","href":"../hydraulic-pneumatic-microinjector/","summary":"공기로 미는 공압식은 압력을, 기름으로 미는 유압식은 부피를 정한다","summary_en":"A pneumatic injector pushes with air and sets the pressure; a hydraulic one pushes with oil and sets the volume"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 64 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (준비 중)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "준비 중";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "지금 이 글";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
