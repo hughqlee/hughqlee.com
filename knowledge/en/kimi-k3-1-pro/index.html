@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kimi K3.1 Pro: Same Base Model, So What Raised Its AA Index to 55? | Hugh Q Lee</title>
+    <meta name="description" content="Kimi K3.1 Pro has the same base model as K3, yet its AA index rose from 44 to 55. About half of the 11 points came from a single terminal-task test, and about 40% from office-work agent tests. See which tests lifted the index past 50, how post-training (reinforcement learning) changes the model, and why it lifts the tests of finishing jobs so much.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="Kimi K3.1 Pro, Kimi K3, Moonshot AI, AA index, Artificial Analysis Intelligence Index, Terminal-Bench 4.0, GDPval-AA, post-training, reinforcement learning, RL, AI agents, Chinese AI model, open weights, LLM benchmark">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/en/kimi-k3-1-pro/">
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/kimi-k3-1-pro/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/kimi-k3-1-pro/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/kimi-k3-1-pro/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ko_KR">
+    <meta property="og:title" content="Kimi K3.1 Pro: Same Base Model, So What Raised Its AA Index to 55?">
+    <meta property="og:description" content="Kimi K3.1 Pro has the same base model as K3, yet its AA index rose from 44 to 55. About half of the 11 points came from a single terminal-task test, and about 40% from office-work agent tests. See which tests lifted the index past 50, how post-training (reinforcement learning) changes the model, and why it lifts the tests of finishing jobs so much.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/en/kimi-k3-1-pro/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/en/kimi-k3-1-pro/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Two bars of the AA index stacked by test: K3 at 43.6 and K3.1 Pro at 55.0, on either side of the line at 50">
+    <meta property="article:published_time" content="2026-10-27">
+    <meta property="article:modified_time" content="2026-10-27">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Kimi K3.1 Pro: Same Base Model, So What Raised Its AA Index to 55?">
+    <meta name="twitter:description" content="Kimi K3.1 Pro has the same base model as K3, yet its AA index rose from 44 to 55. About half of the 11 points came from a single terminal-task test, and about 40% from office-work agent tests. See which tests lifted the index past 50, how post-training (reinforcement learning) changes the model, and why it lifts the tests of finishing jobs so much.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/en/kimi-k3-1-pro/og.png">
+    <meta name="twitter:image:alt" content="Two bars of the AA index stacked by test: K3 at 43.6 and K3.1 Pro at 55.0, on either side of the line at 50">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/en/kimi-k3-1-pro/#article",
+          "headline": "Kimi K3.1 Pro: same base model, so what raised its AA index to 55?",
+          "alternativeHeadline": "Kimi K3.1 Pro: same base model, so what raised its AA index to 55?",
+          "description": "Kimi K3.1 Pro has the same base model as K3, yet its AA index rose from 44 to 55. About half of the 11 points came from a single terminal-task test, and about 40% from office-work agent tests. See which tests lifted the index past 50, how post-training (reinforcement learning) changes the model, and why it lifts the tests of finishing jobs so much.",
+          "abstract": "Not the base model but post-training. Moonshot gave K3’s base model far more reinforcement learning (RL). That training centres on “how to use tools and see a job through to the end.” And the AA index puts half of its weight on exactly such tests.",
+          "inLanguage": "en",
+          "datePublished": "2026-10-27",
+          "dateModified": "2026-10-27",
+          "url": "https://hughqlee.com/knowledge/en/kimi-k3-1-pro/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/en/kimi-k3-1-pro/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/en/kimi-k3-1-pro/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/en/#collection"
+          },
+          "isAccessibleForFree": true,
+          "about": [
+            {
+              "@type": "SoftwareApplication",
+              "name": "Kimi K3.1 Pro",
+              "applicationCategory": "Large language model",
+              "creator": {
+                "@type": "Organization",
+                "name": "Moonshot AI"
+              }
+            },
+            {
+              "@type": "Thing",
+              "name": "Artificial Analysis Intelligence Index"
+            }
+          ],
+          "citation": [
+            {
+              "@type": "CreativeWork",
+              "name": "Moonshot AI, Kimi K3.1 Pro (blog, 2026-10-23)",
+              "url": "https://www.kimi.com/blog/kimi-k3-1-pro"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Kimi K3: Open Frontier Intelligence (Moonshot AI, arXiv 2607.24653, 2026)",
+              "url": "https://arxiv.org/abs/2607.24653"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Kimi K2.5: Visual Agentic Intelligence (Moonshot AI, arXiv 2602.02276, 2026)",
+              "url": "https://arxiv.org/abs/2602.02276"
+            },
+            {
+              "@type": "ScholarlyArticle",
+              "name": "Ronald J. Williams, Simple statistical gradient-following algorithms for connectionist reinforcement learning (Machine Learning 8, 1992)",
+              "url": "https://doi.org/10.1007/BF00992696"
+            },
+            {
+              "@type": "WebPage",
+              "name": "Artificial Analysis, Intelligence Benchmarking Methodology (Intelligence Index v4.3.2)",
+              "url": "https://artificialanalysis.ai/methodology/intelligence-benchmarking"
+            },
+            {
+              "@type": "WebPage",
+              "name": "Artificial Analysis, Kimi K3 vs Kimi K3.1 Pro",
+              "url": "https://artificialanalysis.ai/models/comparisons/kimi-k3-vs-kimi-k3-1-pro"
+            },
+            {
+              "@type": "Article",
+              "name": "Artificial Analysis, Announcing the Artificial Analysis Intelligence Index v4.3 (2026-09-07)",
+              "url": "https://artificialanalysis.ai/articles/artificial-analysis-intelligence-index-v4-3"
+            },
+            {
+              "@type": "WebPage",
+              "name": "Artificial Analysis, Terminal-Bench 4.0",
+              "url": "https://artificialanalysis.ai/evaluations/terminalbench-4-0"
+            },
+            {
+              "@type": "WebPage",
+              "name": "Artificial Analysis, Coding Agent Index: Claude Code vs Kimi Code CLI",
+              "url": "https://artificialanalysis.ai/agents/coding-agents/comparisons/claude-code-vs-kimi-code-cli"
+            }
+          ],
+          "translationOfWork": {
+            "@id": "https://hughqlee.com/knowledge/kimi-k3-1-pro/#article"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/en/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/en/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Kimi K3.1 Pro: same base model, so what raised its AA index to 55?",
+              "item": "https://hughqlee.com/knowledge/en/kimi-k3-1-pro/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/en/kimi-k3-1-pro/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is Kimi K3.1 Pro?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A language model released by China’s Moonshot AI on 2026-10-23. It is Kimi K3, released in July (an MoE that uses only 104B of its 2.8T parameters per token, with a 1M-token context), given far more post-training. Moonshot says it will publish the weights by November 4 (Moonshot K3.1 Pro blog)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What does the Artificial Analysis Intelligence Index (AA index) measure?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "It is the weighted average of ten tests that the evaluation company Artificial Analysis runs on each model itself. The current version (v4.3.2) weights agents 30%, coding 20%, general 30% and scientific reasoning 20%, and private tests carry 45% of the weight (AA methodology)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is Kimi K3.1 Pro’s AA index score?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "55, fourth when the variants of each model count as one (2026-10-26). Ahead of it are Claude Opus 5.5 (58), Claude Sonnet 5.5 (56) and Muse Wonder Full (56). K3 (max) scored 44."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Where did K3.1 Pro gain over K3?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "About half of the 11 points (+5.4) came from Terminal-Bench 4.0 (13% → 67%), and about 40% (+4.6) from four office-work agent tests. Knowledge and scientific reasoning together rose by just over 1.7 points (this page’s computation from AA’s test scores)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is Terminal-Bench 4.0?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A test of 66 tasks that each finish a real job in a terminal. They span software, machine learning, science, operations, security, hardware and media, and a task counts only if all its tests pass. AA runs it in the mini-swe-agent harness and averages three runs per task."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Which Chinese AI models score above 50 on the AA index?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "On AA’s leaderboard of 2026-10-26 (v4.3.2), only Kimi K3.1 Pro (55). The next models from Chinese companies are MiMo-V2.6-Pro (46) and Qwen3.8 Max, DeepSeek V4.1 Flash and GLM-5.3 (45). The scoring differs from version to version, so scores can be compared only within one version."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does Kimi K3.1 Pro have a different architecture from K3?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Moonshot mentions no architectural change. It says only that it is “a post-trained version of K3, with substantially larger post-training compute.” Once the weights are published, by November 4, the configuration file will show it."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How does post-training (reinforcement learning) change the model?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "As in pre-training, it measures a loss and changes the weights by backpropagation, but it uses a score instead of a right answer. Among answers the model wrote itself, those scoring above the average for the same problem are made more likely and those below less likely (the policy gradient). K3 took this method over from K2.5 (Kimi K3 technical report §4.1.2)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can Kimi K3.1 Pro’s scores be trusted as they are?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The AA index is measured by AA, not by the model company. The private agent tests, whose questions nobody can see (AA-Briefcase, AutomationBench-AA), also rose a lot. Moonshot’s own scores use a different harness and settings, so they differ slightly from AA’s (Terminal-Bench 4.0: Moonshot 65.7%, AA 67%)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --danger: #ff8c8c;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            --wide: 980px;
+            /* 지수의 네 영역: 01 표의 막대와 그림 4의 칩이 쓴다 */
+            --kp-agents: #69d2ff;
+            --kp-agents-soft: rgba(105, 210, 255, 0.14);
+            --kp-coding: #9ce37d;
+            --kp-coding-soft: rgba(156, 227, 125, 0.14);
+            --kp-general: #f0c674;
+            --kp-general-soft: rgba(240, 198, 116, 0.14);
+            --kp-science: #f49ac8;
+            --kp-science-soft: rgba(244, 154, 200, 0.14);
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --danger: #b42323;
+            --kp-agents: #0969a8;
+            --kp-agents-soft: rgba(9, 105, 168, 0.10);
+            --kp-coding: #25723f;
+            --kp-coding-soft: rgba(37, 114, 63, 0.10);
+            --kp-general: #966a10;
+            --kp-general-soft: rgba(150, 106, 16, 0.10);
+            --kp-science: #be185d;
+            --kp-science-soft: rgba(190, 24, 93, 0.10);
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+        .wide { width: min(var(--wide), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle, .btn {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-family: var(--mono);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover, .btn:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 8px; }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0 0 20px; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        .step { padding: 40px 0 8px; border-top: 1px solid var(--line); margin-top: 28px; }
+        .step-no { margin: 0 0 6px; color: var(--accent); font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; }
+        h2 { margin: 0 0 14px; font-size: clamp(22px, 4vw, 30px); line-height: 1.35; letter-spacing: -0.01em; }
+        h3 { margin: 28px 0 8px; font-size: 18px; line-height: 1.45; }
+        .source { margin-top: 12px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            margin: 24px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+        .toc a { display: block; height: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); text-decoration: none; font-size: 15px; line-height: 1.5; }
+        .toc a:hover { border-color: var(--line-strong); }
+        .toc span { display: block; color: var(--accent); font-family: var(--mono); font-size: 12px; }
+        .toc-nav { padding-top: 4px; }
+
+        /* 네 영역의 색: 01 표의 막대, 그림 4의 칩 */
+        .a-agents { --area: var(--kp-agents); --area-soft: var(--kp-agents-soft); }
+        .a-coding { --area: var(--kp-coding); --area-soft: var(--kp-coding-soft); }
+        .a-general { --area: var(--kp-general); --area-soft: var(--kp-general-soft); }
+        .a-science { --area: var(--kp-science); --area-soft: var(--kp-science-soft); }
+        .kp-small { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+        .mean { text-decoration: overline; }
+
+        .table-wrap { overflow-x: auto; margin: 14px 0 0; }
+        table.kp-table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.5; }
+        table.kp-table th, table.kp-table td { padding: 6px 6px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+        table.kp-table thead th { color: var(--muted); font-weight: 600; }
+        table.kp-table tbody th { font-weight: 600; }
+        table.kp-table tr.area th { padding-top: 12px; color: var(--muted); font-family: var(--mono); font-size: 13px; }
+        table.kp-table td.num { font-family: var(--mono); font-size: 14px; white-space: nowrap; }
+
+        .note {
+            margin: 14px 0 0;
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+
+        /* 확인됨 · 가설 · 모름 표시: <span class="tag known">확인됨</span> */
+        .tag {
+            display: inline-block;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.known { color: var(--accent-green); }
+        .tag.guess { color: var(--accent-warn); }
+        .tag.unknown { color: var(--muted); }
+        .limits { margin: 0; padding: 0; list-style: none; }
+        .limits li { margin: 10px 0; }
+        .limits .tag { margin-right: 8px; }
+
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        .steps { margin: 0; padding-left: 1.4em; }
+        .steps li { margin: 8px 0; }
+        .steps li::marker { color: var(--accent); font-family: var(--mono); }
+
+        /* 01 Performance: 표 안의 기여 막대 */
+        .priv { margin-left: 6px; padding: 1px 5px; border: 1px solid var(--line-strong); border-radius: 4px; color: var(--muted); font-family: var(--mono); font-size: 11px; font-weight: 400; white-space: nowrap; }
+        td.contrib { min-width: 4.6em; font-family: var(--mono); font-size: 14px; white-space: nowrap; }
+        .cbar { display: block; height: 6px; margin-top: 3px; border-radius: 3px; background: var(--area); }
+        .cbar.neg { background: var(--danger); }
+        table.kp-gains .what { display: block; margin-top: 2px; color: var(--muted); font-size: 13px; font-weight: 400; }
+
+        /* 02 Training: 그림 */
+        .kp-fig { margin: 18px 0 8px; }
+        .kp-fig figcaption { margin-top: 8px; color: var(--muted); font-size: 14px; }
+        .pipe { display: grid; gap: 12px; padding: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .pipe-name { margin: 0 0 4px; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+        .pipe-row { display: flex; align-items: stretch; gap: 6px; }
+        .pbox { flex: 1 1 0; min-width: 0; padding: 8px 10px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--panel-soft); line-height: 1.45; }
+        .pbox b { display: block; font-size: 14px; }
+        .pbox span { display: block; color: var(--muted); font-size: 12.5px; }
+        .pbox.body { border-color: var(--accent); background: var(--accent-soft); }
+        .pbox.big { flex: 3 1 0; border-style: dashed; }
+        .pbox.out { flex: 0 0 auto; border-color: var(--text); }
+        .parr { align-self: center; flex: none; color: var(--muted); font-family: var(--mono); }
+        .pbox .dots9 { display: grid; grid-template-columns: repeat(3, 8px); gap: 3px; margin-top: 6px; }
+        .dots9 i { display: block; width: 8px; height: 8px; border-radius: 2px; background: var(--kp-coding); }
+        svg.loop { display: block; width: 100%; max-width: 440px; height: auto; margin: 0 auto; }
+        .loop rect { fill: var(--panel-soft); stroke: var(--line-strong); stroke-width: 1.2; }
+        .loop .t1 { fill: var(--text); font-family: var(--sans); font-size: 14px; font-weight: 700; }
+        .loop .t2 { fill: var(--muted); font-family: var(--sans); font-size: 12px; }
+        .loop .arc { fill: none; stroke: var(--accent); stroke-width: 2; }
+        .loop .head { fill: var(--accent); }
+        .loop .mid { fill: var(--muted); font-family: var(--sans); font-size: 12.5px; }
+        .loop .rew { fill: var(--accent); font-family: var(--sans); font-size: 12px; font-weight: 700; }
+        dl.loop-steps { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 14px; margin: 14px 0 0; }
+        dl.loop-steps dt { color: var(--accent); font-weight: 700; white-space: nowrap; }
+        dl.loop-steps dd { margin: 0; }
+        .climb { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 14px; list-style: none; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .climb li { display: grid; justify-items: center; gap: 4px; }
+        .climb-track { display: flex; align-items: flex-end; width: 100%; max-width: 44px; height: 96px; border-radius: 4px; background: var(--panel-soft); box-shadow: inset 0 0 0 1px var(--line); overflow: hidden; }
+        .climb-bar { display: block; width: 100%; background: var(--accent); }
+        .climb-v { font-family: var(--mono); font-size: 13px; }
+        .climb-k { color: var(--muted); font-size: 12px; }
+        .maps { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+        .map { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.4fr); gap: 6px 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .map-from { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.5; }
+        .map-arrow { color: var(--muted); font-family: var(--mono); }
+        .map-to { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
+        .chip { display: inline-block; padding: 2px 8px; border: 1px solid var(--area); border-radius: 999px; background: var(--area-soft); font-family: var(--mono); font-size: 12.5px; line-height: 1.6; }
+        .map.none { border-style: dashed; }
+        .map.none .map-from { color: var(--muted); }
+        .map.none .chip { border-color: var(--line-strong); background: transparent; color: var(--muted); }
+
+
+        @media (max-width: 600px) {
+            .pipe-row { flex-direction: column; }
+            .parr { transform: rotate(90deg); }
+            .pbox.out, .pbox.big { flex: 1 1 auto; }
+            .map { grid-template-columns: 1fr; }
+            .map-arrow { display: none; }
+        }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        footer {
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (max-width: 520px) {
+            table.kp-table { font-size: 13px; }
+            table.kp-table th, table.kp-table td { padding: 5px 3px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/en/">hughqlee.com</a> / <a href="/knowledge/en/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/kimi-k3-1-pro/" hreflang="ko" lang="ko">한국어</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="wrap hero" aria-labelledby="page-title">
+            <nav class="kmap" aria-label="Knowledge map" data-current="kimi-k3-1-pro">
+                <p class="kmap-head"><span class="kmap-label">KNOWLEDGE MAP</span><span class="kmap-path">Machine learning › Language models</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">The first page in this field. Nothing to read before or after it yet.</p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE · LANGUAGE MODELS</p>
+            <h1 id="page-title">Kimi K3.1 Pro: same base model, so what raised its AA index to 55?</h1>
+            <p class="answer">Not the base model but post-training. Moonshot gave K3’s base model far more reinforcement learning (RL). That training centres on “how to use tools and see a job through to the end.” And the AA index puts half of its weight on exactly such tests.</p>
+        </section>
+
+        <section id="intro" class="wrap step" aria-labelledby="intro-title">
+            <p class="step-no">Introduction</p>
+            <h2 id="intro-title">The first Chinese model above 50</h2>
+            <p>The AA index (Artificial Analysis Intelligence Index) is the weighted average of ten tests that the evaluation company Artificial Analysis (AA) runs itself, on many AI models under the same conditions. In the current version (v4.3.2), the only Chinese model above 50 is Moonshot AI’s Kimi K3.1 Pro (55).</p>
+            <div class="table-wrap">
+                <table class="kp-table">
+                    <thead>
+                        <tr><th scope="col">Leaderboard row</th><th scope="col">Model</th><th scope="col">AA index</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="num">1</td><td>Claude Opus 5.5 (max)</td><td class="num">58</td></tr>
+                        <tr><td class="num">2</td><td>Claude Sonnet 5.5 (max)</td><td class="num">56</td></tr>
+                        <tr><td class="num">3</td><td>Claude Opus 5.5 (xhigh)</td><td class="num">56</td></tr>
+                        <tr><td class="num">4</td><td>Muse Wonder Full (max)</td><td class="num">56</td></tr>
+                        <tr><th scope="row" class="num">5</th><th scope="row">Kimi K3.1 Pro</th><th scope="row" class="num">55</th></tr>
+                        <tr><td class="num">…</td><td>MiMo-V2.6-Pro (next Chinese model)</td><td class="num">46</td></tr>
+                        <tr><td class="num">…</td><td>Kimi K3 (max)</td><td class="num">44</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>The leaderboard counts the same model separately for each reasoning effort (how long it is allowed to think). Counting such variants as one, K3.1 Pro is fourth. The next models from Chinese companies are MiMo-V2.6-Pro (Xiaomi) at 46, and Qwen3.8 Max (Alibaba), DeepSeek V4.1 Flash and GLM-5.3 at 45. K3.1 Pro has the same base model (the model built by pre-training) as K3 (44), released in July.</p>
+            <h3>50 is a moving line</h3>
+            <p>With v4.3 on 2026-09-07, AA changed its tests. It moved Terminal-Bench from 2.1 to the harder 4.0, replaced τ³-Banking with the business-automation test AutomationBench-AA, and raised the weight of private tests, whose questions are not published, from 40% to 45%. The reason: “to prevent gaming and reduce saturation.” Saturation is when almost every model gets nearly full marks, so a test no longer tells models apart.</p>
+            <p>As the tests got harder, the same models scored lower. Claude Fable 5 scored 62.1 on v4.1.1 and 49.70 on v4.3. When the version changes, the scoring changes, so scores can be compared only within one version. So “passed 50” is a statement about the current version (v4.3.2), and what means something is the comparison within it. In the current version, 55 is 3 points below the top (58) and 9 points above the next Chinese model (46).</p>
+            <p class="source">Sources: ranking: AA leaderboard (v4.3.2, read 2026-10-26) · base model: Moonshot K3.1 Pro blog (2026-10-23) · the test changes: AA Intelligence Index v4.3 announcement · Fable 5’s scores: wojciech.io’s v4.3 explainer</p>
+        </section>
+
+        <nav class="wrap toc-nav" aria-label="In detail">
+            <ol class="toc">
+                <li><a href="#gains"><span>01 Performance</span>Which tests rose</a></li>
+                <li><a href="#training"><span>02 Training</span>Same base model, much more post-training</a></li>
+                <li><a href="#rl-loop"><span>02 Training</span>One turn of reinforcement learning</a></li>
+                <li><a href="#rl-update"><span>02 Training</span>The update is loss and backpropagation, too</a></li>
+                <li><a href="#long-tasks"><span>02 Training</span>In a long job, small mistakes add up</a></li>
+            </ol>
+        </nav>
+
+        <section id="gains" class="wrap step" aria-labelledby="gains-title">
+            <p class="step-no">01 Performance</p>
+            <h2 id="gains-title">Which tests rose</h2>
+            <p>The AA index is the weighted average of ten tests. An agent test makes an AI use tools (the command line, a browser, apps) to finish a job over many steps. Agents (30%) and coding (20%) together make half of the index tests of “using tools to get a job done.” About half of the 11 points gained (+5.4) came from the single test Terminal-Bench 4.0, and about 40% (+4.6) from four office-work agent tests.</p>
+            <div class="table-wrap">
+                <table class="kp-table kp-gains">
+                    <thead>
+                        <tr><th scope="col">Test</th><th scope="col">K3 → K3.1 Pro</th><th scope="col">Index points</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="area"><th colspan="3" scope="rowgroup">Agents 30%</th></tr>
+                        <tr class="a-agents"><th scope="row">AA-Briefcase 15%<span class="priv">private</span><span class="what">Real knowledge-work tasks</span></th><td class="num">Elo 1499 → 1678</td><td class="contrib">+1.34<span class="cbar" style="width: 24.9%"></span></td></tr>
+                        <tr class="a-agents"><th scope="row">GDPval-AA 10%<span class="what">Real work products across occupations</span></th><td class="num">Elo 1534 → 1846</td><td class="contrib">+1.56<span class="cbar" style="width: 28.9%"></span></td></tr>
+                        <tr class="a-agents"><th scope="row">AutomationBench-AA 5%<span class="priv">private</span><span class="what">Business workflow automation</span></th><td class="num">58% → 73%</td><td class="contrib">+0.75<span class="cbar" style="width: 13.9%"></span></td></tr>
+                        <tr class="area"><th colspan="3" scope="rowgroup">Coding 20%</th></tr>
+                        <tr class="a-coding"><th scope="row">Terminal-Bench 4.0 10%<span class="what">Finishing jobs in a terminal</span></th><td class="num">13% → 67%</td><td class="contrib">+5.40<span class="cbar" style="width: 100%"></span></td></tr>
+                        <tr class="a-coding"><th scope="row">SciCode 10%<span class="what">Scientific computing code</span></th><td class="num">59% → 61%</td><td class="contrib">+0.20<span class="cbar" style="width: 3.7%"></span></td></tr>
+                        <tr class="area"><th colspan="3" scope="rowgroup">General 30%</th></tr>
+                        <tr class="a-general"><th scope="row">AA-Omniscience 15%<span class="priv">private</span><span class="what">Knowledge accuracy and not making things up</span></th><td class="num">Accuracy 48% → 51%<br>Hallucination rate 53% → 44%</td><td class="contrib">+0.75<span class="cbar" style="width: 13.9%"></span></td></tr>
+                        <tr class="a-general"><th scope="row">GDP.pdf 10%<span class="what">Reasoning over long professional documents</span></th><td class="num">22% → 31%</td><td class="contrib">+0.90<span class="cbar" style="width: 16.7%"></span></td></tr>
+                        <tr class="a-general"><th scope="row">AA-LCR 5%<span class="what">Long-context reasoning</span></th><td class="num">89% → 86%</td><td class="contrib">−0.15<span class="cbar neg" style="width: 2.8%"></span></td></tr>
+                        <tr class="area"><th colspan="3" scope="rowgroup">Scientific reasoning 20%</th></tr>
+                        <tr class="a-science"><th scope="row">Humanity's Last Exam 10%<span class="what">Very hard expert-knowledge questions</span></th><td class="num">47% → 52%</td><td class="contrib">+0.50<span class="cbar" style="width: 9.3%"></span></td></tr>
+                        <tr class="a-science"><th scope="row">CritPt 10%<span class="priv">private</span><span class="what">Research-level physics problems</span></th><td class="num">23% → 25%</td><td class="contrib">+0.20<span class="cbar" style="width: 3.7%"></span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="kp-small">Index points are weight × the change in score. Elo is a score from pitting two models’ work against each other, turned into 0–1 by (Elo − 500) ÷ 2000. AA-Omniscience’s non-hallucination is 1 − the hallucination rate (how often the model made up an answer when it did not know). The index was recomputed from the weights and test scores AA publishes and matches AA’s values within rounding. AA shows the index as a whole number; this page gives one decimal to tell 49.6 from 50.</p>
+            <p>The test that lifted the index most is Terminal-Bench 4.0: 66 tasks that each finish a real job in a terminal (a window where you give commands in text), and a task counts only if all its tests pass. K3 scores 13% and K3.1 Pro 67%, the top score on AA’s page for the test. Run in its own harness (the frame a model works in; here Kimi Code CLI), K3 still scored 21%, and on the older version (v2) it scored 84%, so it fell sharply on the harder 4.0 tasks. Why it fell so far is unknown. <span class="tag unknown">Unknown</span></p>
+            <h3>What it takes to pass 50</h3>
+            <p>Start from K3’s scores and swap the tests one by one for K3.1 Pro’s, and you can see what lifted the index past 50.</p>
+            <div class="table-wrap">
+                <table class="kp-table" id="cross">
+                    <thead>
+                        <tr><th scope="col">Tests swapped to K3.1 Pro’s scores</th><th scope="col">AA index</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">None (all K3)</th><td class="num">43.6</td></tr>
+                        <tr><th scope="row">Terminal-Bench 4.0 alone</th><td class="num">49.0</td></tr>
+                        <tr><th scope="row">The nine other than Terminal-Bench 4.0</th><td class="num">49.6</td></tr>
+                        <tr><th scope="row">Terminal-Bench 4.0 + AA-Briefcase</th><td class="num">50.3</td></tr>
+                        <tr><th scope="row">Terminal-Bench 4.0 + GDPval-AA</th><td class="num">50.5</td></tr>
+                        <tr><th scope="row">All (K3.1 Pro)</th><td class="num">55.0</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>The terminal test alone adds about half, yet still leaves the index 1.0 point short of 50, and without it, swapping all nine others stops at 49.6. Only the terminal test plus one big office-work test (AA-Briefcase or GDPval-AA) passes 50. The knowledge and science tests barely move the index (HLE +0.5, CritPt +0.2, SciCode +0.2). So 55 came not from a base model that knows more but from training to finish jobs.</p>
+            <p>“Private” in the table marks a test whose questions are not published. A model can be practised in advance on questions like those of a public test. In the current version, private tests carry 45% of the weight, and 3 of the 11 points gained came from private tests.</p>
+            <p class="source">Sources: weights, public or private, and the Elo mapping: AA methodology v4.3.2 · scores: AA comparison page, K3 vs K3.1 Pro (read 2026-10-26) · Omniscience accuracy and hallucination rate: AA’s values as reported by VentureBeat · Terminal-Bench 4.0: AA’s page for the test · K3’s 21%: AA coding agent comparison (Coding Agent Index v2.0) · the 84% on v2: AA’s post on X (seen only in a search summary) · index points and the swapped indexes: this page’s computation</p>
+        </section>
+
+        <section id="training" class="wrap step" aria-labelledby="training-title">
+            <p class="step-no">02 Training</p>
+            <h2 id="training-title">Same base model, much more post-training</h2>
+            <p>A language model is a mass of numbers called weights. Training means changing those numbers little by little, and it happens in two stages. Pre-training has the model read an enormous amount of text and predict the next word. There the model gains knowledge and learns to write. This page calls the result the base model. Post-training teaches that base model how to work.</p>
+            <p>Moonshot says “K3.1 Pro is a post-trained version of K3, with substantially larger post-training compute.” Its size is the same as K3’s too: about 2.8 trillion weights, of which only about 104 billion are picked for each piece of a word (token) it writes.</p>
+            <figure class="kp-fig" aria-labelledby="fig-pipe-cap">
+                <div class="pipe">
+                    <div>
+                        <p class="pipe-name">The same base model</p>
+                        <div class="pipe-row">
+                            <div class="pbox"><b>Pre-training</b><span>Read text, predict the next word</span></div>
+                            <span class="parr" aria-hidden="true">→</span>
+                            <div class="pbox body"><b>Base model</b><span>About 2.8 trillion weights</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="pipe-name">K3’s post-training</p>
+                        <div class="pipe-row">
+                            <div class="pbox"><b>Copy good examples</b><span>SFT</span></div>
+                            <span class="parr" aria-hidden="true">→</span>
+                            <div class="pbox"><b>9 RL experts</b><span>3 domains × 3 thinking lengths</span><span class="dots9" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+                            <span class="parr" aria-hidden="true">→</span>
+                            <div class="pbox"><b>Merge into one</b><span>MOPD</span></div>
+                            <span class="parr" aria-hidden="true">→</span>
+                            <div class="pbox out"><b>K3</b><span>AA index 44</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="pipe-name">K3.1 Pro’s post-training</p>
+                        <div class="pipe-row">
+                            <div class="pbox big"><b>Much larger post-training</b><span>Joint reinforcement learning across hundreds of domains</span></div>
+                            <span class="parr" aria-hidden="true">→</span>
+                            <div class="pbox out"><b>K3.1 Pro</b><span>AA index 55</span></div>
+                        </div>
+                    </div>
+                </div>
+                <figcaption id="fig-pipe-cap">Figure 1. The base model is the same; post-training differs. How many stages K3.1 Pro’s post-training has, and how much compute it used, are not published.</figcaption>
+            </figure>
+            <h3>K3’s post-training: copy examples, nine experts, merge into one</h3>
+            <ol class="steps">
+                <li><b>Copy good examples (SFT)</b>: the model is shown records of work done well and learns to write the same way. The records were made by earlier Kimi models, checked several times and reviewed by people.</li>
+                <li><b>9 RL experts</b>: the model learns by trying things and getting scores (see “One turn of reinforcement learning” below). For each of three domains (general tasks, general agents, coding agents), experts that think briefly, long or longest (low, high, max) are grown separately. Thinking length is taught with scores too: each problem gets a suitable length, and thinking past a multiple of it earns a penalty (−1 point). A generous multiple gives max; smaller ones give high and low.</li>
+                <li><b>Merge into one (MOPD)</b>: the student model writes an answer itself, and word by word it is pulled toward what the expert for that domain and thinking length would pick. That is how nine experts become one model.</li>
+            </ol>
+            <h3 id="rl-loop">One turn of reinforcement learning</h3>
+            <p>Reinforcement learning does not hand the model the right answer. It lets the model try things itself and gives the result a score (reward) to learn from. For an agent, it goes round like this.</p>
+            <figure class="kp-fig" aria-labelledby="fig-loop-cap">
+                <svg class="loop" viewBox="0 0 360 290" role="img" aria-labelledby="fig-loop-cap">
+                    <defs><marker id="kp-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="head" d="M0,0 L10,5 L0,10 z"></path></marker></defs>
+                    <path class="arc" d="M248,33 C285,33 296,70 296,114" marker-end="url(#kp-head)"></path>
+                    <path class="arc" d="M296,176 C296,220 285,257 252,257" marker-end="url(#kp-head)"></path>
+                    <path class="arc" d="M112,257 C75,257 64,220 64,176" marker-end="url(#kp-head)"></path>
+                    <path class="arc" d="M64,114 C64,70 75,33 108,33" marker-end="url(#kp-head)"></path>
+                    <rect x="112" y="8" width="136" height="50" rx="10"></rect>
+                    <text class="t1" x="180" y="29" text-anchor="middle">① Task</text>
+                    <text class="t2" x="180" y="47" text-anchor="middle">A job with tests</text>
+                    <rect x="236" y="120" width="120" height="50" rx="10"></rect>
+                    <text class="t1" x="296" y="141" text-anchor="middle">② Try</text>
+                    <text class="t2" x="296" y="159" text-anchor="middle">In a sandbox</text>
+                    <rect x="112" y="232" width="136" height="50" rx="10"></rect>
+                    <text class="t1" x="180" y="253" text-anchor="middle">③ Check</text>
+                    <text class="t2" x="180" y="271" text-anchor="middle">Inspect the end state</text>
+                    <rect x="4" y="120" width="120" height="50" rx="10"></rect>
+                    <text class="t1" x="64" y="141" text-anchor="middle">④ Update</text>
+                    <text class="t2" x="64" y="159" text-anchor="middle">Toward high scores</text>
+                    <text class="rew" x="96" y="214">score</text>
+                    <text class="mid" x="180" y="150" text-anchor="middle">over and over</text>
+                </svg>
+                <figcaption id="fig-loop-cap">Figure 2. One turn of agent reinforcement learning: take a task, try it in a sandbox, let a checking program score the end state, and update the model with that score.</figcaption>
+            </figure>
+            <dl class="loop-steps">
+                <dt>① Task</dt><dd>Programming tasks with tests; assistant work spanning days in mock email, messaging and document apps (up to thousands of tool uses in one go); web development; GPU programming; investment-banking, data-analysis and legal work (tens to hundreds of steps).</dd>
+                <dt>② Try</dt><dd>Inside a sandbox (a virtual computer set apart for experiments) the model runs commands and edits files over many steps. Training and evaluating K3 created 51,219,741 sandboxes. The frame the model works in (the harness) varies too, with Kimi Code, Claude Code, Codex and others set up for different task groups, so the model does not get used to just one tool.</dd>
+                <dt>③ Check</dt><dd>When the model says “done,” nobody takes its word for it. A checking program (a verifier) looks at the state after the job and scores it. The scoring checks are kept hidden and submissions are limited, to stop tricks that only pass the checks. For work with no right answer, such as writing, another AI grader writes a rubric and compares two answers.</dd>
+                <dt>④ Update</dt><dd>The model is updated to make high-scoring attempts more likely and low-scoring ones less likely. This goes round over and over.</dd>
+            </dl>
+            <h3 id="rl-update">The update is loss and backpropagation, too</h3>
+            <p>How does ④ Update work? Exactly as in pre-training. Two words are all you need.</p>
+            <dl class="loop-steps">
+                <dt>Loss</dt><dd>A number for how wrong the current answer is. Smaller is better.</dd>
+                <dt>Backpropagation</dt><dd>A way to work out, tracing back from the answer, which way and how much to change each weight to make the loss smaller.</dd>
+            </dl>
+            <p>Measure the loss, find the direction to change by backpropagation, and move the weights a little that way. Pre-training and post-training follow the same order. What differs from stage to stage is what the loss is measured against.</p>
+            <div class="table-wrap">
+                <table class="kp-table" id="pg-losses">
+                    <thead>
+                        <tr><th scope="col">Stage</th><th scope="col">Measured against</th><th scope="col">How it changes the model</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">Pre-training</th><td>The next word that actually came in the text</td><td>Raises the chance of predicting that word</td></tr>
+                        <tr><th scope="row">Copy good examples</th><td>Examples of good answers</td><td>Raises the chance of writing the example’s words</td></tr>
+                        <tr><th scope="row">Reinforcement learning</th><td>The score of its own answer (there is no right answer)</td><td>Makes answers that score above average more likely, and those below less likely</td></tr>
+                        <tr><th scope="row">Merge into one</th><td>The words the expert model would pick</td><td>Moves each word toward the expert’s choice</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Only reinforcement learning is different. There is no right answer, only a score, and the score is a number set by a checking program, so backpropagation cannot trace back to it. So the model’s own answer is treated as if it were the right one to measure the loss, and the model is changed toward writing that answer more if its score beat the average for the same problem, and less if it fell short.</p>
+            <p class="kp-small">As formulas, the loss of pre-training and of copying examples is −log p(the right word), and the loss of reinforcement learning is −(r − <span class="mean">r</span>) × log p(the word it wrote). p is the chance the model writes that word, r is the score, and <span class="mean">r</span> is the average score of the answers to the same problem. Changing the model by this loss moves it, on average, toward higher scores (the policy gradient). K3 uses K2.5’s formula, which adds guards against changing too much at once, and when merging into one it uses log p<sub>expert</sub> − log p<sub>student</sub> as the score for each word.</p>
+            <p>Take one critical step. A model that has almost finished a job has two paths. Path a is “run the tests and fix”: choose it and the task succeeds 80% of the time. Path b is “say it’s done right away”: 20%. At first the model chooses a only three times in ten. The numbers are assumptions made for the explanation.</p>
+            <p>Of four tries, two succeed, so the average is half a success. A try that succeeded did better than average, so its path is made more likely; a try that failed did worse, so its path is made less likely.</p>
+            <div class="table-wrap">
+                <table class="kp-table" id="pg-tries">
+                    <thead>
+                        <tr><th scope="col">Try</th><th scope="col">Path</th><th scope="col">Result</th><th scope="col">So</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">1</th><td>a test and fix</td><td>Success</td><td>a more likely</td></tr>
+                        <tr><th scope="row">2</th><td>b finish at once</td><td>Failure</td><td>b less likely</td></tr>
+                        <tr><th scope="row">3</th><td>b finish at once</td><td>Success (luck)</td><td>b more likely</td></tr>
+                        <tr><th scope="row">4</th><td>b finish at once</td><td>Failure</td><td>b less likely</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>A lucky b like the third try pushes toward b. Still, the four together push toward a, because with only two paths, making b less likely is the same as making a more likely.</p>
+            <p class="kp-small">Worked out, the four tries push toward choosing a by +0.35, +0.15, −0.15, +0.15, which add up to +0.5. Each push is (score − average score) times how much the log probability of the chosen path moves toward a (1 − 0.3 = 0.7 if a was chosen, −0.3 if b was).</p>
+            <figure class="kp-fig" aria-labelledby="fig-climb-cap">
+                <ol class="climb">
+                    <li><span class="climb-v">30%</span><span class="climb-track"><span class="climb-bar" style="height: 30%"></span></span><span class="climb-k">Start</span></li>
+                    <li><span class="climb-v">42%</span><span class="climb-track"><span class="climb-bar" style="height: 42%"></span></span><span class="climb-k">1</span></li>
+                    <li><span class="climb-v">56%</span><span class="climb-track"><span class="climb-bar" style="height: 56%"></span></span><span class="climb-k">2</span></li>
+                    <li><span class="climb-v">70%</span><span class="climb-track"><span class="climb-bar" style="height: 70%"></span></span><span class="climb-k">3</span></li>
+                    <li><span class="climb-v">79%</span><span class="climb-track"><span class="climb-bar" style="height: 79%"></span></span><span class="climb-k">4</span></li>
+                    <li><span class="climb-v">85%</span><span class="climb-track"><span class="climb-bar" style="height: 85%"></span></span><span class="climb-k">5</span></li>
+                </ol>
+                <figcaption id="fig-climb-cap">Figure 3. The chance of choosing a as this update is repeated five times (below: the number of updates). Task success rises from 38% to 71%. The numbers are assumed.</figcaption>
+            </figure>
+            <p>Nobody told the model the right answer. Scores alone made the good habit grow. K3 went round this loop on tasks full of such critical steps.</p>
+            <p class="source">Sources: policy gradient: Williams (1992) · K3’s reinforcement learning formula: K2.5 report (arXiv 2602.02276) §4.4.2 Eq. 1, which the K3 report §4.1.2 follows · the score when merging into one: K3 report §4.1.3 Eq. 15 · the four tries: this page’s computation (assumed numbers)</p>
+            <h3>What K3.1 Pro added</h3>
+            <p>K3.1 Pro ran this reinforcement learning “jointly across hundreds of downstream domains.” For that, Moonshot reworked its training software, long-text processing, training efficiency, sandboxes, the scheduling of practice runs (rollouts) and the quality checks of its training environments, and says the aim was stable, predictable returns from each increase in reinforcement learning compute, with consistent gains in every domain. The K3 report also showed that with more reinforcement learning compute, the model chains more tool uses and its capability rises with them.</p>
+            <figure class="kp-fig" aria-labelledby="fig-map-cap">
+                <ul class="maps">
+                    <li class="map"><p class="map-from">Finishing projects in sandboxes; long-running coding</p><span class="map-arrow" aria-hidden="true">→</span><p class="map-to"><span class="chip a-coding">Terminal-Bench 4.0 13% → 67%</span></p></li>
+                    <li class="map"><p class="map-from">Financial modelling and research; running a simulated business</p><span class="map-arrow" aria-hidden="true">→</span><p class="map-to"><span class="chip a-agents">GDPval-AA Elo 1534 → 1846</span><span class="chip a-agents">AA-Briefcase Elo 1499 → 1678</span><span class="chip a-general">GDP.pdf 22% → 31%</span></p></li>
+                    <li class="map"><p class="map-from">Getting work done with tools and apps</p><span class="map-arrow" aria-hidden="true">→</span><p class="map-to"><span class="chip a-agents">AutomationBench-AA 58% → 73%</span></p></li>
+                    <li class="map"><p class="map-from">Factual accuracy</p><span class="map-arrow" aria-hidden="true">→</span><p class="map-to"><span class="chip a-general">AA-Omniscience Hallucination rate 53% → 44%</span></p></li>
+                    <li class="map none"><p class="map-from">(not on the list)</p><span class="map-arrow" aria-hidden="true">→</span><p class="map-to"><span class="chip">HLE 47% → 52%</span><span class="chip">CritPt 23% → 25%</span><span class="chip">SciCode 59% → 61%</span><span class="chip">AA-LCR 89% → 86%</span></p></li>
+                </ul>
+                <figcaption id="fig-map-cap">Figure 4. Work Moonshot added to reinforcement learning (left) and similar AA tests (right). The pairing is this page’s.</figcaption>
+            </figure>
+            <p>Tests similar to the added work rose a lot; scientific reasoning and long context, which are not on the list, barely rose or fell. Moonshot has not said which training raised which test. <span class="tag guess">Hypothesis</span></p>
+            <h3 id="long-tasks">In a long job, small mistakes add up</h3>
+            <p>Why did the tests of finishing jobs rise so much more? An agent moves many times to finish one job. In AA’s coding agent tests, the model moved 146 to 186 times per task on average (turns). Among those moves are several critical points where a big mistake ruins the job. Count these as steps, and say the job is done only if every step is passed. Then task success is per-step success multiplied by itself once per step. For example, if per-step success rises from 95.0% to 99.0%, a one-step test gains 4.0 points, but a 50-step task goes from 7.7% to 60.5%. So making each step just a little more reliable lifts success on long tasks a lot. <span class="tag guess">Hypothesis</span></p>
+            <p class="kp-small">This is a toy model. Real agents fix mistakes and try again, and steps differ in difficulty. Neither the number of steps in Terminal-Bench tasks nor K3’s and K3.1 Pro’s per-step success is published. Still, it shows the direction: tests of finishing jobs magnify small improvements from post-training.</p>
+            <h3>The architecture is the footing</h3>
+            <p>The architecture did not raise the score directly, because the base model is the same. But K3 is built to read long text with little memory. It mixes layers that carry a small summary of what came before (linear attention, KDA) with layers that look at all of it again (full attention), 3:1, which cuts the memory a 1-million-token context takes. Reinforcement learning that runs long jobs over and over needs that kind of footing. <span class="tag guess">Hypothesis</span></p>
+            <p class="source">Sources: Moonshot K3.1 Pro blog · size: The Decoder · K3’s post-training: Kimi K3 technical report (arXiv 2607.24653) §4.1 (SFT, nine experts, reasoning effort, MOPD), §4.2 (tasks and rewards, harnesses), §5.3.2 (sandboxes), §4.1.2 Fig. 8 (RL compute and capability) · turns: AA coding agent comparison (Coding Agent Index v2.0) · toy model (task success = per-step success<sup>steps</sup>): this page’s computation · attention: the same report §2.1</p>
+        </section>
+
+        <section id="summary" class="wrap step" aria-labelledby="summary-title">
+            <p class="step-no">Summary</p>
+            <h2 id="summary-title">Same base model; what rose is the power to finish the job</h2>
+            <div class="table-wrap">
+                <table class="kp-table">
+                    <thead>
+                        <tr><th scope="col"></th><th scope="col">K3 → K3.1 Pro</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">Base model (architecture, size)</th><td>The same</td></tr>
+                        <tr><th scope="row">Post-training</th><td>Much larger: reinforcement learning across hundreds of domains, reworked infrastructure</td></tr>
+                        <tr><th scope="row">How the model is changed</th><td>By loss and backpropagation, as in pre-training. Reinforcement learning uses a score instead of a right answer</td></tr>
+                        <tr><th scope="row">Where it rose</th><td>Terminal +5.4, office work +4.6, knowledge and science +1.7, long context −0.2</td></tr>
+                        <tr><th scope="row">What it took to pass 50</th><td>The terminal test was required, plus at least one office-work test</td></tr>
+                        <tr><th scope="row">Thinking longer</th><td>Both default to the longest-thinking setting (max), and the amount they wrote for one run of the index tests (148M–161M output tokens) is similar too. This is not why the score rose</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="note">
+                <p><strong>Myth</strong>It rose because the base model got bigger.</p>
+                <p class="fact"><strong>In fact</strong>The base model is the same as K3’s. What grew is post-training.</p>
+            </div>
+            <div class="note">
+                <p><strong>Myth</strong>It rose by practising only for the public tests.</p>
+                <p class="fact"><strong>In fact</strong>The private agent tests, whose questions nobody can see (AA-Briefcase, AutomationBench-AA), rose a lot too: 3 of the 11 points came from private tests. But Terminal-Bench 4.0, the test that lifted the index most, is public, so whether the model practised on similar tasks is unknown.</p>
+            </div>
+            <div class="note">
+                <p><strong>Myth</strong>Reinforcement learning teaches the model the right answers.</p>
+                <p class="fact"><strong>In fact</strong>It gives only scores, no right answers. It just changes the model to do more often what scored above average among the tries it made itself.</p>
+            </div>
+            <h3>Confirmed · Hypothesis · Unknown</h3>
+            <ul class="limits">
+                <li><span class="tag known">Confirmed</span>The scores, the ranking and the index weights were checked against AA’s pages (read 2026-10-26). The index recomputed from the published weights and test scores matches AA’s values for K3, K3.1 Pro, Claude Opus 5.5 and Claude Fable 5.1. That K3.1 Pro is a post-trained version of K3, and its reinforcement learning domains, are Moonshot’s statements. K3’s post-training stages and its reinforcement learning formula are as written in the K3 and K2.5 technical reports.</li>
+                <li><span class="tag guess">Hypothesis</span>The pairing of the work Moonshot added to reinforcement learning with the tests that rose most, the training that raised Terminal-Bench 4.0, and the architecture being the footing for large-scale reinforcement learning. The toy model of long jobs and the four-try example are worked from numbers set in advance.</li>
+                <li><span class="tag unknown">Unknown</span>Why K3 fell so far on Terminal-Bench 4.0, how much post-training compute grew, whether K3.1 Pro’s reinforcement learning had tasks similar to Terminal-Bench 4.0, and whether the base model really is the same (the weights are not out yet).</li>
+            </ul>
+            <p class="source">Sources: AA comparison page · AA methodology v4.3.2 · Moonshot K3.1 Pro blog · the recomputed index: this page’s computation</p>
+        </section>
+
+        <section id="faq" class="wrap step" aria-labelledby="faq-title">
+            <p class="step-no">Questions</p>
+            <h2 id="faq-title">Frequently asked questions</h2>
+            <!-- 검색·AI 답변용. 독자가 검색창에 칠 질문과, 출처가 있는 사실만 담은 두세 문장의 답. head의 FAQPage와 문장이 같아야 한다. -->
+            <div class="faq" id="faq-list">
+                <details>
+                    <summary>What is Kimi K3.1 Pro?</summary>
+                    <p>A language model released by China’s Moonshot AI on 2026-10-23. It is Kimi K3, released in July (an MoE that uses only 104B of its 2.8T parameters per token, with a 1M-token context), given far more post-training. Moonshot says it will publish the weights by November 4 (Moonshot K3.1 Pro blog).</p>
+                </details>
+                <details>
+                    <summary>What does the Artificial Analysis Intelligence Index (AA index) measure?</summary>
+                    <p>It is the weighted average of ten tests that the evaluation company Artificial Analysis runs on each model itself. The current version (v4.3.2) weights agents 30%, coding 20%, general 30% and scientific reasoning 20%, and private tests carry 45% of the weight (AA methodology).</p>
+                </details>
+                <details>
+                    <summary>What is Kimi K3.1 Pro’s AA index score?</summary>
+                    <p>55, fourth when the variants of each model count as one (2026-10-26). Ahead of it are Claude Opus 5.5 (58), Claude Sonnet 5.5 (56) and Muse Wonder Full (56). K3 (max) scored 44.</p>
+                </details>
+                <details>
+                    <summary>Where did K3.1 Pro gain over K3?</summary>
+                    <p>About half of the 11 points (+5.4) came from Terminal-Bench 4.0 (13% → 67%), and about 40% (+4.6) from four office-work agent tests. Knowledge and scientific reasoning together rose by just over 1.7 points (this page’s computation from AA’s test scores).</p>
+                </details>
+                <details>
+                    <summary>What is Terminal-Bench 4.0?</summary>
+                    <p>A test of 66 tasks that each finish a real job in a terminal. They span software, machine learning, science, operations, security, hardware and media, and a task counts only if all its tests pass. AA runs it in the mini-swe-agent harness and averages three runs per task.</p>
+                </details>
+                <details>
+                    <summary>Which Chinese AI models score above 50 on the AA index?</summary>
+                    <p>On AA’s leaderboard of 2026-10-26 (v4.3.2), only Kimi K3.1 Pro (55). The next models from Chinese companies are MiMo-V2.6-Pro (46) and Qwen3.8 Max, DeepSeek V4.1 Flash and GLM-5.3 (45). The scoring differs from version to version, so scores can be compared only within one version.</p>
+                </details>
+                <details>
+                    <summary>Does Kimi K3.1 Pro have a different architecture from K3?</summary>
+                    <p>Moonshot mentions no architectural change. It says only that it is “a post-trained version of K3, with substantially larger post-training compute.” Once the weights are published, by November 4, the configuration file will show it.</p>
+                </details>
+                <details>
+                    <summary>How does post-training (reinforcement learning) change the model?</summary>
+                    <p>As in pre-training, it measures a loss and changes the weights by backpropagation, but it uses a score instead of a right answer. Among answers the model wrote itself, those scoring above the average for the same problem are made more likely and those below less likely (the policy gradient). K3 took this method over from K2.5 (Kimi K3 technical report §4.1.2).</p>
+                </details>
+                <details>
+                    <summary>Can Kimi K3.1 Pro’s scores be trusted as they are?</summary>
+                    <p>The AA index is measured by AA, not by the model company. The private agent tests, whose questions nobody can see (AA-Briefcase, AutomationBench-AA), also rose a lot. Moonshot’s own scores use a different harness and settings, so they differ slightly from AA’s (Terminal-Bench 4.0: Moonshot 65.7%, AA 67%).</p>
+                </details>
+            </div>
+        </section>
+
+        <section class="wrap step" aria-labelledby="more-title">
+            <h2 id="more-title">Further reading</h2>
+            <ul class="links">
+                <li><a href="https://www.kimi.com/blog/kimi-k3-1-pro">Moonshot AI, Kimi K3.1 Pro (blog, 2026-10-23)</a></li>
+                <li><a href="https://arxiv.org/abs/2607.24653">Kimi K3: Open Frontier Intelligence (Moonshot AI technical report, arXiv 2607.24653, 2026)</a></li>
+                <li><a href="https://arxiv.org/abs/2602.02276">Kimi K2.5: Visual Agentic Intelligence (Moonshot AI technical report, arXiv 2602.02276, 2026)</a></li>
+                <li><a href="https://doi.org/10.1007/BF00992696">Ronald J. Williams, Simple statistical gradient-following algorithms for connectionist reinforcement learning (Machine Learning 8, 1992)</a></li>
+                <li><a href="https://artificialanalysis.ai/models/kimi-k3-1-pro">Artificial Analysis, Kimi K3.1 Pro model page</a></li>
+                <li><a href="https://artificialanalysis.ai/models/comparisons/kimi-k3-vs-kimi-k3-1-pro">Artificial Analysis, Kimi K3 vs Kimi K3.1 Pro</a></li>
+                <li><a href="https://artificialanalysis.ai/methodology/intelligence-benchmarking">Artificial Analysis, Intelligence Benchmarking Methodology (Intelligence Index v4.3.2)</a></li>
+                <li><a href="https://artificialanalysis.ai/articles/artificial-analysis-intelligence-index-v4-3">Artificial Analysis, Announcing the Intelligence Index v4.3 (2026-09-07)</a></li>
+                <li><a href="https://artificialanalysis.ai/evaluations/terminalbench-4-0">Artificial Analysis, Terminal-Bench 4.0</a></li>
+                <li><a href="https://artificialanalysis.ai/agents/coding-agents/comparisons/claude-code-vs-kimi-code-cli">Artificial Analysis, Claude Code vs Kimi Code CLI (Coding Agent Index)</a></li>
+                <li><a href="https://the-decoder.com/chinese-ai-model-kimi-k3-1-pro-is-closing-in-on-anthropics-claude-opus-5-5/">The Decoder, Chinese AI model Kimi K3.1 Pro is closing in on Anthropic's Claude Opus 5.5</a></li>
+                <li><a href="https://venturebeat.com/technology/moonshots-kimi-k3-1-pro-flirts-with-open-weights-leadership-amid-paid-influencer-scandal-allegations">VentureBeat, Moonshot's Kimi K3.1 Pro flirts with open weights leadership</a></li>
+                <li><a href="https://wojciech.io/insights/artificial-analysis-intelligence-index-v4-3/">wojciech.io, Artificial Analysis Intelligence Index v4.3 explained</a></li>
+                <li>Computation: the index was recomputed from the weights and test scores AA publishes (Python). Five of six models match AA’s values within rounding; one (GLM-5.3) matches only at the edge.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        Last updated <time datetime="2026-10-27">2026-10-27</time> · <a href="/en/">Hugh Q Lee</a> · Translated from the <a href="/knowledge/kimi-k3-1-pro/" hreflang="ko">Korean original</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+            });
+            render();
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-10-26","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"},{"id":"ml","name":"기계 학습","name_en":"Machine learning"},{"id":"llm","name":"언어 모델","name_en":"Language models","parent":"ml"},{"id":"rob","name":"로봇·자동화","name_en":"Robotics and automation"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"},{"id":"train-val-calib-test","title":"train·val·calib·test","title_en":"train/val/calib/test","domain":"ml","status":"published","href":"../train-val-calib-test/","summary":"학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold를 위해 칸 하나를 더 두기","summary_en":"Keep one more split for what is fitted after training: the temperature T and the threshold"},{"id":"error-backpropagation","title":"역전파","title_en":"Backpropagation","domain":"ml","status":"published","href":"../error-backpropagation/","summary":"출력의 오차를 뒤로 전해 다층 퍼셉트론의 가운데 층까지 고치기","summary_en":"Pass the output's error backward to correct the middle layer of a multilayer perceptron too"},{"id":"robot-types","title":"로봇의 종류","title_en":"Robot types","domain":"rob","status":"published","href":"../robot-types/","summary":"관절을 잇는 구조가 손끝의 자세를 정하고, 그 자세가 실험실에서 로봇의 쓰임을 정한다","summary_en":"How the joints are joined sets the hand's posture, and the posture sets what a robot does in the lab"},{"id":"hydraulic-pneumatic-microinjector","title":"마이크로인젝터","title_en":"Microinjectors","domain":"rob","status":"published","href":"../hydraulic-pneumatic-microinjector/","summary":"공기로 미는 공압식은 압력을, 기름으로 미는 유압식은 부피를 정한다","summary_en":"A pneumatic injector pushes with air and sets the pressure; a hydraulic one pushes with oil and sets the volume"},{"id":"kimi-k3-1-pro","title":"Kimi K3.1 Pro","title_en":"Kimi K3.1 Pro","domain":"llm","status":"published","href":"../kimi-k3-1-pro/","summary":"몸통은 그대로 두고 사후 학습으로 AA 지수를 44에서 55로 올리기","summary_en":"Raise the AA index from 44 to 55 with post-training, on the same base model"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            MAP.nodes.forEach(function (n) { n.title = n.title_en || n.title; n.summary = n.summary_en || n.summary; });
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 100 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (coming soon)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "coming soon";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "you are here";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
