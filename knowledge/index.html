@@ -34,72 +34,82 @@
         {
           "@type": "CollectionPage",
           "@id": "https://hughqlee.com/knowledge/#collection",
-          "workTranslation": { "@id": "https://hughqlee.com/knowledge/en/#collection" },
+          "workTranslation": {
+            "@id": "https://hughqlee.com/knowledge/en/#collection"
+          },
           "url": "https://hughqlee.com/knowledge/",
           "name": "Knowledge",
           "description": "Hugh Q Lee가 공부한 개념을 직접 조작해 보며 이해하도록 만든 인터랙티브 지식 페이지 모음.",
           "inLanguage": "ko",
-          "author": { "@id": "https://hughqlee.com/#person" },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
           "mainEntity": {
             "@type": "ItemList",
             "itemListElement": [
               {
                 "@type": "ListItem",
                 "position": 1,
+                "url": "https://hughqlee.com/knowledge/pretraining-posttraining-inference/",
+                "name": "AI는 답하면서도 배울까: 사전 학습, 사후 학습, 추론"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
                 "url": "https://hughqlee.com/knowledge/kimi-k3-1-pro/",
                 "name": "Kimi K3.1 Pro, 몸통은 그대로인데 무엇이 AA 지수를 55로 올렸나"
               },
               {
                 "@type": "ListItem",
-                "position": 2,
+                "position": 3,
                 "url": "https://hughqlee.com/knowledge/hydraulic-pneumatic-microinjector/",
                 "name": "유압식과 공압식 마이크로인젝터, 압력을 정하나 부피를 정하나"
               },
               {
                 "@type": "ListItem",
-                "position": 3,
+                "position": 4,
                 "url": "https://hughqlee.com/knowledge/robot-types/",
                 "name": "로봇의 종류, 무엇을 어떤 자세로 옮기나"
               },
               {
                 "@type": "ListItem",
-                "position": 4,
+                "position": 5,
                 "url": "https://hughqlee.com/knowledge/error-backpropagation/",
                 "name": "역전파, 정답이 없는 가운데 층은 어떻게 배우나"
               },
               {
                 "@type": "ListItem",
-                "position": 5,
+                "position": 6,
                 "url": "https://hughqlee.com/knowledge/train-val-calib-test/",
                 "name": "train-val-calib-test, calib은 무엇을 정하나"
               },
               {
                 "@type": "ListItem",
-                "position": 6,
+                "position": 7,
                 "url": "https://hughqlee.com/knowledge/phase-contrast-microscopy/",
                 "name": "위상차 현미경, 투명한 것을 밝기로 보는 법"
               },
               {
                 "@type": "ListItem",
-                "position": 7,
+                "position": 8,
                 "url": "https://hughqlee.com/knowledge/yolo-v3/",
                 "name": "YOLOv3, 멀티 스케일 예측과 바운딩 박스 예측"
               },
               {
                 "@type": "ListItem",
-                "position": 8,
+                "position": 9,
                 "url": "https://hughqlee.com/knowledge/yolo-v2/",
                 "name": "YOLOv2, 앵커 박스와 패스스루 레이어"
               },
               {
                 "@type": "ListItem",
-                "position": 9,
+                "position": 10,
                 "url": "https://hughqlee.com/knowledge/iou-nms/",
                 "name": "IOU와 NMS, 박스 하나만 남기기"
               },
               {
                 "@type": "ListItem",
-                "position": 10,
+                "position": 11,
                 "url": "https://hughqlee.com/knowledge/yolo-v1/",
                 "name": "YOLOv1, 한 번 보고 모두 찾기"
               }
@@ -121,8 +131,18 @@
         {
           "@type": "BreadcrumbList",
           "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Hugh Q Lee", "item": "https://hughqlee.com/" },
-            { "@type": "ListItem", "position": 2, "name": "Knowledge", "item": "https://hughqlee.com/knowledge/" }
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/"
+            }
           ]
         }
       ]
@@ -306,6 +326,13 @@
         </section>
 
         <ol class="pages" aria-label="지식 페이지">
+            <li>
+                <article>
+                    <p class="meta"><time datetime="2026-10-28">2026-10-28</time> · 언어 모델</p>
+                    <h2><a href="/knowledge/pretraining-posttraining-inference/">AI는 답하면서도 배울까: 사전 학습, 사후 학습, 추론</a></h2>
+                    <p>사전 학습, 사후 학습, 추론을 가르는 질문은 하나다. 가중치가 바뀌나? 직접 학습한 가장 작은 GPT를 한 걸음씩 따라가며, 학습 둘은 가중치를 바꾸고 추론은 맥락만 바꾼다는 것과, 강화학습이 정답 없이 뽑기와 채점으로 출력을 바꾸는 과정을 본다. 언어 모델의 두 번째 글이다.</p>
+                </article>
+            </li>
             <li>
                 <article>
                     <p class="meta"><time datetime="2026-10-27">2026-10-27</time> · 언어 모델</p>
