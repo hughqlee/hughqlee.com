@@ -534,12 +534,80 @@
     {
       "id": "2026-044",
       "title": "나는 왜 남들보다 쉽게 지칠까",
-      "hugh": { "stars": 3, "review": "High Sensitive Person, 읽는 내내 '이거 나잖아!?'." },
+      "hugh": { "stars": 2, "review": "High Sensitive Person, 읽는 내내 '이거 나잖아!?'." },
       "subtitle": "무던해 보이지만 누구보다 예민한 HSP를 위한 심리학",
       "author": "최재훈",
       "publisher": "서스테인",
       "genres": ["self"],
       "listPrice": 17800,
+      "status": "available"
+    },
+    {
+      "id": "2026-045",
+      "title": "어른의 품위",
+      "hugh": { "stars": 3, "review": "재밌게 술술 읽혔다." },
+      "subtitle": "진짜 어른이 되기 위해 지켜야 할 삶의 태도",
+      "author": "최서영",
+      "publisher": "북로망스",
+      "genres": ["self"],
+      "listPrice": 19500,
+      "status": "available"
+    },
+    {
+      "id": "2026-046",
+      "title": "어떻게 말해줘야 할까",
+      "hugh": { "stars": 2, "review": "꽤 좋은 내용이었다. 실천은 어렵다." },
+      "subtitle": "오은영의 현실밀착 육아회화",
+      "author": "오은영, 차상미",
+      "publisher": "김영사",
+      "genres": ["parenting"],
+      "listPrice": 19800,
+      "status": "available"
+    },
+    {
+      "id": "2026-047",
+      "title": "김범준의 물리 장난감",
+      "hugh": { "stars": 2, "review": "신박했다." },
+      "subtitle": "일상 속 사물들에서 찾은 신기한 과학 원리",
+      "author": "김범준",
+      "publisher": "이김",
+      "genres": ["science"],
+      "listPrice": 22000,
+      "status": "available"
+    },
+    {
+      "id": "2026-048",
+      "title": "김경일의 마음 수업 1",
+      "hugh": { "stars": 1, "review": "별로였다." },
+      "subtitle": "불안 편: 행운 자판기와 걱정 괴물",
+      "author": "이향안, 김이조",
+      "publisher": "글고래",
+      "genres": ["parenting"],
+      "listPrice": 15800,
+      "status": "available"
+    },
+    {
+      "id": "2026-049",
+      "title": "술술 읽히는 군주론",
+      "hugh": { "stars": 1, "review": "술술 읽히지 않았다." },
+      "subtitle": "新譯 君主論",
+      "author": "니콜로 마키아벨리",
+      "translator": "이지은",
+      "publisher": "힘찬북스",
+      "genres": ["humanities"],
+      "listPrice": 16800,
+      "status": "available"
+    },
+    {
+      "id": "2026-050",
+      "title": "손자병법",
+      "hugh": { "stars": 1, "review": "노잼" },
+      "subtitle": "시공을 초월한 전쟁론의 고전",
+      "author": "손자",
+      "translator": "김원중",
+      "publisher": "휴머니스트",
+      "genres": ["humanities"],
+      "listPrice": 18000,
       "status": "available"
     }
   ]
