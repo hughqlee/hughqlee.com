@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How do you match one X-ray film to a 3D CT scan? | Hugh Q Lee</title>
+    <meta name="description" content="An X-ray film is one view of what a CT scan records. So you can compute the same shadow from the CT volume, search for the pose that looks most like the film, and match the two. The formula that does this is the cone-beam model, in which rays spread from a point source.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="X-ray to CT registration, 3D/2D registration, DRR, digitally reconstructed radiograph, cone-beam CT, X-ray film, micro-CT, projection matrix, cone-beam">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/en/xray-ct-registration/">
+    <!-- 영문판(/knowledge/en/xray-ct-registration/)은 System/build_en.py가 이 페이지에서 만든다. 두 판이 서로를 가리킨다. -->
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/xray-ct-registration/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/xray-ct-registration/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/xray-ct-registration/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ko_KR">
+    <meta property="og:title" content="How do you match one X-ray film to a 3D CT scan?">
+    <meta property="og:description" content="An X-ray film is one view of what a CT scan records. So you can compute the same shadow from the CT volume, search for the pose that looks most like the film, and match the two. The formula that does this is the cone-beam model, in which rays spread from a point source.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/en/xray-ct-registration/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/en/xray-ct-registration/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="A picture showing that one X-ray film is one of the many views a CT scan takes while going around the specimen">
+    <meta property="article:published_time" content="2026-11-03">
+    <meta property="article:modified_time" content="2026-11-03">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How do you match one X-ray film to a 3D CT scan?">
+    <meta name="twitter:description" content="An X-ray film is one view of what a CT scan records. So you can compute the same shadow from the CT volume, search for the pose that looks most like the film, and match the two. The formula that does this is the cone-beam model, in which rays spread from a point source.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/en/xray-ct-registration/og.png">
+    <meta name="twitter:image:alt" content="A picture showing that one X-ray film is one of the many views a CT scan takes while going around the specimen">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage의 문장은 본문 "자주 묻는 질문"과 같아야 한다. 질문을 늘리면 둘 다 늘린다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/en/xray-ct-registration/#article",
+          "headline": "How do you match one X-ray film to a 3D CT scan?",
+          "alternativeHeadline": "How do you match one X-ray film to a 3D CT scan?",
+          "description": "An X-ray film is one view of what a CT scan records. So you can compute the same shadow from the CT volume, search for the pose that looks most like the film, and match the two. The formula that does this is the cone-beam model, in which rays spread from a point source.",
+          "abstract": "An X-ray film is one view of what a CT scan records. So you can compute the same shadow from the CT volume, search for the pose that looks most like the film, and match the two. The formula that does this is the cone-beam model, in which rays spread from a point source.",
+          "inLanguage": "en",
+          "datePublished": "2026-11-03",
+          "dateModified": "2026-11-03",
+          "url": "https://hughqlee.com/knowledge/en/xray-ct-registration/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/en/xray-ct-registration/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/en/xray-ct-registration/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/en/#collection"
+          },
+          "isAccessibleForFree": true,
+          "citation": {
+            "@type": "CreativeWork",
+            "name": "Markelj et al. 2012, a review of 3D/2D registration methods for image-guided interventions (Medical Image Analysis)",
+            "url": "https://doi.org/10.1016/j.media.2010.03.005"
+          },
+          "translationOfWork": {
+            "@id": "https://hughqlee.com/knowledge/xray-ct-registration/#article"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/en/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/en/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "How do you match one X-ray film to a 3D CT scan?",
+              "item": "https://hughqlee.com/knowledge/en/xray-ct-registration/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/en/xray-ct-registration/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What does it mean to match an X-ray film to a CT?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "It means making a virtual X-ray picture from the CT volume while changing the CT's pose (three turns and three shifts), and finding the pose that looks most like the real film. Using virtual X-ray pictures (DRRs) to solve inverse problems such as slice-to-volume registration is well studied (Gopalakrishnan and Golland 2022, abstract), and methods that match a 3D CT to 2D X-ray projections are catalogued as 3D/2D registration (Markelj et al. 2012, abstract)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is a DRR (virtual X-ray picture)?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A DRR (digitally reconstructed radiograph) is a picture computed by adding up the CT volume's values along the rays from a point source to each detector pixel. A real X-ray picture's pixel is also the sum of the attenuation coefficient along a ray (the NIST attenuation law), so the same formula makes the same kind of picture from a CT."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why do you need a cone-beam model with a point source rather than parallel rays?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "With a point source, things nearer the source appear larger, so the size of the shadow tells you the front-to-back position. With a parallel model, the shadow does not change when you move back and forth. In this page's 2D toy, though, once the source was 6 or more times the specimen radius away, the parallel model's rotation error was within 2°, and the cone model's power to find the front-to-back position weakened too."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How are a CT and an X-ray picture taken differently?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Both are taken with a point source, a specimen and a flat detector, and a pixel is the sum of attenuation along a ray. A CT collects pictures from hundreds of views as the specimen or the source turns, and a computer solves them into a 3D volume. An X-ray film is one picture from one view and is the result itself, so front and back overlap and there is no depth (Pauwels et al. 2015)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How is the voxel size of a micro-CT set?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "By default it is the detector pixel size divided by the magnification (source–detector distance ÷ source–specimen distance), and binning enlarges it by the binning factor. In the public SkyScan 1272 log, a 27 µm pixel (9 µm with 3×3 binning) and a magnification of 1.35 gave an expected value of about 20 µm. A small voxel does not mean the resolution is as good."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How accurate is matching a film to a CT?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "It depends on the device and the method, so this page does not give a single number. If the matching error is larger than a structure, you cannot draw that structure's boundary from the film. In this page's 2D toy, the error with which the cone model finds the front-to-back position grew as the source moved farther away (0.005 at 6×, 0.20 at 20×)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --danger: #ff8c8c;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --danger: #b42323;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            cursor: pointer;
+        }
+        .theme-toggle:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 32px; border-bottom: 1px solid var(--line); }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        section { padding: 32px 0; }
+        h2 { margin: 0 0 12px; font-size: 22px; line-height: 1.4; }
+
+        .panel {
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .hint { margin: 0 0 16px; color: var(--muted); }
+        .demo label {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .demo input[type="range"] { width: 100%; min-height: 44px; margin: 4px 0; accent-color: var(--accent); }
+        .meter { height: 10px; overflow: hidden; border-radius: 999px; background: var(--panel-strong); }
+        .meter span { display: block; width: 0; height: 100%; background: var(--accent); transition: width 0.2s ease; }
+        .result { margin: 12px 0 0; font-family: var(--mono); font-size: 15px; }
+
+        .steps { margin: 0; padding-left: 1.4em; }
+        .steps li { margin: 8px 0; }
+        .steps li::marker { color: var(--accent); font-family: var(--mono); }
+
+        .note {
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+
+        /* Confirmed · Hypothesis · Unknown 표시: <span class="tag known">Confirmed</span> */
+        .tag {
+            display: inline-block;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.known { color: var(--accent-green); }
+        .tag.guess { color: var(--accent-warn); }
+        .tag.unknown { color: var(--muted); }
+
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        footer {
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        /* ---- X선–CT 정합 페이지 ---- */
+        .step-no { margin: 0 0 6px; color: var(--accent); font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; }
+        .src { margin: 10px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+        section p { margin: 0 0 12px; }
+        figure.fig { margin: 14px 0 0; }
+        figure.fig svg { display: block; width: 100%; height: auto; }
+        figure.fig figcaption { margin-top: 6px; color: var(--muted); font-size: 13px; }
+        .t-label { fill: var(--muted); font-family: var(--sans); font-size: 20px; }
+        .t-num { fill: var(--text); font-family: var(--mono); font-size: 26px; font-weight: 700; }
+        .t-sum { fill: var(--text); font-family: var(--mono); font-size: 22px; font-weight: 700; }
+        .beamfill { fill: var(--accent-warn); fill-opacity: 0.16; }
+        .beamline { stroke: var(--accent-warn); stroke-width: 1.6; fill: none; }
+        .beamarrow { fill: var(--accent-warn); }
+        .cellf { fill: var(--accent-green); stroke: var(--accent-green); stroke-width: 1.5; }
+        .pixf { fill: var(--accent); stroke: var(--accent); stroke-width: 1.5; }
+        .detbar { stroke: var(--accent); stroke-width: 7; stroke-linecap: round; fill: none; }
+        .detbar.faint, .srcdot.faint { opacity: 0.45; stroke: var(--faint); }
+        .srcdot { fill: var(--text); }
+        .srcdot.faint { fill: var(--faint); stroke: none; }
+        .sampf { fill: var(--accent-green); fill-opacity: 0.2; stroke: var(--accent-green); stroke-width: 2; }
+        .d-dent { fill: var(--accent-green); fill-opacity: 0.2; stroke: var(--accent-green); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+        .d-cav { fill: var(--panel); stroke: var(--accent-green); stroke-width: 1; vector-effect: non-scaling-stroke; }
+        .d-lay { fill: var(--accent-warn); }
+        .d-dot { fill: var(--accent-green); }
+        .d-film { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linejoin: round; }
+        .d-drr { fill: none; stroke: var(--accent-warn); stroke-width: 3; stroke-linejoin: round; }
+        .d-det { stroke: var(--faint); stroke-width: 6; stroke-linecap: round; }
+        .d-brk { stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
+        .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+        .legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: 6px; border-radius: 50%; vertical-align: -1px; background: var(--c); }
+        .ctl { display: grid; grid-template-columns: 4.6em minmax(0, 1fr) 3.6em; align-items: center; gap: 8px; margin-top: 4px; }
+        .ctl label { display: block; justify-content: initial; color: var(--muted); font-family: var(--mono); font-size: 14px; }
+        .ctl output { font-family: var(--mono); font-size: 14px; text-align: right; }
+        .ctl input[type="range"] { width: 100%; min-height: 44px; margin: 0; accent-color: var(--accent); }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
+        .chip { min-height: 44px; padding: 6px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: transparent; color: var(--text); font: inherit; font-size: 15px; cursor: pointer; }
+        .chip:hover { border-color: var(--line-strong); }
+        .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+        .chips-label { margin: 14px 0 0; color: var(--muted); font-family: var(--mono); font-size: 13px; }
+        .scorebar { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+        .scorebar label { color: var(--muted); font-family: var(--mono); font-size: 14px; white-space: nowrap; }
+        .scorebar .meter { flex: 1; }
+        .scorebar .meter span.ok { background: var(--accent-green); }
+        .scorebar output { min-width: 4.4ch; font-family: var(--mono); font-size: 15px; text-align: right; }
+        .readout { margin: 12px 0 0; min-height: 3.4em; color: var(--text); font-size: 15px; }
+        .small { margin: 10px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+        .table-wrap { overflow-x: auto; margin: 14px 0 0; }
+        table.cmp-table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.5; }
+        table.cmp-table th, table.cmp-table td { padding: 8px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+        table.cmp-table thead th { color: var(--muted); font-weight: 600; }
+        table.cmp-table tbody th { width: 22%; font-weight: 600; }
+        .pts { margin: 8px 0 0; padding-left: 1.2em; }
+        .pts li { margin: 8px 0; }
+        .note + .note { margin-top: 10px; }
+        details.more { margin: 8px 0 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        details.more summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        details.more[open] summary { border-bottom: 1px solid var(--line); }
+        details.more .body { padding: 12px 16px 4px; }
+        details.more .body p { margin: 0 0 10px; }
+        @media (max-width: 520px) {
+            .ctl { grid-template-columns: 4em minmax(0, 1fr) 3.2em; }
+        }
+        .warn-line { padding-left: 14px; border-left: 3px solid var(--accent-warn); }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/en/">hughqlee.com</a> / <a href="/knowledge/en/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/xray-ct-registration/" hreflang="ko" lang="ko">한국어</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main" class="wrap">
+        <section class="hero">
+            <!-- 지식 지도: 데이터와 규칙은 System/지식 지도.md. 한 줄 글은 스크립트 없이도 읽히는 같은 내용이다.
+                 예: 먼저 읽을 글: <a href="../iou-nms/">IOU·NMS</a> · 이어서 읽을 글은 아직 없다 · 같은 분야: mAP(준비 중) -->
+            <nav class="kmap" aria-label="Knowledge map" data-current="xray-ct-registration">
+                <p class="kmap-head"><span class="kmap-label">KNOWLEDGE MAP</span><span class="kmap-path">X-ray and CT imaging</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">The first page in this field. Nothing to read before or after it yet.</p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE · X-RAY AND CT IMAGING</p>
+            <h1>How do you match one X-ray film to a 3D CT scan?</h1>
+            <p class="answer">An X-ray film is one view of what a CT scan records. So you can compute the same shadow from the CT volume, search for the pose that looks most like the film, and match the two. The formula that does this is the cone-beam model, in which rays spread from a point source.</p>
+        </section>
+
+        <section aria-labelledby="one-title">
+            <p class="step-no">01 One view</p>
+            <h2 id="one-title">One film is one view of a CT</h2>
+            <p>An X-ray film is taken the same way as a CT. X-rays spreading from a point source pass through the specimen and reach a flat detector, and each pixel is the attenuation added up along the path of its ray. A CT turns the specimen and takes such shadows from hundreds of views; a film takes just one of them.</p>
+            <figure class="fig">
+                <svg viewBox="0 0 680 250" role="img" aria-labelledby="ring-t ring-d">
+                <title id="ring-t">A film is one of the many views a CT takes</title>
+                <desc id="ring-d">A top view. Pairs of a source and a detector sit around the specimen in many directions, and the one pair that shoots from left to right is the film.</desc>
+                <circle class="srcdot faint" cx="440.0" cy="125.0" r="5"/>
+                <line class="detbar faint" x1="240.0" y1="91.0" x2="240.0" y2="159.0"/>
+                <circle class="srcdot faint" cx="410.7" cy="195.7" r="5"/>
+                <line class="detbar faint" x1="293.3" y1="30.2" x2="245.2" y2="78.3"/>
+                <circle class="srcdot faint" cx="340.0" cy="225.0" r="5"/>
+                <line class="detbar faint" x1="374.0" y1="25.0" x2="306.0" y2="25.0"/>
+                <circle class="srcdot faint" cx="269.3" cy="195.7" r="5"/>
+                <line class="detbar faint" x1="434.8" y1="78.3" x2="386.7" y2="30.2"/>
+                <circle class="srcdot faint" cx="269.3" cy="54.3" r="5"/>
+                <line class="detbar faint" x1="386.7" y1="219.8" x2="434.8" y2="171.7"/>
+                <circle class="srcdot faint" cx="340.0" cy="25.0" r="5"/>
+                <line class="detbar faint" x1="306.0" y1="225.0" x2="374.0" y2="225.0"/>
+                <circle class="srcdot faint" cx="410.7" cy="54.3" r="5"/>
+                <line class="detbar faint" x1="245.2" y1="171.7" x2="293.3" y2="219.8"/>
+                <polygon class="beamfill" points="240,125 440,91 440,159"/>
+                <line class="detbar" x1="440" y1="91" x2="440" y2="159"/>
+                <circle class="srcdot" cx="240" cy="125" r="7"/>
+                <circle class="sampf" cx="340" cy="125" r="28"/>
+                </svg>
+                <figcaption>A top view. The pair with the yellow beam is the film, and the gray pairs are the other views the CT takes as it turns.</figcaption>
+            </figure>
+            <p class="src">Sources: C-arm geometry is written as a 3×4 projection matrix that comes from the pinhole camera (Preuhs et al. 2018 §2.1). A dental CBCT takes several hundred frames in 10–40 s (Pauwels et al. 2015), and the rotation step in the public SkyScan 1272 log is 0.4°.</p>
+        </section>
+
+        <section aria-labelledby="sum-title">
+            <p class="step-no">02 Shadow</p>
+            <h2 id="sum-title">A shadow is a sum, so one view cannot tell depth</h2>
+            <p>A pixel value is the sum of how dark each cell along the ray is. Across three cells, (1, 2, 3), (3, 2, 1) and (2, 2, 2) all add up to 6, so the shadow is the same. One view gives only the sum and not which cell is dark. That is why many views are needed.</p>
+            <figure class="fig">
+                <svg viewBox="0 0 680 190" role="img" aria-labelledby="rows-t rows-d">
+                <title id="rows-t">Three rows with different insides make the same shadow</title>
+                <desc id="rows-d">There are three rows whose three cells along the ray have values (1, 2, 3), (3, 2, 1) and (2, 2, 2). Every row adds up to 6, so the shadow on the right is equally dark.</desc>
+                <rect class="beamfill" x="24" y="28" width="466" height="12"/>
+                <polygon class="beamarrow" points="504,34 490,27 490,41"/>
+                <rect class="cellf" x="150" y="12" width="70" height="44" rx="6" style="fill-opacity:0.38"/>
+                <text class="t-num" x="185" y="42" text-anchor="middle">1</text>
+                <rect class="cellf" x="234" y="12" width="70" height="44" rx="6" style="fill-opacity:0.64"/>
+                <text class="t-num" x="269" y="42" text-anchor="middle">2</text>
+                <rect class="cellf" x="318" y="12" width="70" height="44" rx="6" style="fill-opacity:0.90"/>
+                <text class="t-num" x="353" y="42" text-anchor="middle">3</text>
+                <rect class="pixf" x="520" y="12" width="64" height="44" rx="6" style="fill-opacity:0.60"/>
+                <text class="t-sum" x="600" y="40">sum 6</text>
+                <rect class="beamfill" x="24" y="86" width="466" height="12"/>
+                <polygon class="beamarrow" points="504,92 490,85 490,99"/>
+                <rect class="cellf" x="150" y="70" width="70" height="44" rx="6" style="fill-opacity:0.90"/>
+                <text class="t-num" x="185" y="100" text-anchor="middle">3</text>
+                <rect class="cellf" x="234" y="70" width="70" height="44" rx="6" style="fill-opacity:0.64"/>
+                <text class="t-num" x="269" y="100" text-anchor="middle">2</text>
+                <rect class="cellf" x="318" y="70" width="70" height="44" rx="6" style="fill-opacity:0.38"/>
+                <text class="t-num" x="353" y="100" text-anchor="middle">1</text>
+                <rect class="pixf" x="520" y="70" width="64" height="44" rx="6" style="fill-opacity:0.60"/>
+                <text class="t-sum" x="600" y="98">sum 6</text>
+                <rect class="beamfill" x="24" y="144" width="466" height="12"/>
+                <polygon class="beamarrow" points="504,150 490,143 490,157"/>
+                <rect class="cellf" x="150" y="128" width="70" height="44" rx="6" style="fill-opacity:0.64"/>
+                <text class="t-num" x="185" y="158" text-anchor="middle">2</text>
+                <rect class="cellf" x="234" y="128" width="70" height="44" rx="6" style="fill-opacity:0.64"/>
+                <text class="t-num" x="269" y="158" text-anchor="middle">2</text>
+                <rect class="cellf" x="318" y="128" width="70" height="44" rx="6" style="fill-opacity:0.64"/>
+                <text class="t-num" x="353" y="158" text-anchor="middle">2</text>
+                <rect class="pixf" x="520" y="128" width="64" height="44" rx="6" style="fill-opacity:0.60"/>
+                <text class="t-sum" x="600" y="156">sum 6</text>
+                </svg>
+                <figcaption>Three rows with different insides make the same shadow. The darkness of a cell is its value.</figcaption>
+            </figure>
+            <p class="src">Sources: NIST gives the exponential attenuation law for a narrow monochromatic beam crossing a uniform layer. Chain it along the ray and you get I/I₀ = exp(−∫μ dl), and taking the logarithm turns it into a sum (the chaining step is a derivation). The cell values are numbers chosen for the explanation.</p>
+        </section>
+
+        <section aria-labelledby="cmp-title">
+            <p class="step-no">03 How each is taken</p>
+            <h2 id="cmp-title">How are a CT and an X-ray taken?</h2>
+            <p>They are taken by the same principle, so they can be matched; they are taken differently, so matching is needed.</p>
+            <div class="table-wrap">
+                <table class="cmp-table">
+                    <thead>
+                        <tr><th scope="col">Item</th><th scope="col">CT (micro-CT)</th><th scope="col">X-ray (one film)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">Principle</th><td>Point source → specimen → flat detector. Pixel = sum of attenuation along the ray</td><td>Same</td></tr>
+                        <tr><th scope="row">Number of views</th><td>Hundreds</td><td>One</td></tr>
+                        <tr><th scope="row">What one frame is</th><td>Raw material. It becomes a result only after many are combined and solved</td><td>That one frame is the result</td></tr>
+                        <tr><th scope="row">Result</th><td>3D volume (attenuation coefficient per voxel)</td><td>2D picture. Front and back overlap</td></tr>
+                        <tr><th scope="row">Depth</th><td>Yes (reconstruction)</td><td>None (a sum)</td></tr>
+                        <tr><th scope="row">Geometry</th><td>The scanner knows it and records it in the log</td><td>May differ every time or go unrecorded <span class="tag guess">Hypothesis</span></td></tr>
+                        <tr><th scope="row">Brightness</th><td>Constant within one scan, and the values are gray values</td><td>Differs with device and conditions, so it may not map directly to the CT <span class="tag guess">Hypothesis</span></td></tr>
+                        <tr><th scope="row">Times taken</th><td>Usually once</td><td>Can be taken many times <span class="tag guess">General tendency</span></td></tr>
+                        <tr><th scope="row">In registration</th><td>The 3D coordinate system, that is, the map</td><td>A 2D observation from one moment and one pose</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="margin-top: 14px;">So registration is placing a 2D observation (the film) on a 3D map (the CT). We do not know which pose the observation came from, so we compute the same observation from the map and pick the pose that looks most like it.</p>
+            <p class="src">Sources: detector correction and geometry from Pauwels et al. 2015 (an overview of dental CBCT); an overview of registration methods from Markelj et al. 2012 (abstract). The micro-CT column is read from the public SkyScan 1272 log.</p>
+        </section>
+
+        <section id="try" aria-labelledby="try-title">
+            <p class="step-no">Try it</p>
+            <h2 id="try-title">Turn the CT to match the film</h2>
+            <div class="panel">
+                <p class="hint">Make a virtual film from the CT, then turn and move the CT until it overlaps the blue curve (the real film). Moving it back and forth brings it closer to the source, and its shadow grows.</p>
+                <div class="demo">
+                    <svg id="reg-svg" viewBox="0 0 680 280" role="img" aria-labelledby="reg-t reg-d" style="display:block;width:100%;height:auto;">
+                        <title id="reg-t">Matching the CT's virtual film to the real film</title>
+                        <desc id="reg-d">A top view. Rays spreading from the source on the left pass through the CT slice in the middle and reach the detector. To the right of the detector, the shadow curve of the real film and the curve of the virtual film made from the CT are drawn side by side.</desc>
+                        <polygon id="reg-beam" class="beamfill" points="52,140 424,22 424,258"/>
+                        <line class="d-det" x1="424" y1="22" x2="424" y2="258"/>
+                        <g id="reg-ph" transform="translate(300 140) rotate(0) scale(62)">
+                            <ellipse class="d-dent" cx="0" cy="0" rx="0.78" ry="0.88"/>
+                            <ellipse class="d-cav" cx="0" cy="0.05" rx="0.3" ry="0.42"/>
+                            <ellipse class="d-lay" cx="0" cy="0.4" rx="0.22" ry="0.06"/>
+                            <ellipse class="d-dot" cx="0.5" cy="-0.45" rx="0.1" ry="0.1"/>
+                            <ellipse class="d-cav" cx="-0.45" cy="-0.3" rx="0.08" ry="0.08"/>
+                        </g>
+                        <path id="reg-film" class="d-film" d=""/>
+                        <path id="reg-drr" class="d-drr" d=""/>
+                        <g id="reg-brk" visibility="hidden">
+                            <line class="d-brk" x1="132" y1="150" x2="144" y2="130"/>
+                            <line class="d-brk" x1="144" y1="150" x2="156" y2="130"/>
+                        </g>
+                        <circle cx="52" cy="140" r="7" class="srcdot"/>
+                        <text class="t-label" x="52" y="168" text-anchor="middle">Source</text>
+                        <text class="t-label" x="424" y="14" text-anchor="middle">Detector</text>
+                    </svg>
+                    <p class="legend"><span style="--c: var(--accent);">Real film</span><span style="--c: var(--accent-warn);">Virtual film from the CT</span></p>
+                    <div class="ctl"><label for="reg-th">Turn</label><input id="reg-th" type="range" min="0" max="359" step="1" value="0"><output id="reg-thv" for="reg-th">0°</output></div>
+                    <div class="ctl"><label for="reg-ty">Sideways</label><input id="reg-ty" type="range" min="-0.6" max="0.6" step="0.01" value="0"><output id="reg-tyv" for="reg-ty">+0.00</output></div>
+                    <div class="ctl"><label for="reg-tx">Back and forth</label><input id="reg-tx" type="range" min="-0.8" max="0.8" step="0.01" value="0"><output id="reg-txv" for="reg-tx">+0.00</output></div>
+                    <p class="chips-label">Projection model</p>
+                    <div class="chips" role="group" aria-label="Choose the projection model">
+                        <button class="chip" type="button" data-model="cone" aria-pressed="true">Cone model (point source)</button>
+                        <button class="chip" type="button" data-model="par" aria-pressed="false">Parallel model (simplified)</button>
+                    </div>
+                    <p class="chips-label">Source distance (times the specimen radius)</p>
+                    <div class="chips" role="group" aria-label="Choose the source distance">
+                        <button class="chip" type="button" data-n="4" aria-pressed="true">4×</button>
+                        <button class="chip" type="button" data-n="10" aria-pressed="false">10×</button>
+                        <button class="chip" type="button" data-n="20" aria-pressed="false">20×</button>
+                    </div>
+                    <div class="chips">
+                        <button class="chip" type="button" id="reg-auto">Match automatically</button>
+                        <button class="chip" type="button" id="reg-reset">Reset</button>
+                    </div>
+                    <div class="scorebar"><label for="reg-score">Similarity</label><div class="meter" aria-hidden="true"><span id="reg-bar" style="width: 20%;"></span></div><output id="reg-score" for="reg-th reg-ty reg-tx">0.804</output></div>
+                    <p id="reg-note" class="readout" aria-live="polite">Turn and move the CT until the two curves overlap. Moving it back and forth changes the size.</p>
+                    <p class="small">This is a toy for explanation. It takes a 2D slice as a one-line shadow and has only three pose values (turn, sideways, back and forth). Real 3D registration has six, and the source distance may be unknown. The drawing is a diagram, so it looks the same whatever source distance you pick. The numbers in the demo come from one film, so they may differ from the three-seed averages in the text.</p>
+                </div>
+            </div>
+        </section>
+
+        <section aria-labelledby="how-title">
+            <p class="step-no">04 Cone model</p>
+            <h2 id="how-title">Why a point source's cone model?</h2>
+            <ol class="steps">
+                <li>With a point source, things nearer the source appear larger, so the size of the shadow tells you the front-to-back position. Simplify to parallel rays and the shadow does not change when you move back and forth.</li>
+                <li>You need the distance between the source and the film and the pixel size to turn the CT's millimeters into the film's pixels.</li>
+                <li>The six pose values (three turns, three shifts) and this geometry fit into a single projection matrix. Registration is finding those values so that the virtual film looks most like the real film.</li>
+            </ol>
+            <div class="note" style="margin-top: 14px;">
+                <p><strong>Distance</strong>As the source moves away, the two models grow closer. In this toy, the parallel model's rotation error was within 2° once the source was only 6 times the specimen radius away, while the error with which the cone model finds the front-to-back position grew as the source moved farther (0.005 at 6×, 0.05 at 10×, 0.20 at 20×, 0.75 at 50×). The farther away the source is, the more the cone model's part shrinks to using a weakened depth signal. <span class="tag known">Confirmed</span> in the toy</p>
+            </div>
+            <p class="src">Source: we recomputed this page's 2D toy with an independent implementation and tested it (the analytic virtual film agrees with numerical integration to within 2.5×10⁻⁴, three seeds per source distance). We do not know what this distance ratio is in a real device.</p>
+        </section>
+
+        <section aria-labelledby="hard-title">
+            <p class="step-no">05 Why it is hard</p>
+            <h2 id="hard-title">Even so, matching is hard</h2>
+            <ul class="pts">
+                <li>One film tells the front-to-back direction only weakly. Many poses look alike. <span class="tag guess">Hypothesis</span> The toy supports this.</li>
+                <li>If you do not know the film's geometry (the source–film distance and so on), the magnification is off. <span class="tag guess">Hypothesis</span></li>
+                <li>A CT and a film use different X-ray energies, so their brightness may not correspond. <span class="tag guess">Hypothesis</span></li>
+            </ul>
+            <p class="warn-line" style="margin-top: 14px;">If the matching error is larger than a structure, you cannot draw that structure's boundary from the film.</p>
+        </section>
+
+        <section aria-labelledby="myth-title">
+            <h2 id="myth-title">Common misconceptions</h2>
+            <div class="note">
+                <p><strong>Myth</strong>A CT and an X-ray are different kinds of pictures, so they cannot be compared.</p>
+                <p class="fact"><strong>In fact</strong>Both are shadows from a point source, and a pixel is the sum of attenuation along a ray. The only difference is the number of views, so you can compute the same shadow from a CT and compare.</p>
+            </div>
+            <div class="note">
+                <p><strong>Myth</strong>If you match a film to a CT, you can draw structure boundaries exactly.</p>
+                <p class="fact"><strong>In fact</strong>If the matching error is larger than a structure, you cannot draw its boundary. That is because one film pins down the front-to-back direction only weakly.</p>
+            </div>
+        </section>
+
+        <section aria-labelledby="deep-title">
+            <h2 id="deep-title">Go deeper</h2>
+            <details class="more">
+                <summary>How is a CT solved into 3D?</summary>
+                <div class="body">
+                    <p>Paint each view's shadow back along the rays it came from and add them up (backprojection), and the shape emerges, but adding them as they are blurs it. So before backprojecting, filter the shadow with something that emphasizes edges (a ramp filter). Combine the two and you have filtered backprojection, and FDK, the standard cone-beam method, carries it over to 3D. <span class="tag known">Confirmed</span> We confirmed that FDK filters with a cosine weight and a ramp filter and then backprojects from the iFDK paper (Chen et al. 2019), and that almost all CBCT machines use FDK from Pauwels et al. 2015; we could not read the original 1984 paper.</p>
+                    <p>FDK solves each detector row as if it were a fan-beam problem and does only the backprojection in 3D. So on one circular orbit it is exact only in the central slice and approximate elsewhere, and the wider the cone, the larger the error. <span class="tag guess">Hypothesis</span> We confirmed the data-sufficiency condition (Tuy–Smith) only from secondary accounts.</p>
+                    <p>In the 2D toy (parallel rays, a 96×96 slice), the correlation with the true image stops at 0.64 without the filter however many views you add; with the filter it was 0.94 at 18 views and 0.98 at 60 views. <span class="tag known">Confirmed</span> in the toy</p>
+                    <p class="src">Sources: Feldkamp, Davis, Kress 1984 (J. Opt. Soc. Am. A 1:612), Chen et al. 2019 (iFDK, arXiv 1909.02724), Pauwels et al. 2015.</p>
+                </div>
+            </details>
+            <details class="more">
+                <summary>Where does the size of one voxel come from?</summary>
+                <div class="body">
+                    <p>The size one detector pixel covers on the specimen is the pixel size ÷ the magnification, and the magnification is the source–detector distance ÷ the source–specimen distance. Binning enlarges it by the binning factor. In the public SkyScan 1272 log, a 9.0 µm camera pixel with 3×3 binning gives 27 µm, and with a magnification of 270.988 ÷ 200.709 = 1.35 the expected value is about 20.0 µm, while the log's Image Pixel Size is 19.80 µm. We do not know why it is 0.99 times smaller. <span class="tag known">Confirmed</span> log values and arithmetic</p>
+                    <p>A small voxel does not mean the resolution is as good. <span class="tag known">Confirmed</span> In one micro-CT system (detector pixel 127 µm, magnification 5.10) the 10% MTF cutoff was 12.56 lp/mm, and the authors wrote that, because of the finite focal spot, the detector blur and the reconstruction kernel, it falls short of the Nyquist limit (Ghani et al. 2016, abstract). At that magnification the pixel on the specimen is about 25 µm and the Nyquist limit is about 20 lp/mm (arithmetic).</p>
+                </div>
+            </details>
+            <details class="more">
+                <summary>How far can you trust a measured volume?</summary>
+                <div class="body">
+                    <p>In specimens of the size handled in mineralized-tissue studies, the beam hardening artifact can reach 32.6% and affects mineral density measurements (Meganck et al. 2009, abstract). In a study comparing 13 dental CBCT devices, even after recalibration the mean error of the CBCT voxel values in the mid-density range was 35 to 1562 (Pauwels et al. 2013, abstract). <span class="tag known">Confirmed</span></p>
+                    <p>So the volume is an estimate set by the device, X-ray energy, filter, voxel, reconstruction and threshold. It is safer to fix the settings, sweep the threshold to see the sensitivity, and look at the relative change between registered scan pairs. <span class="tag guess">Hypothesis</span></p>
+                </div>
+            </details>
+        </section>
+
+        <section aria-labelledby="known-title">
+            <h2 id="known-title">Confirmed · Hypothesis · Unknown</h2>
+            <div class="note">
+                <p class="fact"><strong>Confirmed</strong>A CT and a film follow the same principle (Preuhs et al. 2018, the NIST attenuation law). In this toy, the analytic virtual film agrees with numerical integration, the parallel model cannot see back-and-forth movement, and the farther away the source is, the more alike the two models become and the weaker the cone model's depth signal gets.</p>
+                <p><strong>Hypothesis</strong>That the film's geometry and brightness may be unknown. Whether the toy's source-distance ratio matches a real device. That the 180°-flipped solution seen when the source is very far comes from the slice's left–right symmetry.</p>
+                <p><strong>Unknown</strong>How a film's brightness corresponds to CT values. The imaging geometry of a real film device. The equations and theorems in the original FDK paper.</p>
+            </div>
+        </section>
+
+        <section id="faq" aria-labelledby="faq-title">
+            <h2 id="faq-title">Frequently asked questions</h2>
+            <!-- 검색·AI 답변용. head의 FAQPage와 문장이 같아야 한다. 스크립트(scripts/build_page.py)가 JSON-LD를 이 본문에서 맞춘다. -->
+            <div class="faq" id="faq-list">
+                <details>
+                    <summary>What does it mean to match an X-ray film to a CT?</summary>
+                    <p>It means making a virtual X-ray picture from the CT volume while changing the CT's pose (three turns and three shifts), and finding the pose that looks most like the real film. Using virtual X-ray pictures (DRRs) to solve inverse problems such as slice-to-volume registration is well studied (Gopalakrishnan and Golland 2022, abstract), and methods that match a 3D CT to 2D X-ray projections are catalogued as 3D/2D registration (Markelj et al. 2012, abstract).</p>
+                </details>
+                <details>
+                    <summary>What is a DRR (virtual X-ray picture)?</summary>
+                    <p>A DRR (digitally reconstructed radiograph) is a picture computed by adding up the CT volume's values along the rays from a point source to each detector pixel. A real X-ray picture's pixel is also the sum of the attenuation coefficient along a ray (the NIST attenuation law), so the same formula makes the same kind of picture from a CT.</p>
+                </details>
+                <details>
+                    <summary>Why do you need a cone-beam model with a point source rather than parallel rays?</summary>
+                    <p>With a point source, things nearer the source appear larger, so the size of the shadow tells you the front-to-back position. With a parallel model, the shadow does not change when you move back and forth. In this page's 2D toy, though, once the source was 6 or more times the specimen radius away, the parallel model's rotation error was within 2°, and the cone model's power to find the front-to-back position weakened too.</p>
+                </details>
+                <details>
+                    <summary>How are a CT and an X-ray picture taken differently?</summary>
+                    <p>Both are taken with a point source, a specimen and a flat detector, and a pixel is the sum of attenuation along a ray. A CT collects pictures from hundreds of views as the specimen or the source turns, and a computer solves them into a 3D volume. An X-ray film is one picture from one view and is the result itself, so front and back overlap and there is no depth (Pauwels et al. 2015).</p>
+                </details>
+                <details>
+                    <summary>How is the voxel size of a micro-CT set?</summary>
+                    <p>By default it is the detector pixel size divided by the magnification (source–detector distance ÷ source–specimen distance), and binning enlarges it by the binning factor. In the public SkyScan 1272 log, a 27 µm pixel (9 µm with 3×3 binning) and a magnification of 1.35 gave an expected value of about 20 µm. A small voxel does not mean the resolution is as good.</p>
+                </details>
+                <details>
+                    <summary>How accurate is matching a film to a CT?</summary>
+                    <p>It depends on the device and the method, so this page does not give a single number. If the matching error is larger than a structure, you cannot draw that structure's boundary from the film. In this page's 2D toy, the error with which the cone model finds the front-to-back position grew as the source moved farther away (0.005 at 6×, 0.20 at 20×).</p>
+                </details>
+            </div>
+        </section>
+
+        <section aria-labelledby="more-title">
+            <h2 id="more-title">Further reading</h2>
+            <ul class="links">
+                <li><a href="https://doi.org/10.1016/j.media.2010.03.005">Markelj et al. 2012, a review of 3D/2D registration methods for image-guided interventions (Medical Image Analysis)</a></li>
+                <li><a href="https://arxiv.org/abs/1808.00853">Preuhs et al. 2018, viewpoint planning for quantitative coronary angiography (§2.1 has the C-arm geometry and projection matrix)</a></li>
+                <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4277439/">Pauwels et al. 2015, the technology of dental cone-beam CT</a></li>
+                <li><a href="https://doi.org/10.1364/JOSAA.1.000612">Feldkamp, Davis, Kress 1984, cone-beam reconstruction (FDK)</a></li>
+                <li><a href="https://physics.nist.gov/PhysRefData/XrayMassCoef/chap2.html">NIST, X-ray attenuation coefficients</a></li>
+                <li><a href="https://arxiv.org/abs/2208.12737">Gopalakrishnan and Golland 2022, a differentiable DRR generator (DiffDRR)</a></li>
+                <li><a href="https://arxiv.org/abs/1909.02724">Chen et al. 2019, iFDK: a scalable framework for instant high-resolution image reconstruction</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        Last updated <time datetime="2026-11-03">2026-11-03</time> · <a href="/en/">Hugh Q Lee</a> · Translated from the <a href="/knowledge/xray-ct-registration/" hreflang="ko">Korean original</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+            });
+            render();
+        })();
+
+        // 맞춰 보기: 2D 단면을 한 줄 그림자로 찍은 장난감. 계산은 해석 선적분이다 (knowledge-lab/cone-beam/cb/drr.py와 같은 식).
+        (function () {
+            "use strict";
+            var $ = function (id) { return document.getElementById(id); };
+            var UM = 1.9, NB = 96, RS = 62, OX = 300, OY = 140, X0 = 438;
+            var ELL = [[0, 0, 0.78, 0.88, 0.5], [0, 0.05, 0.3, 0.42, -0.5], [0, 0.4, 0.22, 0.06, 0.35], [0.5, -0.45, 0.1, 0.1, 1], [-0.45, -0.3, 0.08, 0.08, -0.5]];
+            var TRUE_POSE = { th: 40, tx: -0.3, ty: 0.12 };
+            var state = { cone: true, n: 4, th: 0, tx: 0, ty: 0 };
+            var film = null;
+            function geom(n) { return { sod: n, sdd: 1.5 * n }; }
+            function drr(th, tx, ty, cone, g) {
+                var a = th * Math.PI / 180, c = Math.cos(a), s = Math.sin(a), P = new Float64Array(NB);
+                for (var k = 0; k < NB; k++) {
+                    var u = -UM + (k + 0.5) * 2 * UM / NB, ox, oy, dx, dy;
+                    if (cone) { ox = -g.sod; oy = 0; dx = g.sdd; dy = u; } else { ox = -g.sod; oy = u * g.sod / g.sdd; dx = 1; dy = 0; }
+                    var len = Math.sqrt(dx * dx + dy * dy), qx = ox - tx, qy = oy - ty;
+                    var o1 = c * qx + s * qy, o2 = -s * qx + c * qy, d1 = c * dx + s * dy, d2 = -s * dx + c * dy, sum = 0;
+                    for (var e = 0; e < ELL.length; e++) {
+                        var E = ELL[e], px = o1 - E[0], py = o2 - E[1];
+                        var A = (d1 / E[2]) * (d1 / E[2]) + (d2 / E[3]) * (d2 / E[3]);
+                        var B = 2 * (px * d1 / (E[2] * E[2]) + py * d2 / (E[3] * E[3]));
+                        var C = (px / E[2]) * (px / E[2]) + (py / E[3]) * (py / E[3]) - 1;
+                        var D = B * B - 4 * A * C;
+                        if (D > 0) sum += E[4] * Math.sqrt(D) / A * len;
+                    }
+                    P[k] = sum;
+                }
+                return P;
+            }
+            function ncc(a, b) {
+                var ma = 0, mb = 0, i;
+                for (i = 0; i < NB; i++) { ma += a[i]; mb += b[i]; }
+                ma /= NB; mb /= NB;
+                var c = 0, va = 0, vb = 0;
+                for (i = 0; i < NB; i++) { var x = a[i] - ma, y = b[i] - mb; c += x * y; va += x * x; vb += y * y; }
+                return c / Math.sqrt(va * vb + 1e-12);
+            }
+            function makeFilm(g) {
+                var seed = 7;
+                function rnd() { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+                var P = drr(TRUE_POSE.th, TRUE_POSE.tx, TRUE_POSE.ty, true, g), mx = 0, k, f = new Float64Array(NB);
+                for (k = 0; k < NB; k++) if (P[k] > mx) mx = P[k];
+                for (k = 0; k < NB; k++) {
+                    var u = -UM + (k + 0.5) * 2 * UM / NB;
+                    f[k] = 0.7 * P[k] + 0.03 * mx * (1 - (u / UM) * (u / UM)) + 0.02 * mx * (rnd() + rnd() + rnd() - 1.5);
+                }
+                return f;
+            }
+            function pathOf(arr) {
+                var mx = 1e-9, k, d = "";
+                for (k = 0; k < NB; k++) if (arr[k] > mx) mx = arr[k];
+                for (k = 0; k < NB; k++) {
+                    var u = -UM + (k + 0.5) * 2 * UM / NB;
+                    d += (k ? "L" : "M") + (X0 + 200 * Math.max(arr[k], 0) / mx).toFixed(1) + " " + (OY + u * RS).toFixed(1);
+                }
+                return d;
+            }
+            function sgn(v) { return (v >= 0 ? "+" : "") + v.toFixed(2); }
+            function setAll(el, o) { for (var k in o) el.setAttribute(k, o[k]); }
+            function labels() {
+                $("reg-thv").textContent = Math.round(state.th) + "°";
+                $("reg-tyv").textContent = sgn(state.ty);
+                $("reg-txv").textContent = sgn(state.tx);
+            }
+            function render(note) {
+                var g = geom(state.n), P = drr(state.th, state.tx, state.ty, state.cone, g), s = ncc(P, film);
+                $("reg-ph").setAttribute("transform", "translate(" + (OX + state.tx * RS).toFixed(1) + " " + (OY + state.ty * RS).toFixed(1) + ") rotate(" + state.th.toFixed(1) + ") scale(" + RS + ")");
+                $("reg-film").setAttribute("d", pathOf(film));
+                $("reg-drr").setAttribute("d", pathOf(P));
+                setAll($("reg-beam"), { points: state.cone ? "52,140 424,22 424,258" : "52,22 424,22 424,258 52,258" });
+                $("reg-brk").setAttribute("visibility", state.n > 4 ? "visible" : "hidden");
+                var bar = $("reg-bar");
+                bar.style.width = (Math.max(0, Math.min(1, (s - 0.75) / 0.25)) * 100).toFixed(0) + "%";
+                bar.className = s >= 0.995 ? "ok" : "";
+                $("reg-score").textContent = s.toFixed(3);
+                labels();
+                if (note) { $("reg-note").textContent = note; return; }
+                var t;
+                if (state.cone) t = s >= 0.995 ? "Matched. The virtual film overlaps the real film." : s >= 0.97 ? "Almost there. Move it sideways and back and forth a little more." : "Turn and move the CT until the two curves overlap. Moving it back and forth changes the size.";
+                else t = "This is the parallel model. Moving back and forth does not change the virtual film. It cannot use size or depth.";
+                $("reg-note").textContent = t;
+            }
+            function search(cone, g) {
+                var best = { s: -2, th: 0, tx: 0, ty: 0 }, th, ty, i, tx, s;
+                var txs = cone ? [-0.6, -0.45, -0.3, -0.15, 0, 0.15, 0.3, 0.45, 0.6] : [0];
+                for (th = 0; th < 360; th += 4) for (ty = -0.4; ty <= 0.401; ty += 0.08) for (i = 0; i < txs.length; i++) {
+                    s = ncc(drr(th, txs[i], ty, cone, g), film);
+                    if (s > best.s) best = { s: s, th: th, tx: txs[i], ty: ty };
+                }
+                var b0 = { th: best.th, tx: best.tx, ty: best.ty };
+                for (th = b0.th - 4; th <= b0.th + 4.01; th += 0.5) for (ty = b0.ty - 0.08; ty <= b0.ty + 0.081; ty += 0.01) for (tx = cone ? b0.tx - 0.15 : 0; tx <= (cone ? b0.tx + 0.151 : 0); tx += 0.015) {
+                    s = ncc(drr(th, tx, ty, cone, g), film);
+                    if (s > best.s) best = { s: s, th: th, tx: tx, ty: ty };
+                }
+                return best;
+            }
+            function sync() { $("reg-th").value = Math.round(state.th); $("reg-ty").value = state.ty; $("reg-tx").value = state.tx; }
+            function press(buttons, key, value) {
+                buttons.forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute(key) === String(value) ? "true" : "false"); });
+            }
+            ["reg-th", "reg-ty", "reg-tx"].forEach(function (id) {
+                $(id).addEventListener("input", function () {
+                    state.th = Number($("reg-th").value); state.ty = Number($("reg-ty").value); state.tx = Number($("reg-tx").value);
+                    render();
+                });
+            });
+            var modelBtns = Array.prototype.slice.call(document.querySelectorAll("[data-model]"));
+            var distBtns = Array.prototype.slice.call(document.querySelectorAll("[data-n]"));
+            modelBtns.forEach(function (b) {
+                b.addEventListener("click", function () { state.cone = b.getAttribute("data-model") === "cone"; press(modelBtns, "data-model", state.cone ? "cone" : "par"); render(); });
+            });
+            distBtns.forEach(function (b) {
+                b.addEventListener("click", function () { state.n = Number(b.getAttribute("data-n")); press(distBtns, "data-n", state.n); film = makeFilm(geom(state.n)); render(); });
+            });
+            $("reg-reset").addEventListener("click", function () { state.th = 0; state.tx = 0; state.ty = 0; sync(); render(); });
+            $("reg-auto").addEventListener("click", function () {
+                var g = geom(state.n), b = search(state.cone, g);
+                state.th = ((b.th % 360) + 360) % 360; state.tx = b.tx; state.ty = b.ty;
+                sync();
+                var dth = Math.abs(state.th - TRUE_POSE.th); dth = Math.min(dth, 360 - dth);
+                var msg;
+                if (state.cone) msg = "Found automatically. It differs from the true pose by " + dth.toFixed(1) + "° in rotation, " + Math.abs(state.ty - TRUE_POSE.ty).toFixed(2) + " sideways and " + Math.abs(state.tx - TRUE_POSE.tx).toFixed(2) + " back and forth.";
+                else msg = "Even doing its best, the parallel model reaches a similarity of " + b.s.toFixed(3) + ". It is off from the true pose by " + dth.toFixed(1) + "° in rotation, and it cannot tell the front-to-back position.";
+                render(msg);
+            });
+            film = makeFilm(geom(state.n));
+            render();
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-11-03","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"},{"id":"ml","name":"기계 학습","name_en":"Machine learning"},{"id":"llm","name":"언어 모델","name_en":"Language models","parent":"ml"},{"id":"rob","name":"로봇·자동화","name_en":"Robotics and automation"},{"id":"ct","name":"X선·CT 영상","name_en":"X-ray and CT imaging"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"},{"id":"train-val-calib-test","title":"train·val·calib·test","title_en":"train/val/calib/test","domain":"ml","status":"published","href":"../train-val-calib-test/","summary":"학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold를 위해 칸 하나를 더 두기","summary_en":"Keep one more split for what is fitted after training: the temperature T and the threshold"},{"id":"error-backpropagation","title":"역전파","title_en":"Backpropagation","domain":"ml","status":"published","href":"../error-backpropagation/","summary":"출력의 오차를 뒤로 전해 다층 퍼셉트론의 가운데 층까지 고치기","summary_en":"Pass the output's error backward to correct the middle layer of a multilayer perceptron too"},{"id":"robot-types","title":"로봇의 종류","title_en":"Robot types","domain":"rob","status":"published","href":"../robot-types/","summary":"관절을 잇는 구조가 손끝의 자세를 정하고, 그 자세가 실험실에서 로봇의 쓰임을 정한다","summary_en":"How the joints are joined sets the hand's posture, and the posture sets what a robot does in the lab"},{"id":"hydraulic-pneumatic-microinjector","title":"마이크로인젝터","title_en":"Microinjectors","domain":"rob","status":"published","href":"../hydraulic-pneumatic-microinjector/","summary":"공기로 미는 공압식은 압력을, 기름으로 미는 유압식은 부피를 정한다","summary_en":"A pneumatic injector pushes with air and sets the pressure; a hydraulic one pushes with oil and sets the volume"},{"id":"kimi-k3-1-pro","title":"Kimi K3.1 Pro","title_en":"Kimi K3.1 Pro","domain":"llm","status":"published","href":"../kimi-k3-1-pro/","summary":"몸통은 그대로 두고 사후 학습으로 AA 지수를 44에서 55로 올리기","summary_en":"Raise the AA index from 44 to 55 with post-training, on the same base model"},{"id":"pretraining-posttraining-inference","title":"사전 학습·사후 학습·추론","title_en":"Pre-training, post-training, inference","domain":"llm","status":"published","href":"../pretraining-posttraining-inference/","summary":"사전 학습과 사후 학습은 가중치를 바꾸고, 추론은 가중치를 그대로 둔 채 맥락으로 답한다","summary_en":"Pre-training and post-training change the weights; inference leaves them as they are and answers from the context"},{"id":"xray-ct-registration","title":"X선–CT 정합","title_en":"X-ray to CT registration","domain":"ct","status":"published","href":"../xray-ct-registration/","summary":"엑스레이 필름 한 장은 CT가 찍는 그림자의 한 방향이라서, CT에서 가상 필름을 계산해 필름에 맞출 수 있다","summary_en":"An X-ray film is one view of what a CT scan records, so a virtual film computed from the CT can be matched to it"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"},{"from":"error-backpropagation","to":"pretraining-posttraining-inference"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            MAP.nodes.forEach(function (n) { n.title = n.title_en || n.title; n.summary = n.summary_en || n.summary; });
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 100 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (coming soon)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "coming soon";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "you are here";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
