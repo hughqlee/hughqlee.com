@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지워도, 안 지워져요 | Hugh Q Lee</title>
+    <meta name="description" content="포맷과 플래시가 먼저 지우는 것은 파일 내용이 아니라 어디에 뭐가 있는지 적은 지도(파티션 테이블과 파일 시스템의 첫머리)라서, 새로 덮어쓰지 않은 본문은 그대로 있고 되살릴 수 있다.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="포맷 데이터 복구, 삭제한 파일 복구, 플래시 후 데이터 복구, 파티션 테이블, 부트 영역, exFAT, 파일 카빙, 지워진 파티션 복구, 외장하드 복구">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/format-keeps-data/">
+    <!-- 영문판(/knowledge/en/format-keeps-data/)은 System/build_en.py가 이 페이지에서 만든다. 두 판이 서로를 가리킨다. -->
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/format-keeps-data/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/format-keeps-data/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/format-keeps-data/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:title" content="지워도, 안 지워져요">
+    <meta property="og:description" content="포맷과 플래시가 먼저 지우는 것은 파일 내용이 아니라 어디에 뭐가 있는지 적은 지도(파티션 테이블과 파일 시스템의 첫머리)라서, 새로 덮어쓰지 않은 본문은 그대로 있고 되살릴 수 있다.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/format-keeps-data/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/format-keeps-data/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="점선으로 지워진 지도 칸과 그대로 남은 사진·문서·영상·음악·메모 칸이 늘어선 디스크 그림">
+    <meta property="article:published_time" content="2026-11-05">
+    <meta property="article:modified_time" content="2026-11-05">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="지워도, 안 지워져요">
+    <meta name="twitter:description" content="포맷과 플래시가 먼저 지우는 것은 파일 내용이 아니라 어디에 뭐가 있는지 적은 지도(파티션 테이블과 파일 시스템의 첫머리)라서, 새로 덮어쓰지 않은 본문은 그대로 있고 되살릴 수 있다.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/format-keeps-data/og.png">
+    <meta name="twitter:image:alt" content="점선으로 지워진 지도 칸과 그대로 남은 사진·문서·영상·음악·메모 칸이 늘어선 디스크 그림">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage의 문장은 본문 "자주 묻는 질문"과 같아야 한다. 질문을 늘리면 둘 다 늘린다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/format-keeps-data/#article",
+          "workTranslation": {
+            "@id": "https://hughqlee.com/knowledge/en/format-keeps-data/#article"
+          },
+          "headline": "지워도, 안 지워져요",
+          "alternativeHeadline": "포맷하거나 플래시로 지운 디스크의 데이터를 왜 되살릴 수 있나?",
+          "description": "포맷과 플래시가 먼저 지우는 것은 파일 내용이 아니라 어디에 뭐가 있는지 적은 지도(파티션 테이블과 파일 시스템의 첫머리)라서, 새로 덮어쓰지 않은 본문은 그대로 있고 되살릴 수 있다.",
+          "abstract": "포맷과 플래시가 먼저 지우는 것은 파일 내용이 아니라 어디에 뭐가 있는지 적은 지도(파티션 테이블과 파일 시스템의 첫머리)라서, 새로 덮어쓰지 않은 본문은 그대로 있고 되살릴 수 있다.",
+          "inLanguage": "ko",
+          "datePublished": "2026-11-05",
+          "dateModified": "2026-11-05",
+          "url": "https://hughqlee.com/knowledge/format-keeps-data/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/format-keeps-data/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/format-keeps-data/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/#collection"
+          },
+          "isAccessibleForFree": true,
+          "citation": {
+            "@type": "CreativeWork",
+            "name": "Microsoft, exFAT file system specification",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/exfat-specification"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "지워도, 안 지워져요",
+              "item": "https://hughqlee.com/knowledge/format-keeps-data/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/format-keeps-data/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "포맷하면 데이터가 정말 지워지나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "빠른 포맷은 파일 테이블과 루트 디렉터리를 지운다(Microsoft format /Q). 전체 포맷은 디스크의 모든 칸에 쓰기 때문에(Microsoft Format-Volume -Full) 옛 본문을 되살릴 수 없다. 이 페이지의 실험에서는 파티션 정보를 지우고 디스크 앞부분을 덮어도, 덮이지 않은 본문의 바이트는 하나도 달라지지 않았다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "플래시가 0%에서 멈췄다. 외장하드는 어떻게 되나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Raspberry Pi Imager는 이미지를 쓰기 전에 파티션 정보를 지우고(Windows), 디스크의 앞 1 MiB와 끝 1 MiB를 0으로 채운다. 이미지의 첫 덩어리는 검증이 끝난 뒤에 마지막으로 쓴다. 그래서 0%에서 멈췄다면 보통 지도와 이 두 끝만 사라졌고, 그 밖의 본문은 그대로다. 볼륨이 맨 앞 1 MiB 안에서 시작했다면 부트 영역도 0이 되었을 수 있고, 볼륨이 어디서 시작하는지는 디스크마다 다르다. 이 설명은 Imager 소스(main 브랜치) 기준이라 설치한 버전에 따라 다를 수 있다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "탐색기에서 드라이브가 사라졌는데 디스크 관리에는 왜 보이나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "장치 자체는 살아 있다. 디스크를 탐색기에서 쓰려면 초기화하고 볼륨을 만들어야 하고, 드라이브 문자는 그 볼륨에 붙는다(Microsoft 디스크 관리 문서). 파티션 정보가 지워지면 붙일 볼륨이 없어서 탐색기에서는 사라지고, 디스크 관리에는 디스크만 남는다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "exFAT에서는 디스크 맨 앞이 덮이면 끝인가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "아니다. 부트 영역 원본(섹터 0~11) 바로 뒤에 복사본(섹터 12~23)이 있어서(Microsoft exFAT 사양 Table 3), 원본만 덮였으면 복사본으로 되살릴 수 있다. 이 페이지의 실험에서는 덮은 양이 6,144바이트 이하일 때 파일 20개가 모두 이름까지 돌아왔다. 복사본의 첫 섹터까지 덮이면 둘 다 사라져서, 덮이지 않은 본문은 파일 카빙으로 내용만 꺼내야 한다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "덮어쓴 양 밖에 있던 예전 파일은 그대로 있나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "그렇다. Raspberry Pi Imager는 이미지를 맨 앞부터 이미지 길이만큼 쓰고 디스크 끝의 1 MiB를 0으로 채울 뿐 그 사이의 칸은 건드리지 않으므로, 본문의 바이트는 그대로다. 다만 열려면 맨 앞의 부트 영역과 파일 목록이 필요해서, 그게 덮였으면 이름 없이 내용만 꺼내야 한다. 오래된 파일이 뒤쪽에 있다는 보장은 없다. 이 실험에서는 먼저 쓴 파일이 앞쪽에 놓여 먼저 덮였다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "파일 카빙으로는 어떤 파일을 찾고, 어떤 파일을 못 찾나?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "파일 카빙은 파일 맨 앞의 표지로 파일을 찾는다. JPG는 FF D8 FF, PDF는 %PDF로 시작한다. 글 파일(.txt)처럼 표지가 없으면 칸이 그대로여도 이 실험의 파일 카빙으로는 찾지 못했다. 머리가 덮이고 꼬리만 남은 파일도 찾을 수 없다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "SSD도 같은가?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "SSD는 운영체제가 쓰지 않는 칸을 TRIM으로 알려 주면 그 칸을 내부에서 비울 수 있어서 본문이 사라질 수 있다. TRIM과 가비지 컬렉션 뒤에는 되살리기가 어렵거나 불가능할 수 있고, 드라이브 펌웨어에 따라 다르다. 이 페이지의 실험은 칸이 그대로 남는 저장 장치를 가정했다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "디스크를 잘못 지웠을 때 가장 먼저 할 일은?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "그 디스크에 아무것도 쓰지 않는다. 복구는 새 데이터가 덮기 전까지의 경주이고, 새로 덮인 칸의 옛 본문은 되살릴 수 없다."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --danger: #ff8c8c;
+            --f-photo: #f0c674;
+            --f-doc: #ff9b85;
+            --f-video: #e58acb;
+            --f-music: #9ce37d;
+            --f-memo: #b7a5ff;
+            --c-boot: #7e9bd1;
+            --on-boot: #0b1626;
+            --c-list: #5fb4c9;
+            --on-list: #04161c;
+            --c-backup: #2a4d5f;
+            --on-backup: #e7edf2;
+            --over-a: #55616b;
+            --over-b: #3f4a53;
+            --unalloc: #0a0d10;
+            --on-unalloc: #e7edf2;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --danger: #b42323;
+            --f-photo: #b9842a;
+            --f-doc: #d4624a;
+            --f-video: #b8479b;
+            --f-music: #3f9a4d;
+            --f-memo: #7a68d6;
+            --c-boot: #3a5fa8;
+            --on-boot: #ffffff;
+            --c-list: #8cc7d6;
+            --on-list: #0d2a33;
+            --c-backup: #cfe3ea;
+            --on-backup: #18212a;
+            --over-a: #a3adb6;
+            --over-b: #838e99;
+            --unalloc: #222a30;
+            --on-unalloc: #e8edf1;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            cursor: pointer;
+        }
+        .theme-toggle:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 32px; border-bottom: 1px solid var(--line); }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        section { padding: 32px 0; }
+        h2 { margin: 0 0 12px; font-size: 22px; line-height: 1.4; }
+
+        .panel {
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .hint { margin: 0 0 16px; color: var(--muted); }
+        .demo label {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .demo input[type="range"] { width: 100%; min-height: 44px; margin: 4px 0; accent-color: var(--accent); }
+        .meter { height: 10px; overflow: hidden; border-radius: 999px; background: var(--panel-strong); }
+        .meter span { display: block; width: 0; height: 100%; background: var(--accent); transition: width 0.2s ease; }
+        .result { margin: 12px 0 0; font-family: var(--mono); font-size: 15px; }
+
+        .steps { margin: 0; padding-left: 1.4em; }
+        .steps li { margin: 8px 0; }
+        .steps li::marker { color: var(--accent); font-family: var(--mono); }
+
+        .note {
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+
+        /* 확인됨 · 가설 · 모름 표시: <span class="tag known">확인됨</span> */
+        .tag {
+            display: inline-block;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.known { color: var(--accent-green); }
+        .tag.guess { color: var(--accent-warn); }
+        .tag.unknown { color: var(--muted); }
+
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        /* 지우기와 되살리기 시뮬레이터 */
+        .sim { display: grid; gap: 16px; }
+        .disk { display: grid; grid-template-columns: repeat(20, 1fr); gap: 3px; }
+        .cell { height: 34px; overflow: hidden; border-radius: 4px; font-size: 11px; font-weight: 600; line-height: 34px; text-align: center; white-space: nowrap; transition: background 0.25s; }
+        .cell.pt { background: var(--accent); color: var(--bg); }
+        .cell.ptx { border: 1.5px dashed var(--accent); background: transparent; color: var(--accent); line-height: 31px; }
+        .cell.bt { background: var(--c-boot); color: var(--on-boot); }
+        .cell.fl { background: var(--c-list); color: var(--on-list); }
+        .cell.bk { background: var(--c-backup); color: var(--on-backup); }
+        .cell.blank { background: var(--panel-strong); }
+        .cell.over { background: repeating-linear-gradient(135deg, var(--over-a) 0 4px, var(--over-b) 4px 8px); color: transparent; }
+        .cell.zero { border: 1px solid var(--line); background: var(--panel-strong); color: var(--muted); line-height: 32px; }
+        .c-photo { background: var(--f-photo); }
+        .c-doc { background: var(--f-doc); }
+        .c-video { background: var(--f-video); }
+        .c-music { background: var(--f-music); }
+        .c-memo { background: var(--f-memo); }
+        .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 13px; line-height: 1.5; }
+        .legend li { display: inline-flex; align-items: center; gap: 6px; }
+        .legend i { display: inline-block; width: 14px; height: 14px; flex: none; border-radius: 3px; }
+        .legend i.k-pt { background: var(--accent); }
+        .legend i.k-bt { background: var(--c-boot); }
+        .legend i.k-fl { background: var(--c-list); }
+        .legend i.k-bk { background: var(--c-backup); }
+        .legend i.k-over { background: repeating-linear-gradient(135deg, var(--over-a) 0 3px, var(--over-b) 3px 6px); }
+        .legend i.k-zero { border: 1px solid var(--line-strong); background: var(--panel-strong); }
+        .say { margin: 0; padding: 14px 16px; border-radius: var(--radius); background: var(--panel-soft); font-weight: 600; min-height: 3.6em; }
+        .sim-steps { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+        .sim-steps > li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: start; }
+        .num { display: grid; place-items: center; width: 30px; height: 30px; margin-top: 6px; border-radius: 50%; background: var(--text); color: var(--bg); font-family: var(--mono); font-size: 14px; }
+        .btn { min-height: 44px; padding: 10px 16px; border: 0; border-radius: var(--radius); background: var(--accent); color: var(--bg); font: inherit; font-weight: 600; text-align: left; cursor: pointer; }
+        .btn.ghost { border: 1px solid var(--line-strong); background: transparent; color: var(--text); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .sim-steps label { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 4px; font-weight: 600; }
+        .sim-steps input[type="range"] { width: 100%; min-height: 44px; margin: 0; accent-color: var(--accent); }
+        .sim-steps input[type="range"]:disabled { opacity: 0.4; }
+        .screens { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .win { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); min-width: 0; }
+        .win-bar { padding: 7px 12px; background: var(--panel-strong); color: var(--muted); font-family: var(--mono); font-size: 12px; }
+        .win-body { display: flex; flex-direction: column; justify-content: center; gap: 8px; min-height: 96px; padding: 14px; font-size: 15px; line-height: 1.5; }
+        .win-body small { display: block; color: var(--muted); font-size: 13px; }
+        .win-body .empty { color: var(--muted); }
+        .drive { display: flex; align-items: center; gap: 12px; }
+        .drive-ico { position: relative; flex: none; width: 44px; height: 26px; border-radius: 5px; background: var(--faint); }
+        .drive-ico::after { content: ""; position: absolute; right: 6px; bottom: 5px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-green); }
+        .dm-row { font-weight: 600; }
+        .dm-bar { display: flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 4px; font-family: var(--mono); font-size: 12px; }
+        .dm-bar.ok { background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+        .dm-bar.free { background: var(--unalloc); color: var(--on-unalloc); }
+        .dm-bar.raw { background: var(--accent-warn); color: #1b1204; }
+        .files { display: flex; flex-direction: column; }
+        .frow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 9px 0; border-top: 1px solid var(--line); }
+        .frow:first-child { border-top: 0; }
+        .sw { width: 14px; height: 14px; flex: none; border-radius: 3px; }
+        .fname { flex: 1 1 80px; font-weight: 600; }
+        .stag { padding: 5px 10px; border: 1px solid currentColor; border-radius: 999px; font-size: 13px; font-weight: 600; line-height: 1.3; }
+        .stag.ok { color: var(--accent-green); }
+        .stag.warn { color: var(--accent-warn); }
+        .stag.bad { color: var(--danger); }
+        .stag.mute { color: var(--muted); }
+        .src { display: block; margin-top: 4px; color: var(--muted); font-size: 14px; }
+        .kinds { margin: 0; padding-left: 1.2em; }
+        .kinds li { margin: 8px 0; }
+        @media (max-width: 560px) {
+            .disk { grid-template-columns: repeat(10, 1fr); }
+            .screens { grid-template-columns: 1fr; }
+        }
+
+        footer {
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="위치">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/en/format-keeps-data/" hreflang="en" lang="en">English</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main" class="wrap">
+        <section class="hero">
+            <!-- 지식 지도: 데이터와 규칙은 System/지식 지도.md. 한 줄 글은 스크립트 없이도 읽히는 같은 내용이다.
+                 이 글: 컴퓨터·저장장치 분야의 첫 글 · 먼저 읽을 글과 이어서 읽을 글은 아직 없다 -->
+            <nav class="kmap" aria-label="지식 지도" data-current="format-keeps-data">
+                <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">컴퓨터·저장장치</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">이 분야의 첫 글이다. 먼저 읽을 글과 이어서 읽을 글은 아직 없다.</p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE</p>
+            <h1>지워도, 안 지워져요</h1>
+            <p class="answer">포맷과 플래시가 먼저 지우는 것은 파일 내용이 아니라 어디에 뭐가 있는지 적은 지도(파티션 테이블과 파일 시스템의 첫머리)라서, 새로 덮어쓰지 않은 본문은 그대로 있고 되살릴 수 있다.</p>
+        </section>
+
+        <section aria-labelledby="try-title">
+            <h2 id="try-title">지도 지우고 되살리기</h2>
+            <div class="panel sim">
+                <p class="hint">외장하드에 이미지를 잘못 플래시하는 장면을 따라가 보자. 1번으로 지도를 지우고, 2번으로 새 이미지가 덮는 양을 바꾼 뒤, 3번으로 되살려 본다. 한 칸은 디스크의 2.5%다.</p>
+                <div id="disk" class="disk" role="img" aria-label="외장하드를 40칸으로 나눈 그림. 맨 앞에 지도와 부트 영역과 파일 목록이 있고, 그 뒤에 사진, 문서, 영상, 음악, 메모 칸이 이어진다."></div>
+                <ul class="legend">
+                    <li><i class="k-pt"></i>지도(파티션 테이블)</li>
+                    <li><i class="k-bt"></i>부트 영역(복사본이 바로 옆)</li>
+                    <li><i class="k-fl"></i>파일 목록(폴더 항목)</li>
+                    <li><i class="c-photo"></i>사진</li>
+                    <li><i class="c-doc"></i>문서</li>
+                    <li><i class="c-video"></i>영상</li>
+                    <li><i class="c-music"></i>음악</li>
+                    <li><i class="c-memo"></i>메모</li>
+                    <li><i class="k-bk"></i>디스크 끝의 지도 복사본</li>
+                    <li><i class="k-zero"></i>플래시가 0으로 채운 칸</li>
+                    <li><i class="k-over"></i>새 이미지가 덮은 칸</li>
+                </ul>
+                <p id="say" class="say" aria-live="polite">지금은 모두 정상이다. 1번을 눌러 지도를 지워 보자.</p>
+                <ol class="sim-steps">
+                    <li><span class="num">1</span><div><button id="b1" class="btn" type="button">플래시 시작: 지도부터 지운다</button></div></li>
+                    <li><span class="num">2</span><div>
+                        <label for="ov">새 이미지가 맨 앞부터 덮은 양 <output id="ovv" for="ov">0%</output></label>
+                        <input id="ov" type="range" min="0" max="100" step="1" value="0" disabled>
+                        <p class="hint">실제 이미지는 3~10 GB 안팎이라서 큰 외장하드에서는 맨 앞의 아주 작은 부분만 덮인다. 그림은 잘 보이게 과장했다.</p>
+                    </div></li>
+                    <li><span class="num">3</span><div><button id="b3" class="btn" type="button" disabled>복구: 지도를 다시 그려 본다</button></div></li>
+                </ol>
+                <div><button id="b0" class="btn ghost" type="button">처음으로</button></div>
+                <div class="screens">
+                    <div class="win"><div class="win-bar">탐색기</div><div id="winEx" class="win-body"><div class="drive"><span class="drive-ico"></span><div><b>내 외장하드 (E:)</b><small>폴더와 파일이 보인다</small></div></div></div></div>
+                    <div class="win"><div class="win-bar">디스크 관리</div><div id="winDm" class="win-body"><div class="dm-row">디스크 4 · 온라인</div><div class="dm-bar ok">exFAT · 정상</div></div></div>
+                </div>
+                <div id="files" class="files" aria-live="polite">
+                    <div class="frow"><span class="sw c-photo"></span><span class="fname">사진</span><span class="stag ok">✓ 정상</span></div>
+                    <div class="frow"><span class="sw c-doc"></span><span class="fname">문서</span><span class="stag ok">✓ 정상</span></div>
+                    <div class="frow"><span class="sw c-video"></span><span class="fname">영상</span><span class="stag ok">✓ 정상</span></div>
+                    <div class="frow"><span class="sw c-music"></span><span class="fname">음악</span><span class="stag ok">✓ 정상</span></div>
+                    <div class="frow"><span class="sw c-memo"></span><span class="fname">메모</span><span class="stag ok">✓ 정상</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section aria-labelledby="how-title">
+            <h2 id="how-title">어떻게 된 걸까</h2>
+            <ol class="steps">
+                <li>디스크에는 지도와 본문이 따로 있다. 지도는 어디에 뭐가 있는지 적은 곳이고, 본문은 파일 내용이 든 칸이다. exFAT에서는 지도가 여러 겹이다. 디스크 맨 앞의 파티션 테이블, 볼륨 맨 앞의 부트 영역, 폴더 안의 파일 목록(폴더 항목)이다. <span class="tag known">확인됨</span>
+                    <span class="src">출처: Microsoft exFAT 사양 Table 3, §6</span></li>
+                <li>포맷과 플래시는 먼저 지도를 지우거나 새로 쓴다. 플래시 도구(Raspberry Pi Imager)는 쓰기 전에 파티션 정보를 지우고(Windows), 디스크의 앞 1 MiB와 끝 1 MiB를 0으로 채운 뒤, 이미지를 맨 앞부터 이미지 길이만큼 쓴다. 이미지의 첫 덩어리는 검증이 끝난 뒤에 쓴다. 빠른 포맷은 파일 테이블과 루트 디렉터리를 지우고, 전체 포맷은 모든 칸에 쓴다. <span class="tag known">확인됨</span>
+                    <span class="src">출처: Raspberry Pi Imager 소스(downloadthread.cpp, main 브랜치, 2026-11-04에 읽음), Microsoft format·Format-Volume 문서, Raspberry Pi OS 다운로드 페이지(필요 저장 공간 2,656~9,504 MB). 설치한 버전에 따라 다를 수 있다</span></li>
+                <li>지도가 없으면 운영체제는 빈 디스크로 본다. 탐색기에서 드라이브가 사라지고, 디스크 관리에는 장치만 남는다. 덮이지 않은 본문은 그대로라서, 지도를 다시 그리거나 파일 카빙(파일 맨 앞의 표지로 찾는 방법)으로 되살린다. 정말 사라지는 것은 새로 덮어쓴 범위뿐이다. <span class="tag known">확인됨</span>
+                    <span class="src">출처: Microsoft exFAT 사양 §3.1, Microsoft 디스크 관리 문서(디스크를 초기화하고 볼륨을 만든 뒤에 드라이브 문자를 붙인다), 이 페이지의 실험(직접 구현)</span></li>
+            </ol>
+        </section>
+
+        <section aria-labelledby="exp-title">
+            <h2 id="exp-title">실험에서 본 것</h2>
+            <p class="hint">128 MiB 디스크 이미지에 exFAT를 만들고 파일 20개를 쓴 뒤, 파티션 정보를 지우고 맨 앞 N바이트를 무작위 바이트로 덮었다. 시나리오 36개다. 직접 구현한 코드와 macOS의 exFAT 드라이버로 확인했다. 플래시가 끝 1 MiB를 0으로 채우는 단계는 따라 하지 않았다(파일이 디스크 끝에 없다).</p>
+            <ul class="kinds">
+                <li>부트 영역 원본(6,144바이트)이 덮여도 바로 뒤 복사본이 살아 있으면 파일 20개가 모두 이름까지 돌아왔다. <span class="tag known">확인됨</span></li>
+                <li>복사본의 첫 섹터까지 덮이면 부트 영역으로는 읽지 못했다. 그래도 덮이지 않은 본문의 바이트는 하나도 달라지지 않았다. <span class="tag known">확인됨</span></li>
+                <li>파일 목록은 폴더마다 그 파일들 바로 앞에 흩어져 있어서, 덮는 양이 늘수록 폴더 단위로 이름을 잃었다. <span class="tag known">확인됨</span></li>
+                <li>메모 같은 글 파일은 머리 표지가 없어서, 칸이 그대로여도 파일 카빙으로 찾지 못했다. <span class="tag known">확인됨</span></li>
+                <li>macOS의 exFAT 드라이버는 먼저 쓴 파일을 디스크 앞쪽에 놓았다. 오래된 파일이 먼저 덮인 셈이다. <span class="tag known">확인됨</span></li>
+            </ul>
+        </section>
+
+        <section aria-labelledby="trust-title">
+            <h2 id="trust-title">얼마나 확인했나</h2>
+            <div class="note">
+                <p class="fact"><strong>확인됨</strong>exFAT 부트 영역과 복사본의 위치, 표지 바이트, 폴더 항목의 짜임(사양). 플래시 도구가 파티션 정보를 지우고 앞뒤 1 MiB를 0으로 채운다는 것(Raspberry Pi Imager 소스). 이 페이지의 실험 결과(직접 구현한 코드와 macOS 드라이버).</p>
+                <p><strong>가설</strong>실제 복구 도구가 exFAT 부트 영역의 복사본으로 되살리는지, 부트 영역이 사라진 뒤 폴더 항목을 주워 이름을 되살리는지. TestDisk 문서는 exFAT의 잃어버린 파티션 찾기를 적지만 부트 섹터 복구는 FAT32와 NTFS만 적는다.</p>
+                <p><strong>모름</strong>실제 Windows가 만든 디스크에서 볼륨이 어디서 시작하는지(Microsoft 문서에서 찾지 못했다). 파티션 정보를 지운 디스크를 디스크 관리가 어떻게 표시하는지. 쪼개진 파일과 SSD에서의 결과.</p>
+            </div>
+        </section>
+
+        <section aria-labelledby="myth-title">
+            <h2 id="myth-title">흔한 오해</h2>
+            <div class="note">
+                <p><strong>오해</strong>포맷하거나 플래시를 누르면 디스크의 데이터가 지워진다.</p>
+                <p class="fact"><strong>실제로는</strong>대부분 지도만 지워진다. 빠른 포맷은 파일 테이블과 루트 디렉터리를 지우고, 이미지 쓰기는 앞뒤 1 MiB를 0으로 채운 뒤 이미지 길이만큼만 덮는다. 전체 포맷이나 SSD의 TRIM처럼 본문까지 비우는 경우만 되살릴 수 없다.</p>
+            </div>
+        </section>
+
+        <section id="faq" aria-labelledby="faq-title">
+            <h2 id="faq-title">자주 묻는 질문</h2>
+            <div class="faq" id="faq-list">
+                <details>
+                    <summary>포맷하면 데이터가 정말 지워지나?</summary>
+                    <p>빠른 포맷은 파일 테이블과 루트 디렉터리를 지운다(Microsoft format /Q). 전체 포맷은 디스크의 모든 칸에 쓰기 때문에(Microsoft Format-Volume -Full) 옛 본문을 되살릴 수 없다. 이 페이지의 실험에서는 파티션 정보를 지우고 디스크 앞부분을 덮어도, 덮이지 않은 본문의 바이트는 하나도 달라지지 않았다.</p>
+                </details>
+                <details>
+                    <summary>플래시가 0%에서 멈췄다. 외장하드는 어떻게 되나?</summary>
+                    <p>Raspberry Pi Imager는 이미지를 쓰기 전에 파티션 정보를 지우고(Windows), 디스크의 앞 1 MiB와 끝 1 MiB를 0으로 채운다. 이미지의 첫 덩어리는 검증이 끝난 뒤에 마지막으로 쓴다. 그래서 0%에서 멈췄다면 보통 지도와 이 두 끝만 사라졌고, 그 밖의 본문은 그대로다. 볼륨이 맨 앞 1 MiB 안에서 시작했다면 부트 영역도 0이 되었을 수 있고, 볼륨이 어디서 시작하는지는 디스크마다 다르다. 이 설명은 Imager 소스(main 브랜치) 기준이라 설치한 버전에 따라 다를 수 있다.</p>
+                </details>
+                <details>
+                    <summary>탐색기에서 드라이브가 사라졌는데 디스크 관리에는 왜 보이나?</summary>
+                    <p>장치 자체는 살아 있다. 디스크를 탐색기에서 쓰려면 초기화하고 볼륨을 만들어야 하고, 드라이브 문자는 그 볼륨에 붙는다(Microsoft 디스크 관리 문서). 파티션 정보가 지워지면 붙일 볼륨이 없어서 탐색기에서는 사라지고, 디스크 관리에는 디스크만 남는다.</p>
+                </details>
+                <details>
+                    <summary>exFAT에서는 디스크 맨 앞이 덮이면 끝인가?</summary>
+                    <p>아니다. 부트 영역 원본(섹터 0~11) 바로 뒤에 복사본(섹터 12~23)이 있어서(Microsoft exFAT 사양 Table 3), 원본만 덮였으면 복사본으로 되살릴 수 있다. 이 페이지의 실험에서는 덮은 양이 6,144바이트 이하일 때 파일 20개가 모두 이름까지 돌아왔다. 복사본의 첫 섹터까지 덮이면 둘 다 사라져서, 덮이지 않은 본문은 파일 카빙으로 내용만 꺼내야 한다.</p>
+                </details>
+                <details>
+                    <summary>덮어쓴 양 밖에 있던 예전 파일은 그대로 있나?</summary>
+                    <p>그렇다. Raspberry Pi Imager는 이미지를 맨 앞부터 이미지 길이만큼 쓰고 디스크 끝의 1 MiB를 0으로 채울 뿐 그 사이의 칸은 건드리지 않으므로, 본문의 바이트는 그대로다. 다만 열려면 맨 앞의 부트 영역과 파일 목록이 필요해서, 그게 덮였으면 이름 없이 내용만 꺼내야 한다. 오래된 파일이 뒤쪽에 있다는 보장은 없다. 이 실험에서는 먼저 쓴 파일이 앞쪽에 놓여 먼저 덮였다.</p>
+                </details>
+                <details>
+                    <summary>파일 카빙으로는 어떤 파일을 찾고, 어떤 파일을 못 찾나?</summary>
+                    <p>파일 카빙은 파일 맨 앞의 표지로 파일을 찾는다. JPG는 FF D8 FF, PDF는 %PDF로 시작한다. 글 파일(.txt)처럼 표지가 없으면 칸이 그대로여도 이 실험의 파일 카빙으로는 찾지 못했다. 머리가 덮이고 꼬리만 남은 파일도 찾을 수 없다.</p>
+                </details>
+                <details>
+                    <summary>SSD도 같은가?</summary>
+                    <p>SSD는 운영체제가 쓰지 않는 칸을 TRIM으로 알려 주면 그 칸을 내부에서 비울 수 있어서 본문이 사라질 수 있다. TRIM과 가비지 컬렉션 뒤에는 되살리기가 어렵거나 불가능할 수 있고, 드라이브 펌웨어에 따라 다르다. 이 페이지의 실험은 칸이 그대로 남는 저장 장치를 가정했다.</p>
+                </details>
+                <details>
+                    <summary>디스크를 잘못 지웠을 때 가장 먼저 할 일은?</summary>
+                    <p>그 디스크에 아무것도 쓰지 않는다. 복구는 새 데이터가 덮기 전까지의 경주이고, 새로 덮인 칸의 옛 본문은 되살릴 수 없다.</p>
+                </details>
+            </div>
+        </section>
+
+        <section aria-labelledby="more-title">
+            <h2 id="more-title">더 보기</h2>
+            <ul class="links">
+                <!-- 영상이 나오면 추가: <li><a href="https://www.youtube.com/watch?v=...">영상으로 보기</a></li> -->
+                <li><a href="https://learn.microsoft.com/en-us/windows/win32/fileio/exfat-specification">Microsoft, exFAT file system specification</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        마지막 업데이트 <time datetime="2026-11-05">2026-11-05</time> · <a href="/">Hugh Q Lee</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+            });
+            render();
+        })();
+
+        // 지우기와 되살리기 시뮬레이터: 디스크를 40칸으로 나눠 지도와 본문을 따로 그린다.
+        // 규칙은 exFAT 디스크 이미지 실험에서 옮겼다: 부트 영역이 덮이면 볼륨으로는 못 읽고, 덮이지 않은 본문은 그대로다.
+        (function () {
+            "use strict";
+            var N = 40;
+            var BOOT = 1; // 부트 영역 칸. 이 칸이 덮이면 지도를 다시 그려도 볼륨으로 읽히지 않는다.
+            var FILES = [
+                { id: "photo", name: "사진", from: 6, to: 13, sig: true },
+                { id: "doc", name: "문서", from: 14, to: 18, sig: true },
+                { id: "video", name: "영상", from: 19, to: 30, sig: true },
+                { id: "music", name: "음악", from: 31, to: 35, sig: true },
+                { id: "memo", name: "메모", from: 36, to: 37, sig: false } // 글 파일은 머리 표지가 없다
+            ];
+            var diskEl = document.getElementById("disk");
+            var sayEl = document.getElementById("say");
+            var b1 = document.getElementById("b1");
+            var b3 = document.getElementById("b3");
+            var b0 = document.getElementById("b0");
+            var ov = document.getElementById("ov");
+            var ovv = document.getElementById("ovv");
+            var winEx = document.getElementById("winEx");
+            var winDm = document.getElementById("winDm");
+            var filesEl = document.getElementById("files");
+            if (!diskEl || !sayEl) return;
+            var cells = [];
+            var st = { stage: "normal", p: 0 };
+            var i;
+            for (i = 0; i < N; i++) {
+                var d = document.createElement("div");
+                diskEl.appendChild(d);
+                cells.push(d);
+            }
+            function k() { return Math.round(st.p * N / 100); }
+            function baseType(n) {
+                if (n === 0) return "pt";
+                if (n === 1) return "bt";
+                if (n <= 3) return "fl";
+                if (n <= 5) return "blank";
+                if (n === 39) return "bk";
+                for (var f = 0; f < FILES.length; f++) {
+                    if (n >= FILES[f].from && n <= FILES[f].to) return "c-" + FILES[f].id;
+                }
+                return "blank";
+            }
+            function cellRender() {
+                var kk = k();
+                for (var n = 0; n < N; n++) {
+                    var t = baseType(n), over = n < kk, cls = "cell " + t, text = "";
+                    if (n === 0) {
+                        if (st.stage === "normal" || st.stage === "recovered") { cls = "cell pt"; text = "지도"; }
+                        else if (over) { cls = "cell over"; }
+                        else { cls = "cell ptx"; text = "없음"; }
+                    } else if (over) {
+                        cls = "cell over";
+                    } else {
+                        if (t === "fl") text = "목록";
+                        if (t === "bt") text = "부트";
+                        if (t === "bk") {
+                            if (st.stage === "normal") { text = "복사"; }
+                            else { cls = "cell zero"; text = "0"; } // 플래시는 디스크 끝의 1 MiB를 0으로 채운다
+                        }
+                    }
+                    cells[n].className = cls;
+                    cells[n].textContent = text;
+                }
+            }
+            function fileStatus(f) {
+                var kk = k(), total = f.to - f.from + 1, hit = 0, n;
+                for (n = f.from; n <= f.to; n++) { if (n < kk) hit++; }
+                if (hit === total) return ["bad", "✕ 덮여서 사라짐"];
+                if (hit > 0) return ["warn", "△ 일부 덮임"];
+                if (st.stage === "normal") return ["ok", "✓ 정상"];
+                if (st.stage === "wiped") return ["mute", "· 안 보여도 데이터는 그대로"];
+                if (st.stage === "failed") return ["bad", "✕ 덮여서 사라짐"];
+                if (kk <= BOOT) return ["ok", "✓ 이름까지 복구"];
+                return f.sig ? ["warn", "△ 내용만 복구, 이름은 도구에 따라 다르다"] : ["warn", "△ 칸은 그대로, 찾을 표지가 없다"];
+            }
+            function filesRender() {
+                var html = "";
+                FILES.forEach(function (f) {
+                    var s = fileStatus(f);
+                    html += '<div class="frow"><span class="sw c-' + f.id + '"></span><span class="fname">' + f.name + '</span><span class="stag ' + s[0] + '">' + s[1] + "</span></div>";
+                });
+                filesEl.innerHTML = html;
+            }
+            function screensRender() {
+                var nameLost = k() > BOOT, ex, dm;
+                if (st.stage === "normal" || (st.stage === "recovered" && !nameLost)) {
+                    ex = '<div class="drive"><span class="drive-ico"></span><div><b>내 외장하드 (E:)</b><small>폴더와 파일이 보인다</small></div></div>';
+                    dm = '<div class="dm-row">디스크 4 · 온라인</div><div class="dm-bar ok">exFAT · 정상</div>';
+                } else if (st.stage === "recovered") {
+                    ex = '<div class="drive"><span class="drive-ico"></span><div><b>드라이브는 보여도 열리지 않는다</b><small>부트 영역이 덮였다. 파일 카빙으로 꺼낸다</small></div></div>';
+                    dm = '<div class="dm-row">디스크 4 · 온라인</div><div class="dm-bar raw">RAW · 파일 시스템 없음</div>';
+                } else {
+                    ex = '<div class="empty">표시할 드라이브가 없다</div>';
+                    dm = '<div class="dm-row">디스크 4 · 온라인</div><div class="dm-bar free">볼륨 없음</div>';
+                }
+                winEx.innerHTML = ex;
+                winDm.innerHTML = dm;
+            }
+            function sayRender() {
+                var m;
+                if (st.stage === "normal") {
+                    m = "지금은 모두 정상이다. 1번을 눌러 지도를 지워 보자.";
+                } else if (st.stage === "wiped") {
+                    m = st.p === 0
+                        ? "플래시가 지도를 지우고 디스크 앞뒤 끝의 1 MiB를 0으로 채웠다. 본문은 건드리지 않았다. 탐색기에는 없고 디스크 관리에는 보인다."
+                        : "맨 앞 " + st.p + "%를 새 이미지가 덮었다. 앞쪽에 있던 것부터 없어진다.";
+                } else if (st.stage === "failed") {
+                    m = "이미지가 디스크 끝까지 덮어서 남은 본문이 없다.";
+                } else {
+                    m = k() <= BOOT
+                        ? "지도를 다시 그렸다. 덮이지 않은 본문은 이름까지 돌아온다."
+                        : "부트 영역이 덮여서 볼륨으로는 읽히지 않는다. 덮이지 않은 본문은 파일 카빙으로 찾아 내용만 꺼낸다.";
+                }
+                sayEl.textContent = m;
+            }
+            function render() {
+                cellRender();
+                filesRender();
+                screensRender();
+                sayRender();
+                b1.disabled = st.stage !== "normal";
+                ov.disabled = st.stage !== "wiped";
+                b3.disabled = st.stage !== "wiped";
+                ov.value = st.p;
+                ovv.textContent = st.p + "%";
+            }
+            b1.addEventListener("click", function () { st.stage = "wiped"; render(); });
+            ov.addEventListener("input", function () { st.p = parseInt(ov.value, 10) || 0; render(); });
+            b3.addEventListener("click", function () { st.stage = k() >= N ? "failed" : "recovered"; render(); });
+            b0.addEventListener("click", function () { st.stage = "normal"; st.p = 0; render(); });
+            render();
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-11-05","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"},{"id":"ml","name":"기계 학습","name_en":"Machine learning"},{"id":"llm","name":"언어 모델","name_en":"Language models","parent":"ml"},{"id":"rob","name":"로봇·자동화","name_en":"Robotics and automation"},{"id":"ct","name":"X선·CT 영상","name_en":"X-ray and CT imaging"},{"id":"st","name":"컴퓨터·저장장치","name_en":"Computer storage"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"},{"id":"train-val-calib-test","title":"train·val·calib·test","title_en":"train/val/calib/test","domain":"ml","status":"published","href":"../train-val-calib-test/","summary":"학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold를 위해 칸 하나를 더 두기","summary_en":"Keep one more split for what is fitted after training: the temperature T and the threshold"},{"id":"error-backpropagation","title":"역전파","title_en":"Backpropagation","domain":"ml","status":"published","href":"../error-backpropagation/","summary":"출력의 오차를 뒤로 전해 다층 퍼셉트론의 가운데 층까지 고치기","summary_en":"Pass the output's error backward to correct the middle layer of a multilayer perceptron too"},{"id":"robot-types","title":"로봇의 종류","title_en":"Robot types","domain":"rob","status":"published","href":"../robot-types/","summary":"관절을 잇는 구조가 손끝의 자세를 정하고, 그 자세가 실험실에서 로봇의 쓰임을 정한다","summary_en":"How the joints are joined sets the hand's posture, and the posture sets what a robot does in the lab"},{"id":"hydraulic-pneumatic-microinjector","title":"마이크로인젝터","title_en":"Microinjectors","domain":"rob","status":"published","href":"../hydraulic-pneumatic-microinjector/","summary":"공기로 미는 공압식은 압력을, 기름으로 미는 유압식은 부피를 정한다","summary_en":"A pneumatic injector pushes with air and sets the pressure; a hydraulic one pushes with oil and sets the volume"},{"id":"kimi-k3-1-pro","title":"Kimi K3.1 Pro","title_en":"Kimi K3.1 Pro","domain":"llm","status":"published","href":"../kimi-k3-1-pro/","summary":"몸통은 그대로 두고 사후 학습으로 AA 지수를 44에서 55로 올리기","summary_en":"Raise the AA index from 44 to 55 with post-training, on the same base model"},{"id":"pretraining-posttraining-inference","title":"사전 학습·사후 학습·추론","title_en":"Pre-training, post-training, inference","domain":"llm","status":"published","href":"../pretraining-posttraining-inference/","summary":"사전 학습과 사후 학습은 가중치를 바꾸고, 추론은 가중치를 그대로 둔 채 맥락으로 답한다","summary_en":"Pre-training and post-training change the weights; inference leaves them as they are and answers from the context"},{"id":"xray-ct-registration","title":"X선–CT 정합","title_en":"X-ray to CT registration","domain":"ct","status":"published","href":"../xray-ct-registration/","summary":"엑스레이 필름 한 장은 CT가 찍는 그림자의 한 방향이라서, CT에서 가상 필름을 계산해 필름에 맞출 수 있다","summary_en":"An X-ray film is one view of what a CT scan records, so a virtual film computed from the CT can be matched to it"},{"id":"format-keeps-data","title":"포맷과 데이터 복구","title_en":"Format and data recovery","domain":"st","status":"published","href":"../format-keeps-data/","summary":"포맷과 플래시가 지우는 것은 지도이고, 덮어쓰지 않은 본문은 그대로라서 되살릴 수 있다","summary_en":"Formatting and flashing erase the map, and the data that was not overwritten stays, so it can be recovered"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"},{"from":"error-backpropagation","to":"pretraining-posttraining-inference"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 64 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (준비 중)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "준비 중";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "지금 이 글";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
