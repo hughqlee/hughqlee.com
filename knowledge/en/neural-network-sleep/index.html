@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Does AI need to sleep too? | Hugh Q Lee</title>
+    <meta name="description" content="In a small model, sleep (stop training and run noise so each connection updates by looking only at the two neurons it joins) was confirmed to improve performance. But no evidence was found that the same holds in large models.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="sleep for neural networks, sleep replay, catastrophic forgetting, Sleep Replay Consolidation, SRC, continual learning, Hebbian learning, STDP, spiking neural network, sequential learning forgetting">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/en/neural-network-sleep/">
+    <!-- 영문판(/knowledge/en/neural-network-sleep/)은 System/build_en.py가 이 페이지에서 만든다. 두 판이 서로를 가리킨다. -->
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/neural-network-sleep/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/neural-network-sleep/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/neural-network-sleep/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ko_KR">
+    <meta property="og:title" content="Does AI need to sleep too?">
+    <meta property="og:description" content="In a small model, sleep (stop training and run noise so each connection updates by looking only at the two neurons it joins) was confirmed to improve performance. But no evidence was found that the same holds in large models.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/en/neural-network-sleep/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/en/neural-network-sleep/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Neural network sleep simulator: the input neuron grid, the connection grids of four outputs, and a graph of the scores for picture A">
+    <meta property="article:published_time" content="2026-11-06">
+    <meta property="article:modified_time" content="2026-11-06">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Does AI need to sleep too?">
+    <meta name="twitter:description" content="In a small model, sleep (stop training and run noise so each connection updates by looking only at the two neurons it joins) was confirmed to improve performance. But no evidence was found that the same holds in large models.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/en/neural-network-sleep/og.png">
+    <meta name="twitter:image:alt" content="Neural network sleep simulator: the input neuron grid, the connection grids of four outputs, and a graph of the scores for picture A">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage의 문장은 본문 "자주 묻는 질문"과 같아야 한다. 질문을 늘리면 둘 다 늘린다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/en/neural-network-sleep/#article",
+          "headline": "Does AI need to sleep too?",
+          "alternativeHeadline": "Does AI need to sleep too?",
+          "description": "In a small model, sleep (stop training and run noise so each connection updates by looking only at the two neurons it joins) was confirmed to improve performance. But no evidence was found that the same holds in large models.",
+          "abstract": "In a small model, sleep (stop training and run noise so each connection updates by looking only at the two neurons it joins) was confirmed to improve performance. But no evidence was found that the same holds in large models.",
+          "inLanguage": "en",
+          "datePublished": "2026-11-06",
+          "dateModified": "2026-11-06",
+          "url": "https://hughqlee.com/knowledge/en/neural-network-sleep/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/en/neural-network-sleep/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/en/neural-network-sleep/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/en/#collection"
+          },
+          "isAccessibleForFree": true,
+          "citation": {
+            "@type": "CreativeWork",
+            "name": "Sleep-like unsupervised replay reduces catastrophic forgetting in artificial neural networks (Nature Communications, 2022)",
+            "url": "https://doi.org/10.1038/s41467-022-34938-7"
+          },
+          "translationOfWork": {
+            "@id": "https://hughqlee.com/knowledge/neural-network-sleep/#article"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/en/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/en/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Does AI need to sleep too?",
+              "item": "https://hughqlee.com/knowledge/en/neural-network-sleep/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/en/neural-network-sleep/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is catastrophic forgetting?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "When a neural network learns tasks in turn, it does well on the latest task while performance on earlier tasks falls sharply. In the paper’s MNIST experiment, learning five tasks in turn gave an overall accuracy of 19.49%."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What does sleep do in a neural network?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "It replaces the activation function with a threshold and runs noise built from the average strength of past inputs. When a later neuron fires, the connection is strengthened if the earlier neuron also fired and weakened if it stayed silent; then the network returns to its original form. The paper calls this procedure Sleep Replay Consolidation (SRC)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does sleep need labeled data?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The sleep stage uses no labels, no errors, and no stored pictures, only the average of the inputs. However, the paper searched its parameters using training set performance, and deciding when to sleep requires knowing when the task changes."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How much does sleep improve performance?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "In the paper’s Table 1, MNIST rose from 19.49% to 48.47% and CIFAR-10 from 19.01% to 44.55%. The upper bounds from learning everything at once are 98.02% and 72.43%. On MNIST it is below storing 0.75% of the images (79.91%); on CIFAR-10 it is above that method (39.39%)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is this used in large language models like ChatGPT?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No application of this method to large language models or products was found. Most follow-up work also comes from the authors’ group, and no large-scale forgetting test was found."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does human sleep protect memory too?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "There is evidence that sleep benefits memory, but the key finding that it protects memory from interference by new learning has failed in a direct replication (Bailes et al. 2020). This paper’s result cannot explain human sleep."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --danger: #ff8c8c;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --danger: #b42323;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            cursor: pointer;
+        }
+        .theme-toggle:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 32px; border-bottom: 1px solid var(--line); }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        section { padding: 32px 0; }
+        h2 { margin: 0 0 12px; font-size: 22px; line-height: 1.4; }
+
+        .panel {
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .hint { margin: 0 0 16px; color: var(--muted); }
+        .demo label {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .demo input[type="range"] { width: 100%; min-height: 44px; margin: 4px 0; accent-color: var(--accent); }
+        .meter { height: 10px; overflow: hidden; border-radius: 999px; background: var(--panel-strong); }
+        .meter span { display: block; width: 0; height: 100%; background: var(--accent); transition: width 0.2s ease; }
+        .result { margin: 12px 0 0; font-family: var(--mono); font-size: 15px; }
+
+        .steps { margin: 0; padding-left: 1.4em; }
+        .steps li { margin: 8px 0; }
+        .steps li::marker { color: var(--accent); font-family: var(--mono); }
+
+        .note {
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+
+        /* 확인됨 · 가설 · 모름 표시: <span class="tag known">확인됨</span> */
+        .tag {
+            display: inline-block;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.known { color: var(--accent-green); }
+        .tag.guess { color: var(--accent-warn); }
+        .tag.unknown { color: var(--muted); }
+
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        footer {
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        /* 잠 시뮬레이터 */
+        .lede { margin: 16px 0 0; }
+        h3 { margin: 24px 0 8px; font-size: 16px; line-height: 1.5; }
+        .sim { padding: 16px; }
+        .phase { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+        .phase #do-new, .phase #do-sleep { grid-column: span 3; }
+        .phase #do-step, .phase #do-fire, .phase #do-reset { grid-column: span 2; }
+        .phase button {
+            min-height: 44px; padding: 8px 10px; border: 1px solid var(--line-strong); border-radius: var(--radius);
+            background: var(--panel-soft); color: var(--text); font: inherit; font-size: 14px; line-height: 1.35; cursor: pointer;
+        }
+        .phase button:hover:not(:disabled) { border-color: var(--accent); }
+        .phase button.go { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+        .phase button:disabled { color: var(--faint); border-color: var(--line); cursor: not-allowed; opacity: 0.65; }
+        .sim .result { min-height: 3.4em; margin: 12px 0; line-height: 1.6; }
+        .opts { display: grid; gap: 8px; }
+        .opt-range label { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-family: var(--mono); font-size: 14px; }
+        .opt-range input { width: 100%; min-height: 44px; margin: 0; accent-color: var(--accent); }
+        fieldset { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 14px; min-width: 0; margin: 0; padding: 0; border: 0; font-size: 14px; }
+        legend { float: left; margin-right: 10px; padding: 0; color: var(--muted); font-family: var(--mono); font-size: 14px; }
+        fieldset label { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; cursor: pointer; }
+        fieldset input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
+        .sim canvas { display: block; width: 100%; }
+        .cards, .outs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+        .cards { align-items: start; }
+        .card { min-width: 0; margin: 0; padding: 4px; border: 2px solid transparent; border-radius: 6px; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+        .card[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+        .inlayer { margin: 0; }
+        .card canvas, .out canvas, #in-grid { aspect-ratio: 1; border-radius: 4px; }
+        .cap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 4px; margin-top: 4px; font-size: 13px; line-height: 1.4; }
+        .verdict { color: var(--muted); font-family: var(--mono); }
+        .verdict.ok { color: var(--accent-green); }
+        .verdict.no { color: var(--danger); }
+        .net { display: grid; gap: 12px; }
+        .inlayer { display: grid; grid-template-columns: 150px 1fr; gap: 14px; align-items: center; }
+        .vote-title { margin: 4px 0 -4px; font-size: 15px; font-weight: 600; }
+        .out.win { border-color: var(--accent); }
+        .out-score { margin: 4px 0 0; font-family: var(--mono); font-size: 13px; line-height: 1.5; white-space: nowrap; }
+        .out.win .out-score { color: var(--accent); font-weight: 700; }
+        .inlayer figcaption { color: var(--muted); font-size: 14px; line-height: 1.5; }
+        .out { min-width: 0; padding: 6px; border: 1px solid var(--line); border-radius: 6px; }
+        .out.fire { border-color: var(--accent-green); box-shadow: 0 0 0 1px var(--accent-green); }
+        .out-name, .out-count { margin: 0; font-family: var(--mono); font-size: 12px; line-height: 1.5; white-space: nowrap; }
+        .out-count { color: var(--muted); }
+        .mem { height: 6px; margin: 3px 0 5px; overflow: hidden; border-radius: 3px; background: var(--panel-strong); }
+        .mem span { display: block; width: 0; height: 100%; background: var(--accent-green); }
+        .legend { margin: 8px 0 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+        .swatch { display: inline-block; width: 11px; height: 11px; margin: 0 4px 0 2px; border-radius: 2px; vertical-align: -1px; }
+        .swatch.up, .swatch.n { background: var(--accent-warn); }
+        .swatch.down, .swatch.a { background: var(--accent); }
+        .table-wrap { margin: 12px 0; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 1.5; }
+        th, td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+        thead th { color: var(--muted); font-weight: 500; }
+        tbody th { font-weight: 500; }
+        .rule tr.on td { background: var(--accent-soft); }
+        .rule td:nth-child(3) { white-space: nowrap; }
+        .rule .n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+        .code { margin: 8px 0 0; padding: 10px 12px; overflow-x: auto; border-radius: 6px; background: var(--panel-soft); font-family: var(--mono); font-size: 12.5px; line-height: 1.7; }
+        .code code { font-family: inherit; }
+        .code span.on { color: var(--accent-green); font-weight: 600; }
+        code { font-family: var(--mono); font-size: 0.92em; }
+        #chart { height: 190px; margin-top: 4px; }
+        section .note + .note { margin-top: 10px; }
+        section > .links { margin: 16px 0; }
+        @media (max-width: 480px) {
+            .phase { grid-template-columns: repeat(6, 1fr); }
+            .phase button { font-size: 13px; }
+            .phase #do-new, .phase #do-sleep { grid-column: 1 / -1; }
+            .inlayer { grid-template-columns: 124px 1fr; }
+            .outs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .card { padding: 2px; }
+            .cap { display: block; font-size: 12px; }
+            .cap b { display: block; }
+            .out { padding: 4px; }
+            .rule th, .rule td { padding: 6px 4px; font-size: 13px; }
+        }
+
+        /* 연결선 그림 */
+        .sim .cards { gap: 6px; }
+        .net { display: block; width: 100%; max-width: 460px; margin: 8px auto 0; }
+        .net text, .mini text { fill: var(--text); font-family: var(--mono); font-size: 13px; }
+        .net .zone rect, .mini .zone rect { fill: var(--panel-soft); stroke: var(--line); }
+        .net .zone text { fill: var(--muted); font-size: 12px; }
+        .net .zone.lit rect, .mini .zone rect { fill: var(--panel-strong); stroke: var(--line-strong); }
+        .net .zone.lit text, .mini .zone text { fill: var(--text); font-size: 12px; }
+        .net .line, .mini .line { fill: none; stroke-linecap: round; }
+        .net .line.pos, .mini .line.pos { stroke: var(--accent-warn); }
+        .net .line.neg, .mini .line.neg { stroke: var(--accent); }
+        .net .node { cursor: pointer; }
+        .net .node circle, .mini .node circle { fill: var(--panel-soft); stroke: var(--line-strong); stroke-width: 1; }
+        .net .node text, .mini .node text { font-weight: 600; }
+        .net .node.win circle { stroke: var(--text); stroke-width: 2.5; }
+        .net .node.on circle { stroke: var(--accent); stroke-dasharray: 3 2; }
+        .net .node.fire circle, .mini .node.fire circle { fill: var(--accent-green); }
+        .net .score { font-size: 14px; }
+        .net .score.win { font-weight: 700; }
+        .mini { display: block; width: 100%; max-width: 420px; margin: 8px auto 0; }
+        .mini .val { font-size: 13px; }
+        .eq { min-height: 1.6em; margin: 6px 0 0; font-family: var(--mono); font-size: 13px; line-height: 1.6; text-align: center; }
+        .main { display: block; width: 100%; min-height: 48px; margin: 0; border: 1px solid var(--accent); border-radius: var(--radius); background: var(--accent-soft); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
+        .main:hover { background: var(--panel-strong); }
+        .sim .result { min-height: 3.2em; margin: 8px 0; }
+        .layer { margin-top: 16px; padding-top: 4px; border-top: 1px solid var(--line); }
+        .layer > summary { min-height: 44px; padding: 10px 0; font-weight: 600; cursor: pointer; }
+        .why-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+        .why-btns button { flex: 1 1 auto; min-height: 44px; padding: 8px 10px; border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--panel-soft); color: var(--text); font: inherit; font-size: 14px; cursor: pointer; }
+        .why-btns button:hover { border-color: var(--accent); }
+        .phase { margin-bottom: 4px; }
+        .phase #do-step, .phase #do-fire, .phase #do-reseed { grid-column: span 2; }
+        .expert-net { display: grid; gap: 12px; }
+        .net .node.fire text, .mini .node.fire text { fill: var(--bg); }
+        .net .node:focus-visible circle { stroke: var(--accent); stroke-width: 3; }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/en/">hughqlee.com</a> / <a href="/knowledge/en/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/neural-network-sleep/" hreflang="ko" lang="ko">한국어</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main" class="wrap">
+        <section class="hero">
+            <!-- 지식 지도: 데이터와 규칙은 System/지식 지도.md. 한 줄 글은 스크립트 없이도 읽히는 같은 내용이다.
+                 예: 먼저 읽을 글: <a href="../iou-nms/">IOU·NMS</a> · 이어서 읽을 글은 아직 없다 · 같은 분야: mAP(준비 중) -->
+            <nav class="kmap" aria-label="Knowledge map" data-current="neural-network-sleep">
+                <p class="kmap-head"><span class="kmap-label">KNOWLEDGE MAP</span><span class="kmap-path">Machine learning</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">Read first: <a href="../error-backpropagation/">Backpropagation</a> · Nothing to read next yet · Same field: <a href="../train-val-calib-test/">train/val/calib/test</a></p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE</p>
+            <h1>Does AI need to sleep too?</h1>
+            <p class="answer">In a small model, sleep (stop training and run noise so each connection updates by looking only at the two neurons it joins) was confirmed to improve performance. But no evidence was found that the same holds in large models.</p>
+            <p class="lede">Sleep is still a strange territory. Why we need it, and what happens to memory during it, are questions scientists have not yet agreed on. A 2022 paper put a neural network to sleep, and an old task it had forgotten came back.</p>
+        </section>
+
+        <section aria-labelledby="try-title">
+            <h2 id="try-title">Put it to sleep yourself</h2>
+            <div class="panel sim">
+                <div class="cards">
+                    <button type="button" class="card" data-k="0" aria-pressed="true"><canvas></canvas><span class="cap"><b>A</b> <span class="verdict"></span></span></button>
+                    <button type="button" class="card" data-k="1" aria-pressed="false"><canvas></canvas><span class="cap"><b>B</b> <span class="verdict"></span></span></button>
+                    <button type="button" class="card" data-k="2" aria-pressed="false"><canvas></canvas><span class="cap"><b>C</b> <span class="verdict"></span></span></button>
+                    <button type="button" class="card" data-k="3" aria-pressed="false"><canvas></canvas><span class="cap"><b>D</b> <span class="verdict"></span></span></button>
+                </div>
+                <svg id="net" class="net" viewBox="0 0 340 216" role="group" aria-label="Line diagram of the chosen picture"></svg>
+                <p id="eq" class="eq"></p>
+                <p id="status" class="result" aria-live="polite">This network already knows old pictures A·B; it is knowledge learned earlier. Let’s teach it new pictures.</p>
+                <button id="do-main" type="button" class="main">Learn new pictures C·D</button>
+                <p class="legend">One line is the sum of the connections from the lit cells in that group. <span class="swatch up"></span>Orange (+) votes for, <span class="swatch down"></span>blue (−) votes against, and thicker is stronger. The two lines add up to the output’s score, and the output with the highest score is the answer. Shared cells are the ones all four pictures turn on; A cells are lit only by picture A. Press an output to see the sum.</p>
+
+                <details id="why" class="layer">
+                    <summary>Why it came back: press and watch, one at a time</summary>
+                    <p>Look only at the two lines into C for picture A, starting right after the new pictures were learned.</p>
+                    <svg id="mini" class="mini" viewBox="0 0 340 120" role="img" aria-label="Two lines into C, from the A cells and the shared cells"></svg>
+                    <p id="why-score" class="eq"></p>
+                    <div class="why-btns">
+                        <button id="why-one" type="button">C sends a signal</button>
+                        <button id="why-many" type="button">100 more</button>
+                        <button id="why-reset" type="button">Rewind</button>
+                    </div>
+                    <p id="why-status" class="result" aria-live="polite">The moment C sends a signal, each cell before it follows just one rule.</p>
+                    <ul class="links">
+                        <li>Connections from cells that were on at that moment get stronger.</li>
+                        <li>Connections from cells that were off at that moment get weaker.</li>
+                        <li>Connections that are already clearly positive barely change. So shared→C stays put and only A cells→C goes down.</li>
+                    </ul>
+                    <h3>Predict the result</h3>
+                    <div class="why-btns">
+                        <button id="pred-overlap" type="button">What if the four overlap more?</button>
+                        <button id="pred-shuffle" type="button">What if the noise is shuffled?</button>
+                    </div>
+                    <p id="pred-result" class="result" aria-live="polite"></p>
+                </details>
+
+                <details id="expert" class="layer">
+                    <summary>For specialists: per-cell values, running code, parameters</summary>
+                    <p class="legend">This is the same network as in the story above. The code below is what actually runs on this page, and every cell in the pictures is a value from that code.</p>
+                    <div class="phase" role="group" aria-label="Sleep controls">
+                        <button id="do-step" type="button" disabled>One step</button>
+                        <button id="do-fire" type="button" disabled>To the next spike</button>
+                        <button id="do-reseed" type="button">Start over with another seed</button>
+                    </div>
+                    <p id="expert-status" class="result" aria-live="polite"></p>
+                    <div class="opts">
+                        <div class="opt-range">
+                            <label for="overlap">Cells all four pictures share <output id="overlap-value" for="overlap">13 cells</output></label>
+                            <input id="overlap" type="range" min="8" max="16" step="1" value="13">
+                        </div>
+                        <fieldset>
+                            <legend>Input at night</legend>
+                            <label><input type="radio" name="input" value="mean" checked> Average input</label>
+                            <label><input type="radio" name="input" value="shuffled"> Shuffled input</label>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Sleep speed</legend>
+                            <label><input type="radio" name="speed" value="1"> Slow</label>
+                            <label><input type="radio" name="speed" value="25" checked> Medium</label>
+                            <label><input type="radio" name="speed" value="60"> Fast</label>
+                        </fieldset>
+                    </div>
+
+                    <h3>Structure: 100 input neurons → 4 output neurons, 400 connections</h3>
+                    <div class="expert-net">
+                        <figure class="inlayer">
+                            <canvas id="in-grid"></canvas>
+                            <figcaption id="in-cap">100 input neurons. By day the chosen picture is the input.</figcaption>
+                        </figure>
+                        <p class="vote-title">When picture <b id="vote-pic">A</b> is shown, the connections of the lit cells cast votes</p>
+                        <div class="outs">
+                            <div class="out" data-k="0"><p class="out-name">A output</p><div class="mem"><span></span></div><canvas></canvas><p class="out-score"></p><p class="out-count">spikes 0</p></div>
+                            <div class="out" data-k="1"><p class="out-name">B output</p><div class="mem"><span></span></div><canvas></canvas><p class="out-score"></p><p class="out-count">spikes 0</p></div>
+                            <div class="out" data-k="2"><p class="out-name">C output</p><div class="mem"><span></span></div><canvas></canvas><p class="out-score"></p><p class="out-count">spikes 0</p></div>
+                            <div class="out" data-k="3"><p class="out-name">D output</p><div class="mem"><span></span></div><canvas></canvas><p class="out-score"></p><p class="out-count">spikes 0</p></div>
+                        </div>
+                        <p class="legend">One cell is the connection from one input neuron to that output. Only the cells the chosen picture turns on are drawn strong. <span class="swatch up"></span>Orange (+) votes for, <span class="swatch down"></span>blue (−) votes against, and a stronger color is a stronger vote. The votes add up to that output’s score, and the output with the highest score is the answer. The bar is the membrane potential; when it fills, the neuron fires.</p>
+                    </div>
+
+                    <h3>Rule: a connection sees only the two neurons it joins</h3>
+                    <div class="table-wrap">
+                        <table class="rule">
+                            <thead><tr><th scope="col">Before (input)</th><th scope="col">After (output)</th><th scope="col">Connection</th><th scope="col">This step</th><th scope="col">All night</th></tr></thead>
+                            <tbody>
+                                <tr id="r-both"><td>fires</td><td>fires</td><td>stronger</td><td class="n">0</td><td class="n">0</td></tr>
+                                <tr id="r-silent"><td>silent</td><td>fires</td><td>weaker</td><td class="n">0</td><td class="n">0</td></tr>
+                                <tr id="r-none"><td>any</td><td>silent</td><td>no change</td><td class="n">0</td><td class="n">0</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+<pre class="code" aria-label="The code of one sleep step"><code><span id="c-pre">pre[i] = rng() &lt; input[i] * rateScale ? 1 : 0;</span>
+<span id="c-mem">mem[k] = decay * mem[k] + alpha * sum(w[k][i] * pre[i]);</span>
+<span id="c-if">if (mem[k] &gt;= beta) {</span>
+<span id="c-up">  w[k][i] += pre[i] ? inc * g(w[k][i]) : -dec * g(w[k][i]);</span>
+<span id="c-rst">  mem[k] = 0;</span>
+}</code></pre>
+                    <p class="legend"><code>g(w)</code> is a gatekeeper found in the authors’ code. It is nearly 0 on clearly positive connections and close to 2 on negative ones, so what actually moves is mostly the negative connections. The paper’s pseudocode has no such term. The values <code>inc</code> 0.0035, <code>dec</code> 0.0002, <code>decay</code> 0.999, and <code>beta</code> 1.045 come from the authors’ code.</p>
+                    <p class="legend"><strong>The paper’s pseudocode as written did not bring it back.</strong> Without the gatekeeper <code>g(w)</code> and the decay, the new outputs’ connections grow without end and accuracy stays at 50% for 11 to 14 cells. The same held across the range tried, with <code>inc</code> and <code>dec</code> scaled down together as far as 1/1,000. That is why this page uses the rule in the authors’ code.</p>
+
+                    <h3>Scores: when shown picture A</h3>
+                    <canvas id="chart" role="img" aria-label="Graph of the scores for picture A over sleep steps"></canvas>
+                    <p class="legend"><span class="swatch a"></span>Score of the A output <span class="swatch n"></span>Higher score of the C and D outputs. The network answers A only when the blue line is on top.</p>
+
+                    <h3>Plain words and terms</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th scope="col">Word used above</th><th scope="col">Term</th></tr></thead>
+                            <tbody>
+                                <tr><td>shouts new answers at old pictures</td><td>catastrophic forgetting</td></tr>
+                                <tr><td>sends a signal</td><td>spike (fire)</td></tr>
+                                <tr><td>built-up signal</td><td>membrane potential</td></tr>
+                                <tr><td>strength of a connection</td><td>weight</td></tr>
+                                <tr><td>old pictures, new pictures</td><td>old task, new task</td></tr>
+                                <tr><td>one turn of the night</td><td>step, 30,000 of them</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <section aria-labelledby="how-title">
+            <h2 id="how-title">It looks like reflection, so why call it sleep?</h2>
+            <ol class="steps">
+                <li><strong>On the outside it resembles reflection.</strong> Picture someone writing a diary at the end of the day. They stop what they were doing and sort through what they knew along with what came in today. The night stage likewise stops new learning and runs an input shaped like the average of the four pictures.</li>
+                <li><strong>What happens inside is closer to sleep.</strong> Reflection weighs old and new knowledge against each other and reaches a conclusion. This sleep does no reasoning. Like biological neurons, it only updates the weights of its nodes, a rather naive process. A connection sees only whether the neurons before and after it just fired.</li>
+            </ol>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th scope="col"></th><th scope="col">Reflection</th><th scope="col">Neural network sleep</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Stops what it was doing</th><td>Yes</td><td>Yes</td></tr>
+                        <tr><th scope="row">Handles old and new together</th><td>Yes</td><td>Yes (average input)</td></tr>
+                        <tr><th scope="row">Reasons over old and new knowledge</th><td>Yes</td><td>No</td></tr>
+                        <tr><th scope="row">What it does</th><td>Weighs things and concludes</td><td>Updates the weights of nodes</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section aria-labelledby="seen-title">
+            <h2 id="seen-title">What running it showed</h2>
+            <p>The code above was run with 100 seeds to measure the share of the four pictures it gets right. This is an own implementation of the small experiment in the paper’s Figure 1.</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th scope="col">Overlapping cells</th><th scope="col">After new task</th><th scope="col">After sleep</th><th scope="col">Old task (after sleep)</th></tr></thead>
+                    <tbody>
+                        <tr><td>10 cells</td><td>100%</td><td>100%</td><td>100%</td></tr>
+                        <tr><td>11 cells</td><td>50%</td><td>100%</td><td>100%</td></tr>
+                        <tr><td>13 cells</td><td>50%</td><td>99%</td><td>99%</td></tr>
+                        <tr><td>14 cells</td><td>50%</td><td>80%</td><td>59%</td></tr>
+                        <tr><td>15 cells</td><td>50%</td><td>50%</td><td>0%</td></tr>
+                        <tr><td>16 cells (all four identical)</td><td>25%</td><td>25%</td><td>0%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul class="links">
+                <li><strong>A’s score stays put.</strong> At 13 cells, shown picture A, the A output scores -0.18 both before and after sleep, while the higher of C and D falls from 0.46 to -0.38. Old outputs A and B did not fire once all night in 96 of 100 seeds.</li>
+                <li><strong>Not just any noise works.</strong> Shuffling the same input strengths into other positions reaches only 53% at 13 cells.</li>
+                <li><strong>More overlap is harder.</strong> At 15 cells each picture has only one cell of its own, so too few connections can be cut and the old task does not return.</li>
+                <li><strong>Sleep does not recognize what is old.</strong> With a lower learning rate and fewer updates (0.05, 2 updates), the new task is underlearned; now the old outputs are the loud ones, and at 15 cells the new task rises from 0% to 96%.</li>
+            </ul>
+            <p>The larger experiments the paper reports are below. The numbers are test accuracy (%) after learning five tasks in turn (paper Table 1). Sleep rises well above the lower bound but does not recover everything.</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th scope="col">Data</th><th scope="col">No sleep</th><th scope="col">Sleep</th><th scope="col">0.75% of images stored</th><th scope="col">All learned at once</th></tr></thead>
+                    <tbody>
+                        <tr><td>MNIST</td><td>19.49</td><td>48.47</td><td>79.91</td><td>98.02</td></tr>
+                        <tr><td>CIFAR-10</td><td>19.01</td><td>44.55</td><td>39.39</td><td>72.43</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section aria-labelledby="trust-title">
+            <h2 id="trust-title">How far this was checked</h2>
+            <div class="note">
+                <p class="fact"><strong>Confirmed</strong>The paper’s sleep procedure (Algorithm 1) and the numbers in Table 1; the sleep rule and parameters in the authors’ code (the repository files were read). The results under “What running it showed” (this page’s code was run with node). The authors’ MATLAB code itself was not run.</p>
+                <p><strong>Hypothesis</strong>The reading that sleep rebalances a tilted network rather than reviving old memories. It fits this small experiment, but a network with two hidden layers is reported to show increased input for the old task in its second hidden layer (paper Fig. 5), and no experiment was found that separates the two explanations.</p>
+                <p><strong>Unknown</strong>Whether it works when large networks are trained end to end, and whether an independent team has reproduced it (none was found). Whether overlap resolves this way in the brain.</p>
+                <p><strong>Differences from the paper</strong>This implementation starts forgetting at 11 cells and reaches 50% at 15. The paper’s Figure 1B starts forgetting at 13 and reaches about 75% at 15 (values read from the figure). The 16 lit cells per picture were counted in the paper’s Figure 1A; the learning rate of 0.1 and 4 updates follow the authors’ script, and no momentum follows the paper’s text.</p>
+            </div>
+        </section>
+
+        <section aria-labelledby="myth-title">
+            <h2 id="myth-title">Common misconceptions</h2>
+            <div class="note">
+                <p><strong>Myth</strong>Sleep makes old memories strong again.</p>
+                <p class="fact"><strong>In fact</strong>In this experiment the connections into A barely change. The new outputs shout less at old pictures, so A wins again. The paper’s Figure 1C points the same way.</p>
+            </div>
+            <div class="note">
+                <p><strong>Myth</strong>The brain sleeps this way too.</p>
+                <p class="fact"><strong>In fact</strong>The idea comes from sleep research, but there is no hippocampus, no sleep stage, and no sequence replay. The authors also acknowledge the simplification. This result is not evidence for a brain mechanism.</p>
+            </div>
+            <div class="note">
+                <p><strong>Myth</strong>Nothing is stored.</p>
+                <p class="fact"><strong>In fact</strong>Old pictures are not stored, but the average of the inputs is. The paper says inputs unrelated to the average still bring back part of it, but the average input does better (Methods, SI §4). The paper’s thresholds and scales were also searched using training set performance, and the paper does not say whether old task data was used for that.</p>
+            </div>
+        </section>
+
+        <section id="faq" aria-labelledby="faq-title">
+            <h2 id="faq-title">Frequently asked questions</h2>
+            <div class="faq">
+                <details>
+                    <summary>What is catastrophic forgetting?</summary>
+                    <p>When a neural network learns tasks in turn, it does well on the latest task while performance on earlier tasks falls sharply. In the paper’s MNIST experiment, learning five tasks in turn gave an overall accuracy of 19.49%.</p>
+                </details>
+                <details>
+                    <summary>What does sleep do in a neural network?</summary>
+                    <p>It replaces the activation function with a threshold and runs noise built from the average strength of past inputs. When a later neuron fires, the connection is strengthened if the earlier neuron also fired and weakened if it stayed silent; then the network returns to its original form. The paper calls this procedure Sleep Replay Consolidation (SRC).</p>
+                </details>
+                <details>
+                    <summary>Does sleep need labeled data?</summary>
+                    <p>The sleep stage uses no labels, no errors, and no stored pictures, only the average of the inputs. However, the paper searched its parameters using training set performance, and deciding when to sleep requires knowing when the task changes.</p>
+                </details>
+                <details>
+                    <summary>How much does sleep improve performance?</summary>
+                    <p>In the paper’s Table 1, MNIST rose from 19.49% to 48.47% and CIFAR-10 from 19.01% to 44.55%. The upper bounds from learning everything at once are 98.02% and 72.43%. On MNIST it is below storing 0.75% of the images (79.91%); on CIFAR-10 it is above that method (39.39%).</p>
+                </details>
+                <details>
+                    <summary>Is this used in large language models like ChatGPT?</summary>
+                    <p>No application of this method to large language models or products was found. Most follow-up work also comes from the authors’ group, and no large-scale forgetting test was found.</p>
+                </details>
+                <details>
+                    <summary>Does human sleep protect memory too?</summary>
+                    <p>There is evidence that sleep benefits memory, but the key finding that it protects memory from interference by new learning has failed in a direct replication (Bailes et al. 2020). This paper’s result cannot explain human sleep.</p>
+                </details>
+            </div>
+        </section>
+
+        <section aria-labelledby="more-title">
+            <h2 id="more-title">Further reading</h2>
+            <ul class="links">
+                <li><a href="../error-backpropagation/">Backpropagation</a>: how connections are corrected by day</li>
+                <li><a href="https://doi.org/10.1038/s41467-022-34938-7">Tadros, Krishnan, Ramyaa, Bazhenov. Sleep-like unsupervised replay reduces catastrophic forgetting in artificial neural networks. Nature Communications, 2022</a></li>
+                <li><a href="https://github.com/tmtadros/SleepReplayConsolidation">The authors’ code repository (SleepReplayConsolidation)</a></li>
+                <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7018054/">Bailes et al. 2020. A replication of the sleep and interference experiment</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        Last updated <time datetime="2026-11-06">2026-11-06</time> · <a href="/en/">Hugh Q Lee</a> · Translated from the <a href="/knowledge/neural-network-sleep/" hreflang="ko">Korean original</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+            });
+            render();
+        })();
+
+        // 이 파일은 knowledge-lab/sleep-replay/sim.js와 같다(tests/test_page.js가 대조한다).
+// 신경망의 잠: Tadros et al. 2022 Patches 실험의 최소 구현. 페이지가 이 코드를 그대로 쓴다.
+// 망은 입력 100(10×10) → 출력 4, softmax다. 잠은 저자 저장소 sleep/sleepnn_old.m 순서를 따른다.
+var SleepSim = (function () {
+  "use strict";
+  var N = 100, K = 4, ON = 16;
+  var DEF = {
+    lr: 0.1, epochs1: 4, epochs2: 4, init: 0.01,            // 깨어 있을 때 학습
+    inc: 0.0035, dec: 0.0002, beta: 0.95 * 1.1, decay: 0.999, alphaScale: 4.25, // 잠의 파라미터
+    rateScale: 0.128, steps: 30000, gate: true
+  };
+  function makeRng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function cell(r, c) { return r * 10 + c; }
+  function block(r0, c0, h, w) {
+    var out = [];
+    for (var r = r0; r < r0 + h; r++) for (var c = c0; c < c0 + w; c++) out.push(cell(r, c));
+    return out;
+  }
+  // 네 장의 사진. 공유 픽셀 overlap개는 가운데, 사진마다 고유한 픽셀은 네 귀퉁이에 둔다.
+  // 망은 픽셀의 위치를 모르므로 이렇게 모아 그려도 결과는 같고, 눈으로 읽기만 쉬워진다.
+  var SHARED = block(3, 3, 4, 4);
+  var CORNER = [block(0, 0, 3, 3), block(0, 7, 3, 3), block(7, 0, 3, 3), block(7, 7, 3, 3)];
+  function makeImages(overlap) {
+    var X = [];
+    for (var k = 0; k < K; k++) {
+      var x = new Float64Array(N), i;
+      for (i = 0; i < overlap; i++) x[SHARED[i]] = 1;
+      for (i = 0; i < ON - overlap; i++) x[CORNER[k][i]] = 1;
+      X.push(x);
+    }
+    return X;
+  }
+  function newNet(rng, o) {
+    var W = [];
+    for (var k = 0; k < K; k++) {
+      var row = new Float64Array(N);
+      for (var i = 0; i < N; i++) row[i] = (rng() - 0.5) * o.init * 2;
+      W.push(row);
+    }
+    return W;
+  }
+  function scores(W, x) {
+    var z = new Float64Array(K);
+    for (var k = 0; k < K; k++) {
+      var s = 0, w = W[k];
+      for (var i = 0; i < N; i++) if (x[i]) s += w[i] * x[i];
+      z[k] = s;
+    }
+    return z;
+  }
+  function softmax(z) {
+    var m = Math.max.apply(null, z), p = new Float64Array(K), t = 0, k;
+    for (k = 0; k < K; k++) { p[k] = Math.exp(z[k] - m); t += p[k]; }
+    for (k = 0; k < K; k++) p[k] /= t;
+    return p;
+  }
+  function predict(W, x) {
+    var z = scores(W, x), b = 0;
+    for (var k = 1; k < K; k++) if (z[k] > z[b]) b = k;
+    return b;
+  }
+  // 낮: 오차 역전파 한 번. 출력층뿐이라 입력 × 오차만큼 고친다. 이 과제의 사진만 본다.
+  function trainStep(W, X, ids, o) {
+    var d = [];
+    for (var k = 0; k < K; k++) d.push(new Float64Array(N));
+    ids.forEach(function (c) {
+      var x = X[c], p = softmax(scores(W, x));
+      for (var k = 0; k < K; k++) {
+        var e = (k === c ? 1 : 0) - p[k];
+        for (var i = 0; i < N; i++) if (x[i]) d[k][i] += e * x[i] / ids.length;
+      }
+    });
+    for (k = 0; k < K; k++) for (var i = 0; i < N; i++) W[k][i] += o.lr * d[k][i];
+  }
+  function correct(W, X) {
+    return X.map(function (x, c) { return predict(W, x) === c; });
+  }
+  // 저자 코드의 sigmoid: W가 양수면 거의 0, 음수면 2에 가깝다. 뚜렷한 양수 연결은 잠에서 거의 안 변한다.
+  function gate(w) { return 2 * (1 - 1 / (1 + Math.exp(-w / 0.001))); }
+  function makeAlpha(W, X, o) {
+    var mx = 0;
+    W.forEach(function (w) { for (var i = 0; i < N; i++) if (w[i] > mx) mx = w[i]; });
+    X.forEach(function (x) {
+      var p = softmax(scores(W, x));
+      for (var k = 0; k < K; k++) if (p[k] > mx) mx = p[k];
+    });
+    return o.alphaScale / mx;
+  }
+  function meanInput(X) {
+    var m = new Float64Array(N);
+    X.forEach(function (x) { for (var i = 0; i < N; i++) m[i] += x[i] / X.length; });
+    return m;
+  }
+  // 대조군: 켜진 칸 수와 세기는 같고 자리만 뒤섞은 입력
+  function shuffledInput(m, rng) {
+    var a = Float64Array.from(m);
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rng() * (i + 1)), t = a[i];
+      a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function sleepStart(W, X, input, o) {
+    return { alpha: makeAlpha(W, X, o), mem: new Float64Array(K), input: input, t: 0, spikes: [0, 0, 0, 0] };
+  }
+  // 잠 한 스텝. 정답도 오차도 쓰지 않는다. 연결 하나가 보는 것은 앞 뉴런과 뒤 뉴런뿐이다.
+  function sleepStep(W, st, rng, o) {
+    var pre = new Uint8Array(N), post = new Uint8Array(K), i, k;
+    for (i = 0; i < N; i++) pre[i] = rng() < st.input[i] * o.rateScale ? 1 : 0;
+    for (k = 0; k < K; k++) {
+      var w = W[k], sum = 0;
+      for (i = 0; i < N; i++) if (pre[i]) sum += w[i];
+      st.mem[k] = o.decay * st.mem[k] + st.alpha * sum;
+      if (st.mem[k] >= o.beta) {
+        post[k] = 1;
+        for (i = 0; i < N; i++) {
+          var g = o.gate ? gate(w[i]) : 1;
+          w[i] += pre[i] ? o.inc * g : -o.dec * g;
+        }
+        st.mem[k] = 0;
+        st.spikes[k]++;
+      }
+    }
+    st.t++;
+    return { pre: pre, post: post };
+  }
+  return { DEF: DEF, N: N, K: K, ON: ON, makeRng: makeRng, makeImages: makeImages, newNet: newNet, scores: scores, softmax: softmax,
+    predict: predict, trainStep: trainStep, correct: correct, gate: gate, makeAlpha: makeAlpha, meanInput: meanInput,
+    shuffledInput: shuffledInput, sleepStart: sleepStart, sleepStep: sleepStep };
+})();
+if (typeof module !== "undefined") module.exports = SleepSim;
+
+        // 잠 시뮬레이터 화면. 계산은 전부 위 SleepSim이 하고 여기서는 값을 그린다.
+        (function () {
+            "use strict";
+            var S = SleepSim, O = S.DEF, $ = function (id) { return document.getElementById(id); };
+            var reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+            var NAMES = ["A", "B", "C", "D"];
+            var T = {
+                start: "This network already knows old pictures A·B; it is knowledge learned earlier. Let’s teach it new pictures.",
+                learn: "Learning new pictures C·D. It does not see A·B.",
+                forgot: "Learning the new pictures flipped the shared cells’ lines. It shouts new answers at old pictures too. Now put it to sleep.",
+                kept: "It gets both A·B and C·D right. So few cells overlap that nothing interferes. You can still put it to sleep.",
+                same: "The four pictures are now identical and cannot be told apart. Sleep has nothing to bring back.",
+                sleeping: "Sleeping. It uses no right answers and no errors. Each connection changes by looking only at its two neurons.",
+                paused: "Paused. Press again to keep sleeping.",
+                back: "The answer is back. The lines into A·B stayed as they were, and only the lines into C·D grew thick and blue. The new outputs simply shout less at old pictures.",
+                backGeneric: "It gets all four pictures right.",
+                morning: "Morning. It gets {n} of the four pictures right. The A·B outputs sent {a} signals and the C·D outputs {b}.",
+                btnLearn: "Learn new pictures C·D", btnSleep: "Go to sleep", btnPause: "Pause", btnResume: "Keep sleeping", btnOn: "Sleep until morning", btnAgain: "Start over",
+                ok: "right", no: "wrong", ans: "says ", notYet: "not learned", overlapUnit: " cells", fired: "spikes ", score: "score ", win: " answer",
+                zones: ["A cells", "B cells", "C cells", "D cells", "shared"],
+                winMark: "ans.",
+                eq: "{k} output: {a} {x} + shared {y} = {s}",
+                eqOne: "{k} output: {a} {x} = {s}",
+                eqZero: "{k} output: shared {y} = {s}",
+                outLabel: "{k} output, score {s}",
+                capDay: "100 input neurons. By day the chosen picture is the input.", capNight: "100 input neurons. At night there is no picture; noise runs at the average strength of the four. A green cell is a neuron firing right now.",
+                noFire: "No output fired in 5,000 steps.",
+                stepNone: "Step {t}: {p} input cells fired. No output has fired yet; only the membrane potentials move.",
+                stepFire: "Step {t}: with {p} input cells firing, the {k} output fired. Of the connections into that output, {p} get stronger and {q} get weaker.",
+                chartStep: "sleep step", chartAlt: "A output {a}, higher of C and D {b}",
+                whyScore: "A score {a} · C score {c} · answer {w}",
+                whyStart: "The moment C sends a signal, each cell before it follows just one rule.",
+                whyOff: "C has sent {n} signals. This time the A cells were all off, so A cells→C got weaker.",
+                whyOn: "C has sent {n} signals. This time {m} A cells were on, so those connections got stronger and the rest weaker.",
+                whyBack: " A’s score passed C’s and the answer is back.",
+                whyQuiet: "C no longer sends signals. It stopped after {n} signals.",
+                predOverlap: "At 15 cells each picture has only one cell of its own. Too few connections can be cut, so with this starting value it gets only {n} of the four pictures right by morning. The average over 100 seeds is 50%.",
+                predShuffle: "Shuffling the same input strengths into other positions, with this starting value it gets {n} of the four pictures right by morning. The average over 100 seeds is 53%. Not just any noise works."
+            };
+            function fmt(s, v) { return s.replace(/\{(\w+)\}/g, function (_, k) { return v[k]; }); }
+            function num(n) { return n.toLocaleString("en-US"); }
+            function sgn(v, d) { return (v < 0 ? "−" : "") + Math.abs(v).toFixed(d === undefined ? 2 : d); }
+
+            var cards = [].slice.call(document.querySelectorAll(".card"));
+            var outs = [].slice.call(document.querySelectorAll(".out"));
+            var DEFAULT_SEED = 20261106, seed = DEFAULT_SEED, state, timer = null, raf = null, selected = 0, focusOut = null, colors, why;
+            var RECTS = [[0, 0, 3, 3], [0, 7, 3, 3], [7, 0, 3, 3], [7, 7, 3, 3], [3, 3, 4, 4]];
+            function cellsOf(r) { var a = []; for (var y = r[0]; y < r[0] + r[2]; y++) for (var x = r[1]; x < r[1] + r[3]; x++) a.push(y * 10 + x); return a; }
+            var ZONES = RECTS.map(cellsOf);
+
+            function learnOld(W, X) { for (var i = 0; i < O.epochs1; i++) S.trainStep(W, X, [0, 1], O); }
+            function learnNewAll(W, X) { for (var i = 0; i < O.epochs2; i++) S.trainStep(W, X, [2, 3], O); }
+            function fresh() {
+                var rng = S.makeRng(seed), overlap = Number($("overlap").value);
+                state = { rng: rng, overlap: overlap, X: S.makeImages(overlap), W: S.newNet(rng, O), phase: 1, sleep: null, input: null, shown: null,
+                    pre: null, post: null, totals: [0, 0, 0], last: [0, 0, 0], hist: [], playing: false, allOkAt: null, crossed: false, paused: false, flash: 0 };
+                // 옛 과제는 전에 배워 둔 지식이다. 화면을 열기 전에 이미 끝나 있다.
+                learnOld(state.W, state.X);
+                state.used = S.meanInput(state.X);
+            }
+            function readColors() {
+                var c = getComputedStyle(document.documentElement);
+                function get(n) { return c.getPropertyValue(n).trim(); }
+                colors = { bg: hex(get("--panel-strong")), up: hex(get("--accent-warn")), down: hex(get("--accent")), hot: hex(get("--accent-green")), on: hex(get("--text")), panel: hex(get("--panel-soft")), line: get("--line-strong"), text: get("--muted"), a: get("--accent"), n: get("--accent-warn"), g: get("--accent-green") };
+            }
+            function hex(h) { return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)]; }
+            function mix(a, b, t) { return "rgb(" + Math.round(a[0] + (b[0] - a[0]) * t) + "," + Math.round(a[1] + (b[1] - a[1]) * t) + "," + Math.round(a[2] + (b[2] - a[2]) * t) + ")"; }
+            function fit(cv) {
+                var r = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+                if (cv.width !== Math.round(w * r) || cv.height !== Math.round(h * r)) { cv.width = Math.round(w * r); cv.height = Math.round(h * r); }
+                var g = cv.getContext("2d"); g.setTransform(r, 0, 0, r, 0, 0); return { g: g, w: w, h: h };
+            }
+            // 격자 하나. 어느 사진에도 켜지지 않는 칸은 비워 두고, 귀퉁이와 가운데 구역에 테두리를 두른다.
+            function grid(cv, colorOf, signOf, letters) {
+                var f = fit(cv), g = f.g, s = f.w / 10, i;
+                if (!f.w) return;
+                g.clearRect(0, 0, f.w, f.w);
+                g.fillStyle = mix(colors.panel, colors.panel, 0); g.fillRect(0, 0, f.w, f.w);
+                for (i = 0; i < 100; i++) {
+                    var c = colorOf(i);
+                    if (!c) continue;
+                    var x = (i % 10) * s, y = Math.floor(i / 10) * s;
+                    g.fillStyle = c; g.fillRect(x + 0.5, y + 0.5, s - 1, s - 1);
+                    var sign = signOf && s >= 11 ? signOf(i) : "";
+                    if (sign) { g.fillStyle = mix(colors.on, colors.on, 0); g.font = "600 " + Math.round(s * 0.8) + "px ui-monospace, Menlo, monospace"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(sign, x + s / 2, y + s / 2 + 0.5); }
+                }
+                g.strokeStyle = colors.line; g.lineWidth = 1;
+                RECTS.forEach(function (r) { g.strokeRect(r[1] * s + 0.5, r[0] * s + 0.5, r[3] * s - 1, r[2] * s - 1); });
+                if (letters && s >= 11) {
+                    g.fillStyle = colors.text; g.font = Math.round(s * 0.72) + "px ui-monospace, Menlo, monospace"; g.textAlign = "center"; g.textBaseline = "middle";
+                    NAMES.forEach(function (n, k) { var r = RECTS[k]; g.fillText(n, (r[1] + 2.5) * s, (r[0] + 2.5) * s + 0.5); });
+                }
+            }
+            function diverge(v, scale, dim) {
+                var t = Math.min(1, Math.sqrt(Math.abs(v) / scale)) * dim;
+                return mix(colors.bg, v >= 0 ? colors.up : colors.down, t);
+            }
+
+            // 연결선 그림: 구역 다섯 → 출력 넷. 선의 값은 그 구역에 켜진 칸들의 연결 합이다.
+            var NS = "http://www.w3.org/2000/svg", net = { lines: [], zones: [], nodes: [], scores: [] };
+            var ZONE_ORDER = [0, 1, 4, 2, 3], ZONE_Y = [28, 68, 108, 148, 188], OUT_Y = [36, 84, 132, 180];
+            function el(p, name, attrs, text) { var e = document.createElementNS(NS, name); for (var k in attrs) e.setAttribute(k, attrs[k]); if (text !== undefined) e.textContent = text; if (p) p.appendChild(e); return e; }
+            function zoneY(z) { return ZONE_Y[ZONE_ORDER.indexOf(z)]; }
+            function buildNet() {
+                var svg = $("net"), z, k;
+                for (z = 0; z < 5; z++) { net.lines[z] = []; for (k = 0; k < 4; k++) net.lines[z][k] = el(svg, "line", { class: "line", x1: 62, y1: zoneY(z), x2: 214, y2: OUT_Y[k] }); }
+                for (z = 0; z < 5; z++) {
+                    var g = el(svg, "g", { class: "zone" });
+                    el(g, "rect", { x: 8, y: zoneY(z) - 14, width: 54, height: 28, rx: 6 });
+                    el(g, "text", { x: 35, y: zoneY(z) + 4, "text-anchor": "middle" }, T.zones[z]);
+                    net.zones[z] = g;
+                }
+                for (k = 0; k < 4; k++) (function (k) {
+                    var g = el(svg, "g", { class: "node", role: "button", tabindex: 0 });
+                    el(g, "circle", { cx: 230, cy: OUT_Y[k], r: 16 });
+                    el(g, "text", { x: 230, y: OUT_Y[k] + 5, "text-anchor": "middle" }, NAMES[k]);
+                    net.nodes[k] = g;
+                    net.scores[k] = el(svg, "text", { class: "score", x: 254, y: OUT_Y[k] + 5 }, "");
+                    function act() { focusOut = focusOut === k ? null : k; drawNet(); }
+                    g.addEventListener("click", act);
+                    g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); act(); } });
+                })(k);
+            }
+            // 고른 사진에서 구역 z의 켜진 칸들이 출력 k로 보내는 값
+            function lineValue(W, pic, z, k) { var s = 0, c = ZONES[z]; for (var i = 0; i < c.length; i++) if (pic[c[i]]) s += W[k][c[i]]; return s; }
+            function isLit(pic, z) { return ZONES[z].some(function (i) { return pic[i]; }); }
+            function setLine(l, v) { l.setAttribute("class", "line " + (v >= 0 ? "pos" : "neg")); l.setAttribute("stroke-width", (1 + 7 * Math.min(1, Math.abs(v))).toFixed(2)); l.setAttribute("data-value", String(v)); }
+            function drawNet() {
+                var st = state, pic = st.X[selected], z = S.scores(st.W, pic), best = S.predict(st.W, pic), y, k;
+                for (y = 0; y < 5; y++) {
+                    var lit = isLit(pic, y);
+                    net.zones[y].setAttribute("class", "zone" + (lit ? " lit" : ""));
+                    for (k = 0; k < 4; k++) {
+                        var l = net.lines[y][k];
+                        l.style.display = lit ? "" : "none";
+                        if (lit) setLine(l, lineValue(st.W, pic, y, k));
+                    }
+                }
+                var firing = st.flash > 0;
+                for (k = 0; k < 4; k++) {
+                    net.nodes[k].setAttribute("class", "node" + (k === best ? " win" : "") + (focusOut === k ? " on" : "") + (firing && st.post && st.post[k] ? " fire" : ""));
+                    net.nodes[k].setAttribute("aria-label", fmt(T.outLabel, { k: NAMES[k], s: sgn(z[k]) }));
+                    net.scores[k].textContent = sgn(z[k]) + (k === best ? " " + T.winMark : "");
+                    net.scores[k].setAttribute("class", "score" + (k === best ? " win" : ""));
+                }
+                var show = focusOut === null ? best : focusOut, own = -1;
+                for (y = 0; y < 4; y++) if (isLit(pic, y)) own = y;
+                var shared = isLit(pic, 4), xv = own >= 0 ? lineValue(st.W, pic, own, show) : 0, yv = shared ? lineValue(st.W, pic, 4, show) : 0;
+                var vals = { k: NAMES[show], a: own >= 0 ? T.zones[own] : "", x: sgn(xv), y: sgn(yv), s: sgn(z[show]) };
+                $("eq").textContent = fmt(own >= 0 && shared ? T.eq : own >= 0 ? T.eqOne : T.eqZero, vals);
+            }
+            function drawThumbs() {
+                var st = state, used = st.used;
+                cards.forEach(function (c, k) {
+                    var x = st.X[k];
+                    grid(c.querySelector("canvas"), function (i) {
+                        if (!used[i]) return null;
+                        if (!x[i]) return mix(colors.bg, colors.bg, 0);
+                        return mix(colors.bg, colors.on, used[i] === 1 ? 0.35 : 1);
+                    });
+                    c.setAttribute("aria-pressed", k === selected ? "true" : "false");
+                });
+            }
+            function drawCards() {
+                var st = state, ok = S.correct(st.W, st.X);
+                cards.forEach(function (c, k) {
+                    var v = c.querySelector(".verdict");
+                    if (st.phase < 2 && k >= 2) { v.textContent = T.notYet; v.className = "verdict"; return; }
+                    var p = S.predict(st.W, st.X[k]);
+                    v.textContent = T.ans + NAMES[p] + " " + (ok[k] ? T.ok : T.no);
+                    v.className = "verdict " + (ok[k] ? "ok" : "no");
+                });
+            }
+            function drawGrids() {
+                var st = state, pic = st.X[selected], used = st.used;
+                $("vote-pic").textContent = NAMES[selected];
+                $("in-cap").textContent = st.sleep ? T.capNight : T.capDay;
+                grid($("in-grid"), function (i) {
+                    if (!used[i]) return null;
+                    if (st.pre && st.pre[i]) return mix(colors.hot, colors.hot, 0);
+                    var v = st.input ? st.input[i] : st.shown ? st.shown[i] : pic[i];
+                    return mix(colors.bg, colors.on, st.input ? 0.15 + 0.6 * v : v);
+                }, null, true);
+                var z = S.scores(st.W, pic), best = S.predict(st.W, pic);
+                outs.forEach(function (o, k) {
+                    var w = st.W[k];
+                    grid(o.querySelector("canvas"), function (i) {
+                        if (!used[i]) return null;
+                        return diverge(w[i], 0.5, pic[i] ? 1 : 0.22);
+                    }, function (i) { return pic[i] ? (w[i] >= 0 ? "+" : "−") : ""; }, true);
+                    var mem = st.sleep ? st.sleep.mem[k] : 0;
+                    o.querySelector(".mem span").style.width = Math.max(0, Math.min(100, 100 * mem / O.beta)) + "%";
+                    o.querySelector(".out-count").textContent = T.fired + num(st.sleep ? st.sleep.spikes[k] : 0);
+                    o.querySelector(".out-score").textContent = T.score + z[k].toFixed(2) + (k === best ? T.win : "");
+                    o.classList.toggle("win", k === best);
+                    o.classList.toggle("fire", !!(st.post && st.post[k]));
+                });
+            }
+            function drawRule() {
+                var st = state, ids = ["r-both", "r-silent", "r-none"];
+                ids.forEach(function (id, j) {
+                    var r = $(id), n = r.querySelectorAll(".n");
+                    n[0].textContent = num(st.last[j]); n[1].textContent = num(st.totals[j]);
+                    r.classList.toggle("on", st.last[j] > 0 && j < 2);
+                });
+                var fired = st.post && st.post.some(function (x) { return x; });
+                ["c-if", "c-up", "c-rst"].forEach(function (id) { $(id).classList.toggle("on", !!fired); });
+                ["c-pre", "c-mem"].forEach(function (id) { $(id).classList.toggle("on", !!st.sleep && !fired); });
+            }
+            function drawChart() {
+                var f = fit($("chart")), g = f.g, h = state.hist, L = 34, R = 8, Tp = 8, B = 26, W = f.w - L - R, H = f.h - Tp - B;
+                if (!f.w) return;
+                g.clearRect(0, 0, f.w, f.h);
+                var lo = -1, hi = 1;
+                h.forEach(function (p) { lo = Math.min(lo, p.a, p.b); hi = Math.max(hi, p.a, p.b); });
+                function X(t) { return L + W * t / O.steps; }
+                function Y(v) { return Tp + H * (hi - v) / (hi - lo); }
+                g.font = "11px ui-monospace, Menlo, monospace"; g.fillStyle = colors.text; g.strokeStyle = colors.line; g.lineWidth = 1;
+                [lo, 0, hi].forEach(function (v) { g.beginPath(); g.moveTo(L, Y(v)); g.lineTo(f.w - R, Y(v)); g.stroke(); g.textAlign = "right"; g.fillText(v.toFixed(v === 0 ? 0 : 1), L - 4, Y(v) + 4); });
+                g.textAlign = "left"; g.fillText("0", L, f.h - 8); g.textAlign = "right"; g.fillText(num(O.steps), f.w - R, f.h - 8);
+                g.textAlign = "center"; g.fillText(T.chartStep, L + W / 2, f.h - 8);
+                if (state.allOkAt !== null) { g.strokeStyle = colors.g; g.setLineDash([3, 3]); g.beginPath(); g.moveTo(X(state.allOkAt), Tp); g.lineTo(X(state.allOkAt), Tp + H); g.stroke(); g.setLineDash([]); }
+                function line(key, color) { if (!h.length) return; g.strokeStyle = color; g.lineWidth = 2; g.beginPath(); h.forEach(function (p, i) { var x = X(p.t), y = Y(p[key]); if (i) g.lineTo(x, y); else g.moveTo(x, y); }); g.stroke(); }
+                line("b", colors.n); line("a", colors.a);
+                if (h.length) { var e = h[h.length - 1]; $("chart").setAttribute("aria-label", fmt(T.chartAlt, { a: e.a.toFixed(2), b: e.b.toFixed(2) })); }
+            }
+            function draw() {
+                drawNet(); drawCards();
+                if ($("expert").open) { drawGrids(); drawRule(); drawChart(); }
+            }
+            function sample() {
+                var st = state, z = S.scores(st.W, st.X[0]);
+                st.hist.push({ t: st.sleep ? st.sleep.t : 0, a: z[0], b: Math.max(z[2], z[3]) });
+                if (st.hist.length > 600) st.hist = st.hist.filter(function (_, i) { return i % 2 === 0; });
+            }
+            function over() { return !!(state.sleep && state.sleep.t >= O.steps); }
+            function buttons() {
+                var st = state, b = $("do-main");
+                b.textContent = st.phase === 1 ? T.btnLearn : st.phase === 2 ? T.btnSleep : over() ? T.btnAgain : st.playing ? T.btnPause : st.crossed && st.paused ? T.btnOn : T.btnResume;
+                $("do-step").disabled = st.phase < 2 || over() || st.playing;
+                $("do-fire").disabled = st.phase < 2 || over() || st.playing;
+            }
+            function say(s) { $("status").textContent = s; }
+            function stop() { if (timer) clearTimeout(timer); if (raf) cancelAnimationFrame(raf); timer = raf = null; if (state) state.playing = false; }
+            function learnNew() {
+                stop(); say(T.learn); var n = 0;
+                state.learning = true;
+                (function tick() {
+                    S.trainStep(state.W, state.X, [2, 3], O);
+                    state.shown = state.X[2 + n % 2];
+                    n++;
+                    if (n >= O.epochs2) state.phase = 2;
+                    draw();
+                    if (n < O.epochs2) { timer = setTimeout(tick, reduced ? 0 : 400); return; }
+                    state.shown = null; state.learning = false; afterNew(); buttons(); draw();
+                })();
+            }
+            function afterNew() {
+                var a = S.correct(state.W, state.X);
+                say(state.overlap >= S.ON ? T.same : a[0] && a[1] ? T.kept : T.forgot);
+                sample();
+            }
+            function startSleep() {
+                var st = state;
+                if (st.sleep) return;
+                var m = S.meanInput(st.X), kind = document.querySelector('input[name="input"]:checked').value;
+                st.input = kind === "shuffled" ? S.shuffledInput(m, st.rng) : m;
+                st.sleep = S.sleepStart(st.W, st.X, st.input, O);
+                st.phase = 3;
+            }
+            function oneStep() {
+                var st = state, e = S.sleepStep(st.W, st.sleep, st.rng, O), p = 0, i, fired = 0;
+                for (i = 0; i < S.N; i++) p += e.pre[i];
+                e.post.forEach(function (x) { fired += x; });
+                st.pre = e.pre; st.post = Array.from(e.post);
+                st.last = [fired * p, fired * (S.N - p), (S.K - fired) * S.N];
+                for (i = 0; i < 3; i++) st.totals[i] += st.last[i];
+                st.lastP = p;
+                return fired;
+            }
+            // 네 장을 모두 맞히고, 점수 차이가 눈에 보일 만큼 벌어졌는가
+            function clearlyBack() {
+                var st = state, m = Infinity;
+                for (var c = 0; c < 4; c++) { var z = S.scores(st.W, st.X[c]); for (var k = 0; k < 4; k++) if (k !== c) m = Math.min(m, z[c] - z[k]); }
+                return m >= 0.05;
+            }
+            function checkDone() {
+                var st = state, t = st.sleep.t, ok;
+                if (t % 50 === 0 && st.allOkAt === null && S.correct(st.W, st.X).every(Boolean)) st.allOkAt = t;
+                if (t >= O.steps) {
+                    ok = S.correct(st.W, st.X); stop();
+                    say(fmt(T.morning, { n: ok.filter(Boolean).length, a: num(st.sleep.spikes[0] + st.sleep.spikes[1]), b: num(st.sleep.spikes[2] + st.sleep.spikes[3]) }));
+                    $("why").open = true;
+                    return true;
+                }
+                if (t % 50 === 0 && !st.crossed && st.allOkAt !== null && clearlyBack()) {
+                    st.crossed = true; st.paused = true; stop();
+                    say(st.overlap < S.ON && document.querySelector('input[name="input"]:checked').value === "mean" && st.sleep.spikes[0] + st.sleep.spikes[1] === 0 ? T.back : T.backGeneric);
+                    return true;
+                }
+                return false;
+            }
+            function play() {
+                var st = state;
+                startSleep(); st.playing = true; st.paused = false;
+                if (!st.crossed) say(T.sleeping);
+                buttons();
+                var last = null, carry = 0, perSecond = reduced ? 7500 : Number(document.querySelector('input[name="speed"]:checked').value) * 60;
+                function frame(now) {
+                    if (!st.playing) return;
+                    var end = false, dt = last === null ? 16 : Math.min(250, now - last), any = 0;
+                    last = now; carry += perSecond * dt / 1000;
+                    var n = Math.floor(carry); carry -= n;
+                    for (var i = 0; i < n; i++) {
+                        any += oneStep();
+                        if (st.sleep.t % 100 === 0) sample();
+                        if ((end = checkDone())) break;
+                    }
+                    st.flash = any > 0 ? 1 : 0;
+                    draw(); buttons();
+                    if (end) return;
+                    if (reduced) timer = setTimeout(function () { frame(performance.now()); }, 200); else raf = requestAnimationFrame(frame);
+                }
+                frame(performance.now());
+            }
+            function stepOnce(untilFire) {
+                var st = state; stop(); startSleep();
+                var fired = 0, n = 0, limit = untilFire ? 5000 : 1;
+                while (n < limit && st.sleep.t < O.steps) { fired = oneStep(); n++; if (st.sleep.t % 100 === 0) sample(); if (st.sleep.t >= O.steps) { checkDone(); break; } if (st.sleep.t % 50 === 0 && st.allOkAt === null && S.correct(st.W, st.X).every(Boolean)) st.allOkAt = st.sleep.t; if (fired) break; }
+                sample(); st.flash = fired ? 1 : 0;
+                if (fired) { var k = st.post.indexOf(1); $("expert-status").textContent = fmt(T.stepFire, { t: num(st.sleep.t), p: st.lastP, q: S.N - st.lastP, k: NAMES[k] }); }
+                else $("expert-status").textContent = untilFire ? T.noFire : fmt(T.stepNone, { t: num(st.sleep.t), p: st.lastP });
+                draw(); buttons();
+            }
+            function reset(keepPhase) {
+                stop();
+                var keep = state ? state.phase : 1;
+                fresh();
+                focusOut = null;
+                $("expert-status").textContent = "";
+                if (keepPhase && keep >= 2) { learnNewAll(state.W, state.X); state.phase = 2; afterNew(); }
+                else say(T.start);
+                buttons(); drawThumbs(); draw();
+            }
+
+            // 왜 돌아왔나: 이야기와 따로 도는 망. 새 사진을 배운 직후에서 시작해 C가 신호를 낼 때마다 멈춘다.
+            var mini = {};
+            function buildMini() {
+                var svg = $("mini"), Y = [28, 92];
+                mini.lines = Y.map(function (y) { return el(svg, "line", { class: "line", x1: 70, y1: y, x2: 262, y2: 60 }); });
+                mini.vals = Y.map(function (y) { return el(svg, "text", { class: "val", x: 150, y: y === 28 ? 24 : 104 }, ""); });
+                [T.zones[0], T.zones[4]].forEach(function (name, i) {
+                    var g = el(svg, "g", { class: "zone" });
+                    el(g, "rect", { x: 8, y: Y[i] - 14, width: 62, height: 28, rx: 6 });
+                    el(g, "text", { x: 39, y: Y[i] + 4, "text-anchor": "middle" }, name);
+                });
+                mini.node = el(svg, "g", { class: "node" });
+                el(mini.node, "circle", { cx: 280, cy: 60, r: 18 });
+                el(mini.node, "text", { x: 280, y: 65, "text-anchor": "middle" }, "C");
+            }
+            function whyFresh() {
+                var rng = S.makeRng(DEFAULT_SEED), X = S.makeImages(13), W = S.newNet(rng, O);
+                learnOld(W, X); learnNewAll(W, X);
+                why = { rng: rng, X: X, W: W, st: S.sleepStart(W, X, S.meanInput(X), O), fires: 0, back: false };
+            }
+            function whyDraw() {
+                var pic = why.X[0], a = lineValue(why.W, pic, 0, 2), b = lineValue(why.W, pic, 4, 2), z = S.scores(why.W, pic);
+                setLine(mini.lines[0], a); setLine(mini.lines[1], b);
+                mini.vals[0].textContent = sgn(a, 3); mini.vals[1].textContent = sgn(b, 3);
+                $("why-score").textContent = fmt(T.whyScore, { a: sgn(z[0]), c: sgn(z[2]), w: NAMES[S.predict(why.W, pic)] });
+            }
+            function whyFire(times) {
+                var msg = "";
+                for (var n = 0; n < times; n++) {
+                    var e = null, guard = 0;
+                    while (guard++ < 5000) { e = S.sleepStep(why.W, why.st, why.rng, O); if (e.post[2]) break; }
+                    if (!e || !e.post[2]) { msg = fmt(T.whyQuiet, { n: num(why.fires) }); break; }
+                    why.fires++;
+                    var pic = why.X[0], on = 0; ZONES[0].forEach(function (i) { if (pic[i] && e.pre[i]) on++; });
+                    msg = on ? fmt(T.whyOn, { n: num(why.fires), m: on }) : fmt(T.whyOff, { n: num(why.fires) });
+                }
+                if (!why.back && S.predict(why.W, why.X[0]) === 0) { why.back = true; msg += T.whyBack; }
+                mini.node.setAttribute("class", "node fire");
+                setTimeout(function () { mini.node.setAttribute("class", "node"); }, reduced ? 0 : 200);
+                $("why-status").textContent = msg;
+                whyDraw();
+            }
+            function quick(overlap, shuffled) {
+                var rng = S.makeRng(DEFAULT_SEED), X = S.makeImages(overlap), W = S.newNet(rng, O);
+                learnOld(W, X); learnNewAll(W, X);
+                var m = S.meanInput(X), st = S.sleepStart(W, X, shuffled ? S.shuffledInput(m, rng) : m, O);
+                for (var t = 0; t < O.steps; t++) S.sleepStep(W, st, rng, O);
+                return S.correct(W, X).filter(Boolean).length;
+            }
+
+            $("do-main").addEventListener("click", function () {
+                var st = state;
+                if (st.learning) return;
+                if (st.phase === 1) learnNew();
+                else if (over()) { seed = DEFAULT_SEED; reset(false); }
+                else if (st.playing) { stop(); st.paused = true; say(T.paused); buttons(); }
+                else play();
+            });
+            cards.forEach(function (c, k) { c.addEventListener("click", function () { selected = k; focusOut = null; drawThumbs(); draw(); }); });
+            $("do-step").addEventListener("click", function () { stepOnce(false); });
+            $("do-fire").addEventListener("click", function () { stepOnce(true); });
+            $("do-reseed").addEventListener("click", function () { seed = Math.floor(Math.random() * 1e9); reset(false); });
+            $("overlap").addEventListener("input", function () { $("overlap-value").textContent = this.value + T.overlapUnit; reset(true); });
+            document.querySelectorAll('input[name="input"]').forEach(function (r) { r.addEventListener("change", function () { if (state.sleep) reset(true); }); });
+            document.querySelectorAll('input[name="speed"]').forEach(function (r) { r.addEventListener("change", function () { if (state.playing) { stop(); play(); } }); });
+            $("expert").addEventListener("toggle", function () { if (this.open) draw(); });
+            $("why-one").addEventListener("click", function () { whyFire(1); });
+            $("why-many").addEventListener("click", function () { whyFire(100); });
+            $("why-reset").addEventListener("click", function () { whyFresh(); $("why-status").textContent = T.whyStart; whyDraw(); });
+            $("pred-overlap").addEventListener("click", function () { $("pred-result").textContent = fmt(T.predOverlap, { n: quick(15, false) }); });
+            $("pred-shuffle").addEventListener("click", function () { $("pred-result").textContent = fmt(T.predShuffle, { n: quick(13, true) }); });
+            window.addEventListener("resize", function () { drawThumbs(); draw(); });
+            new MutationObserver(function () { readColors(); drawThumbs(); draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+            readColors(); buildNet(); buildMini(); fresh(); whyFresh(); whyDraw(); buttons(); drawThumbs(); draw();
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-11-06","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"},{"id":"ml","name":"기계 학습","name_en":"Machine learning"},{"id":"llm","name":"언어 모델","name_en":"Language models","parent":"ml"},{"id":"rob","name":"로봇·자동화","name_en":"Robotics and automation"},{"id":"ct","name":"X선·CT 영상","name_en":"X-ray and CT imaging"},{"id":"st","name":"컴퓨터·저장장치","name_en":"Computer storage"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"},{"id":"train-val-calib-test","title":"train·val·calib·test","title_en":"train/val/calib/test","domain":"ml","status":"published","href":"../train-val-calib-test/","summary":"학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold를 위해 칸 하나를 더 두기","summary_en":"Keep one more split for what is fitted after training: the temperature T and the threshold"},{"id":"error-backpropagation","title":"역전파","title_en":"Backpropagation","domain":"ml","status":"published","href":"../error-backpropagation/","summary":"출력의 오차를 뒤로 전해 다층 퍼셉트론의 가운데 층까지 고치기","summary_en":"Pass the output's error backward to correct the middle layer of a multilayer perceptron too"},{"id":"neural-network-sleep","title":"신경망의 잠","title_en":"Sleep for neural networks","domain":"ml","status":"published","href":"../neural-network-sleep/","summary":"학습을 멈추고 잡음을 흘려 연결이 앞뒤 뉴런만 보고 바뀌게 하면, 잊은 옛 과제가 돌아오기도 한다","summary_en":"Stop training and run noise through the network so each connection changes by its two neurons alone, and a forgotten old task can come back"},{"id":"robot-types","title":"로봇의 종류","title_en":"Robot types","domain":"rob","status":"published","href":"../robot-types/","summary":"관절을 잇는 구조가 손끝의 자세를 정하고, 그 자세가 실험실에서 로봇의 쓰임을 정한다","summary_en":"How the joints are joined sets the hand's posture, and the posture sets what a robot does in the lab"},{"id":"hydraulic-pneumatic-microinjector","title":"마이크로인젝터","title_en":"Microinjectors","domain":"rob","status":"published","href":"../hydraulic-pneumatic-microinjector/","summary":"공기로 미는 공압식은 압력을, 기름으로 미는 유압식은 부피를 정한다","summary_en":"A pneumatic injector pushes with air and sets the pressure; a hydraulic one pushes with oil and sets the volume"},{"id":"kimi-k3-1-pro","title":"Kimi K3.1 Pro","title_en":"Kimi K3.1 Pro","domain":"llm","status":"published","href":"../kimi-k3-1-pro/","summary":"몸통은 그대로 두고 사후 학습으로 AA 지수를 44에서 55로 올리기","summary_en":"Raise the AA index from 44 to 55 with post-training, on the same base model"},{"id":"pretraining-posttraining-inference","title":"사전 학습·사후 학습·추론","title_en":"Pre-training, post-training, inference","domain":"llm","status":"published","href":"../pretraining-posttraining-inference/","summary":"사전 학습과 사후 학습은 가중치를 바꾸고, 추론은 가중치를 그대로 둔 채 맥락으로 답한다","summary_en":"Pre-training and post-training change the weights; inference leaves them as they are and answers from the context"},{"id":"xray-ct-registration","title":"X선–CT 정합","title_en":"X-ray to CT registration","domain":"ct","status":"published","href":"../xray-ct-registration/","summary":"엑스레이 필름 한 장은 CT가 찍는 그림자의 한 방향이라서, CT에서 가상 필름을 계산해 필름에 맞출 수 있다","summary_en":"An X-ray film is one view of what a CT scan records, so a virtual film computed from the CT can be matched to it"},{"id":"format-keeps-data","title":"포맷과 데이터 복구","title_en":"Format and data recovery","domain":"st","status":"published","href":"../format-keeps-data/","summary":"포맷과 플래시가 지우는 것은 지도이고, 덮어쓰지 않은 본문은 그대로라서 되살릴 수 있다","summary_en":"Formatting and flashing erase the map, and the data that was not overwritten stays, so it can be recovered"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"},{"from":"error-backpropagation","to":"pretraining-posttraining-inference"},{"from":"error-backpropagation","to":"neural-network-sleep"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            MAP.nodes.forEach(function (n) { n.title = n.title_en || n.title; n.summary = n.summary_en || n.summary; });
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 100 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (coming soon)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "coming soon";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "you are here";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
