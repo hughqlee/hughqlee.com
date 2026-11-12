@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maker | Hugh Q Lee</title>
+    <meta name="description" content="Hardware and DIY builds Hugh Q Lee makes by hand.">
+    <meta name="author" content="Hugh Q Lee">
+    <!-- Translated from /maker/ (the Korean original): keep it in step. Add each build to the list and to the ItemList in the same order, newest first. -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+    <link rel="canonical" href="https://hughqlee.com/maker/en/">
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/maker/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/maker/en/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/maker/en/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ko_KR">
+    <meta property="og:title" content="Maker | Hugh Q Lee">
+    <meta property="og:description" content="Hardware and DIY builds made by hand.">
+    <meta property="og:url" content="https://hughqlee.com/maker/en/">
+    <meta property="og:image" content="https://hughqlee.com/images/og-cover.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Terminal-style home page of Hugh Q Lee: hughqlee in ASCII art, “To see is something extraordinary.”, and links to projects, knowledge, books, and maker.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Maker | Hugh Q Lee">
+    <meta name="twitter:description" content="Hardware and DIY builds made by hand.">
+    <meta name="twitter:image" content="https://hughqlee.com/images/og-cover.jpg">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "CollectionPage",
+          "@id": "https://hughqlee.com/maker/en/#collection",
+          "translationOfWork": { "@id": "https://hughqlee.com/maker/#collection" },
+          "url": "https://hughqlee.com/maker/en/",
+          "name": "Maker",
+          "description": "Hardware and DIY builds Hugh Q Lee makes by hand.",
+          "inLanguage": "en",
+          "author": { "@id": "https://hughqlee.com/#person" },
+          "mainEntity": {
+            "@type": "ItemList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "url": "https://hughqlee.com/maker/en/ms110p-pi-minirack/",
+                "name": "3D-printed mini rack for MS110P and Raspberry Pi"
+              }
+            ]
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Hugh Q Lee", "item": "https://hughqlee.com/en/" },
+            { "@type": "ListItem", "position": 2, "name": "Maker", "item": "https://hughqlee.com/maker/en/" }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+        p { margin: 0 0 12px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            font-family: var(--mono);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 28px; }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 16px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .lead { color: var(--muted); }
+
+        .pages { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+        .pages article {
+            position: relative;
+            padding: 18px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .pages article:hover { border-color: var(--line-strong); }
+        .pages h2 { margin: 0 0 6px; font-size: 20px; line-height: 1.4; }
+        .pages h2 a { color: var(--text); text-decoration: none; }
+        .pages h2 a::after { content: ""; position: absolute; inset: 0; }  /* the whole card is the link */
+        .pages p { margin: 0; color: var(--muted); }
+        .pages .meta { margin: 0 0 6px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+
+        footer {
+            margin-top: 48px;
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/en/">hughqlee.com</a> / <span aria-current="page">maker</span>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/maker/" hreflang="ko" lang="ko">한국어</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main" class="wrap">
+        <section class="hero" aria-labelledby="page-title">
+            <p class="eyebrow">MAKER</p>
+            <h1 id="page-title">Maker</h1>
+            <p class="lead">A place for the hardware and DIY builds I make by hand.</p>
+        </section>
+
+        <ol class="pages" aria-label="Maker builds">
+            <li>
+                <article>
+                    <p class="meta"><time datetime="2026-11-12">2026-11-12</time> · 3D printing</p>
+                    <h2><a href="/maker/en/ms110p-pi-minirack/">3D-printed mini rack for MS110P and Raspberry Pi</a></h2>
+                    <p>A rack that stands Raspberry Pi boards upright on top of an MS110P PoE switch. Its five rails take a mix of Pi 3B+ and Zero 2 W carriers, and the seven print-ready STL files are released under CC BY 4.0.</p>
+                </article>
+            </li>
+        </ol>
+    </main>
+
+    <footer class="wrap">
+        <a href="/en/">Hugh Q Lee</a> · Translated from the <a href="/maker/" hreflang="ko">Korean original</a>
+    </footer>
+
+    <script>
+        // Theme toggle (shared with the homepage through localStorage "theme").
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function label() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                label();
+            });
+            label();
+        })();
+    </script>
+</body>
+</html>

@@ -7,13 +7,13 @@
     <!-- Main page (profile and the way to each section): Korean at / (the original), English at /en/. -->
     <url>
         <loc>https://hughqlee.com/</loc>
-        <lastmod>2026-10-12</lastmod>
+        <lastmod>2026-11-12</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
         <loc>https://hughqlee.com/en/</loc>
-        <lastmod>2026-10-12</lastmod>
+        <lastmod>2026-11-12</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
     </url>
@@ -48,6 +48,33 @@
     </url>
 
     <!-- folio.html is intentionally omitted: it is marked noindex. -->
+
+    <!-- Maker: Korean at /maker/ (the original), English at /maker/en/. Add each build when it is published,
+         and update lastmod when it changes. -->
+    <url>
+        <loc>https://hughqlee.com/maker/</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://hughqlee.com/maker/en/</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://hughqlee.com/maker/ms110p-pi-minirack/</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://hughqlee.com/maker/en/ms110p-pi-minirack/</loc>
+        <lastmod>2026-11-12</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
 
     <!-- Knowledge: add each page when it is published, and update lastmod when it changes. -->
     <url>

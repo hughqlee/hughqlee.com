@@ -49,7 +49,7 @@ EN_HEAD = {
     "description": "Computer vision and robotics systems that Hugh Q Lee, a Vision AI Product Engineer, built for zebrafish lab automation: toxicity evaluation automation, microinjection, behavior and feeding analytics, and robotic 3D imaging.",
     "keywords": "Hugh Q Lee, Projects, Vision AI, Product Engineer, Lab Automation, Computer Vision, Robotics, Zebrafish, Assay Automation, Microscopy",
     "og:description": "Selected work in vision AI, robotics, microscopy automation, and zebrafish assay systems.",
-    "og:image:alt": "Terminal-style home page of Hugh Q Lee: hughqlee in ASCII art, “To see is something extraordinary.”, and links to projects, knowledge, and books.",
+    "og:image:alt": "Terminal-style home page of Hugh Q Lee: hughqlee in ASCII art, “To see is something extraordinary.”, and links to projects, knowledge, books, and maker.",
 }
 HEAD_TAG = {
     "description": '<meta name="description" ',

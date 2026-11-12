@@ -1,6 +1,6 @@
 # Hugh Q Lee
 
-> Personal site of Hugh Q Lee, a Vision AI Product Engineer building computer vision and robotic automation systems for zebrafish lab workflows, and an AI engineer with a strong interest in personal branding, entrepreneurship, and company culture. The home page is a short profile that leads to each section: Projects holds selected work, Knowledge holds interactive explanations of concepts Hugh Q Lee has studied, each checked against its original source, and Books is a shelf of the books he buys and lends, with reviews from the readers who borrowed them. The site is written in Korean, and every page has an English version translated from the Korean original: the home page at https://hughqlee.com/en/, the projects at https://hughqlee.com/projects/en/, the knowledge pages under https://hughqlee.com/knowledge/en/, and the bookshelf at https://hughqlee.com/books/en/.
+> Personal site of Hugh Q Lee, a Vision AI Product Engineer building computer vision and robotic automation systems for zebrafish lab workflows, and an AI engineer with a strong interest in personal branding, entrepreneurship, and company culture. The home page is a short profile that leads to each section: Projects holds selected work, Knowledge holds interactive explanations of concepts Hugh Q Lee has studied, each checked against its original source, Books is a shelf of the books he buys and lends, with reviews from the readers who borrowed them, and Maker holds the hardware and DIY builds he makes by hand, with their print files. The site is written in Korean, and every page has an English version translated from the Korean original: the home page at https://hughqlee.com/en/, the projects at https://hughqlee.com/projects/en/, the knowledge pages under https://hughqlee.com/knowledge/en/, the bookshelf at https://hughqlee.com/books/en/, and the maker pages under https://hughqlee.com/maker/en/.
 
 ## Knowledge (English)
 
@@ -56,3 +56,8 @@ Selected work (each is a run report on the projects page; client and lab details
 ## Books
 
 - [My Hobby Is Reading](https://hughqlee.com/books/en/): Books Hugh Q Lee has read and rated, lent to friends with no fees: a deposit equal to the price of a new copy, refunded in full on return, and ratings from the readers who borrowed each book. Korean original: [HughQLee는 독서가 취미입니다](https://hughqlee.com/books/).
+
+## Maker
+
+- [Maker](https://hughqlee.com/maker/en/): Hardware and DIY builds Hugh Q Lee makes by hand, with their files. Korean original: [Maker](https://hughqlee.com/maker/).
+- [3D-printed mini rack for MS110P and Raspberry Pi](https://hughqlee.com/maker/en/ms110p-pi-minirack/): A rack (design R15) that stands Raspberry Pi boards upright on top of a MERCUSYS MS110P PoE switch. Pi 3B+ and Zero 2 W carriers slide into five rails, and an L-shaped cover closes the roof and the back. The page has the parts list, short print and assembly notes, and what has been checked (the CAD clearance check passed, and it has been assembled) and what has not (precise fit, strength, PoE power and heat with the cover on). Seven print-ready STL files are released under CC BY 4.0. Korean original: [MS110P와 Raspberry Pi용 3D 출력 미니랙](https://hughqlee.com/maker/ms110p-pi-minirack/).
