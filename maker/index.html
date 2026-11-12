@@ -6,7 +6,8 @@
     <title>Maker | Hugh Q Lee</title>
     <meta name="description" content="Hugh Q Lee가 직접 손으로 만든 하드웨어와 DIY 작업 모음.">
     <meta name="author" content="Hugh Q Lee">
-    <!-- 작업을 올릴 때마다 아래 목록(HTML)과 ItemList(mainEntity)에 같은 순서(새 작업이 위)로 추가하고, /maker/en/에도 같이 넣는다. -->
+    <!-- 작업을 올릴 때마다 아래 목록(HTML)과 ItemList(mainEntity)에 같은 순서(새 작업이 위)로 추가하고, /maker/en/에도 같이 넣는다.
+         썸네일은 작업 폴더의 thumb.webp(640×480, 4:3)이고, 두 판이 같은 파일을 쓴다. -->
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
     <link rel="canonical" href="https://hughqlee.com/maker/">
     <link rel="alternate" hreflang="ko" href="https://hughqlee.com/maker/">
@@ -220,6 +221,22 @@
         .pages h2 a::after { content: ""; position: absolute; inset: 0; }  /* the whole card is the link */
         .pages p { margin: 0; color: var(--muted); }
         .pages .meta { margin: 0 0 6px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+        /* Each build's thumb.webp (640 x 480, 4:3) beside the text; on a phone, above it and cropped wider. */
+        .pages article { display: grid; grid-template-columns: 168px minmax(0, 1fr); align-items: center; gap: 20px; }
+        .pages .thumb {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: var(--bg);
+        }
+        @media (max-width: 560px) {
+            .pages article { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+            .pages .thumb { aspect-ratio: 16 / 9; }
+        }
 
         footer {
             margin-top: 48px;
@@ -254,9 +271,12 @@
         <ol class="pages" aria-label="Maker 작업">
             <li>
                 <article>
-                    <p class="meta"><time datetime="2026-11-12">2026-11-12</time> · 3D 프린팅</p>
-                    <h2><a href="/maker/ms110p-pi-minirack/">MS110P와 Raspberry Pi용 3D 출력 미니랙</a></h2>
-                    <p>PoE 스위치 MS110P 위에 Raspberry Pi를 세로로 꽂는 랙이다. 레일 다섯 칸에 Pi 3B+와 Zero 2 W 캐리어를 섞어 넣고, 출력용 STL 7종을 CC BY 4.0으로 공개했다.</p>
+                    <img class="thumb" src="/maker/ms110p-pi-minirack/thumb.webp" width="640" height="480" alt="" decoding="async">
+                    <div>
+                        <p class="meta"><time datetime="2026-11-12">2026-11-12</time> · 3D 프린팅</p>
+                        <h2><a href="/maker/ms110p-pi-minirack/">MS110P와 Raspberry Pi용 3D 출력 미니랙</a></h2>
+                        <p>PoE 스위치 MS110P 위에 Raspberry Pi를 세로로 꽂는 랙이다. 레일 다섯 칸에 Pi 3B+와 Zero 2 W 캐리어를 섞어 넣고, 출력용 STL 7종을 CC BY 4.0으로 공개했다.</p>
+                    </div>
                 </article>
             </li>
         </ol>

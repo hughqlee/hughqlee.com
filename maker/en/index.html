@@ -6,7 +6,8 @@
     <title>Maker | Hugh Q Lee</title>
     <meta name="description" content="Hardware and DIY builds Hugh Q Lee makes by hand.">
     <meta name="author" content="Hugh Q Lee">
-    <!-- Translated from /maker/ (the Korean original): keep it in step. Add each build to the list and to the ItemList in the same order, newest first. -->
+    <!-- Translated from /maker/ (the Korean original): keep it in step. Add each build to the list and to the ItemList in the same order, newest first.
+         The thumbnail is the build folder's thumb.webp (640 x 480, 4:3), the same file as the Korean list. -->
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
     <link rel="canonical" href="https://hughqlee.com/maker/en/">
     <link rel="alternate" hreflang="ko" href="https://hughqlee.com/maker/">
@@ -220,6 +221,22 @@
         .pages h2 a::after { content: ""; position: absolute; inset: 0; }  /* the whole card is the link */
         .pages p { margin: 0; color: var(--muted); }
         .pages .meta { margin: 0 0 6px; color: var(--faint); font-family: var(--mono); font-size: 13px; }
+        /* Each build's thumb.webp (640 x 480, 4:3) beside the text; on a phone, above it and cropped wider. */
+        .pages article { display: grid; grid-template-columns: 168px minmax(0, 1fr); align-items: center; gap: 20px; }
+        .pages .thumb {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: var(--bg);
+        }
+        @media (max-width: 560px) {
+            .pages article { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+            .pages .thumb { aspect-ratio: 16 / 9; }
+        }
 
         footer {
             margin-top: 48px;
@@ -254,9 +271,12 @@
         <ol class="pages" aria-label="Maker builds">
             <li>
                 <article>
-                    <p class="meta"><time datetime="2026-11-12">2026-11-12</time> · 3D printing</p>
-                    <h2><a href="/maker/en/ms110p-pi-minirack/">3D-printed mini rack for MS110P and Raspberry Pi</a></h2>
-                    <p>A rack that stands Raspberry Pi boards upright on top of an MS110P PoE switch. Its five rails take a mix of Pi 3B+ and Zero 2 W carriers, and the seven print-ready STL files are released under CC BY 4.0.</p>
+                    <img class="thumb" src="/maker/ms110p-pi-minirack/thumb.webp" width="640" height="480" alt="" decoding="async">
+                    <div>
+                        <p class="meta"><time datetime="2026-11-12">2026-11-12</time> · 3D printing</p>
+                        <h2><a href="/maker/en/ms110p-pi-minirack/">3D-printed mini rack for MS110P and Raspberry Pi</a></h2>
+                        <p>A rack that stands Raspberry Pi boards upright on top of an MS110P PoE switch. Its five rails take a mix of Pi 3B+ and Zero 2 W carriers, and the seven print-ready STL files are released under CC BY 4.0.</p>
+                    </div>
                 </article>
             </li>
         </ol>
