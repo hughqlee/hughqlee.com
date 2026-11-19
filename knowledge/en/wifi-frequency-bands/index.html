@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wi-Fi 2.4 GHz vs 5 GHz vs 6 GHz: what is the difference? | Hugh Q Lee</title>
+    <meta name="description" content="The three bands Wi-Fi uses (2.4, 5 and 6 GHz) offer more width the higher they are, so higher bands are faster and less crowded, but at the same distance the received signal is weaker and thick walls such as concrete take more of it.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="Wi-Fi 2.4 GHz vs 5 GHz, Wi-Fi frequency bands, 6 GHz Wi-Fi, Wi-Fi 6E, Wi-Fi 7, channel width, 2.4G vs 5G Wi-Fi, 5 GHz through walls, which Wi-Fi band to choose">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/en/wifi-frequency-bands/">
+    <!-- 영문판(/knowledge/en/wifi-frequency-bands/)은 System/build_en.py가 이 페이지에서 만든다. 두 판이 서로를 가리킨다. -->
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/wifi-frequency-bands/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/wifi-frequency-bands/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/wifi-frequency-bands/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ko_KR">
+    <meta property="og:title" content="Wi-Fi 2.4 GHz vs 5 GHz vs 6 GHz: what is the difference?">
+    <meta property="og:description" content="The three bands Wi-Fi uses (2.4, 5 and 6 GHz) offer more width the higher they are, so higher bands are faster and less crowded, but at the same distance the received signal is weaker and thick walls such as concrete take more of it.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/en/wifi-frequency-bands/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/en/wifi-frequency-bands/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Three stripes of different thickness (2.4, 5 and 6 GHz) fading as they pass two walls; the thicker the stripe, the fainter it is behind the walls">
+    <meta property="article:published_time" content="2026-11-19">
+    <meta property="article:modified_time" content="2026-11-19">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Wi-Fi 2.4 GHz vs 5 GHz vs 6 GHz: what is the difference?">
+    <meta name="twitter:description" content="The three bands Wi-Fi uses (2.4, 5 and 6 GHz) offer more width the higher they are, so higher bands are faster and less crowded, but at the same distance the received signal is weaker and thick walls such as concrete take more of it.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/en/wifi-frequency-bands/og.png">
+    <meta name="twitter:image:alt" content="Three stripes of different thickness (2.4, 5 and 6 GHz) fading as they pass two walls; the thicker the stripe, the fainter it is behind the walls">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage의 문장은 본문 "자주 묻는 질문"과 같아야 한다. 질문을 늘리면 둘 다 늘린다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/en/wifi-frequency-bands/#article",
+          "headline": "Wi-Fi 2.4 GHz vs 5 GHz vs 6 GHz: what is the difference?",
+          "alternativeHeadline": "How are Wi-Fi frequencies divided, and what differs from band to band?",
+          "description": "The three bands Wi-Fi uses (2.4, 5 and 6 GHz) offer more width the higher they are, so higher bands are faster and less crowded, but at the same distance the received signal is weaker and thick walls such as concrete take more of it.",
+          "abstract": "The three bands Wi-Fi uses (2.4, 5 and 6 GHz) offer more width the higher they are, so higher bands are faster and less crowded, but at the same distance the received signal is weaker and thick walls such as concrete take more of it.",
+          "inLanguage": "en",
+          "datePublished": "2026-11-19",
+          "dateModified": "2026-11-19",
+          "url": "https://hughqlee.com/knowledge/en/wifi-frequency-bands/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/en/wifi-frequency-bands/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/en/wifi-frequency-bands/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/en/#collection"
+          },
+          "isAccessibleForFree": true,
+          "citation": [
+            {
+              "@type": "CreativeWork",
+              "name": "Technical Standards for Radio Equipment of Radio Stations That May Be Established Without Notification (Ministry of Science and ICT Notice No. 2026-10, Korea)",
+              "url": "https://www.law.go.kr/%ED%96%89%EC%A0%95%EA%B7%9C%EC%B9%99/%EC%8B%A0%EA%B3%A0%ED%95%98%EC%A7%80%EC%95%84%EB%8B%88%ED%95%98%EA%B3%A0%EA%B0%9C%EC%84%A4%ED%95%A0%EC%88%98%EC%9E%88%EB%8A%94%EB%AC%B4%EC%84%A0%EA%B5%AD%EC%9A%A9%EB%AC%B4%EC%84%A0%EC%84%A4%EB%B9%84%EC%9D%98%EA%B8%B0%EC%88%A0%EA%B8%B0%EC%A4%80"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "Recommendation ITU-R P.525-5, Calculation of free-space attenuation (2024)",
+              "url": "https://www.itu.int/rec/R-REC-P.525-5-202411-I/en"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "Recommendation ITU-R P.2040-4, Effects of building materials and structures on radiowave propagation in the range of 1 MHz to 450 GHz (2025)",
+              "url": "https://www.itu.int/rec/R-REC-P.2040-4-202509-I/en"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "47 CFR Part 15, §15.247, §15.403, §15.407 (FCC)",
+              "url": "https://www.ecfr.gov/current/title-47/chapter-I/subchapter-A/part-15/subpart-E/section-15.407"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "C. E. Shannon, A Mathematical Theory of Communication (Bell System Technical Journal, 1948)",
+              "url": "https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "Wi-Fi Alliance brings Wi-Fi 6 into 6 GHz (Wi-Fi Alliance, 2020)",
+              "url": "https://www.wi-fi.org/news-events/newsroom/wi-fi-alliance-brings-wi-fi-6-into-6-ghz"
+            }
+          ],
+          "translationOfWork": {
+            "@id": "https://hughqlee.com/knowledge/wifi-frequency-bands/#article"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/en/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/en/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Wi-Fi 2.4 GHz vs 5 GHz vs 6 GHz: what is the difference?",
+              "item": "https://hughqlee.com/knowledge/en/wifi-frequency-bands/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/en/wifi-frequency-bands/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Which should I choose, 2.4 GHz or 5 GHz Wi-Fi?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "In the same room as the router, or when the walls in between are thin, 5 GHz or 6 GHz has the advantage, because the channels are wider. The widest channel is 40 MHz at 2.4 GHz, 160 MHz at 5 GHz and 320 MHz at 6 GHz (Wi-Fi CERTIFIED 7 Technology Overview). At a spot behind several concrete walls, 2.4 GHz can have the advantage. In this page’s calculation, 2.4 GHz was the fastest at 5 m with three 10 cm concrete walls. The calculation assumes the three bands transmit at the same power, and with other assumptions it is two to four walls."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why is 5 GHz Wi-Fi faster than 2.4 GHz?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Not because the frequency is higher, but because the channel is wider. The whole 2.4 GHz band is 83.5 MHz, so a 160 MHz channel does not fit. In the example of the Wi-Fi CERTIFIED 7 Technology Overview, the top speed of one spatial stream is 344.1 Mbps on a 40 MHz channel, 1,441.2 Mbps on a 160 MHz channel and 2,882.4 Mbps on a 320 MHz channel. In Shannon’s theorem (1948) too, the upper limit of what a channel can send without error is proportional to its width."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why is 5 GHz Wi-Fi weak behind walls?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Two things add up. At the same distance, 5 GHz receives about one fifth of what 2.4 GHz does (7 dB, the free-space loss of ITU-R P.525-5). On top of that, concrete absorbs more of the wave the higher the frequency. Calculated with the equations and example values of ITU-R P.2040-4, one 10 cm concrete wall takes about 8 dB at 2.4 GHz and about 14 dB at 5 GHz. In thin sheets such as glass or plasterboard, the bands differed by less than 1.4 dB."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is different about 6 GHz Wi-Fi (Wi-Fi 6E)?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Wi-Fi 6E is the name for devices that extend the features of Wi-Fi 6 into the 6 GHz band (Wi-Fi Alliance, 2020). The 6 GHz band is 5,925–7,125 MHz, 1,200 MHz wide (Article 7 of the Korean Technical Standards, US FCC 47 CFR §15.403). That width holds 59 channels of 20 MHz or 3 channels of 320 MHz. In return, at the same distance the received signal is about one seventh of that of 2.4 GHz (8.5 dB)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why is 2.4 GHz Wi-Fi crowded?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Wi-Fi is not the only user of the 2.4 GHz band. Bluetooth uses 2.402–2.480 GHz (Bluetooth SIG), and household microwave ovens operate at 2.45 GHz (Wikipedia). Because the band is only 83.5 MHz wide, the channels used without overlapping are usually three: 1, 6 and 11."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do higher frequencies weaken faster in the air?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Not in empty space. At distance d, the strength of the wave (its power flux density) is the transmitted power divided by 4πd², and frequency does not appear in it (ITU-R P.525-5, equation 3). What differs is the effective area λ²/4π with which the receiving antenna collects the wave (equation 4). With its shorter wavelength, 5 GHz has 0.20 times the area of 2.4 GHz, and 6 GHz 0.14 times."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What are the Wi-Fi channel widths 20, 40, 80, 160 and 320 MHz?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The width of one slot into which a band is divided. A router uses one slot at a time, and the wider the slot, the more it sends at once. Wi-Fi 4 uses up to 40 MHz, Wi-Fi 5 and Wi-Fi 6 up to 160 MHz, and Wi-Fi 7 up to 320 MHz (Wi-Fi CERTIFIED 7 Technology Overview, Table 2). Under the Korean rules, a device that uses 6 GHz indoors is limited to 5 dBm per MHz in 5,925–6,425 MHz and 2 dBm per MHz in 6,425–7,125 MHz. Because the limit is per MHz, the narrower the channel, the less power it can put out. At 5 dBm per MHz that is 18 dBm on a 20 MHz channel and 30 dBm on a 320 MHz channel."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Are Wi-Fi frequencies the same in Korea and the US?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The ranges of 2.4 GHz (2,400–2,483.5 MHz) and 6 GHz (5,925–7,125 MHz) are the same. At 5 GHz, Korea has 5,150–5,350 MHz and 5,470–5,850 MHz, while the US goes up to 5,895 MHz, 45 MHz more. The ranges where radar has to be avoided (5,250–5,350 MHz and 5,470–5,725 MHz) are the same. In Korea, 6 GHz devices that are also used outdoors use only 5,925–6,425 MHz, at 14 dBm or less. The Korean values were read from Ministry of Science and ICT Notice No. 2026-10, and the US values from FCC 47 CFR Part 15."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --danger: #ff8c8c;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --danger: #b42323;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            cursor: pointer;
+        }
+        .theme-toggle:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 32px; border-bottom: 1px solid var(--line); }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        section { padding: 32px 0; }
+        h2 { margin: 0 0 12px; font-size: 22px; line-height: 1.4; }
+
+        .panel {
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .hint { margin: 0 0 16px; color: var(--muted); }
+        .demo label {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .demo input[type="range"] { width: 100%; min-height: 44px; margin: 4px 0; accent-color: var(--accent); }
+        .meter { height: 10px; overflow: hidden; border-radius: 999px; background: var(--panel-strong); }
+        .meter span { display: block; width: 0; height: 100%; background: var(--accent); transition: width 0.2s ease; }
+        .result { margin: 12px 0 0; font-family: var(--mono); font-size: 15px; }
+
+        .steps { margin: 0; padding-left: 1.4em; }
+        .steps li { margin: 8px 0; }
+        .steps li::marker { color: var(--accent); font-family: var(--mono); }
+
+        .note {
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+
+        /* 확인됨 · 가설 · 모름 표시: <span class="tag known">Confirmed</span> */
+        .tag {
+            display: inline-block;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.known { color: var(--accent-green); }
+        .tag.guess { color: var(--accent-warn); }
+        .tag.unknown { color: var(--muted); }
+
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        /* 집 안에서 대역 바꿔 보기 */
+        .sim { display: grid; gap: 16px; }
+        .sim .hint { margin: 0; }
+        .scene { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .scene text { fill: var(--muted); font-family: var(--sans); font-size: 13px; }
+        .scene .lane-name { font-family: var(--mono); font-size: 12px; paint-order: stroke; stroke: var(--panel-soft); stroke-width: 4px; stroke-linejoin: round; }
+        .scene .lane-name.on { fill: var(--text); font-weight: 700; }
+        .scene .device { fill: var(--panel-strong); stroke: var(--line-strong); stroke-width: 1.5; }
+        .scene .wall { stroke: var(--line-strong); stroke-width: 1; }
+        .scene .wall.concrete { fill: var(--faint); }
+        .scene .wall.wood { fill: var(--accent-warn); fill-opacity: 0.55; }
+        .scene .wall.glass { fill: var(--accent); fill-opacity: 0.25; }
+        .scene .wall.plasterboard { fill: var(--panel-strong); }
+        .scene .pick-frame { fill: none; stroke: var(--text); stroke-width: 1; stroke-dasharray: 3 3; }
+        .presets { display: flex; flex-wrap: wrap; gap: 8px; }
+        .btn { min-height: 44px; padding: 10px 14px; border: 0; border-radius: var(--radius); background: var(--accent); color: var(--bg); font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+        .btn.ghost { border: 1px solid var(--line-strong); background: transparent; color: var(--text); }
+        .btn.ghost:hover { border-color: var(--accent); }
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; }
+        .controls label { display: flex; justify-content: space-between; gap: 12px; font-weight: 600; }
+        .controls output { color: var(--accent); font-family: var(--mono); font-size: 15px; }
+        .controls input[type="range"] { width: 100%; min-height: 44px; margin: 0; accent-color: var(--accent); }
+        .controls select { width: 100%; min-height: 44px; margin-top: 4px; padding: 8px 10px; border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--panel-soft); color: var(--text); font: inherit; font-size: 16px; }
+        .controls .wide { grid-column: 1 / -1; }
+        .say { margin: 0; padding: 14px 16px; border-radius: var(--radius); background: var(--panel-soft); font-weight: 600; min-height: 3.6em; }
+        .pick { margin: 0; color: var(--muted); font-size: 15px; }
+        .bands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .band { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); cursor: pointer; min-width: 0; }
+        .band.picked { border-color: var(--text); }
+        .band.best { background: var(--accent-soft); }
+        .band-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; min-height: 28px; font-family: var(--mono); font-size: 15px; font-weight: 700; }
+        .band-head input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
+        .badge { padding: 3px 7px; border-radius: 999px; background: var(--accent); color: var(--bg); font-family: var(--sans); font-size: 12px; font-weight: 700; line-height: 1.3; }
+        .badge[hidden] { display: none; }
+        .row { display: grid; gap: 2px; }
+        .row .k { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 13px; line-height: 1.4; }
+        .row .v { color: var(--text); font-family: var(--mono); font-size: 13px; white-space: nowrap; }
+        .bar { display: block; height: 8px; overflow: hidden; border-radius: 999px; background: var(--panel-strong); }
+        .bar i { display: block; height: 100%; border-radius: 999px; transition: width 0.2s ease; }
+        .b24 .bar i { background: var(--accent-warn); }
+        .b5 .bar i { background: var(--accent); }
+        .b6 .bar i { background: var(--accent-green); }
+        .fine { margin: 0; color: var(--muted); font-size: 14px; }
+        .src { display: block; margin-top: 4px; color: var(--muted); font-size: 14px; }
+        .kinds { margin: 0; padding-left: 1.2em; }
+        .kinds li { margin: 8px 0; }
+        .note + .note { margin-top: 10px; }
+
+        /* 세 대역 한눈에 */
+        .spans { display: grid; gap: 8px; margin: 0 0 16px; }
+        .span-row { display: grid; grid-template-columns: 4.6em 1fr; gap: 10px; align-items: center; font-family: var(--mono); font-size: 14px; }
+        .span-row .bar { height: 14px; border-radius: 4px; }
+        .span-row .bar i { border-radius: 4px; }
+        .span-row small { grid-column: 2; margin-top: -4px; color: var(--muted); font-family: var(--sans); font-size: 13px; }
+        .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+        table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 14px; line-height: 1.5; }
+        th, td { padding: 8px 10px; border-top: 1px solid var(--line); text-align: left; vertical-align: top; }
+        thead th { border-top: 0; background: var(--panel-soft); font-family: var(--mono); font-size: 13px; }
+        tbody th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+
+        @media (max-width: 560px) {
+            .bands { grid-template-columns: 1fr; }
+            .controls { grid-template-columns: 1fr; }
+        }
+
+        footer {
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/en/">hughqlee.com</a> / <a href="/knowledge/en/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/wifi-frequency-bands/" hreflang="ko" lang="ko">한국어</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main" class="wrap">
+        <section class="hero">
+            <!-- 지식 지도: 데이터와 규칙은 System/지식 지도.md. 한 줄 글은 스크립트 없이도 읽히는 같은 내용이다.
+                 이 글: 무선 통신 분야의 첫 글 · 먼저 읽을 글과 이어서 읽을 글은 아직 없다 -->
+            <nav class="kmap" aria-label="Knowledge map" data-current="wifi-frequency-bands">
+                <p class="kmap-head"><span class="kmap-label">KNOWLEDGE MAP</span><span class="kmap-path">Wireless communication</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">This is the first page in this field. There is nothing to read before or after it yet.</p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE</p>
+            <h1>Wi-Fi 2.4 GHz vs 5 GHz vs 6 GHz: what is the difference?</h1>
+            <p class="answer">The three bands Wi-Fi uses (2.4, 5 and 6 GHz) offer more width the higher they are, so higher bands are faster and less crowded, but at the same distance the received signal is weaker and thick walls such as concrete take more of it.</p>
+        </section>
+
+        <section aria-labelledby="try-title">
+            <h2 id="try-title">Try the bands around the house</h2>
+            <div class="panel sim">
+                <p class="hint">Change the distance and the walls between the router and the laptop. Assuming the three bands transmit at the same strength, it works out each band’s lane width (channel width), received signal and theoretical top speed.</p>
+                <svg id="scene" class="scene" viewBox="0 0 640 190" aria-hidden="true" focusable="false"></svg>
+                <div class="presets" role="group" aria-label="Pick a spot">
+                    <button class="btn ghost" type="button" data-d="3" data-n="0">Same room, 3 m</button>
+                    <button class="btn ghost" type="button" data-d="5" data-n="1">Behind one wall, 5 m</button>
+                    <button class="btn ghost" type="button" data-d="8" data-n="3">Behind three walls, 8 m</button>
+                </div>
+                <div class="controls">
+                    <div>
+                        <label for="dist">Distance from the router <output id="distv" for="dist">5 m</output></label>
+                        <input id="dist" type="range" min="1" max="30" step="1" value="5">
+                    </div>
+                    <div>
+                        <label for="nwall">Walls in between <output id="nwallv" for="nwall">0 walls</output></label>
+                        <input id="nwall" type="range" min="0" max="4" step="1" value="0">
+                    </div>
+                    <div class="wide">
+                        <label for="wkind">Kind of wall</label>
+                        <select id="wkind">
+                            <option value="c10" selected>Concrete, 10 cm</option>
+                            <option value="c20">Concrete, 20 cm</option>
+                            <option value="wood">Wooden door, 4 cm</option>
+                            <option value="glass">Glass window, 6 mm</option>
+                            <option value="pb">Plasterboard, 12.5 mm</option>
+                        </select>
+                    </div>
+                </div>
+                <p id="say" class="say" aria-live="polite">5 m away, no walls. 6 GHz is the fastest here (2,882 Mbps). Its received signal is 1/7 of 2.4 GHz, but its lane is 8 times as wide.</p>
+                <div id="bands" class="bands" role="radiogroup" aria-label="Pick a band">
+                    <label class="band b24" for="pick-24">
+                        <span class="band-head"><input type="radio" name="band" id="pick-24" value="2.4"> 2.4 GHz <span class="badge" hidden>Fastest</span></span>
+                        <span class="row"><span class="k">Lane width <span class="v" data-f="width">40 MHz</span></span><span class="bar"><i data-f="widthbar" style="width: 12.5%"></i></span></span>
+                        <span class="row"><span class="k">Received signal <span class="v" data-f="sig">baseline</span></span><span class="bar"><i data-f="sigbar" style="width: 82.3%"></i></span></span>
+                        <span class="row"><span class="k">Top speed <span class="v" data-f="rate">344 Mbps</span></span><span class="bar"><i data-f="ratebar" style="width: 11.9%"></i></span></span>
+                    </label>
+                    <label class="band b5 picked" for="pick-5">
+                        <span class="band-head"><input type="radio" name="band" id="pick-5" value="5" checked> 5 GHz <span class="badge" hidden>Fastest</span></span>
+                        <span class="row"><span class="k">Lane width <span class="v" data-f="width">160 MHz</span></span><span class="bar"><i data-f="widthbar" style="width: 50.0%"></i></span></span>
+                        <span class="row"><span class="k">Received signal <span class="v" data-f="sig">1/5</span></span><span class="bar"><i data-f="sigbar" style="width: 73.5%"></i></span></span>
+                        <span class="row"><span class="k">Top speed <span class="v" data-f="rate">1,441 Mbps</span></span><span class="bar"><i data-f="ratebar" style="width: 50.0%"></i></span></span>
+                    </label>
+                    <label class="band b6 best" for="pick-6">
+                        <span class="band-head"><input type="radio" name="band" id="pick-6" value="6"> 6 GHz <span class="badge">Fastest</span></span>
+                        <span class="row"><span class="k">Lane width <span class="v" data-f="width">320 MHz</span></span><span class="bar"><i data-f="widthbar" style="width: 100.0%"></i></span></span>
+                        <span class="row"><span class="k">Received signal <span class="v" data-f="sig">1/7</span></span><span class="bar"><i data-f="sigbar" style="width: 71.6%"></i></span></span>
+                        <span class="row"><span class="k">Top speed <span class="v" data-f="rate">2,882 Mbps</span></span><span class="bar"><i data-f="ratebar" style="width: 100.0%"></i></span></span>
+                    </label>
+                </div>
+                <p id="pick" class="pick" aria-live="polite">Picked band 5 GHz: it loses 61 dB over the distance and 0 dB in the walls. Its received signal is 1/5 of 2.4 GHz.</p>
+                <p class="fine">Lane width is the widest channel in that band. Received signal is compared with 2.4 GHz at the same spot. Top speed is the theoretical value for one spatial stream, and real speeds are lower.</p>
+            </div>
+        </section>
+
+        <section aria-labelledby="how-title">
+            <h2 id="how-title">How it works</h2>
+            <ol class="steps">
+                <li>Speed is set by the width of the lane. A band is a range of frequencies that the regulator has opened for use without a licence, and a router uses one slot in it, called a channel. The wider the slot, the more it sends at once. The bands are 83.5 MHz wide at 2.4 GHz, 580 MHz at 5 GHz and 1,200 MHz at 6 GHz. So the widest channel is 40 MHz at 2.4 GHz, 160 MHz at 5 GHz and 320 MHz at 6 GHz, and the top speed of one spatial stream is 344 / 1,441 / 2,882 Mbps. <span class="tag known">Confirmed</span>
+                    <span class="src">Source: Korea’s Technical Standards for Radio Equipment of Radio Stations That May Be Established Without Notification, Article 7 (band ranges); Wi-Fi Alliance, Wi-Fi CERTIFIED 7 Technology Overview, Table 2 and p. 5</span></li>
+                <li>The received signal is weaker on the higher bands. At the same distance, 5 GHz receives about one fifth of what 2.4 GHz does (7 dB), and 6 GHz about one seventh (8.5 dB). This is not because the wave wears out faster in the air. It is because the shorter the wavelength, the smaller the area with which the receiving antenna collects the wave. Concrete walls add to this. One 10 cm wall takes 8 dB at 2.4 GHz, 14 dB at 5 GHz and 16 dB at 6 GHz. Thin sheets such as glass or plasterboard take about 1 to 3 dB, and the bands differ by less than 1.4 dB. A dB counts a ratio: 10 dB is 10 times and 3 dB is 2 times. <span class="tag known">Confirmed</span>
+                    <span class="src">Source: ITU-R P.525-5, equations 3 to 6 (free-space loss); calculated from equation 43b and the example values of Table 3 in ITU-R P.2040-4 (implemented for this page). The wall figures are for a wave entering a smooth slab head-on</span></li>
+                <li>So width is traded for reach. With the same channel width, the lower band, whose received signal is stronger, always comes out ahead. A higher band is faster when it uses a wide channel, and that advantage lasts only while enough signal is left. In this page’s calculation, 2.4 GHz became the fastest once three 10 cm concrete walls stood in the way at 5 m. In return, 2.4 GHz is crowded. Bluetooth and microwave ovens use the same band, and usually only three channels can be used without overlapping. <span class="tag guess">Hypothesis</span>
+                    <span class="src">Source: Shannon 1948, Theorem 17 (channel capacity); this page’s calculation (implemented for this page; it assumes the three bands transmit at the same power, and with other assumptions it is two to four walls); Bluetooth SIG, Bluetooth Technology Overview (the band Bluetooth uses); Wikipedia: List of WLAN channels and ISM radio band (non-overlapping channels and microwave ovens, secondary sources)</span></li>
+            </ol>
+        </section>
+
+        <section aria-labelledby="bands-title">
+            <h2 id="bands-title">The three bands at a glance</h2>
+            <p class="hint">The bars show the widths of the bands to the same scale.</p>
+            <div class="spans">
+                <div class="span-row b24"><span>2.4 GHz</span><span class="bar"><i style="width: 7%"></i></span><small>83.5 MHz</small></div>
+                <div class="span-row b5"><span>5 GHz</span><span class="bar"><i style="width: 48.3%"></i></span><small>580 MHz</small></div>
+                <div class="span-row b6"><span>6 GHz</span><span class="bar"><i style="width: 100%"></i></span><small>1,200 MHz</small></div>
+            </div>
+            <div class="table-wrap" tabindex="0" role="region" aria-label="Comparison table of the three bands">
+                <table>
+                    <thead>
+                        <tr><th scope="col"></th><th scope="col">2.4 GHz</th><th scope="col">5 GHz</th><th scope="col">6 GHz</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">Range</th><td>2,400~2,483.5 MHz</td><td>5,150~5,350 MHz, 5,470~5,850 MHz</td><td>5,925~7,125 MHz</td></tr>
+                        <tr><th scope="row">Non-overlapping 20 MHz channels</th><td>3 (channels 1, 6 and 11)</td><td>25</td><td>59</td></tr>
+                        <tr><th scope="row">Widest channel</th><td>40 MHz</td><td>160 MHz</td><td>320 MHz</td></tr>
+                        <tr><th scope="row">Generations that use it</th><td>Wi-Fi 4, 6, 7</td><td>Wi-Fi 4, 5, 6, 7</td><td>Wi-Fi 6E, 7</td></tr>
+                        <tr><th scope="row">Shared with</th><td>Bluetooth, microwave ovens</td><td>Radar, in part of the band</td><td>A new band opened in 2020. Indoors the whole band is used; devices that are also used outdoors use only the lower 500 MHz, at low power</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <span class="src">Source: the ranges, the ranges where radar has to be avoided and the 6 GHz conditions are from Article 7 of Korea’s Technical Standards for Radio Equipment of Radio Stations That May Be Established Without Notification (Ministry of Science and ICT Notice No. 2026-10). Channel widths and generations are from the Wi-Fi CERTIFIED 7 Technology Overview, Table 2. The channel counts at 2.4 GHz and 5 GHz and the microwave oven are from Wikipedia (a secondary source), and the 59 channels at 6 GHz were confirmed by counting again from the range. Bluetooth is from the Bluetooth SIG. The year 6 GHz was opened is from the US FCC news release of April 23, 2020 and from Korean press reports in 2020.</span>
+        </section>
+
+        <section aria-labelledby="exp-title">
+            <h2 id="exp-title">What the calculation showed</h2>
+            <p class="hint">The loss on the three bands was calculated with the equations of the ITU-R Recommendations, and width and signal were combined into a speed with Shannon’s equation. The assumptions are the same power of 20 dBm (100 mW) on the three bands, antennas that receive evenly from every direction, a receiver noise figure of 7 dB, and one spatial stream. The speed is the smaller of the Shannon limit and the top speed in the Wi-Fi 7 document. The code was written for this page and checked with 46 tests.</p>
+            <ul class="kinds">
+                <li>When all three bands use a 20 MHz channel, 2.4 GHz was the fastest at every spot from 1 to 50 m with 0 to 4 concrete walls. <span class="tag known">Confirmed</span></li>
+                <li>With the widest channels, 6 GHz was the fastest wherever there was no wall. Without walls, the order did not change within 500 m. <span class="tag known">Confirmed</span></li>
+                <li>At 5 m with three 10 cm concrete walls, 2.4 GHz was the fastest (344 / 206 / 69 Mbps). With the power changed between 14 and 30 dBm and the noise figure between 3 and 10 dB, it took two to four walls. <span class="tag guess">Hypothesis</span></li>
+                <li>With wooden doors, glass windows or plasterboard, 6 GHz stayed the fastest at 5 m even with twelve of them. <span class="tag known">Confirmed</span></li>
+                <li>Counting only what is lost inside the material, 6 mm of glass takes less than 0.2 dB, but with what bounces off its surfaces included it was 2 to 3 dB. In thin sheets, reflection is most of the loss. <span class="tag known">Confirmed</span></li>
+            </ul>
+        </section>
+
+        <section aria-labelledby="trust-title">
+            <h2 id="trust-title">How far this is confirmed</h2>
+            <div class="note">
+                <p class="fact"><strong>Confirmed</strong>The equation for free-space loss (ITU-R P.525-5). The equations for attenuation in building materials and for transmission through a slab, and the example values for materials (ITU-R P.2040-4). The equation for channel capacity (Shannon 1948). The band ranges, the ranges where radar has to be avoided, and the conditions and power limits for 6 GHz (Article 7 of the Korean Technical Standards, US FCC 47 CFR Part 15). Channel widths and the top speed of one spatial stream (Wi-Fi CERTIFIED 7 Technology Overview). This page’s calculation implements these equations and values.</p>
+                <p><strong>Hypothesis</strong>The simulator’s assumptions (the same power on the three bands, a noise figure of 7 dB, one spatial stream, no interference from other devices, smooth slabs entered head-on). “2.4 GHz comes out ahead behind three walls” is a value that follows from these assumptions. Calculated from the limits in the Korean rules, the maximum power on the widest channel is similar on the three bands, at 29 to 30 dBm.</p>
+                <p><strong>Unknown</strong>How much power a real router transmits on each band. How much a real wall with steel reinforcement takes. What a measurement in a real home gives. One router measured at one spot showed 2.4 GHz 12 dB stronger than 5 GHz, but it could not be told whether that came from the walls or from the router’s different power on each band.</p>
+            </div>
+        </section>
+
+        <section aria-labelledby="myth-title">
+            <h2 id="myth-title">Common misconceptions</h2>
+            <div class="note">
+                <p><strong>Myth</strong>5 GHz is fast because its frequency is high.</p>
+                <p class="fact"><strong>In fact</strong>What makes it fast is the width of the channel. With the same 20 MHz channel, 2.4 GHz, whose received signal is stronger, was faster at every spot calculated. The higher bands simply have room for wide channels.</p>
+            </div>
+            <div class="note">
+                <p><strong>Myth</strong>Radio waves of a higher frequency weaken faster in the air.</p>
+                <p class="fact"><strong>In fact</strong>In empty space, the strength of a wave that has spread out does not depend on frequency. What differs is the area with which the receiving antenna collects the wave, and it is smaller the shorter the wavelength. The loss in walls such as concrete is added on top.</p>
+            </div>
+        </section>
+
+        <section id="faq" aria-labelledby="faq-title">
+            <h2 id="faq-title">Frequently asked questions</h2>
+            <div class="faq" id="faq-list">
+                <details>
+                    <summary>Which should I choose, 2.4 GHz or 5 GHz Wi-Fi?</summary>
+                    <p>In the same room as the router, or when the walls in between are thin, 5 GHz or 6 GHz has the advantage, because the channels are wider. The widest channel is 40 MHz at 2.4 GHz, 160 MHz at 5 GHz and 320 MHz at 6 GHz (Wi-Fi CERTIFIED 7 Technology Overview). At a spot behind several concrete walls, 2.4 GHz can have the advantage. In this page’s calculation, 2.4 GHz was the fastest at 5 m with three 10 cm concrete walls. The calculation assumes the three bands transmit at the same power, and with other assumptions it is two to four walls.</p>
+                </details>
+                <details>
+                    <summary>Why is 5 GHz Wi-Fi faster than 2.4 GHz?</summary>
+                    <p>Not because the frequency is higher, but because the channel is wider. The whole 2.4 GHz band is 83.5 MHz, so a 160 MHz channel does not fit. In the example of the Wi-Fi CERTIFIED 7 Technology Overview, the top speed of one spatial stream is 344.1 Mbps on a 40 MHz channel, 1,441.2 Mbps on a 160 MHz channel and 2,882.4 Mbps on a 320 MHz channel. In Shannon’s theorem (1948) too, the upper limit of what a channel can send without error is proportional to its width.</p>
+                </details>
+                <details>
+                    <summary>Why is 5 GHz Wi-Fi weak behind walls?</summary>
+                    <p>Two things add up. At the same distance, 5 GHz receives about one fifth of what 2.4 GHz does (7 dB, the free-space loss of ITU-R P.525-5). On top of that, concrete absorbs more of the wave the higher the frequency. Calculated with the equations and example values of ITU-R P.2040-4, one 10 cm concrete wall takes about 8 dB at 2.4 GHz and about 14 dB at 5 GHz. In thin sheets such as glass or plasterboard, the bands differed by less than 1.4 dB.</p>
+                </details>
+                <details>
+                    <summary>What is different about 6 GHz Wi-Fi (Wi-Fi 6E)?</summary>
+                    <p>Wi-Fi 6E is the name for devices that extend the features of Wi-Fi 6 into the 6 GHz band (Wi-Fi Alliance, 2020). The 6 GHz band is 5,925–7,125 MHz, 1,200 MHz wide (Article 7 of the Korean Technical Standards, US FCC 47 CFR §15.403). That width holds 59 channels of 20 MHz or 3 channels of 320 MHz. In return, at the same distance the received signal is about one seventh of that of 2.4 GHz (8.5 dB).</p>
+                </details>
+                <details>
+                    <summary>Why is 2.4 GHz Wi-Fi crowded?</summary>
+                    <p>Wi-Fi is not the only user of the 2.4 GHz band. Bluetooth uses 2.402–2.480 GHz (Bluetooth SIG), and household microwave ovens operate at 2.45 GHz (Wikipedia). Because the band is only 83.5 MHz wide, the channels used without overlapping are usually three: 1, 6 and 11.</p>
+                </details>
+                <details>
+                    <summary>Do higher frequencies weaken faster in the air?</summary>
+                    <p>Not in empty space. At distance d, the strength of the wave (its power flux density) is the transmitted power divided by 4πd², and frequency does not appear in it (ITU-R P.525-5, equation 3). What differs is the effective area λ²/4π with which the receiving antenna collects the wave (equation 4). With its shorter wavelength, 5 GHz has 0.20 times the area of 2.4 GHz, and 6 GHz 0.14 times.</p>
+                </details>
+                <details>
+                    <summary>What are the Wi-Fi channel widths 20, 40, 80, 160 and 320 MHz?</summary>
+                    <p>The width of one slot into which a band is divided. A router uses one slot at a time, and the wider the slot, the more it sends at once. Wi-Fi 4 uses up to 40 MHz, Wi-Fi 5 and Wi-Fi 6 up to 160 MHz, and Wi-Fi 7 up to 320 MHz (Wi-Fi CERTIFIED 7 Technology Overview, Table 2). Under the Korean rules, a device that uses 6 GHz indoors is limited to 5 dBm per MHz in 5,925–6,425 MHz and 2 dBm per MHz in 6,425–7,125 MHz. Because the limit is per MHz, the narrower the channel, the less power it can put out. At 5 dBm per MHz that is 18 dBm on a 20 MHz channel and 30 dBm on a 320 MHz channel.</p>
+                </details>
+                <details>
+                    <summary>Are Wi-Fi frequencies the same in Korea and the US?</summary>
+                    <p>The ranges of 2.4 GHz (2,400–2,483.5 MHz) and 6 GHz (5,925–7,125 MHz) are the same. At 5 GHz, Korea has 5,150–5,350 MHz and 5,470–5,850 MHz, while the US goes up to 5,895 MHz, 45 MHz more. The ranges where radar has to be avoided (5,250–5,350 MHz and 5,470–5,725 MHz) are the same. In Korea, 6 GHz devices that are also used outdoors use only 5,925–6,425 MHz, at 14 dBm or less. The Korean values were read from Ministry of Science and ICT Notice No. 2026-10, and the US values from FCC 47 CFR Part 15.</p>
+                </details>
+            </div>
+        </section>
+
+        <section aria-labelledby="more-title">
+            <h2 id="more-title">Further reading</h2>
+            <ul class="links">
+                <!-- 영상이 나오면 추가: <li><a href="https://www.youtube.com/watch?v=...">영상으로 보기</a></li> -->
+                <li><a href="https://www.itu.int/rec/R-REC-P.525-5-202411-I/en">ITU-R P.525-5, Calculation of free-space attenuation (2024)</a></li>
+                <li><a href="https://www.itu.int/rec/R-REC-P.2040-4-202509-I/en">ITU-R P.2040-4, Effects of building materials and structures on radiowave propagation (2025)</a></li>
+                <li><a href="https://www.law.go.kr/%ED%96%89%EC%A0%95%EA%B7%9C%EC%B9%99/%EC%8B%A0%EA%B3%A0%ED%95%98%EC%A7%80%EC%95%84%EB%8B%88%ED%95%98%EA%B3%A0%EA%B0%9C%EC%84%A4%ED%95%A0%EC%88%98%EC%9E%88%EB%8A%94%EB%AC%B4%EC%84%A0%EA%B5%AD%EC%9A%A9%EB%AC%B4%EC%84%A0%EC%84%A4%EB%B9%84%EC%9D%98%EA%B8%B0%EC%88%A0%EA%B8%B0%EC%A4%80">Ministry of Science and ICT (Korea), Technical Standards for Radio Equipment of Radio Stations That May Be Established Without Notification (Notice No. 2026-10)</a></li>
+                <li><a href="https://www.ecfr.gov/current/title-47/chapter-I/subchapter-A/part-15/subpart-E/section-15.407">FCC 47 CFR §15.407, General technical requirements (U-NII)</a></li>
+                <li><a href="https://www.wi-fi.org/news-events/newsroom/wi-fi-alliance-brings-wi-fi-6-into-6-ghz">Wi-Fi Alliance, Wi-Fi Alliance brings Wi-Fi 6 into 6 GHz (2020)</a></li>
+                <li><a href="https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf">C. E. Shannon, A Mathematical Theory of Communication (1948)</a></li>
+                <li>Wi-Fi Alliance, Wi-Fi CERTIFIED 7 Technology Overview (2024)</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        Last updated <time datetime="2026-11-19">2026-11-19</time> · <a href="/en/">Hugh Q Lee</a> · Translated from the <a href="/knowledge/wifi-frequency-bands/" hreflang="ko">Korean original</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+            });
+            render();
+        })();
+    </script>
+    <script>
+/* Wi-Fi 주파수 대역 시뮬레이터의 계산 부분. 화면 코드는 없다.
+ *
+ * 한 자리(공유기에서의 거리, 사이에 낀 벽)에서 대역마다 손실, 받는 전력, 섀넌 상한을 낸다.
+ * 식의 출처: ITU-R P.525-5 식 5(자유 공간 손실), ITU-R P.2040-4 식 27a·57·58·59(재료 속 감쇠)와
+ * 식 37a·43b·44(한 겹 판의 투과, 수직 입사), 섀넌 1948 정리 17(채널 용량).
+ * 가정: 세 대역이 같은 출력(기본 20 dBm e.i.r.p.), 등방성 안테나, 잡음 지수 7 dB와 290 K,
+ * 벽은 서로 영향이 없는 판, 공간 스트림 하나, 대역의 대표 주파수는 대역 가운데.
+ * 파이썬 기준 구현은 wb/model.py이고 tests/test_sim.py가 둘을 대조한다.
+ */
+(function (root) {
+  'use strict';
+
+  var C = 299792458;              // 빛의 속도 m/s
+  var K_BOLTZMANN = 1.380649e-23; // J/K
+  var T0_K = 290;
+
+  // 대표 주파수(MHz), 가장 넓은 채널(MHz), 그 폭에서 스트림 하나의 최고 속도(Mbps, Wi-Fi 7 Technology Overview 5쪽)
+  var BANDS = {
+    '2.4': { fMHz: 2441.75, maxWidthMHz: 40, perStreamMbps: 344.1 },
+    '5': { fMHz: 5500, maxWidthMHz: 160, perStreamMbps: 1441.2 },
+    '6': { fMHz: 6525, maxWidthMHz: 320, perStreamMbps: 2882.4 }
+  };
+  var BAND_KEYS = ['2.4', '5', '6'];
+  var PER_STREAM_MBPS = { 40: 344.1, 160: 1441.2, 320: 2882.4 };
+
+  // ITU-R P.2040-4 표 3: [a, b, c, d]. ε' = a f^b, σ = c f^d (f는 GHz)
+  var MATERIALS = {
+    concrete: [5.24, 0, 0.0462, 0.7822],
+    brick: [3.91, 0, 0.0238, 0.16],
+    plasterboard: [2.73, 0, 0.0085, 0.9395],
+    wood: [1.99, 0, 0.0047, 1.0718],
+    glass: [6.31, 0, 0.0036, 1.3394],
+    chipboard: [2.58, 0, 0.0217, 0.78]
+  };
+
+  var DEFAULTS = { eirpDbm: 20, nfDb: 7, wallModel: 'slab', widthMHz: null };
+
+  function log10(x) { return Math.log(x) / Math.LN10; }
+
+  function fsplDb(fMHz, dM) {
+    return 20 * log10(4 * Math.PI * dM * fMHz * 1e6 / C);
+  }
+
+  function epsReal(material, fGHz) {
+    var m = MATERIALS[material];
+    return m[0] * Math.pow(fGHz, m[1]);
+  }
+
+  function sigma(material, fGHz) {
+    var m = MATERIALS[material];
+    return m[2] * Math.pow(fGHz, m[3]);
+  }
+
+  function epsImag(material, fGHz) {
+    return 17.98 * sigma(material, fGHz) / fGHz;
+  }
+
+  // 재료 속에서 잃는 것만(반사 제외)
+  function absorbDb(material, thicknessM, fMHz) {
+    var f = fMHz / 1000;
+    return 1636 * sigma(material, f) / Math.sqrt(epsReal(material, f)) * thicknessM;
+  }
+
+  // 복소수는 [실수부, 허수부]
+  function cmul(a, b) { return [a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]]; }
+  function cdiv(a, b) {
+    var d = b[0] * b[0] + b[1] * b[1];
+    return [(a[0] * b[0] + a[1] * b[1]) / d, (a[1] * b[0] - a[0] * b[1]) / d];
+  }
+  function csqrt(a) {
+    var r = Math.sqrt(a[0] * a[0] + a[1] * a[1]);
+    var re = Math.sqrt((r + a[0]) / 2);
+    var im = Math.sqrt((r - a[0]) / 2);
+    return [re, a[1] < 0 ? -im : im];
+  }
+  function cexp(a) {
+    var e = Math.exp(a[0]);
+    return [e * Math.cos(a[1]), e * Math.sin(a[1])];
+  }
+  function cabs(a) { return Math.sqrt(a[0] * a[0] + a[1] * a[1]); }
+
+  // 한 겹 판을 수직으로 지나며 잃는 것: 표면 반사와 판 안의 다중 반사 포함
+  function slabDb(material, thicknessM, fMHz) {
+    var f = fMHz / 1000;
+    var n = csqrt([epsReal(material, f), -epsImag(material, f)]);
+    var k = 2 * Math.PI * thicknessM * fMHz * 1e6 / C;
+    var q = [k * n[0], k * n[1]];
+    var r = cdiv([1 - n[0], -n[1]], [1 + n[0], n[1]]);
+    var r2 = cmul(r, r);
+    var e1 = cexp([q[1], -q[0]]);          // exp(-jq)
+    var e2 = cexp([2 * q[1], -2 * q[0]]);  // exp(-j2q)
+    var num = cmul([1 - r2[0], -r2[1]], e1);
+    var r2e2 = cmul(r2, e2);
+    var t = cdiv(num, [1 - r2e2[0], -r2e2[1]]);
+    return -20 * log10(cabs(t));
+  }
+
+  function wallDb(material, thicknessM, fMHz, wallModel) {
+    if (wallModel === 'absorb') return absorbDb(material, thicknessM, fMHz);
+    return slabDb(material, thicknessM, fMHz);
+  }
+
+  // walls: [{ material: 'concrete', thicknessM: 0.1 }, ...]
+  function wallsDb(walls, fMHz, wallModel) {
+    var sum = 0;
+    for (var i = 0; i < walls.length; i++) {
+      sum += wallDb(walls[i].material, walls[i].thicknessM, fMHz, wallModel);
+    }
+    return sum;
+  }
+
+  function noiseDbm(widthMHz, nfDb) {
+    return 10 * log10(K_BOLTZMANN * T0_K * widthMHz * 1e6 / 1e-3) + nfDb;
+  }
+
+  function shannonMbps(widthMHz, snrDb) {
+    return widthMHz * Math.log(1 + Math.pow(10, snrDb / 10)) / Math.LN2;
+  }
+
+  function link(band, dM, walls, opts) {
+    var o = {};
+    var key;
+    for (key in DEFAULTS) o[key] = DEFAULTS[key];
+    if (opts) for (key in opts) o[key] = opts[key];
+    var b = BANDS[band];
+    var width = o.widthMHz || b.maxWidthMHz;
+    var fspl = fsplDb(b.fMHz, dM);
+    var wdb = wallsDb(walls || [], b.fMHz, o.wallModel);
+    var loss = fspl + wdb;
+    var rx = o.eirpDbm - loss;
+    var noise = noiseDbm(width, o.nfDb);
+    var snr = rx - noise;
+    var shannon = shannonMbps(width, snr);
+    var cap = PER_STREAM_MBPS[width];
+    return {
+      band: band,
+      fMHz: b.fMHz,
+      widthMHz: width,
+      fsplDb: fspl,
+      wallsDb: wdb,
+      lossDb: loss,
+      rxDbm: rx,
+      noiseDbm: noise,
+      snrDb: snr,
+      shannonMbps: shannon,
+      cappedMbps: cap === undefined ? null : Math.min(shannon, cap)
+    };
+  }
+
+  // 뚜껑을 씌운 속도: 문서의 최고 속도가 없는 폭이면 섀넌 상한 그대로
+  function rateMbps(s) {
+    return s.cappedMbps === null ? s.shannonMbps : s.cappedMbps;
+  }
+
+  // best는 섀넌 상한이, bestCapped는 뚜껑을 씌운 속도가 가장 높은 대역
+  function compare(dM, walls, opts) {
+    var states = {};
+    var best = null;
+    var bestCapped = null;
+    for (var i = 0; i < BAND_KEYS.length; i++) {
+      var s = link(BAND_KEYS[i], dM, walls, opts);
+      states[BAND_KEYS[i]] = s;
+      if (best === null || s.shannonMbps > states[best].shannonMbps) best = BAND_KEYS[i];
+      if (bestCapped === null || rateMbps(s) > rateMbps(states[bestCapped])) bestCapped = BAND_KEYS[i];
+    }
+    return { states: states, best: best, bestCapped: bestCapped };
+  }
+
+  var api = {
+    BANDS: BANDS,
+    MATERIALS: MATERIALS,
+    DEFAULTS: DEFAULTS,
+    fsplDb: fsplDb,
+    absorbDb: absorbDb,
+    slabDb: slabDb,
+    wallsDb: wallsDb,
+    noiseDbm: noiseDbm,
+    shannonMbps: shannonMbps,
+    link: link,
+    rateMbps: rateMbps,
+    compare: compare
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.WifiBands = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+    </script>
+    <script>
+        // 집 안에서 대역 바꿔 보기: 거리와 벽을 바꾸면 대역마다 길 너비, 받는 신호, 최대 속도가 바뀐다.
+        // 계산은 위의 WifiBands(sim.js)가 하고, 여기는 화면만 그린다.
+        (function () {
+            "use strict";
+            var S = window.WifiBands;
+            var KEYS = ["2.4", "5", "6"];
+            var IDS = { "2.4": "pick-24", "5": "pick-5", "6": "pick-6" };
+            var COLORS = { "2.4": "var(--accent-warn)", "5": "var(--accent)", "6": "var(--accent-green)" };
+            var WALLS = {
+                c10: { material: "concrete", thicknessM: 0.10, px: 10, name: "10 cm concrete wall" },
+                c20: { material: "concrete", thicknessM: 0.20, px: 18, name: "20 cm concrete wall" },
+                wood: { material: "wood", thicknessM: 0.04, px: 7, name: "4 cm wooden door" },
+                glass: { material: "glass", thicknessM: 0.006, px: 4, name: "6 mm glass window" },
+                pb: { material: "plasterboard", thicknessM: 0.0125, px: 5, name: "12.5 mm plasterboard" }
+            };
+            var TOP_MBPS = 2882.4;
+            var NS = "http://www.w3.org/2000/svg";
+
+            var dist = document.getElementById("dist");
+            var nwall = document.getElementById("nwall");
+            var wkind = document.getElementById("wkind");
+            var distv = document.getElementById("distv");
+            var nwallv = document.getElementById("nwallv");
+            var say = document.getElementById("say");
+            var pick = document.getElementById("pick");
+            var scene = document.getElementById("scene");
+            var cards = {};
+            KEYS.forEach(function (k) { cards[k] = document.getElementById(IDS[k]).closest(".band"); });
+
+            function fmt(x) { return Math.round(x).toLocaleString("en-US"); }
+            function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
+            function picked() {
+                for (var i = 0; i < KEYS.length; i++) if (document.getElementById(IDS[KEYS[i]]).checked) return KEYS[i];
+                return "5";
+            }
+            // 같은 자리의 2.4 GHz가 받는 신호의 몇 분의 1인가
+            function fraction(s, base) { return Math.round(Math.pow(10, (s.lossDb - base.lossDb) / 10)); }
+            function rateText(rate) {
+                if (rate < 1) return "under 1 Mbps";
+                return fmt(rate) + " Mbps";
+            }
+            function sigPct(s) { return clamp((s.rxDbm + 100) / 80 * 100, 0, 100); }
+
+            function sayText(d, n, kind, r) {
+                var best = r.bestCapped;
+                var s = r.states[best];
+                var rate = S.rateMbps(s);
+                var where = d + " m away, " + (n ? "behind " + n + " × " + WALLS[kind].name : "no walls") + ". ";
+                if (rate < 1) return where + "Hardly anything arrives on any of the three bands.";
+                var head = best + " GHz is the fastest here (" + fmt(rate) + " Mbps). ";
+                if (best === "2.4") return where + head + "Its lane is the narrowest, but the most signal is left.";
+                return where + head + "Its received signal is 1/" + fmt(fraction(s, r.states["2.4"])) + " of 2.4 GHz, but its lane is " + (s.widthMHz / 40) + " times as wide.";
+            }
+
+            function pickText(band, r) {
+                var s = r.states[band];
+                var text = "Picked band " + band + " GHz: it loses " + s.fsplDb.toFixed(0) + " dB over the distance and " + s.wallsDb.toFixed(0) + " dB in the walls. ";
+                if (band === "2.4") return text + "Its received signal is the strongest of the three.";
+                return text + "Its received signal is 1/" + fmt(fraction(s, r.states["2.4"])) + " of 2.4 GHz.";
+            }
+
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+
+            // 그림: 왼쪽 공유기에서 오른쪽 노트북까지 길 셋. 굵기는 채널 폭, 진하기는 그 구간에 남은 신호다.
+            function drawScene(d, n, kind, band) {
+                while (scene.firstChild) scene.removeChild(scene.firstChild);
+                // 화면 폭에 맞춰 그린다. 좁은 화면에서도 글자 크기가 그대로다.
+                var W = Math.round(Math.max(280, scene.getBoundingClientRect().width || 640));
+                scene.setAttribute("viewBox", "0 0 " + W + " 190");
+                var x0 = 64, x1 = W - 64, laneY = { "2.4": 44, "5": 92, "6": 144 };
+                var wall = WALLS[kind];
+                el("rect", { x: 14, y: 70, width: 32, height: 50, rx: 6, "class": "device" }, scene);
+                el("line", { x1: 23, y1: 70, x2: 18, y2: 48, "class": "device" }, scene);
+                el("line", { x1: 37, y1: 70, x2: 42, y2: 48, "class": "device" }, scene);
+                el("text", { x: 30, y: 140, "text-anchor": "middle" }, scene).textContent = "router";
+                el("rect", { x: W - 48, y: 76, width: 36, height: 26, rx: 3, "class": "device" }, scene);
+                el("rect", { x: W - 54, y: 104, width: 48, height: 6, rx: 2, "class": "device" }, scene);
+                el("text", { x: W - 30, y: 140, "text-anchor": "middle" }, scene).textContent = "laptop";
+                el("text", { x: W / 2, y: 184, "text-anchor": "middle" }, scene).textContent = d + " m";
+                var cuts = [];
+                for (var i = 1; i <= n; i++) cuts.push(i / (n + 1));
+                KEYS.forEach(function (k) {
+                    var b = S.BANDS[k];
+                    var thick = 4 + b.maxWidthMHz / 320 * 24;
+                    var y = laneY[k];
+                    var edges = [0].concat(cuts, [1]);
+                    for (var j = 0; j < edges.length - 1; j++) {
+                        var mid = (edges[j] + edges[j + 1]) / 2;
+                        var passed = [];
+                        for (var w = 0; w < j; w++) passed.push(wall);
+                        var here = S.link(k, Math.max(0.5, d * mid), passed);
+                        var alpha = clamp((here.rxDbm + 100) / 70, 0.05, 1);
+                        el("rect", { x: x0 + (x1 - x0) * edges[j], y: y - thick / 2, width: (x1 - x0) * (edges[j + 1] - edges[j]), height: thick, fill: COLORS[k], "fill-opacity": alpha.toFixed(2) }, scene);
+                    }
+                    if (k === band) el("rect", { x: x0 - 4, y: y - thick / 2 - 4, width: x1 - x0 + 8, height: thick + 8, rx: 4, "class": "pick-frame" }, scene);
+                });
+                cuts.forEach(function (c) {
+                    el("rect", { x: x0 + (x1 - x0) * c - wall.px / 2, y: 14, width: wall.px, height: 156, "class": "wall " + wall.material }, scene);
+                });
+                // 이름표는 벽 위에 그린다. 벽에 가려지지 않게 글자 둘레를 바탕색으로 두른다.
+                KEYS.forEach(function (k) {
+                    var b = S.BANDS[k];
+                    var thick = 4 + b.maxWidthMHz / 320 * 24;
+                    el("text", { x: x0, y: laneY[k] - thick / 2 - 7, "class": "lane-name" + (k === band ? " on" : "") }, scene).textContent = k + " GHz · " + b.maxWidthMHz + " MHz";
+                });
+            }
+
+            function render() {
+                var d = Number(dist.value);
+                var n = Number(nwall.value);
+                var kind = wkind.value;
+                var walls = [];
+                for (var i = 0; i < n; i++) walls.push(WALLS[kind]);
+                var r = S.compare(d, walls);
+                var band = picked();
+                var base = r.states["2.4"];
+                distv.textContent = d + " m";
+                nwallv.textContent = n + (n === 1 ? " wall" : " walls");
+                KEYS.forEach(function (k) {
+                    var s = r.states[k];
+                    var rate = S.rateMbps(s);
+                    var card = cards[k];
+                    card.classList.toggle("best", k === r.bestCapped && rate >= 1);
+                    card.classList.toggle("picked", k === band);
+                    card.querySelector(".badge").hidden = !(k === r.bestCapped && rate >= 1);
+                    card.querySelector('[data-f="width"]').textContent = s.widthMHz + " MHz";
+                    card.querySelector('[data-f="widthbar"]').style.width = (s.widthMHz / 320 * 100).toFixed(1) + "%";
+                    card.querySelector('[data-f="sig"]').textContent = k === "2.4" ? "baseline" : "1/" + fmt(fraction(s, base));
+                    card.querySelector('[data-f="sigbar"]').style.width = sigPct(s).toFixed(1) + "%";
+                    card.querySelector('[data-f="rate"]').textContent = rateText(rate);
+                    card.querySelector('[data-f="ratebar"]').style.width = clamp(rate / TOP_MBPS * 100, 0, 100).toFixed(1) + "%";
+                });
+                say.textContent = sayText(d, n, kind, r);
+                pick.textContent = pickText(band, r);
+                drawScene(d, n, kind, band);
+            }
+
+            [dist, nwall].forEach(function (input) { input.addEventListener("input", render); });
+            wkind.addEventListener("change", render);
+            KEYS.forEach(function (k) { document.getElementById(IDS[k]).addEventListener("change", render); });
+            Array.prototype.forEach.call(document.querySelectorAll(".presets button"), function (button) {
+                button.addEventListener("click", function () {
+                    dist.value = button.getAttribute("data-d");
+                    nwall.value = button.getAttribute("data-n");
+                    wkind.value = "c10";
+                    render();
+                });
+            });
+            render();
+            if ("ResizeObserver" in window) {
+                var lastWidth = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(scene.getBoundingClientRect().width);
+                    if (w && w !== lastWidth) { lastWidth = w; render(); }
+                }).observe(scene);
+            }
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-11-19","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"},{"id":"ml","name":"기계 학습","name_en":"Machine learning"},{"id":"llm","name":"언어 모델","name_en":"Language models","parent":"ml"},{"id":"rob","name":"로봇·자동화","name_en":"Robotics and automation"},{"id":"ct","name":"X선·CT 영상","name_en":"X-ray and CT imaging"},{"id":"st","name":"컴퓨터·저장장치","name_en":"Computer storage"},{"id":"wl","name":"무선 통신","name_en":"Wireless communication"},{"id":"cg","name":"컴퓨터 그래픽스","name_en":"Computer graphics"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"},{"id":"train-val-calib-test","title":"train·val·calib·test","title_en":"train/val/calib/test","domain":"ml","status":"published","href":"../train-val-calib-test/","summary":"학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold를 위해 칸 하나를 더 두기","summary_en":"Keep one more split for what is fitted after training: the temperature T and the threshold"},{"id":"error-backpropagation","title":"역전파","title_en":"Backpropagation","domain":"ml","status":"published","href":"../error-backpropagation/","summary":"출력의 오차를 뒤로 전해 다층 퍼셉트론의 가운데 층까지 고치기","summary_en":"Pass the output's error backward to correct the middle layer of a multilayer perceptron too"},{"id":"neural-network-sleep","title":"신경망의 잠","title_en":"Sleep for neural networks","domain":"ml","status":"published","href":"../neural-network-sleep/","summary":"학습을 멈추고 잡음을 흘려 연결이 앞뒤 뉴런만 보고 바뀌게 하면, 잊은 옛 과제가 돌아오기도 한다","summary_en":"Stop training and run noise through the network so each connection changes by its two neurons alone, and a forgotten old task can come back"},{"id":"robot-types","title":"로봇의 종류","title_en":"Robot types","domain":"rob","status":"published","href":"../robot-types/","summary":"관절을 잇는 구조가 손끝의 자세를 정하고, 그 자세가 실험실에서 로봇의 쓰임을 정한다","summary_en":"How the joints are joined sets the hand's posture, and the posture sets what a robot does in the lab"},{"id":"hydraulic-pneumatic-microinjector","title":"마이크로인젝터","title_en":"Microinjectors","domain":"rob","status":"published","href":"../hydraulic-pneumatic-microinjector/","summary":"공기로 미는 공압식은 압력을, 기름으로 미는 유압식은 부피를 정한다","summary_en":"A pneumatic injector pushes with air and sets the pressure; a hydraulic one pushes with oil and sets the volume"},{"id":"kimi-k3-1-pro","title":"Kimi K3.1 Pro","title_en":"Kimi K3.1 Pro","domain":"llm","status":"published","href":"../kimi-k3-1-pro/","summary":"몸통은 그대로 두고 사후 학습으로 AA 지수를 44에서 55로 올리기","summary_en":"Raise the AA index from 44 to 55 with post-training, on the same base model"},{"id":"pretraining-posttraining-inference","title":"사전 학습·사후 학습·추론","title_en":"Pre-training, post-training, inference","domain":"llm","status":"published","href":"../pretraining-posttraining-inference/","summary":"사전 학습과 사후 학습은 가중치를 바꾸고, 추론은 가중치를 그대로 둔 채 맥락으로 답한다","summary_en":"Pre-training and post-training change the weights; inference leaves them as they are and answers from the context"},{"id":"xray-ct-registration","title":"X선–CT 정합","title_en":"X-ray to CT registration","domain":"ct","status":"published","href":"../xray-ct-registration/","summary":"엑스레이 필름 한 장은 CT가 찍는 그림자의 한 방향이라서, CT에서 가상 필름을 계산해 필름에 맞출 수 있다","summary_en":"An X-ray film is one view of what a CT scan records, so a virtual film computed from the CT can be matched to it"},{"id":"format-keeps-data","title":"포맷과 데이터 복구","title_en":"Format and data recovery","domain":"st","status":"published","href":"../format-keeps-data/","summary":"포맷과 플래시가 지우는 것은 지도이고, 덮어쓰지 않은 본문은 그대로라서 되살릴 수 있다","summary_en":"Formatting and flashing erase the map, and the data that was not overwritten stays, so it can be recovered"},{"id":"wifi-frequency-bands","title":"와이파이 주파수 대역","title_en":"Wi-Fi frequency bands","domain":"wl","status":"published","href":"../wifi-frequency-bands/","summary":"높은 대역일수록 길이 넓어 빠르지만, 받는 신호가 약하고 콘크리트 벽에서 더 잃는다","summary_en":"Higher bands have wider channels and are faster, but the received signal is weaker and concrete walls take more of it"},{"id":"pixel-art-gaussian-splats","title":"픽셀 아트 가우시안 스플랫","title_en":"Pixel-art Gaussian splats","domain":"cg","status":"published","href":"../pixel-art-gaussian-splats/","summary":"3D 디자인하는 방법 중 하나다. 간단하고 구조적이라 AI가 다루기 용이하다","summary_en":"One way to design in 3D; simple and structured, so AI handles it easily"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"},{"from":"error-backpropagation","to":"pretraining-posttraining-inference"},{"from":"error-backpropagation","to":"neural-network-sleep"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            MAP.nodes.forEach(function (n) { n.title = n.title_en || n.title; n.summary = n.summary_en || n.summary; });
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 100 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (coming soon)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "coming soon";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "you are here";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
