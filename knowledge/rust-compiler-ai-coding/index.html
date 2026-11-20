@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>바이브 코딩 시대, 왜 Rust가 떠올랐을까? | Hugh Q Lee</title>
+    <meta name="description" content="바이브 코딩으로 코드가 쏟아지면서 에러와 시행착오의 비용이 커졌다. 마지막 '완성' 버튼(컴파일)을 누르면 Rust는 깐깐하게 에러를 검사해, 이 비용을 아끼고 에러를 미리 막는다.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="Rust, 러스트, 바이브 코딩, vibe coding, Rust 컴파일러, rustc, AI 코딩, AI 코딩 에이전트, LLM 코드 생성, 컴파일 에러, 빌림 검사기, borrow checker, Python과 Rust 비교, RustAssistant, DORA 2024">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/rust-compiler-ai-coding/">
+    <!-- 영문판(/knowledge/en/rust-compiler-ai-coding/)은 System/build_en.py가 이 페이지에서 만든다. 두 판이 서로를 가리킨다. -->
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/rust-compiler-ai-coding/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/rust-compiler-ai-coding/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/rust-compiler-ai-coding/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:title" content="바이브 코딩 시대, 왜 Rust가 떠올랐을까?">
+    <meta property="og:description" content="바이브 코딩으로 코드가 쏟아지면서 에러와 시행착오의 비용이 커졌다. 마지막 '완성' 버튼(컴파일)을 누르면 Rust는 깐깐하게 에러를 검사해, 이 비용을 아끼고 에러를 미리 막는다.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/rust-compiler-ai-coding/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/rust-compiler-ai-coding/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="같은 실수를 Python과 Rust로 돌린 결과. Python은 출하 뒤 실제 입력에서 멈추고, Rust는 라인 끝 자동 검수(컴파일)에서 막는다">
+    <meta property="article:published_time" content="2026-11-20">
+    <meta property="article:modified_time" content="2026-11-20">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="바이브 코딩 시대, 왜 Rust가 떠올랐을까?">
+    <meta name="twitter:description" content="바이브 코딩으로 코드가 쏟아지면서 에러와 시행착오의 비용이 커졌다. 마지막 '완성' 버튼(컴파일)을 누르면 Rust는 깐깐하게 에러를 검사해, 이 비용을 아끼고 에러를 미리 막는다.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/rust-compiler-ai-coding/og.png">
+    <meta name="twitter:image:alt" content="같은 실수를 Python과 Rust로 돌린 결과. Python은 출하 뒤 실제 입력에서 멈추고, Rust는 라인 끝 자동 검수(컴파일)에서 막는다">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage의 문장은 본문 "자주 묻는 질문"과 같아야 한다. 질문을 늘리면 둘 다 늘린다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/rust-compiler-ai-coding/#article",
+          "workTranslation": { "@id": "https://hughqlee.com/knowledge/en/rust-compiler-ai-coding/#article" },
+          "headline": "바이브 코딩 시대, 왜 Rust가 떠올랐을까?",
+          "alternativeHeadline": "AI로 코드를 쏟아 내는 시대에 Rust가 주목받는 이유는?",
+          "description": "바이브 코딩으로 코드가 쏟아지면서 에러와 시행착오의 비용이 커졌다. 마지막 '완성' 버튼(컴파일)을 누르면 Rust는 깐깐하게 에러를 검사해, 이 비용을 아끼고 에러를 미리 막는다.",
+          "abstract": "바이브 코딩으로 코드가 쏟아지면서 에러와 시행착오의 비용이 커졌다. 마지막 '완성' 버튼(컴파일)을 누르면 Rust는 깐깐하게 에러를 검사해, 이 비용을 아끼고 에러를 미리 막는다.",
+          "inLanguage": "ko",
+          "datePublished": "2026-11-20",
+          "dateModified": "2026-11-20",
+          "url": "https://hughqlee.com/knowledge/rust-compiler-ai-coding/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/rust-compiler-ai-coding/",
+          "image": { "@type": "ImageObject", "url": "https://hughqlee.com/knowledge/rust-compiler-ai-coding/og.png", "width": 1200, "height": 630 },
+          "author": { "@id": "https://hughqlee.com/#person" },
+          "publisher": { "@id": "https://hughqlee.com/#person" },
+          "isPartOf": { "@id": "https://hughqlee.com/knowledge/#collection" },
+          "isAccessibleForFree": true,
+          "citation": [
+            { "@type": "CreativeWork", "name": "P. Deligiannis, A. Lal, N. Mehrotra, A. Rastogi, Fixing Rust Compilation Errors using LLMs (arXiv 2308.05177, 2023)", "url": "https://arxiv.org/abs/2308.05177" },
+            { "@type": "CreativeWork", "name": "Google Cloud, Announcing the 2024 DORA report (2024)", "url": "https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report" },
+            { "@type": "CreativeWork", "name": "A. Karpathy, vibe coding (X, 2025-02)", "url": "https://x.com/karpathy/status/1886192184808149383" },
+            { "@type": "CreativeWork", "name": "S. Willison, Not all AI-assisted programming is vibe coding (but vibe coding rocks) (2025)", "url": "https://simonwillison.net/2025/Mar/19/vibe-coding/" },
+            { "@type": "CreativeWork", "name": "The Rust Programming Language, 11. Writing Automated Tests", "url": "https://doc.rust-lang.org/book/ch11-00-testing.html" },
+            { "@type": "CreativeWork", "name": "Rust error codes: E0599", "url": "https://doc.rust-lang.org/error_codes/E0599.html" },
+            { "@type": "CreativeWork", "name": "Rust error codes: E0502", "url": "https://doc.rust-lang.org/error_codes/E0502.html" },
+            { "@type": "CreativeWork", "name": "mypy documentation: Optional types and the None type", "url": "https://mypy.readthedocs.io/en/stable/kinds_of_types.html" },
+            { "@type": "CreativeWork", "name": "mypy documentation: Dynamic vs static typing", "url": "https://mypy.readthedocs.io/en/stable/getting_started.html" }
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": ["https://github.com/hughqlee", "https://www.linkedin.com/in/hughqlee/", "https://x.com/hughqlee/"]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Hugh Q Lee", "item": "https://hughqlee.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Knowledge", "item": "https://hughqlee.com/knowledge/" },
+            { "@type": "ListItem", "position": 3, "name": "바이브 코딩 시대, 왜 Rust가 떠올랐을까?", "item": "https://hughqlee.com/knowledge/rust-compiler-ai-coding/" }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/rust-compiler-ai-coding/#faq",
+          "mainEntity": [
+            { "@type": "Question", "name": "바이브 코딩이란?", "acceptedAnswer": { "@type": "Answer", "text": "AI에게 말로 시키고, 나온 코드를 거의 읽지 않고 그대로 쓰는 방식이다. Andrej Karpathy가 2025년 2월 X에 처음 쓴 이름으로, 코드가 있다는 것조차 잊고 AI의 변경을 모두 받아들이는 코딩을 가리켰다." } },
+            { "@type": "Question", "name": "AI로 코드를 쓰면 정말 에러가 느나?", "acceptedAnswer": { "@type": "Answer", "text": "DORA 2024 보고서(Google Cloud)는 AI 도입이 늘수록 배포 처리량이 1.5%, 배포 안정성이 7.2% 떨어진 것으로 추정했다. 안정성은 배포 직후 손봐야 하는 배포의 비율 같은 지표로 잰다. 설문에 바탕을 둔 추정이다." } },
+            { "@type": "Question", "name": "Rust는 왜 AI 코딩에 잘 맞나?", "acceptedAnswer": { "@type": "Answer", "text": "Rust 컴파일러는 타입과 빌림 규칙을 실행 전에 검사하고, 어기면 줄 번호와 이유를 적은 에러를 낸다. 이 글의 두 예제에서 rustc 1.100.0은 두 실수를 모두 실행 전에 거부하고 고칠 방법(help)도 붙였다. Python 3.11.4에서는 같은 실수가 테스트를 지나 실제 입력에서야 드러났다." } },
+            { "@type": "Question", "name": "AI가 컴파일 에러를 받아 고치는 방법이 실제로 통하나?", "acceptedAnswer": { "@type": "Answer", "text": "Microsoft Research의 RustAssistant(2023)는 컴파일러의 에러를 코드와 함께 LLM에 주고, 고친 뒤 다시 컴파일하기를 되풀이했다. GPT-4로, 인기 Rust 라이브러리 100개의 GitHub 기록에서 찾은 컴파일 에러 커밋 182개 가운데 134개(73.63%)를 다시 컴파일되게 고쳤다. 2023년 모델의 결과다." } },
+            { "@type": "Question", "name": "Python으로는 같은 실수를 미리 잡을 수 없나?", "acceptedAnswer": { "@type": "Answer", "text": "Python은 기본으로 문법만 보고 실행한다. 타입 검사기 mypy는 None일 수 있는 값을 확인 없이 쓰는 것을 막지만, 타입 힌트를 단 함수만 검사한다(mypy 문서). 이 글의 Python 예제처럼 힌트가 없으면 기본으로는 검사하지 않는다." } },
+            { "@type": "Question", "name": "Rust 컴파일러가 잡지 못하는 실수는?", "acceptedAnswer": { "@type": "Answer", "text": "타입과 빌림 규칙에 어긋나지 않는 실수다. Rust 책은 타입 시스템이 모든 것을 잡지는 못한다며, 2를 더해야 할 함수가 10을 더하는 경우를 예로 든다. 이런 논리 오류는 테스트가 잡아야 한다." } }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --danger: #ff8c8c;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --danger: #b42323;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            cursor: pointer;
+        }
+        .theme-toggle:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 32px; border-bottom: 1px solid var(--line); }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        section { padding: 32px 0; }
+        h2 { margin: 0 0 12px; font-size: 22px; line-height: 1.4; }
+
+        .panel {
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .hint { margin: 0 0 16px; color: var(--muted); }
+        .demo label {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .demo input[type="range"] { width: 100%; min-height: 44px; margin: 4px 0; accent-color: var(--accent); }
+        .meter { height: 10px; overflow: hidden; border-radius: 999px; background: var(--panel-strong); }
+        .meter span { display: block; width: 0; height: 100%; background: var(--accent); transition: width 0.2s ease; }
+        .result { margin: 12px 0 0; font-family: var(--mono); font-size: 15px; }
+
+        .steps { margin: 0; padding-left: 1.4em; }
+        .steps li { margin: 8px 0; }
+        .steps li::marker { color: var(--accent); font-family: var(--mono); }
+
+        .note {
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+
+        /* 확인됨 · 가설 · 모름 표시: <span class="tag known">확인됨</span> */
+        .tag {
+            display: inline-block;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.known { color: var(--accent-green); }
+        .tag.guess { color: var(--accent-warn); }
+        .tag.unknown { color: var(--muted); }
+
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        /* 도입: 질문(h1) 아래 한 줄, 그다음 한 문장 답 */
+        .lede { margin: -8px 0 20px; color: var(--muted); }
+
+        /* 같은 실수, 두 언어: 고르기 → 네 칸 → 버튼 → 코드와 출력 (좁으면 위아래) */
+        .loop { display: grid; gap: 16px; }
+        .loop .hint { margin: 0; }
+        .loop-controls { display: flex; flex-wrap: wrap; gap: 12px 28px; }
+        .loop-field { min-width: 0; margin: 0; padding: 0; border: 0; }
+        .loop-field legend { margin-bottom: 6px; padding: 0; color: var(--muted); font-family: var(--mono); font-size: 13px; }
+        .loop-seg { display: inline-flex; flex-wrap: wrap; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); }
+        .loop-seg label { position: relative; cursor: pointer; }
+        .loop-seg input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+        .loop-seg span { display: block; min-height: 44px; padding: 10px 14px; color: var(--muted); font-size: 15px; line-height: 1.5; }
+        .loop-seg label + label span { border-left: 1px solid var(--line); }
+        .loop-seg input:checked + span { background: var(--accent-soft); color: var(--text); box-shadow: inset 0 -2px 0 var(--accent); }
+        .loop-seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: -3px; }
+        /* 수작업 → 자동화 라인: 그림 위 한 줄 */
+        .fx-era { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 0; font-size: 14px; }
+        .fx-mode { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 6px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: transparent; color: var(--muted); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+        .fx-mode:hover { border-color: var(--line-strong); }
+        .fx-mode[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
+        .fx-mode[aria-pressed="true"] b { color: var(--accent); }
+        .fx-mode:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .fx-arrow { color: var(--accent); }
+        .fx-era b { font-size: 13px; font-weight: 700; }
+        @media (max-width: 560px) {
+            .fx-era { flex-direction: column; align-items: stretch; gap: 4px; }
+            .fx-arrow { align-self: center; transform: rotate(90deg); }
+        }
+        .loop [hidden] { display: none !important; }
+        .fx-mode-hand .fx-auto, .fx-svg:not(.fx-mode-hand) .fx-hand { display: none; }
+        .fx-lens { fill: none; stroke: var(--line-strong); stroke-width: 2.5; }
+        .fx-mode-hand .fx-st.now .fx-lens { stroke: var(--accent); }
+        .loop-track.hand-track { grid-template-columns: repeat(3, minmax(0, 1fr)); counter-reset: st; }
+        @media (max-width: 560px) { .loop-track.hand-track { grid-template-columns: minmax(0, 1fr); } }
+        .hand-note { margin: 0; color: var(--muted); font-size: 14px; }
+        .loop-eq { color: var(--accent); font-family: var(--mono); }
+        .loop-eg { color: var(--muted); font-size: 12px; opacity: 0.85; }
+        /* 공장 라인 그림: 컨베이어 위로 코드(제품)가 네 칸을 지난다. 자동 검수 문은 Python에서 점선(문법만), Rust에서 굵은 선(rustc) */
+        .fx { margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .fx-svg { display: block; width: 100%; height: auto; }
+        .fx-belt { fill: var(--panel-strong); stroke: var(--line-strong); stroke-width: 1; }
+        .fx-rollers circle { fill: var(--line-strong); }
+        .fx-mach { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.5; }
+        .fx-person { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.5; }
+        .fx-in { fill: var(--muted); font-family: var(--mono); font-size: 20px; }
+        .fx-name { fill: var(--text); font-family: var(--sans); font-size: 24px; font-weight: 700; }
+        .fx-sub { fill: var(--muted); font-family: var(--mono); font-size: 20px; }
+        .fx-post, .fx-beam { fill: var(--panel); stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 4 3; }
+        .fx-ray { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 3 5; opacity: 0.6; }
+        .lang-rust .fx-post, .lang-rust .fx-beam { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 3; stroke-dasharray: none; }
+        .lang-rust .fx-ray { stroke: var(--accent); stroke-width: 3; stroke-dasharray: none; opacity: 0.9; }
+        .lang-rust .fx-only-py, .lang-python .fx-only-rs { display: none; }
+        .lang-rust .fx-gate .fx-sub { fill: var(--accent); }
+        .fx-st.now .fx-name { fill: var(--accent); }
+        .fx-gate.caught .fx-post, .fx-gate.caught .fx-beam { stroke: var(--danger); }
+        .fx-gate.caught .fx-ray { stroke: var(--danger); }
+        .fx-ret { fill: none; stroke: var(--accent); stroke-width: 2; stroke-dasharray: 6 4; opacity: 0; }
+        .fx-ret-label { fill: var(--accent); font-family: var(--sans); font-size: 20px; opacity: 0; }
+        .fx-tip { fill: var(--accent); }
+        .fixed.lang-rust .fx-ret-rs, .fixed.lang-python .fx-ret-py { opacity: 1; }
+        .fx-item { transition: transform 0.55s ease; }
+        .fx-item rect { fill: var(--panel); stroke: var(--text); stroke-width: 1.5; }
+        .fx-code { fill: var(--text); font-family: var(--mono); font-size: 15px; }
+        .fx-badge { fill: none; stroke: none; }
+        .fx-mark { fill: var(--panel); font-family: var(--sans); font-size: 13px; font-weight: 700; }
+        .fx-item[data-s="pass"] rect { stroke: var(--accent-green); }
+        .fx-item[data-s="pass"] .fx-badge { fill: var(--accent-green); }
+        .fx-item[data-s="block"] rect, .fx-item[data-s="crash"] rect { stroke: var(--danger); fill: var(--panel); }
+        .fx-item[data-s="block"] .fx-badge, .fx-item[data-s="crash"] .fx-badge { fill: var(--danger); }
+        .fx-item[data-s="wrong"] rect { stroke: var(--accent-warn); }
+        .fx-item[data-s="wrong"] .fx-badge { fill: var(--accent-warn); }
+        .loop-track { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; counter-reset: st; }
+        @media (max-width: 560px) { .loop-track { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        .loop-st { display: grid; gap: 2px; min-width: 0; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); transition: border-color 0.2s ease; }
+        .loop-nm { font-size: 15px; font-weight: 700; }
+        .loop-nm::before { counter-increment: st; content: counter(st) " "; color: var(--muted); font-family: var(--mono); font-weight: 400; }
+        .loop-sub { color: var(--muted); font-size: 12px; }
+        .loop-chip { justify-self: start; margin-top: 4px; padding: 0 6px; border: 1px solid currentColor; border-radius: 4px; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+        .loop-st[data-s="pass"] .loop-chip { color: var(--accent-green); }
+        .loop-st[data-s="block"] .loop-chip, .loop-st[data-s="crash"] .loop-chip { color: var(--danger); }
+        .loop-st[data-s="wrong"] .loop-chip { color: var(--accent-warn); }
+        .loop-st[data-s="block"], .loop-st[data-s="crash"] { border-color: var(--danger); }
+        .loop-st[data-s="wrong"] { border-color: var(--accent-warn); }
+        .loop-st.now { border-color: var(--accent); }
+        .loop-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+        .loop-btn { min-height: 44px; padding: 8px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: transparent; color: var(--text); font: inherit; font-size: 15px; cursor: pointer; }
+        .loop-btn.primary { border-color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+        .loop-btn:hover:not(:disabled) { border-color: var(--accent); }
+        .loop-btn:disabled { opacity: 0.4; cursor: default; }
+        .loop-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .loop-verdict { min-height: 1.6em; margin: 0; font-weight: 700; }
+        .loop-verdict .where { color: var(--accent); }
+        .loop-panes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+        @media (max-width: 720px) { .loop-panes { grid-template-columns: minmax(0, 1fr); } }
+        .loop-pane { display: grid; gap: 6px; align-content: start; min-width: 0; }
+        .loop-pane-h { display: flex; justify-content: space-between; gap: 8px; margin: 0; color: var(--muted); font-family: var(--mono); font-size: 13px; }
+        .loop-pre { margin: 0; padding: 10px 0; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); font-family: var(--mono); font-size: 13px; line-height: 1.55; }
+        .loop-pre .ln { display: block; padding-right: 12px; white-space: pre; }
+        .loop-pre .ln::before { content: attr(data-n); display: inline-block; width: 2.6em; padding-right: 10px; color: var(--muted); text-align: right; }
+        .loop-pre .ln.hit { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--danger); }
+        .loop-out { min-height: 9em; padding: 10px 12px; white-space: pre; }
+        .loop-out .k { color: var(--muted); }
+        .loop-out .bad { color: var(--danger); }
+        .loop-out .ok { color: var(--accent-green); }
+        .loop-out .warn { color: var(--accent-warn); }
+        .loop-prov { margin: 0; color: var(--muted); font-size: 13px; }
+        .loop-prov:empty { display: none; }
+        .loop-steps { display: grid; gap: 10px; margin: 0; padding-left: 1.4em; }
+        .loop-steps li::marker { color: var(--accent); font-family: var(--mono); }
+        .loop-steps strong { margin-right: 8px; }
+        /* 자동화 라인으로 보면: 비유와 코딩의 짝 */
+        .line-map { display: grid; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
+        .line-map li { display: grid; grid-template-columns: minmax(7.5em, auto) auto minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); font-size: 15px; }
+        .line-map li span:first-child { color: var(--muted); font-family: var(--mono); font-size: 13px; }
+        .line-map li span:nth-child(2) { color: var(--accent); }
+        .line-map li:last-child { border-color: var(--accent); }
+        .source { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
+
+        footer {
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="위치">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/en/rust-compiler-ai-coding/" hreflang="en" lang="en">English</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main" class="wrap">
+        <section class="hero">
+            <!-- 지식 지도: 데이터와 규칙은 System/지식 지도.md. 한 줄 글은 스크립트 없이도 읽히는 같은 내용이다.
+                 이 글: 프로그래밍 언어 분야의 첫 글 · 먼저 읽을 글과 이어서 읽을 글은 아직 없다 -->
+            <nav class="kmap" aria-label="지식 지도" data-current="rust-compiler-ai-coding">
+                <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">프로그래밍 언어</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">이 분야의 첫 글이다. 먼저 읽을 글과 이어서 읽을 글은 아직 없다.</p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE</p>
+            <h1>바이브 코딩 시대, 왜 Rust가 떠올랐을까?</h1>
+            <p class="lede">트렌드가 바뀌며 Rust가 떠올랐다. 바이브 코딩(AI가 쓴 코드를 거의 읽지 않고 그대로 쓰는 방식)으로 코드가 쏟아져 나오지만, 모두 제대로 돌지는 않는다. 그만큼 에러와 시행착오가 늘고, 그 비용도 커진다. 꼭 돈이 아니더라도 말이다.</p>
+            <p class="answer">마지막 '완성' 버튼(컴파일)을 누르면 Rust는 깐깐하게 에러를 검사한다. 그래서 이 비용을 아끼고, 에러를 미리 막는다.</p>
+        </section>
+
+        <section aria-labelledby="line-title">
+            <h2 id="line-title">자동화 라인으로 보면</h2>
+            <p>수작업 공장에서는 만들면서 일정 부분 검수도 함께 했다. 자동화 라인으로 바뀌자 제품은 쏟아져 나오는데, 그 작은 검수가 빠지면서 불량이 새 문제로 떠올랐다. 부랴부랴 라인 뒤편에 검수 인원을 두어도, 쏟아지는 물량이 워낙 많아 다 보기 어렵다.</p>
+            <p>Rust는 라인 끝단에 강력한 자동 검수 모듈을 단 언어다. 그래서 이 문제를 미리 막는다.</p>
+            <p class="source">출처: 바이브 코딩은 Andrej Karpathy가 2025년 2월에 붙인 이름이다. DORA 2024 보고서는 AI 도입이 늘수록 배포 안정성(배포 직후 손봐야 하는 비율 등)이 7.2% 떨어진 것으로 추정했다.</p>
+        </section>
+
+        <section aria-labelledby="try-title">
+            <h2 id="try-title">같은 불량, 두 라인</h2>
+            <div class="panel loop">
+                <p class="hint">불량과 라인을 골라 돌려 보자. 라인(언어)을 바꾸면 불량이 걸리는 곳이 달라진다.</p>
+                <div class="loop-controls" data-auto>
+                    <fieldset class="loop-field">
+                        <legend>AI가 낸 불량</legend>
+                        <div class="loop-seg">
+                            <label><input type="radio" name="loop-bug" id="loop-bug-missing" value="missing" checked><span>① 없는 사람을 찾을 때</span></label>
+                            <label><input type="radio" name="loop-bug" id="loop-bug-mutate" value="mutate"><span>② 목록을 돌면서 지울 때</span></label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="loop-field">
+                        <legend>라인(언어)</legend>
+                        <div class="loop-seg">
+                            <label><input type="radio" name="loop-lang" id="loop-lang-py" value="python" checked><span>Python</span></label>
+                            <label><input type="radio" name="loop-lang" id="loop-lang-rs" value="rust"><span>Rust</span></label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="fx-era" role="group" aria-label="공장 방식">
+                    <button type="button" class="fx-mode" id="fx-mode-hand" data-mode="hand" aria-pressed="false"><b>수작업</b>사람이 직접 짜며 그때그때 확인</button>
+                    <span class="fx-arrow" aria-hidden="true">→</span>
+                    <button type="button" class="fx-mode" id="fx-mode-auto" data-mode="auto" aria-pressed="true"><b>자동화 라인</b>AI 바이브 코딩</button>
+                </div>
+                <figure class="fx" aria-hidden="true">
+                    <svg id="fx" class="fx-svg lang-python" viewBox="0 0 640 206" focusable="false">
+                        <defs>
+                            <marker id="fx-tip" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="fx-tip"></path></marker>
+                        </defs>
+                        <g class="fx-auto">
+                        <path class="fx-ret fx-ret-rs" d="M 240 50 C 240 14, 80 14, 80 50" marker-end="url(#fx-tip)"></path>
+                        <text class="fx-ret-label fx-ret-rs" x="160" y="22" text-anchor="middle">컴파일 에러</text>
+                        <path class="fx-ret fx-ret-py" d="M 560 50 C 560 2, 80 2, 80 50" marker-end="url(#fx-tip)"></path>
+                        <text class="fx-ret-label fx-ret-py" x="320" y="22" text-anchor="middle">사용자 신고</text>
+                        <rect class="fx-belt" x="16" y="132" width="608" height="12" rx="6"></rect>
+                        <g class="fx-rollers"><circle cx="40" cy="138" r="3"></circle><circle cx="120" cy="138" r="3"></circle><circle cx="200" cy="138" r="3"></circle><circle cx="280" cy="138" r="3"></circle><circle cx="360" cy="138" r="3"></circle><circle cx="440" cy="138" r="3"></circle><circle cx="520" cy="138" r="3"></circle><circle cx="600" cy="138" r="3"></circle></g>
+                        <g class="fx-st" data-k="write" transform="translate(80 0)">
+                            <rect class="fx-mach" x="-38" y="56" width="76" height="46" rx="6"></rect>
+                            <text class="fx-in" x="0" y="86" text-anchor="middle">AI</text>
+                            <text class="fx-name" x="0" y="170" text-anchor="middle">생산</text>
+                        </g>
+                        <g class="fx-st fx-gate" data-k="check" transform="translate(240 0)">
+                            <rect class="fx-post" x="-36" y="58" width="8" height="74"></rect>
+                            <rect class="fx-post" x="28" y="58" width="8" height="74"></rect>
+                            <rect class="fx-beam" x="-40" y="50" width="80" height="10" rx="3"></rect>
+                            <line class="fx-ray" x1="0" y1="62" x2="0" y2="128"></line>
+                            <text class="fx-name" x="0" y="170" text-anchor="middle">자동 검수</text>
+                            <text class="fx-sub fx-only-py" x="0" y="196" text-anchor="middle">문법만</text>
+                            <text class="fx-sub fx-only-rs" x="0" y="196" text-anchor="middle">rustc</text>
+                        </g>
+                        <g class="fx-st" data-k="test" transform="translate(400 0)">
+                            <circle class="fx-person" cx="0" cy="70" r="11"></circle>
+                            <path class="fx-person" d="M -18 112 Q -18 86 0 86 Q 18 86 18 112 Z"></path>
+                            <text class="fx-name" x="0" y="170" text-anchor="middle">뒤편 검수</text>
+                        </g>
+                        <g class="fx-st" data-k="real" transform="translate(560 0)">
+                            <rect class="fx-mach" x="-34" y="66" width="68" height="40" rx="4"></rect>
+                            <path class="fx-mach" d="M -34 66 L 0 46 L 34 66 Z"></path>
+                            <text class="fx-name" x="0" y="170" text-anchor="middle">출하 · 사용자</text>
+                        </g>
+                        </g>
+                        <g class="fx-hand">
+                            <g class="fx-st" data-k="make" transform="translate(110 0)">
+                                <circle class="fx-person" cx="-22" cy="66" r="11"></circle>
+                                <path class="fx-person" d="M -40 104 Q -40 82 -22 82 Q -4 82 -4 104 Z"></path>
+                                <circle class="fx-lens" cx="26" cy="72" r="11"></circle>
+                                <line class="fx-lens" x1="34" y1="80" x2="44" y2="90"></line>
+                                <text class="fx-name" x="0" y="170" text-anchor="middle">생산 · 작은 검수</text>
+                                <text class="fx-sub" x="0" y="196" text-anchor="middle">사람이 만들며 확인</text>
+                            </g>
+                            <g class="fx-st" data-k="test" transform="translate(320 0)">
+                                <circle class="fx-person" cx="0" cy="70" r="11"></circle>
+                                <path class="fx-person" d="M -18 112 Q -18 86 0 86 Q 18 86 18 112 Z"></path>
+                                <text class="fx-name" x="0" y="170" text-anchor="middle">뒤편 검수</text>
+                            </g>
+                            <g class="fx-st" data-k="real" transform="translate(530 0)">
+                                <rect class="fx-mach" x="-34" y="66" width="68" height="40" rx="4"></rect>
+                                <path class="fx-mach" d="M -34 66 L 0 46 L 34 66 Z"></path>
+                                <text class="fx-name" x="0" y="170" text-anchor="middle">출하 · 사용자</text>
+                            </g>
+                        </g>
+                        <g id="fx-item" class="fx-item" style="transform: translate(80px, 0px)">
+                            <rect x="-17" y="104" width="34" height="28" rx="5"></rect>
+                            <text class="fx-code" x="0" y="123" text-anchor="middle">{ }</text>
+                            <circle class="fx-badge" cx="15" cy="104" r="9"></circle>
+                            <text class="fx-mark" x="15" y="108" text-anchor="middle"></text>
+                        </g>
+                    </svg>
+                </figure>
+
+                <ol class="loop-track" id="loop-track" data-auto>
+                    <li class="loop-st" data-k="write"><span class="loop-nm">생산</span><span class="loop-sub">AI가 코드를 쓴다</span><span class="loop-chip">대기</span></li>
+                    <li class="loop-st" data-k="check"><span class="loop-nm">라인 끝 자동 검수</span><span class="loop-sub"><span class="loop-eq">=</span> 컴파일러</span><span class="loop-eg" id="loop-sub-check">Python: 문법만</span><span class="loop-chip">대기</span></li>
+                    <li class="loop-st" data-k="test"><span class="loop-nm">뒤편 검수 인원</span><span class="loop-sub"><span class="loop-eq">=</span> 사람의 리뷰와 테스트</span><span class="loop-eg">이 예제: AI가 고른 흔한 입력</span><span class="loop-chip">대기</span></li>
+                    <li class="loop-st" data-k="real"><span class="loop-nm">출하</span><span class="loop-sub"><span class="loop-eq">=</span> 사용자 손에서</span><span class="loop-eg">이 예제: 드문 입력</span><span class="loop-chip">대기</span></li>
+                </ol>
+
+                <ol class="loop-track hand-track" id="hand-track" hidden>
+                    <li class="loop-st"><span class="loop-nm">생산 · 작은 검수</span><span class="loop-sub"><span class="loop-eq">=</span> 사람이 직접 짜며 그때그때 확인</span></li>
+                    <li class="loop-st"><span class="loop-nm">뒤편 검수 인원</span><span class="loop-sub"><span class="loop-eq">=</span> 사람의 리뷰와 테스트</span></li>
+                    <li class="loop-st"><span class="loop-nm">출하</span><span class="loop-sub"><span class="loop-eq">=</span> 사용자 손에서</span></li>
+                </ol>
+                <p class="hand-note" id="hand-note" hidden>자동화 라인을 누르면 AI가 만든 코드를 직접 돌려 볼 수 있다.</p>
+
+                <div class="loop-actions" data-auto>
+                    <button id="loop-run" class="loop-btn primary" type="button">돌려 보기</button>
+                    <button id="loop-feed" class="loop-btn" type="button" hidden>해결하기</button>
+                    <button id="loop-reset" class="loop-btn" type="button" hidden>처음 판으로</button>
+                </div>
+                <p class="loop-verdict" id="loop-verdict" aria-live="polite" data-auto></p>
+
+                <div class="loop-panes" data-auto>
+                    <div class="loop-pane">
+                        <p class="loop-pane-h"><span id="loop-file">missing_buggy.py</span><span id="loop-ver">AI의 첫 판</span></p>
+                        <pre id="loop-code" class="loop-pre" aria-label="코드"><span class="ln" data-n="1">def find_email(users, name):</span><span class="ln" data-n="2">    for u in users:</span><span class="ln" data-n="3">        if u["name"] == name:</span><span class="ln" data-n="4">            return u["email"]</span><span class="ln" data-n="5"> </span><span class="ln" data-n="6">def greeting(users, name):</span><span class="ln" data-n="7">    email = find_email(users, name)</span><span class="ln" data-n="8">    return "mail: " + email.lower()</span></pre>
+                    </div>
+                    <div class="loop-pane">
+                        <p class="loop-pane-h"><span>화면에 찍힌 것</span><span id="loop-tool">Python 3.11.4</span></p>
+                        <pre id="loop-out" class="loop-pre loop-out" aria-live="polite"><span class="k">돌려 보기를 누르면 네 칸을 차례로 지난다.</span></pre>
+                    </div>
+                </div>
+                <p class="loop-prov" id="loop-prov" data-auto></p>
+            </div>
+            <p class="source">출처: 예제 넷은 이 글을 위해 AI(Claude)가 일부러 실수를 넣어 쓴 코드다. 화면의 출력은 Python 3.11.4와 rustc 1.100.0에서 실제로 돌려 받은 것이다. 긴 출력의 몇 줄만 …으로 줄였다.</p>
+        </section>
+
+        <section aria-labelledby="how-title">
+            <h2 id="how-title">단계마다 한 줄</h2>
+            <ol class="loop-steps">
+                <li><strong>쓰기(생산)</strong>예제는 AI가 흔한 경우만 맞추고 드문 경우(목록에 없는 이름, 짧은 단어 둘이 이어진 목록)를 놓친 코드다.</li>
+                <li><strong>검사(라인 끝 자동 검수)</strong>Python은 문법만 보고 바로 실행한다. Rust는 타입과 빌림 규칙까지 보고, 어기면 실행 파일을 만들지 않는다. 빌림 규칙은 값을 고치라고 빌려준 동안 다른 곳이 그 값을 빌리지 못하게 하는 규칙이다.</li>
+                <li><strong>테스트와 실제 입력(뒤편 검수와 출하)</strong>Python에서는 두 예제 모두 테스트를 통과하고, 실제 입력에서야 불량이 드러난다. ①은 에러로 멈추고, ②는 에러 없이 틀린 답을 낸다.</li>
+                <li><strong>고치기(라인으로 되돌리기)</strong>rustc는 몇째 줄이 왜 안 되는지 적고, 두 예제에는 고칠 방법(help)도 붙였다. 이 에러를 AI에게 돌려주면 다음 판을 쓸 수 있다. 2023년 한 연구에서는 GPT-4가 이렇게 되풀이해, 인기 Rust 라이브러리의 실제 GitHub 커밋 182개 가운데 134개를 다시 컴파일되게 고쳤다.</li>
+            </ol>
+            <p class="source">출처: 반복 방식은 Deligiannis 외(2023) 2.2절, 커밋 134/182(73.63%)는 표 3의 GPT-4 결과(답 다섯 개 중 고름, N = 5)다. 커밋은 crates.io 상위 100개 라이브러리의 GitHub 기록에서 찾은 것이다.</p>
+        </section>
+
+        <section id="faq" aria-labelledby="faq-title">
+            <h2 id="faq-title">자주 묻는 질문</h2>
+            <div class="faq">
+                <details>
+                    <summary>바이브 코딩이란?</summary>
+                    <p>AI에게 말로 시키고, 나온 코드를 거의 읽지 않고 그대로 쓰는 방식이다. Andrej Karpathy가 2025년 2월 X에 처음 쓴 이름으로, 코드가 있다는 것조차 잊고 AI의 변경을 모두 받아들이는 코딩을 가리켰다.</p>
+                </details>
+                <details>
+                    <summary>AI로 코드를 쓰면 정말 에러가 느나?</summary>
+                    <p>DORA 2024 보고서(Google Cloud)는 AI 도입이 늘수록 배포 처리량이 1.5%, 배포 안정성이 7.2% 떨어진 것으로 추정했다. 안정성은 배포 직후 손봐야 하는 배포의 비율 같은 지표로 잰다. 설문에 바탕을 둔 추정이다.</p>
+                </details>
+                <details>
+                    <summary>Rust는 왜 AI 코딩에 잘 맞나?</summary>
+                    <p>Rust 컴파일러는 타입과 빌림 규칙을 실행 전에 검사하고, 어기면 줄 번호와 이유를 적은 에러를 낸다. 이 글의 두 예제에서 rustc 1.100.0은 두 실수를 모두 실행 전에 거부하고 고칠 방법(help)도 붙였다. Python 3.11.4에서는 같은 실수가 테스트를 지나 실제 입력에서야 드러났다.</p>
+                </details>
+                <details>
+                    <summary>AI가 컴파일 에러를 받아 고치는 방법이 실제로 통하나?</summary>
+                    <p>Microsoft Research의 RustAssistant(2023)는 컴파일러의 에러를 코드와 함께 LLM에 주고, 고친 뒤 다시 컴파일하기를 되풀이했다. GPT-4로, 인기 Rust 라이브러리 100개의 GitHub 기록에서 찾은 컴파일 에러 커밋 182개 가운데 134개(73.63%)를 다시 컴파일되게 고쳤다. 2023년 모델의 결과다.</p>
+                </details>
+                <details>
+                    <summary>Python으로는 같은 실수를 미리 잡을 수 없나?</summary>
+                    <p>Python은 기본으로 문법만 보고 실행한다. 타입 검사기 mypy는 None일 수 있는 값을 확인 없이 쓰는 것을 막지만, 타입 힌트를 단 함수만 검사한다(mypy 문서). 이 글의 Python 예제처럼 힌트가 없으면 기본으로는 검사하지 않는다.</p>
+                </details>
+                <details>
+                    <summary>Rust 컴파일러가 잡지 못하는 실수는?</summary>
+                    <p>타입과 빌림 규칙에 어긋나지 않는 실수다. Rust 책은 타입 시스템이 모든 것을 잡지는 못한다며, 2를 더해야 할 함수가 10을 더하는 경우를 예로 든다. 이런 논리 오류는 테스트가 잡아야 한다.</p>
+                </details>
+            </div>
+        </section>
+
+        <section aria-labelledby="more-title">
+            <h2 id="more-title">더 보기</h2>
+            <ul class="links">
+                <li><a href="https://arxiv.org/abs/2308.05177">P. Deligiannis, A. Lal, N. Mehrotra, A. Rastogi, Fixing Rust Compilation Errors using LLMs (arXiv 2308.05177, 2023)</a></li>
+                <li><a href="https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report">Google Cloud, Announcing the 2024 DORA report (2024)</a></li>
+                <li><a href="https://x.com/karpathy/status/1886192184808149383">A. Karpathy, vibe coding (X, 2025-02)</a></li>
+                <li><a href="https://simonwillison.net/2025/Mar/19/vibe-coding/">S. Willison, Not all AI-assisted programming is vibe coding (but vibe coding rocks) (2025)</a></li>
+                <li><a href="https://doc.rust-lang.org/book/ch11-00-testing.html">The Rust Programming Language, 11. Writing Automated Tests</a></li>
+                <li><a href="https://doc.rust-lang.org/error_codes/E0599.html">Rust error codes: E0599</a></li>
+                <li><a href="https://doc.rust-lang.org/error_codes/E0502.html">Rust error codes: E0502</a></li>
+                <li><a href="https://mypy.readthedocs.io/en/stable/kinds_of_types.html">mypy documentation: Optional types and the None type</a></li>
+                <li><a href="https://mypy.readthedocs.io/en/stable/getting_started.html">mypy documentation: Dynamic vs static typing</a></li>
+            </ul>
+        </section>
+        <script type="application/json" id="loop-data">{"versions":{"python":"Python 3.11.4","rustc":"rustc 1.100.0"},"scenarios":{"missing":{"python":{"buggy":{"file":"missing_buggy.py","code":"def find_email(users, name):\n    for u in users:\n        if u[\"name\"] == name:\n            return u[\"email\"]\n\ndef greeting(users, name):\n    email = find_email(users, name)\n    return \"mail: \" + email.lower()\n","steps":[{"k":"write","s":"done","out":"<span class=\"k\"># missing_buggy.py<\/span>\n"},{"k":"check","s":"pass","out":"<span class=\"k\">$ python3 (불러오기)<\/span>\n<span class=\"ok\">문법 이상 없음 → 바로 실행<\/span>\n\n"},{"k":"test","s":"pass","out":"<span class=\"k\">users = [{&quot;name&quot;: &quot;Minji&quot;, &quot;email&quot;: &quot;MINJI@EXAMPLE.COM&quot;}]<\/span>\n<span class=\"k\">&gt;&gt;&gt; greeting(users, &quot;Minji&quot;)<\/span>\n<span class=\"ok\">&#x27;mail: minji@example.com&#x27;<\/span>\n\n"},{"k":"real","s":"crash","hit":8,"out":"<span class=\"k\">&gt;&gt;&gt; greeting(users, &quot;Seojun&quot;)<\/span>\n<span class=\"bad\">Traceback (most recent call last):\n  …\n  File &quot;missing_buggy.py&quot;, line 8, in greeting\n    return &quot;mail: &quot; + email.lower()\nAttributeError: &#x27;NoneType&#x27; object has no attribute &#x27;lower&#x27;<\/span>\n"}],"verdict":"불량이 드러난 곳: <span class=\"where\">출하 뒤(실제 입력)<\/span>. 뒤편 검수(테스트)를 지나 사용자 손에서 멈췄다.","feed":"해결하기","prov":"Python의 Traceback은 예제 파일 줄만 남기고 …으로 줄였다."},"fixed":{"file":"missing_fixed.py","code":"def find_email(users, name):\n    for u in users:\n        if u[\"name\"] == name:\n            return u[\"email\"]\n\ndef greeting(users, name):\n    email = find_email(users, name)\n    if email is None:\n        return \"no such person\"\n    return \"mail: \" + email.lower()\n","steps":[{"k":"write","s":"done","out":"<span class=\"k\"># missing_fixed.py<\/span>\n"},{"k":"check","s":"pass","out":"<span class=\"k\">$ python3 (불러오기)<\/span>\n<span class=\"ok\">문법 이상 없음 → 바로 실행<\/span>\n\n"},{"k":"test","s":"pass","out":"<span class=\"k\">users = [{&quot;name&quot;: &quot;Minji&quot;, &quot;email&quot;: &quot;MINJI@EXAMPLE.COM&quot;}]<\/span>\n<span class=\"k\">&gt;&gt;&gt; greeting(users, &quot;Minji&quot;)<\/span>\n<span class=\"ok\">&#x27;mail: minji@example.com&#x27;<\/span>\n\n"},{"k":"real","s":"pass","out":"<span class=\"k\">&gt;&gt;&gt; greeting(users, &quot;Seojun&quot;)<\/span>\n<span class=\"ok\">&#x27;no such person&#x27;<\/span>\n"}],"verdict":"고친 판은 <span class=\"where\">네 칸을 모두<\/span> 지났다."}},"rust":{"buggy":{"file":"missing_buggy.rs","code":"pub struct User { pub name: String, pub email: String }\n\npub fn find_email<'a>(users: &'a [User], name: &str) -> Option<&'a str> {\n    users.iter().find(|u| u.name == name).map(|u| u.email.as_str())\n}\n\npub fn greeting(users: &[User], name: &str) -> String {\n    let email = find_email(users, name);\n    format!(\"mail: {}\", email.to_lowercase())\n}\n","steps":[{"k":"write","s":"done","out":"<span class=\"k\">// missing_buggy.rs<\/span>\n"},{"k":"check","s":"block","hit":9,"out":"<span class=\"k\">$ rustc missing_buggy.rs<\/span>\n<span class=\"bad\">error[E0599]: no method named `to_lowercase` found for enum `Option&lt;T&gt;` in the current scope\n   --&gt; missing_buggy.rs:9:31\n    |\n  9 |     format!(&quot;mail: {}&quot;, email.to_lowercase())\n    |                               ^^^^^^^^^^^^ method not found in `Option&lt;&amp;str&gt;`\n    |\nnote: the method `to_lowercase` exists on the type `&amp;str`\n   …\nhelp: consider using `Option::expect` to unwrap the `&amp;str` value, panicking if the value is an `Option::None`\n    |\n  9 |     format!(&quot;mail: {}&quot;, email.expect(&quot;REASON&quot;).to_lowercase())\n    |                              +++++++++++++++++\n\nerror: aborting due to 1 previous error\n\nFor more information about this error, try `rustc --explain E0599`.<\/span>\n"},{"k":"test","s":"skip","out":""},{"k":"real","s":"skip","out":"<span class=\"k\"># 실행 파일이 없어 돌리지 않았다<\/span>\n"}],"verdict":"불량이 걸린 곳: <span class=\"where\">라인 끝 자동 검수(rustc)<\/span>. 실행하기 전에 막혔다.","feed":"해결하기","prov":"rustc가 note에 인용한 설치 폴더 안 코드 몇 줄은 …으로 줄였다. 나머지는 받은 그대로다."},"fixed":{"file":"missing_fixed.rs","code":"pub struct User { pub name: String, pub email: String }\n\npub fn find_email<'a>(users: &'a [User], name: &str) -> Option<&'a str> {\n    users.iter().find(|u| u.name == name).map(|u| u.email.as_str())\n}\n\npub fn greeting(users: &[User], name: &str) -> String {\n    match find_email(users, name) {\n        Some(email) => format!(\"mail: {}\", email.to_lowercase()),\n        None => \"no such person\".to_string(),\n    }\n}\n","steps":[{"k":"write","s":"done","out":"<span class=\"k\">// missing_fixed.rs<\/span>\n"},{"k":"check","s":"pass","out":"<span class=\"k\">$ rustc missing_fixed.rs<\/span>\n<span class=\"ok\">에러 없음<\/span>\n\n"},{"k":"test","s":"pass","out":"<span class=\"k\">users = [User { name: &quot;Minji&quot;, email: &quot;MINJI@EXAMPLE.COM&quot; }]<\/span>\n<span class=\"k\">greeting(users, &quot;Minji&quot;)<\/span>\n<span class=\"ok\">mail: minji@example.com<\/span>\n\n"},{"k":"real","s":"pass","out":"<span class=\"k\">greeting(users, &quot;Seojun&quot;)<\/span>\n<span class=\"ok\">no such person<\/span>\n"}],"verdict":"고친 판은 <span class=\"where\">네 칸을 모두<\/span> 지났다."}}},"mutate":{"python":{"buggy":{"file":"mutate_buggy.py","code":"def drop_short(words):\n    for w in words:\n        if len(w) < 3:\n            words.remove(w)\n    return words\n","steps":[{"k":"write","s":"done","out":"<span class=\"k\"># mutate_buggy.py<\/span>\n"},{"k":"check","s":"pass","out":"<span class=\"k\">$ python3 (불러오기)<\/span>\n<span class=\"ok\">문법 이상 없음 → 바로 실행<\/span>\n\n"},{"k":"test","s":"pass","out":"<span class=\"k\">&gt;&gt;&gt; drop_short([&quot;a&quot;, &quot;cat&quot;])<\/span>\n<span class=\"ok\">[&#x27;cat&#x27;]<\/span>\n\n"},{"k":"real","s":"wrong","out":"<span class=\"k\">&gt;&gt;&gt; drop_short([&quot;a&quot;, &quot;b&quot;, &quot;cat&quot;, &quot;dog&quot;])<\/span>\n<span class=\"warn\">[&#x27;b&#x27;, &#x27;cat&#x27;, &#x27;dog&#x27;]<\/span>\n<span class=\"k\"># 에러 없음. 맞는 답은 [&#x27;cat&#x27;, &#x27;dog&#x27;]<\/span>\n"}],"verdict":"불량이 드러난 곳: <span class=\"where\">출하 뒤(실제 입력)<\/span>. 에러도 없이 틀린 답이 출하됐다.","feed":"해결하기","prov":""},"fixed":{"file":"mutate_fixed.py","code":"def drop_short(words):\n    return [w for w in words if len(w) >= 3]\n","steps":[{"k":"write","s":"done","out":"<span class=\"k\"># mutate_fixed.py<\/span>\n"},{"k":"check","s":"pass","out":"<span class=\"k\">$ python3 (불러오기)<\/span>\n<span class=\"ok\">문법 이상 없음 → 바로 실행<\/span>\n\n"},{"k":"test","s":"pass","out":"<span class=\"k\">&gt;&gt;&gt; drop_short([&quot;a&quot;, &quot;cat&quot;])<\/span>\n<span class=\"ok\">[&#x27;cat&#x27;]<\/span>\n\n"},{"k":"real","s":"pass","out":"<span class=\"k\">&gt;&gt;&gt; drop_short([&quot;a&quot;, &quot;b&quot;, &quot;cat&quot;, &quot;dog&quot;])<\/span>\n<span class=\"ok\">[&#x27;cat&#x27;, &#x27;dog&#x27;]<\/span>\n"}],"verdict":"고친 판은 <span class=\"where\">네 칸을 모두<\/span> 지났다."}},"rust":{"buggy":{"file":"mutate_buggy.rs","code":"pub fn drop_short(words: &mut Vec<String>) {\n    for w in words.iter() {\n        if w.len() < 3 {\n            words.retain(|x| x != w);\n        }\n    }\n}\n","steps":[{"k":"write","s":"done","out":"<span class=\"k\">// mutate_buggy.rs<\/span>\n"},{"k":"check","s":"block","hit":4,"out":"<span class=\"k\">$ rustc mutate_buggy.rs<\/span>\n<span class=\"bad\">error[E0502]: cannot borrow `*words` as mutable because it is also borrowed as immutable\n --&gt; mutate_buggy.rs:4:13\n  |\n2 |       for w in words.iter() {\n  |       -        ------------\n  |       |        |\n  |       |        immutable borrow occurs here\n  |  \u005f\u005f\u005f\u005f\u005f|        immutable borrow later used here\n  | |\n3 | |         if w.len() &lt; 3 {\n4 | |             words.retain(|x| x != w);\n  | |             ^^^^^^^^^^^^^^^^^^^^^^^^ mutable borrow occurs here\n5 | |         }\n6 | |     }\n  | |\u005f\u005f\u005f\u005f\u005f- this for loop borrows `*words` immutably, preventing mutation within its body\n  |\n  = help: consider using an index-based loop instead, or collecting modifications into a separate collection\n\nerror: aborting due to 1 previous error\n\nFor more information about this error, try `rustc --explain E0502`.<\/span>\n"},{"k":"test","s":"skip","out":""},{"k":"real","s":"skip","out":"<span class=\"k\"># 실행 파일이 없어 돌리지 않았다<\/span>\n"}],"verdict":"불량이 걸린 곳: <span class=\"where\">라인 끝 자동 검수(rustc)<\/span>. 실행하기 전에 막혔다.","feed":"해결하기","prov":"rustc가 note에 인용한 설치 폴더 안 코드 몇 줄은 …으로 줄였다. 나머지는 받은 그대로다."},"fixed":{"file":"mutate_fixed.rs","code":"pub fn drop_short(words: &mut Vec<String>) {\n    words.retain(|w| w.len() >= 3);\n}\n","steps":[{"k":"write","s":"done","out":"<span class=\"k\">// mutate_fixed.rs<\/span>\n"},{"k":"check","s":"pass","out":"<span class=\"k\">$ rustc mutate_fixed.rs<\/span>\n<span class=\"ok\">에러 없음<\/span>\n\n"},{"k":"test","s":"pass","out":"<span class=\"k\">drop_short([&quot;a&quot;, &quot;cat&quot;])<\/span>\n<span class=\"ok\">[&quot;cat&quot;]<\/span>\n\n"},{"k":"real","s":"pass","out":"<span class=\"k\">drop_short([&quot;a&quot;, &quot;b&quot;, &quot;cat&quot;, &quot;dog&quot;])<\/span>\n<span class=\"ok\">[&quot;cat&quot;, &quot;dog&quot;]<\/span>\n"}],"verdict":"고친 판은 <span class=\"where\">네 칸을 모두<\/span> 지났다."}}}}}</script>
+        <script type="application/json" id="loop-text">{"first": "AI의 첫 판", "fixed": "에러를 받고 고친 판", "idle": "돌려 보기를 누르면 네 칸을 차례로 지난다.", "checkPy": "Python: 문법만", "checkRs": "Rust: rustc가 타입·빌림까지", "chip": {"wait": "대기", "pass": "통과", "block": "막힘", "crash": "멈춤", "wrong": "틀린 답", "skip": "안 돌림", "done": "씀"}}</script>
+    </main>
+
+    <footer class="wrap">
+        마지막 업데이트 <time datetime="2026-11-20">2026-11-20</time> · <a href="/">Hugh Q Lee</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+            });
+            render();
+        })();
+
+        // 같은 실수, 두 언어: 고른 실수와 언어의 실제 실행 기록(loop-data)을 네 칸에 차례로 보여 준다.
+        (function () {
+            var DATA = JSON.parse(document.getElementById("loop-data").textContent);
+            var T = JSON.parse(document.getElementById("loop-text").textContent);
+            var $ = function (id) { return document.getElementById(id); };
+            var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            var state = { bug: "missing", lang: "python", fixed: false, timer: null, running: false, mode: "auto" };
+            // 공장 라인 그림: 칸마다 제품(코드)의 자리. 상태에 따라 색과 표시가 바뀐다
+            var FX = { write: 80, check: 240, test: 400, real: 560 };
+            var FXH = { make: 110, test: 320, real: 530 };  // 수작업: 생산 · 작은 검수 → 뒤편 검수 → 출하
+            var MARK = { pass: "✓", block: "✕", crash: "✕", wrong: "!" };
+            var fx = $("fx"), item = $("fx-item");
+            function fxPlace(k, s) {
+                item.style.transform = "translate(" + FX[k] + "px, 0px)";
+                item.setAttribute("data-s", s === "done" ? "" : s);
+                item.querySelector(".fx-mark").textContent = MARK[s] || "";
+            }
+            function fxLine(now, caught) {
+                fx.setAttribute("class", "fx-svg lang-" + state.lang + (state.fixed ? " fixed" : "") + (state.mode === "hand" ? " fx-mode-hand" : ""));
+                Array.prototype.forEach.call(fx.querySelectorAll(".fx-st"), function (g) {
+                    g.classList.toggle("now", g.getAttribute("data-k") === now);
+                    if (g.classList.contains("fx-gate")) g.classList.toggle("caught", !!caught);
+                });
+            }
+
+            function esc(t) { return String(t).replace(/[&<>]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; }); }
+            function scenario() { return DATA.scenarios[state.bug][state.lang][state.fixed ? "fixed" : "buggy"]; }
+            function showCode(hit) {
+                var sc = scenario();
+                $("loop-file").textContent = sc.file;
+                $("loop-ver").textContent = state.fixed ? T.fixed : T.first;
+                $("loop-code").innerHTML = sc.code.replace(/\n$/, "").split("\n").map(function (l, i) {
+                    return '<span class="ln' + (hit === i + 1 ? " hit" : "") + '" data-n="' + (i + 1) + '">' + (esc(l) || " ") + "</span>";
+                }).join("");
+            }
+            function setStations(map, now) {
+                Array.prototype.forEach.call(document.querySelectorAll("#loop-track .loop-st"), function (li) {
+                    var s = map[li.dataset.k] || "wait";
+                    li.dataset.s = s;
+                    li.classList.toggle("now", li.dataset.k === now);
+                    li.querySelector(".loop-chip").textContent = T.chip[s];
+                });
+                $("loop-sub-check").textContent = state.lang === "python" ? T.checkPy : T.checkRs;
+            }
+            function idle() {
+                clearTimeout(state.timer);
+                state.running = false;
+                showCode(null);
+                setStations({}, null);
+                fxLine(null, false);
+                fxPlace("write", "done");
+                $("loop-out").innerHTML = '<span class="k">' + esc(T.idle) + "</span>";
+                $("loop-verdict").textContent = "";
+                $("loop-tool").textContent = state.lang === "python" ? DATA.versions.python : DATA.versions.rustc;
+                $("loop-feed").hidden = true;
+                $("loop-reset").hidden = !state.fixed;
+                $("loop-run").disabled = false;
+                $("loop-prov").textContent = "";
+            }
+            function finish(sc) {
+                state.running = false;
+                $("loop-run").disabled = false;
+                $("loop-verdict").innerHTML = sc.verdict;
+                $("loop-prov").textContent = sc.prov || "";
+                if (!state.fixed && sc.feed) { $("loop-feed").hidden = false; $("loop-feed").textContent = sc.feed; }
+                $("loop-reset").hidden = !state.fixed;
+            }
+            function run() {
+                if (state.running) return;
+                var sc = scenario(), steps = sc.steps, map = {}, i = 0, out = "", hit = null, focus = null;
+                state.running = true;
+                $("loop-run").disabled = true;
+                $("loop-feed").hidden = true;
+                (function tick() {
+                    var st = steps[i];
+                    map[st.k] = st.s;
+                    out += st.out;
+                    if (st.hit) hit = st.hit;  // 실수가 난 줄과 칸은 끝까지 강조한다
+                    if (!focus && (st.s === "block" || st.s === "crash" || st.s === "wrong")) focus = st.k;
+                    setStations(map, focus || st.k);
+                    if (st.s !== "skip") fxPlace(st.k, st.s);
+                    fxLine(focus || st.k, st.s === "block" || map.check === "block");
+                    showCode(hit);
+                    $("loop-out").innerHTML = out;
+                    $("loop-out").scrollTop = $("loop-out").scrollHeight;
+                    i += 1;
+                    if (i < steps.length) state.timer = setTimeout(tick, reduce ? 0 : 650);
+                    else finish(sc);
+                })();
+            }
+            function onChoice() {
+                state.bug = document.querySelector('input[name="loop-bug"]:checked').value;
+                state.lang = document.querySelector('input[name="loop-lang"]:checked').value;
+                state.fixed = false;
+                idle();
+            }
+            // 수작업 / 자동화 라인: 수작업은 흐름만 보여 주고(실행 기록이 없다), 자동화 라인에서 코드를 돌린다
+            function setMode(mode) {
+                state.mode = mode;
+                Array.prototype.forEach.call(document.querySelectorAll(".fx-mode"), function (b) {
+                    b.setAttribute("aria-pressed", b.getAttribute("data-mode") === mode ? "true" : "false");
+                });
+                Array.prototype.forEach.call(document.querySelectorAll(".loop [data-auto]"), function (el) {
+                    if (mode === "hand") { el.dataset.wasHidden = el.hidden ? "1" : ""; el.hidden = true; }
+                });
+                $("hand-track").hidden = mode !== "hand";
+                $("hand-note").hidden = mode !== "hand";
+                state.fixed = false;
+                if (mode === "hand") {
+                    clearTimeout(state.timer);
+                    state.running = false;
+                    fxLine(null, false);
+                    var order = ["make", "test", "real"], i = 0;
+                    (function step() {
+                        var k = order[i];
+                        item.style.transform = "translate(" + FXH[k] + "px, 0px)";
+                        item.setAttribute("data-s", "");
+                        item.querySelector(".fx-mark").textContent = "";
+                        fxLine(k, false);
+                        i += 1;
+                        if (i < order.length) state.timer = setTimeout(step, reduce ? 0 : 700);
+                    })();
+                } else {
+                    Array.prototype.forEach.call(document.querySelectorAll(".loop [data-auto]"), function (el) {
+                        el.hidden = false;
+                    });
+                    idle();
+                }
+            }
+            Array.prototype.forEach.call(document.querySelectorAll(".fx-mode"), function (b) {
+                b.addEventListener("click", function () { setMode(b.getAttribute("data-mode")); });
+            });
+            Array.prototype.forEach.call(document.querySelectorAll('input[name="loop-bug"], input[name="loop-lang"]'), function (r) {
+                r.addEventListener("change", onChoice);
+            });
+            $("loop-run").addEventListener("click", run);
+            $("loop-feed").addEventListener("click", function () { state.fixed = true; idle(); run(); });
+            $("loop-reset").addEventListener("click", function () { state.fixed = false; idle(); });
+            idle();
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-11-20","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"},{"id":"ml","name":"기계 학습","name_en":"Machine learning"},{"id":"llm","name":"언어 모델","name_en":"Language models","parent":"ml"},{"id":"rob","name":"로봇·자동화","name_en":"Robotics and automation"},{"id":"ct","name":"X선·CT 영상","name_en":"X-ray and CT imaging"},{"id":"st","name":"컴퓨터·저장장치","name_en":"Computer storage"},{"id":"wl","name":"무선 통신","name_en":"Wireless communication"},{"id":"cg","name":"컴퓨터 그래픽스","name_en":"Computer graphics"},{"id":"pl","name":"프로그래밍 언어","name_en":"Programming languages"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"},{"id":"train-val-calib-test","title":"train·val·calib·test","title_en":"train/val/calib/test","domain":"ml","status":"published","href":"../train-val-calib-test/","summary":"학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold를 위해 칸 하나를 더 두기","summary_en":"Keep one more split for what is fitted after training: the temperature T and the threshold"},{"id":"error-backpropagation","title":"역전파","title_en":"Backpropagation","domain":"ml","status":"published","href":"../error-backpropagation/","summary":"출력의 오차를 뒤로 전해 다층 퍼셉트론의 가운데 층까지 고치기","summary_en":"Pass the output's error backward to correct the middle layer of a multilayer perceptron too"},{"id":"neural-network-sleep","title":"신경망의 잠","title_en":"Sleep for neural networks","domain":"ml","status":"published","href":"../neural-network-sleep/","summary":"학습을 멈추고 잡음을 흘려 연결이 앞뒤 뉴런만 보고 바뀌게 하면, 잊은 옛 과제가 돌아오기도 한다","summary_en":"Stop training and run noise through the network so each connection changes by its two neurons alone, and a forgotten old task can come back"},{"id":"robot-types","title":"로봇의 종류","title_en":"Robot types","domain":"rob","status":"published","href":"../robot-types/","summary":"관절을 잇는 구조가 손끝의 자세를 정하고, 그 자세가 실험실에서 로봇의 쓰임을 정한다","summary_en":"How the joints are joined sets the hand's posture, and the posture sets what a robot does in the lab"},{"id":"hydraulic-pneumatic-microinjector","title":"마이크로인젝터","title_en":"Microinjectors","domain":"rob","status":"published","href":"../hydraulic-pneumatic-microinjector/","summary":"공기로 미는 공압식은 압력을, 기름으로 미는 유압식은 부피를 정한다","summary_en":"A pneumatic injector pushes with air and sets the pressure; a hydraulic one pushes with oil and sets the volume"},{"id":"kimi-k3-1-pro","title":"Kimi K3.1 Pro","title_en":"Kimi K3.1 Pro","domain":"llm","status":"published","href":"../kimi-k3-1-pro/","summary":"몸통은 그대로 두고 사후 학습으로 AA 지수를 44에서 55로 올리기","summary_en":"Raise the AA index from 44 to 55 with post-training, on the same base model"},{"id":"pretraining-posttraining-inference","title":"사전 학습·사후 학습·추론","title_en":"Pre-training, post-training, inference","domain":"llm","status":"published","href":"../pretraining-posttraining-inference/","summary":"사전 학습과 사후 학습은 가중치를 바꾸고, 추론은 가중치를 그대로 둔 채 맥락으로 답한다","summary_en":"Pre-training and post-training change the weights; inference leaves them as they are and answers from the context"},{"id":"xray-ct-registration","title":"X선–CT 정합","title_en":"X-ray to CT registration","domain":"ct","status":"published","href":"../xray-ct-registration/","summary":"엑스레이 필름 한 장은 CT가 찍는 그림자의 한 방향이라서, CT에서 가상 필름을 계산해 필름에 맞출 수 있다","summary_en":"An X-ray film is one view of what a CT scan records, so a virtual film computed from the CT can be matched to it"},{"id":"format-keeps-data","title":"포맷과 데이터 복구","title_en":"Format and data recovery","domain":"st","status":"published","href":"../format-keeps-data/","summary":"포맷과 플래시가 지우는 것은 지도이고, 덮어쓰지 않은 본문은 그대로라서 되살릴 수 있다","summary_en":"Formatting and flashing erase the map, and the data that was not overwritten stays, so it can be recovered"},{"id":"wifi-frequency-bands","title":"와이파이 주파수 대역","title_en":"Wi-Fi frequency bands","domain":"wl","status":"published","href":"../wifi-frequency-bands/","summary":"높은 대역일수록 길이 넓어 빠르지만, 받는 신호가 약하고 콘크리트 벽에서 더 잃는다","summary_en":"Higher bands have wider channels and are faster, but the received signal is weaker and concrete walls take more of it"},{"id":"pixel-art-gaussian-splats","title":"픽셀 아트 가우시안 스플랫","title_en":"Pixel-art Gaussian splats","domain":"cg","status":"published","href":"../pixel-art-gaussian-splats/","summary":"3D 디자인하는 방법 중 하나다. 간단하고 구조적이라 AI가 다루기 용이하다","summary_en":"One way to design in 3D; simple and structured, so AI handles it easily"},{"id":"rust-compiler-ai-coding","title":"Rust 컴파일러와 AI 코딩","title_en":"The Rust compiler and AI coding","domain":"pl","status":"published","href":"../rust-compiler-ai-coding/","summary":"Rust 컴파일러는 AI가 놓친 실수를 실행 전에 막고, 고칠 곳을 적어 준다","summary_en":"The Rust compiler stops the mistakes AI misses before the code runs, and writes down what to fix"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"},{"from":"error-backpropagation","to":"pretraining-posttraining-inference"},{"from":"error-backpropagation","to":"neural-network-sleep"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 64 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (준비 중)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "준비 중";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "지금 이 글";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
