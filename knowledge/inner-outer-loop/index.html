@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>outer loop를 자동화하면, AI slop은 무엇으로 막을까? | Hugh Q Lee</title>
+    <meta name="description" content="로렌 탄(SpaceXSI)이 말하는 inner loop와 outer loop. outer loop를 자동화하면 들어오는 일이 폭증하고, 그 일을 slop 없이 받아 내는 것은 견고한 inner loop, 그중에서도 Codebase다.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="inner loop, outer loop, 이너 루프, 아우터 루프, AI slop, 슬롭, AI 코딩 에이전트, Grok Bot, Lauren Tan, 로렌 탄, poteto, SpaceXSI, Codebase, 정적 분석, static analysis, 검증, verification, agents.md, Cursor, Claude Code, Codex">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/inner-outer-loop/">
+    <!-- 영문판(/knowledge/en/inner-outer-loop/)은 System/build_en.py가 이 페이지에서 만든다. 두 판이 서로를 가리킨다. -->
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/inner-outer-loop/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/inner-outer-loop/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/inner-outer-loop/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="ko_KR">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:title" content="outer loop를 자동화하면, AI slop은 무엇으로 막을까?">
+    <meta property="og:description" content="로렌 탄(SpaceXSI)이 말하는 inner loop와 outer loop. outer loop를 자동화하면 들어오는 일이 폭증하고, 그 일을 slop 없이 받아 내는 것은 견고한 inner loop, 그중에서도 Codebase다.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/inner-outer-loop/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/inner-outer-loop/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="outer loop에서 들어온 일이 inner loop의 네 축(Codebase, Static analysis, Verification, Prose)을 지나 PR과 병합으로 가는 그림. 네 칸은 중요도 순으로 작아진다">
+    <meta property="article:published_time" content="2026-11-23">
+    <meta property="article:modified_time" content="2026-11-23">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="outer loop를 자동화하면, AI slop은 무엇으로 막을까?">
+    <meta name="twitter:description" content="로렌 탄(SpaceXSI)이 말하는 inner loop와 outer loop. outer loop를 자동화하면 들어오는 일이 폭증하고, 그 일을 slop 없이 받아 내는 것은 견고한 inner loop, 그중에서도 Codebase다.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/inner-outer-loop/og.png">
+    <meta name="twitter:image:alt" content="outer loop에서 들어온 일이 inner loop의 네 축(Codebase, Static analysis, Verification, Prose)을 지나 PR과 병합으로 가는 그림. 네 칸은 중요도 순으로 작아진다">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage의 문장은 본문 "자주 묻는 질문"과 같아야 한다. 질문을 늘리면 둘 다 늘린다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/inner-outer-loop/#article",
+          "workTranslation": { "@id": "https://hughqlee.com/knowledge/en/inner-outer-loop/#article" },
+          "headline": "outer loop를 자동화하면, AI slop은 무엇으로 막을까?",
+          "alternativeHeadline": "AI 코딩의 inner loop와 outer loop란 무엇이고, outer loop를 자동화하면 왜 inner loop가 중요해질까?",
+          "description": "로렌 탄(SpaceXSI)이 말하는 inner loop와 outer loop. outer loop를 자동화하면 들어오는 일이 폭증하고, 그 일을 slop 없이 받아 내는 것은 견고한 inner loop, 그중에서도 Codebase다.",
+          "abstract": "로렌 탄(SpaceXSI)이 말하는 inner loop와 outer loop. outer loop를 자동화하면 들어오는 일이 폭증하고, 그 일을 slop 없이 받아 내는 것은 견고한 inner loop, 그중에서도 Codebase다.",
+          "inLanguage": "ko",
+          "datePublished": "2026-11-23",
+          "dateModified": "2026-11-23",
+          "url": "https://hughqlee.com/knowledge/inner-outer-loop/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/inner-outer-loop/",
+          "image": { "@type": "ImageObject", "url": "https://hughqlee.com/knowledge/inner-outer-loop/og.png", "width": 1200, "height": 630 },
+          "author": { "@id": "https://hughqlee.com/#person" },
+          "publisher": { "@id": "https://hughqlee.com/#person" },
+          "isPartOf": { "@id": "https://hughqlee.com/knowledge/#collection" },
+          "isAccessibleForFree": true,
+          "citation": [
+            { "@type": "CreativeWork", "name": "Lauren Tan, All Code Is Slop (Except Mine), AI Engineer CODE 2026 (2026-11-11, YouTube)", "url": "https://www.youtube.com/watch?v=O_zcc6Xl12g" },
+            { "@type": "CreativeWork", "name": "AI Engineer CODE 2026: All Code Is Slop (Except Mine) 발표 페이지", "url": "https://ai.engineer/code/2026/talks/lauren-tan" },
+            { "@type": "CreativeWork", "name": "Matt Pocock, LIVE: Poteto (creator of pstack) on shipping 1,000's of PR's a month at SpaceX (2026-10-02, YouTube)", "url": "https://www.youtube.com/watch?v=MN9dGgmLyso" }
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": ["https://github.com/hughqlee", "https://www.linkedin.com/in/hughqlee/", "https://x.com/hughqlee/"]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Hugh Q Lee", "item": "https://hughqlee.com/" },
+            { "@type": "ListItem", "position": 2, "name": "Knowledge", "item": "https://hughqlee.com/knowledge/" },
+            { "@type": "ListItem", "position": 3, "name": "outer loop를 자동화하면, AI slop은 무엇으로 막을까?", "item": "https://hughqlee.com/knowledge/inner-outer-loop/" }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/inner-outer-loop/#faq",
+          "mainEntity": [
+            { "@type": "Question", "name": "AI 코딩에서 inner loop와 outer loop란?", "acceptedAnswer": { "@type": "Answer", "text": "로렌 탄의 말로 inner loop는 AI 에이전트들이 내 의도를 향해 코드를 고치고 확인하는 반복이고, outer loop는 코드베이스 밖의 모든 것, 곧 Slack · Linear · X로 들어오는 버그 신고와 요청이다. 그는 Cursor 프로젝트를 inner loop, Grok Bot을 outer loop라고 부른다." } },
+            { "@type": "Question", "name": "AI slop이란?", "acceptedAnswer": { "@type": "Answer", "text": "AI가 만들어 낸 엉성한 결과물, 여기서는 엉성한 코드를 가리키는 말이다. 로렌 탄은 AI Engineer CODE 2026 발표에서 inner loop가 slop을 내면 그 loop를 자동화해도 slop이 더 많이 나올 뿐이라고 말했다." } },
+            { "@type": "Question", "name": "Grok Bot은 outer loop를 어떻게 자동화하나?", "acceptedAnswer": { "@type": "Answer", "text": "봇이 Slack 채널을 지켜보다가 버그 신고가 오면 먼저 재현해 보고, 최신 main에도 남아 있으면 Cursor 프로젝트에 일로 넘긴다. 사람이 신고를 읽고 에이전트에게 옮겨 주던 중계를 봇이 맡는 것이다(Matt Pocock 라이브, 2026-10-02)." } },
+            { "@type": "Question", "name": "inner loop를 견고하게 하는 네 축은?", "acceptedAnswer": { "@type": "Answer", "text": "그는 시간을 쓸 곳을 Codebase, Static analysis, Verification, Prose 순으로 그린다. 앞의 두 축은 코드로 하는 검사라 매번 같은 결과를 내고, Verification은 런타임 · 형식 검증, Prose는 규칙 · 스킬 · agents.md처럼 판단이 필요한 글이다." } },
+            { "@type": "Question", "name": "agents.md 같은 규칙보다 코드베이스가 왜 중요한가?", "acceptedAnswer": { "@type": "Answer", "text": "그는 에이전트를 고쳐 줄 때마다 규칙에 한 줄을 더하지 말고 결정적 검사로 바꾸라고 말한다. 코드가 훨씬 재현성이 높기 때문이다. 예로 React의 useEffect를 제품 코드에서 금지하고 직접 만든 프레임워크 Dune의 몇몇 API 안에서만 쓰게 하자 그 종류의 실수가 통째로 사라졌다고 했다." } },
+            { "@type": "Question", "name": "AI 에이전트가 PR을 스스로 병합하나?", "acceptedAnswer": { "@type": "Answer", "text": "로렌 탄은 더 리뷰할 것이 없어지면 에이전트가 대부분의 PR을 스스로 병합하게 둘 수 있다고 말하고, 그의 코드 리뷰는 검증 결과물을 보는 일로 줄었다고 한다. 그의 팀은 지난달 PR 약 11,000개를 냈고, 되돌림 비율은 약 0.5%로 꾸준하다고 했다. 발표에서 본인이 말한 수치다." } }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --danger: #ff8c8c;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --danger: #b42323;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            cursor: pointer;
+        }
+        .theme-toggle:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 32px; border-bottom: 1px solid var(--line); }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        section { padding: 32px 0; }
+        h2 { margin: 0 0 12px; font-size: 22px; line-height: 1.4; }
+
+        .panel {
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .hint { margin: 0 0 16px; color: var(--muted); }
+        .demo label {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .demo input[type="range"] { width: 100%; min-height: 44px; margin: 4px 0; accent-color: var(--accent); }
+        .meter { height: 10px; overflow: hidden; border-radius: 999px; background: var(--panel-strong); }
+        .meter span { display: block; width: 0; height: 100%; background: var(--accent); transition: width 0.2s ease; }
+        .result { margin: 12px 0 0; font-family: var(--mono); font-size: 15px; }
+
+        .steps { margin: 0; padding-left: 1.4em; }
+        .steps li { margin: 8px 0; }
+        .steps li::marker { color: var(--accent); font-family: var(--mono); }
+
+        .note {
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+
+        /* 확인됨 · 가설 · 모름 표시: <span class="tag known">확인됨</span> */
+        .tag {
+            display: inline-block;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.known { color: var(--accent-green); }
+        .tag.guess { color: var(--accent-warn); }
+        .tag.unknown { color: var(--muted); }
+
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        .lede { margin: -8px 0 20px; color: var(--muted); }
+        .source { margin: 12px 0 0; color: var(--muted); font-size: 14px; }
+        /* inner loop · outer loop 그림 하나: 위에서 아래로 흐르는 길, 오른쪽에 ⑥ → ① 화살표 */
+        .io { --io-out: var(--accent-warn); --io-in: var(--accent); --io-ok: var(--accent-green); --io-bad: var(--danger);
+              --io-out-soft: color-mix(in srgb, var(--accent-warn) 8%, transparent); --io-in-soft: color-mix(in srgb, var(--accent) 7%, transparent);
+              --io-on: color-mix(in srgb, var(--accent) 24%, transparent); --io-hot: color-mix(in srgb, var(--accent) 16%, transparent); }
+        .io-flow { position: relative; display: grid; gap: 10px; padding-right: 44px; min-width: 0; }
+        .io-band { border-radius: 10px; padding: 12px; display: grid; gap: 10px; min-width: 0; }
+        .io-out { background: var(--io-out-soft); border: 1px solid var(--io-out); }
+        .io-in { background: var(--io-in-soft); border: 1px solid var(--io-in); }
+        .io-end { background: var(--panel-soft); border: 1px solid var(--line); }
+        .io-band-h { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 10px; align-items: baseline; }
+        .io-band-h b { font-family: var(--mono); font-size: 15px; letter-spacing: 0.02em; }
+        .io-out .io-band-h b { color: var(--io-out); }
+        .io-in .io-band-h b { color: var(--io-in); }
+        .io-band-h span { font-size: 13px; color: var(--muted); }
+        .io-col { display: grid; gap: 2px; }
+        .io-dn { justify-self: center; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.2; }
+        .io-down { justify-self: center; margin: 0; color: var(--muted); font-size: 13px; line-height: 1; }
+        .io-stg { border: 1px solid var(--line); background: var(--panel); border-radius: var(--radius); padding: 6px 10px; display: grid; min-width: 0; transition: background 0.25s, border-color 0.25s; }
+        .io-nm { font-size: 15px; font-weight: 600; }
+        .io-stg small { font-size: 13px; color: var(--muted); line-height: 1.4; }
+        .io-stg small b { color: var(--io-out); font-weight: 600; }
+        .io-stg.hot { background: var(--io-hot); border-color: var(--io-in); }
+        .io-out .io-stg.hot { border-color: var(--io-out); }
+        .io-fix { gap: 8px; }
+        .io-fix-h { display: grid; border-radius: 6px; }
+        .io-fix-h.hot { background: var(--io-hot); }
+        .io-srcs { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+        .io-srcs li { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px 2px 8px; background: var(--panel-soft); }
+        .io-srcs svg { width: 14px; height: 14px; color: var(--io-out); flex: none; }
+        .io-ctl { display: grid; gap: 4px; }
+        .io-ctl-h { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; }
+        .io-ctl-h output { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+        .io-hint { margin: 0; font-size: 13px; color: var(--muted); }
+        .io input[type="range"] { width: 100%; min-height: 32px; accent-color: var(--io-out); }
+        .io-axes-h { margin: 0; font-size: 13px; color: var(--muted); text-align: center; }
+        .io-axes { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-end; gap: 6px; min-width: 0; }
+        .io-axes li { display: flex; min-width: 0; }
+        .io-a1 { flex: 4 1 0; } .io-a2 { flex: 3 1 0; } .io-a3 { flex: 2.2 1 0; } .io-a4 { flex: 1.6 1 0; }
+        .io-ax { font: inherit; width: 100%; cursor: pointer; border: 1px solid var(--line); background: var(--panel-soft); color: var(--muted); border-radius: var(--radius); padding: 8px 6px; display: grid; align-content: center; justify-items: center; gap: 2px; text-align: center; line-height: 1.3; min-width: 0; transition: background 0.25s, border-color 0.25s; word-break: normal; overflow-wrap: normal; }
+        .io-a1 .io-ax { min-height: 132px; } .io-a2 .io-ax { min-height: 108px; } .io-a3 .io-ax { min-height: 86px; } .io-a4 .io-ax { min-height: 68px; }
+        .io-axn { font-weight: 600; color: var(--text); hyphens: manual; }
+        .io-a1 .io-axn { font-size: 17px; } .io-a2 .io-axn { font-size: 15px; } .io-a3 .io-axn { font-size: 14px; } .io-a4 .io-axn { font-size: 13px; }
+        .io-ex { font-size: 12px; color: var(--text); text-wrap: balance; word-break: keep-all; }
+        .io-eg { font-size: 11px; text-wrap: balance; word-break: keep-all; }
+        .io-ax:hover { border-color: var(--line-strong); }
+        .io-ax[aria-pressed="true"] { background: var(--io-on); border-color: var(--io-in); }
+        .io-ax[aria-pressed="true"] .io-axn { color: var(--io-in); }
+        .io-ax.io-cur { outline: 1px dashed var(--io-in); outline-offset: 2px; }
+        .io-ax:focus-visible { outline: 2px solid var(--io-in); outline-offset: 2px; }
+        .io-exc { border: 1px solid var(--io-in); border-radius: var(--radius); background: var(--panel); padding: 8px 12px; display: grid; gap: 2px; }
+        .io-exc b { font-size: 13px; color: var(--io-in); }
+        .io-exc p { margin: 0; font-size: 15px; line-height: 1.55; }
+        .io-rate { margin: 0; font-size: 14px; color: var(--muted); text-align: center; }
+        .io-rate b { color: var(--io-in); font-family: var(--mono); }
+        .io-tray-h { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; font-size: 14px; }
+        .io-tray-h span { font-variant-numeric: tabular-nums; }
+        .io-g { color: var(--io-ok); font-weight: 600; } .io-r { color: var(--io-bad); font-weight: 600; }
+        .io-tray { display: grid; grid-template-columns: repeat(20, minmax(0, 1fr)); gap: 3px; min-height: 12px; }
+        .io-tile { aspect-ratio: 1 / 1; border-radius: 2px; background: var(--io-ok); opacity: 0.85; }
+        .io-tile.bad { background: var(--io-bad); opacity: 1; }
+        .io-ret { position: absolute; right: 0; top: 34px; bottom: 46px; width: 32px; border: 2px dashed var(--io-out); border-left: 0; border-radius: 0 14px 14px 0; }
+        .io-ret::before { content: ""; position: absolute; left: -7px; top: -7px; border: 6px solid transparent; border-right-color: var(--io-out); }
+        .io-ret span { position: absolute; right: -1px; top: 50%; transform: translate(50%, -50%); writing-mode: vertical-rl; background: var(--panel); color: var(--io-out); font-size: 12px; font-weight: 600; padding: 6px 0; white-space: nowrap; }
+        .io-tokens { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+        .io-tok { position: absolute; left: 0; top: 0; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--muted); box-shadow: 0 0 0 2px var(--panel); }
+        .io-tok.ok { background: var(--io-ok); } .io-tok.bad { background: var(--io-bad); }
+        .io-verdict { margin: 14px 0 0; font-weight: 600; min-height: 3.4em; }
+        .io-try { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); }
+        .io-try button { font: inherit; min-height: 40px; border-radius: var(--radius); padding: 6px 12px; cursor: pointer; border: 1px solid var(--line); background: var(--panel-soft); color: var(--text); }
+        .io-try button:hover { border-color: var(--line-strong); }
+        .io-claim { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+        .io-claim li { display: grid; grid-template-columns: 1.6em minmax(0, 1fr); gap: 6px; }
+        .io-claim .io-no { font-weight: 700; font-family: var(--mono); color: var(--muted); }
+        .io-claim .o .io-no { color: var(--accent-warn); } .io-claim .i .io-no { color: var(--accent); } .io-claim .bad .io-no { color: var(--danger); } .io-claim .ok .io-no { color: var(--accent-green); }
+        .io-claim p { margin: 0; }
+        .io-note { margin: 16px 0 0; font-size: 14px; color: var(--muted); }
+        @media (max-width: 560px) { .io-eg { display: none; } }
+        @media (max-width: 420px) {
+            .panel.io { padding: 12px; }
+            .io-flow { padding-right: 30px; } .io-band { padding: 8px; } .io-stg { padding: 6px 8px; }
+            .io-ex { display: none; } .io-ax { padding: 6px 2px; }
+            .io-a1 { flex: 3 1 0; } .io-a2 { flex: 2.7 1 0; } .io-a3 { flex: 2.4 1 0; } .io-a4 { flex: 2.1 1 0; }
+            .io-a1 .io-axn { font-size: 13px; } .io-a2 .io-axn { font-size: 12px; } .io-a3 .io-axn { font-size: 11px; } .io-a4 .io-axn { font-size: 10px; }
+            .io-ret { width: 22px; }
+        }
+        footer {
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="위치">
+            <a href="/">hughqlee.com</a> / <a href="/knowledge/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/en/inner-outer-loop/" hreflang="en" lang="en">English</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main" class="wrap">
+        <section class="hero">
+            <!-- 지식 지도: 데이터와 규칙은 System/지식 지도.md. 한 줄 글은 스크립트 없이도 읽히는 같은 내용이다.
+                 이 글: 소프트웨어 공학 분야의 첫 글 · 먼저 읽을 글은 Rust 컴파일러와 AI 코딩 -->
+            <nav class="kmap" aria-label="지식 지도" data-current="inner-outer-loop">
+                <p class="kmap-head"><span class="kmap-label">지식 지도</span><span class="kmap-path">소프트웨어 공학</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">이 분야의 첫 글이다. 먼저 읽을 글: <a href="../rust-compiler-ai-coding/">Rust 컴파일러와 AI 코딩</a> · 이어서 읽을 글은 아직 없다</p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE</p>
+            <h1>outer loop를 자동화하면, AI slop은 무엇으로 막을까?</h1>
+            <p class="lede">코딩은 이미 AI 에이전트가 맡았다. 이제 요청과 버그 리포트를 모아 할 일을 정하는 일까지 봇이 맡는다면, 쏟아지는 일은 무엇이 받아 낼까? SpaceXSI에서 Grok Bot을 만드는 로렌 탄의 답을 따라가 본다.</p>
+            <p class="answer">outer loop를 자동화하면 들어오는 일이 폭증한다. 그 일을 slop 없이 받아 내는 것은 견고한 inner loop, 그중에서도 Codebase다.</p>
+        </section>
+
+        <section aria-labelledby="try-title">
+            <h2 id="try-title">폭증한 throughput, 네 축으로 받아 내기</h2>
+            <div class="panel io">
+                <p class="hint">점 하나가 일 한 건이다. ①에서 ⑥까지 내려가는 길을 보고, outer loop의 throughput을 키워 보자. 그다음 inner loop의 네 축을 눌러 쌓아 보자.</p>
+                <div class="io-flow" id="io-flow">
+                    <div class="io-band io-out">
+                        <div class="io-band-h"><b>outer loop</b><span>코드베이스 밖 · Grok Bot</span></div>
+                        <div class="io-ctl">
+                            <div class="io-ctl-h"><label for="io-n"><b>outer loop throughput · 하루에 들어오는 일</b></label><output id="io-n-out" for="io-n">1건</output></div>
+                            <input id="io-n" type="range" min="1" max="100" step="1" value="1">
+                            <p class="io-hint">1건이면 이 길을 한 번 지난다. 10건까지는 사람이 모아 정리한다고 두었다.</p>
+                        </div>
+                        <div class="io-col">
+                            <div class="io-stg" id="io-s1"><span class="io-nm">① 들어온다</span><small>버그 신고 · 요청</small>
+                                <ul class="io-srcs" aria-label="들어오는 곳">
+                                    <li><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 2 4.5 14M11.5 2 10 14M2 5.5h12.5M1.5 10.5H14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Slack</li>
+                                    <li><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2" y="2.5" width="12" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m5 8 2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Linear</li>
+                                    <li><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m3 2.5 10 11M13 2.5l-10 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>X</li>
+                                    <li><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="1.5" y="3.5" width="13" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m2 4.5 6 4.5 6-4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>이메일</li>
+                                </ul>
+                            </div>
+                            <p class="io-dn" aria-hidden="true">↓</p>
+                            <div class="io-stg" id="io-s2"><span class="io-nm">② 확인한다</span><small>봇이 재현해 보고, 최신 main에도 남아 있는지 본다</small></div>
+                            <p class="io-dn" aria-hidden="true">↓</p>
+                            <div class="io-stg" id="io-s3"><span class="io-nm">③ 넘긴다</span><small><span id="io-relay"><b>사람이</b> 모아 정리 · 분류해</span> 할 일로 넘긴다</small></div>
+                        </div>
+                    </div>
+                    <p class="io-down" aria-hidden="true">▼</p>
+                    <div class="io-band io-in">
+                        <div class="io-band-h"><b>inner loop</b><span>AI 에이전트 · 그의 경우 Cursor</span></div>
+                        <div class="io-stg io-fix" id="io-s4">
+                            <div class="io-fix-h" id="io-s4h"><span class="io-nm">④ 고친다</span><small>AI 에이전트가 네 축 안에서 코드를 고친다. 걸린 실수는 그 자리에서 다시 고친다.</small></div>
+                            <p class="io-axes-h">순서가 아니라 중요도 · 클수록 시간을 많이 쓸 곳 · 누르면 켜지고 예가 뜬다</p>
+                            <ul class="io-axes" aria-label="inner loop의 네 축, 큰 것부터">
+                                <li class="io-a1"><button type="button" class="io-ax io-cur" id="io-l-codebase" data-k="codebase" aria-pressed="false"><span class="io-axn" lang="en">Code&shy;base</span><span class="io-ex">고칠 수 있는 길을 좁힌다</span><span class="io-eg">API 설계 · 구조 · 리팩터링</span></button></li>
+                                <li class="io-a2"><button type="button" class="io-ax" id="io-l-static" data-k="static" aria-pressed="false"><span class="io-axn" lang="en">Static analysis</span><span class="io-ex">쓰는 즉시 틀린 곳을 알린다</span><span class="io-eg">린트 · 타입 · 컴파일러</span></button></li>
+                                <li class="io-a3"><button type="button" class="io-ax" id="io-l-verify" data-k="verify" aria-pressed="false"><span class="io-axn" lang="en">Verifi&shy;cation</span><span class="io-ex">직접 돌려 보고 확인한다</span><span class="io-eg">런타임 · 형식 검증</span></button></li>
+                                <li class="io-a4"><button type="button" class="io-ax" id="io-l-prose" data-k="prose" aria-pressed="false"><span class="io-axn" lang="en">Prose</span><span class="io-ex">글로 방향을 적어 둔다</span><span class="io-eg">agents.md · 스킬</span></button></li>
+                            </ul>
+                            <div class="io-exc" aria-live="polite"><b id="io-ex-h">Codebase의 예</b><p id="io-ex-t">잘 쓰기 어려운 React의 useEffect를 제품 코드에서 금지하고, 직접 만든 클라이언트 프레임워크 Dune의 몇몇 API 안에서만 쓰게 했다. 그 종류의 실수가 통째로 사라졌다.</p></div>
+                            <p class="io-rate" id="io-rate">AI slop 발생 확률: <b>10.0%</b></p>
+                        </div>
+                        <p class="io-dn" aria-hidden="true">↓</p>
+                        <div class="io-stg" id="io-s5"><span class="io-nm">⑤ PR</span><small>에이전트가 PR을 연다</small></div>
+                        <p class="io-dn" aria-hidden="true">↓</p>
+                        <div class="io-stg" id="io-s6"><span class="io-nm">⑥ 병합</span><small>리뷰할 것이 없어지면, 에이전트가 대부분의 PR을 스스로 병합한다 · 사람은 검증 결과물을 본다</small></div>
+                    </div>
+                    <p class="io-down" aria-hidden="true">▼</p>
+                    <div class="io-band io-end">
+                        <div class="io-tray-h"><b>하루 끝 상자</b><span><span class="io-g" id="io-good">통과 0.9</span> · <span class="io-r" id="io-bad">slop 0.1</span></span></div>
+                        <div class="io-tray" id="io-tray" aria-hidden="true"><span class="io-tile"></span></div>
+                    </div>
+                    <div class="io-ret" aria-hidden="true"><span>⑥ → ① 무수히 반복</span></div>
+                    <div class="io-tokens" id="io-tokens" aria-hidden="true"></div>
+                </div>
+                <p class="io-verdict" id="io-verdict" aria-live="polite">하루 1건 × 10.0% = slop 평균 0.1건. 한 건이면 작은 실수다. 이제 outer loop의 throughput을 키워 보자.</p>
+                <div class="io-try">해 보기
+                    <button type="button" id="io-p-outer">outer loop만 키우기</button>
+                    <button type="button" id="io-p-inner">inner loop부터 쌓기</button>
+                    <button type="button" id="io-p-reset">처음으로</button>
+                </div>
+            </div>
+            <p class="source">출처: 두 loop의 정의와 outer loop의 흐름(①~③)은 Matt Pocock 라이브(2026-10-02) 35~42분 무렵, 네 축과 그 예, 에이전트의 병합은 AI Engineer CODE 2026 발표(2026-11-11)다. 그림의 slop 발생 확률과 네 칸의 크기는 단순화한 예이고, 잰 숫자가 아니다.</p>
+        </section>
+
+        <section aria-labelledby="claim-title">
+            <h2 id="claim-title">로렌 탄의 주장, 일곱 걸음</h2>
+            <ol class="io-claim">
+                <li class="o"><span class="io-no">1</span><p><b>예전의 outer loop.</b> Slack, Linear, X, 이메일 같은 창구를 통해, 사람이 요청이나 버그 리포트를 정리해 개발할 사항을 정했다.</p></li>
+                <li class="i"><span class="io-no">2</span><p><b>예전의 inner loop.</b> 이렇게 정한 개발 사항의 코딩을 Codex나 Claude Code 같은 AI 에이전트가 맡게 되면서 생산성이 올라갔다.</p></li>
+                <li class="o"><span class="io-no">3</span><p><b>이제 Grok Bot으로 outer loop를 자동화할 수 있다.</b> 그러면 outer loop의 throughput이 폭증한다.</p></li>
+                <li class="bad"><span class="io-no">4</span><p><b>기존 inner loop가 내던 작은 slop은 폭증한 입력만큼 커진다.</b> AI slop 문제는 여기서 생긴다.</p></li>
+                <li class="i"><span class="io-no">5</span><p><b>따라서 견고한 inner loop 구조가 필요하다.</b> 그는 네 축을 제시한다. 가장 중요한 것은 Codebase, 다음으로 Static analysis, Verification(특히 에이전트가 코드를 직접 돌려 보기), Prose 순이다.</p></li>
+                <li class="i"><span class="io-no">6</span><p><b>요즘 사람들은 Prose에 집중하지만, 가장 중요한 것은 Codebase다.</b> 위 그림에서 축을 누르면 그 축의 예가 뜬다.</p></li>
+                <li class="ok"><span class="io-no">7</span><p><b>이렇게 완성한 견고한 inner loop는 outer loop의 폭증한 throughput을 모두 받아 낸다.</b> slop은 bye bye~ (아주 bye는 아니다).</p></li>
+            </ol>
+            <p class="io-note">그림의 숫자는 단순화한 예다. 네 칸의 크기 비율도 정해 둔 값이다. 아무 축도 없을 때 AI slop 발생 확률을 10%로 두고, Codebase는 그 확률을 4분의 1로, Static analysis와 Verification은 각각 절반으로, Prose는 5분의 4로 줄인다고 두었다. 사람이 하루에 모아 정리할 몫 10건도 정해 둔 값이다.</p>
+            <p class="source">출처: 일곱 걸음은 두 영상을 보고 정리한 이 글의 설명이다. 네 축의 차례는 발표의 "this inverse pyramid is how I think about where to spend time"(발표 영상 2분 무렵), 팀의 PR 약 11,000개와 되돌림 비율 약 0.5%는 발표에서 본인이 말한 수치다.</p>
+        </section>
+
+        <section id="faq" aria-labelledby="faq-title">
+            <h2 id="faq-title">자주 묻는 질문</h2>
+            <div class="faq">
+                <details>
+                    <summary>AI 코딩에서 inner loop와 outer loop란?</summary>
+                    <p>로렌 탄의 말로 inner loop는 AI 에이전트들이 내 의도를 향해 코드를 고치고 확인하는 반복이고, outer loop는 코드베이스 밖의 모든 것, 곧 Slack · Linear · X로 들어오는 버그 신고와 요청이다. 그는 Cursor 프로젝트를 inner loop, Grok Bot을 outer loop라고 부른다.</p>
+                </details>
+                <details>
+                    <summary>AI slop이란?</summary>
+                    <p>AI가 만들어 낸 엉성한 결과물, 여기서는 엉성한 코드를 가리키는 말이다. 로렌 탄은 AI Engineer CODE 2026 발표에서 inner loop가 slop을 내면 그 loop를 자동화해도 slop이 더 많이 나올 뿐이라고 말했다.</p>
+                </details>
+                <details>
+                    <summary>Grok Bot은 outer loop를 어떻게 자동화하나?</summary>
+                    <p>봇이 Slack 채널을 지켜보다가 버그 신고가 오면 먼저 재현해 보고, 최신 main에도 남아 있으면 Cursor 프로젝트에 일로 넘긴다. 사람이 신고를 읽고 에이전트에게 옮겨 주던 중계를 봇이 맡는 것이다(Matt Pocock 라이브, 2026-10-02).</p>
+                </details>
+                <details>
+                    <summary>inner loop를 견고하게 하는 네 축은?</summary>
+                    <p>그는 시간을 쓸 곳을 Codebase, Static analysis, Verification, Prose 순으로 그린다. 앞의 두 축은 코드로 하는 검사라 매번 같은 결과를 내고, Verification은 런타임 · 형식 검증, Prose는 규칙 · 스킬 · agents.md처럼 판단이 필요한 글이다.</p>
+                </details>
+                <details>
+                    <summary>agents.md 같은 규칙보다 코드베이스가 왜 중요한가?</summary>
+                    <p>그는 에이전트를 고쳐 줄 때마다 규칙에 한 줄을 더하지 말고 결정적 검사로 바꾸라고 말한다. 코드가 훨씬 재현성이 높기 때문이다. 예로 React의 useEffect를 제품 코드에서 금지하고 직접 만든 프레임워크 Dune의 몇몇 API 안에서만 쓰게 하자 그 종류의 실수가 통째로 사라졌다고 했다.</p>
+                </details>
+                <details>
+                    <summary>AI 에이전트가 PR을 스스로 병합하나?</summary>
+                    <p>로렌 탄은 더 리뷰할 것이 없어지면 에이전트가 대부분의 PR을 스스로 병합하게 둘 수 있다고 말하고, 그의 코드 리뷰는 검증 결과물을 보는 일로 줄었다고 한다. 그의 팀은 지난달 PR 약 11,000개를 냈고, 되돌림 비율은 약 0.5%로 꾸준하다고 했다. 발표에서 본인이 말한 수치다.</p>
+                </details>
+            </div>
+        </section>
+
+        <section aria-labelledby="more-title">
+            <h2 id="more-title">더 보기</h2>
+            <ul class="links">
+                <li><a href="https://www.youtube.com/watch?v=O_zcc6Xl12g">Lauren Tan, All Code Is Slop (Except Mine), AI Engineer CODE 2026 (2026-11-11, YouTube)</a></li>
+                <li><a href="https://ai.engineer/code/2026/talks/lauren-tan">AI Engineer CODE 2026: All Code Is Slop (Except Mine) 발표 페이지</a></li>
+                <li><a href="https://www.youtube.com/watch?v=MN9dGgmLyso">Matt Pocock, LIVE: Poteto (creator of pstack) on shipping 1,000's of PR's a month at SpaceX (2026-10-02, YouTube)</a></li>
+            </ul>
+        </section>
+        <script type="application/json" id="io-data">{"model":{"base":0.1,"layers":["codebase","static","verify","prose"],"factor":{"codebase":0.25,"static":0.5,"verify":0.5,"prose":0.8},"relayCap":10,"start":1},"names":{"codebase":"Codebase","static":"Static analysis","verify":"Verification","prose":"Prose"},"examples":{"codebase":"잘 쓰기 어려운 React의 useEffect를 제품 코드에서 금지하고, 직접 만든 클라이언트 프레임워크 Dune의 몇몇 API 안에서만 쓰게 했다. 그 종류의 실수가 통째로 사라졌다.","static":"에이전트가 같은 실수를 하면 린트 규칙으로 만든다. 오류 메시지가 근본 원인과 바른 고침을 알려 준다. Electron의 main과 renderer 사이 import도 분석기와 린트로 막았다.","verify":"에이전트가 앱을 직접 돌려 보게 한다(Chrome DevTools 프로토콜). 주요 흐름은 TLA+로, 알고리즘은 Lean으로 확인해 실제로 버그를 찾았다.","prose":"agents.md, 규칙, 스킬처럼 판단이 필요한 것만 얇게 둔다. 주석도 글이다. Cursor에서는 에이전트가 땜질(타이머)을 정당화하는 주석을 남기며 땜질이 퍼졌다. 그래서 Grok Bot 팀은 쉽게 낡는 주석의 99%를 금지했다."},"text":{"unit":"{n}건","nAria":"하루 {n}건","rate":"AI slop 발생 확률: ","exTitle":"{name}의 예","good":"통과 ","bad":"slop ","relayHuman":"사람이","relayBot":"봇이","relayRest":" 모아 정리 · 분류해","head":"하루 {n}건 × {pct} = slop 평균 {bad}건.","v1":" 한 건이면 작은 실수다. 이제 outer loop의 throughput을 키워 보자.","vWeak":" 폭증한 입력을 기존 inner loop가 소화하지 못한다. slop이 쌓인다.","vStrong":" 견고한 inner loop가 폭증한 throughput을 받아 낸다. slop은 bye bye (아주 bye는 아니다).","vMid":" throughput을 더 키워 보자.","vMore":" 축을 하나 더 쌓으면 slop이 얼마나 줄어드나? 가장 큰 Codebase부터 눌러 보자."}}</script>
+    </main>
+
+    <footer class="wrap">
+        마지막 업데이트 <time datetime="2026-11-23">2026-11-23</time> · <a href="/">Hugh Q Lee</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "라이트 모드로 전환" : "다크 모드로 전환");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+            });
+            render();
+        })();
+
+        // inner loop · outer loop: one figure. Toy model (not measured): slop rate = base x the factor of each axis that is on.
+        (function () {
+            "use strict";
+            var D = JSON.parse(document.getElementById("io-data").textContent);
+            var M = D.model, T = D.text;
+            var $ = function (id) { return document.getElementById(id); };
+            function fill(s, o) { return s.replace(/\{(\w+)\}/g, function (_, k) { return o[k]; }); }
+            function rate(on) { var p = M.base; M.layers.forEach(function (k) { if (on[k]) p *= M.factor[k]; }); return p; }
+            function pct(p) { return (Math.round(p * 1000 + 1e-9) / 10).toFixed(1) + "%"; }
+            function fmt(x) { var s = x.toFixed(x < 1 ? 2 : 1); return s.replace(/0+$/, "").replace(/\.$/, ""); }
+            function red(n, p) { return Math.floor(n * p + 1e-9); }
+            function verdict(n, p) {
+                var head = fill(T.head, { n: n, pct: pct(p), bad: fmt(n * p) });
+                if (n === 1) return head + T.v1;
+                if (n >= 50 && p >= 0.05) return head + T.vWeak;
+                if (n >= 50 && p <= 0.005 + 1e-12) return head + T.vStrong;
+                if (n < 50) return head + T.vMid;
+                return head + T.vMore;
+            }
+            var n = $("io-n"), btn = {};
+            M.layers.forEach(function (k) { btn[k] = $("io-l-" + k); });
+            var state = { n: M.start, p: M.base };
+            function flags() { var f = {}; M.layers.forEach(function (k) { f[k] = btn[k].getAttribute("aria-pressed") === "true"; }); return f; }
+            function render() {
+                state.n = +n.value; state.p = rate(flags());
+                var p = state.p, N = state.n, bad = N * p;
+                $("io-n-out").textContent = fill(T.unit, { n: N });
+                n.setAttribute("aria-valuetext", fill(T.nAria, { n: N }));
+                $("io-relay").innerHTML = "<b>" + (N > M.relayCap ? T.relayBot : T.relayHuman) + "</b>" + T.relayRest;
+                $("io-rate").innerHTML = T.rate + "<b>" + pct(p) + "</b>";
+                $("io-good").textContent = T.good + fmt(N - bad);
+                $("io-bad").textContent = T.bad + fmt(bad);
+                var r = red(N, p), acc = 0, html = "";
+                for (var i = 0; i < N; i++) { acc += r / N; var b = acc >= 1 - 1e-9; if (b) acc -= 1; html += '<span class="io-tile' + (b ? " bad" : "") + '"></span>'; }
+                $("io-tray").innerHTML = html;
+                $("io-verdict").textContent = verdict(N, p);
+            }
+            function show(k) {
+                M.layers.forEach(function (j) { btn[j].classList.toggle("io-cur", j === k); });
+                $("io-ex-h").textContent = fill(T.exTitle, { name: D.names[k] });
+                $("io-ex-t").textContent = D.examples[k];
+            }
+            n.addEventListener("input", render);
+            M.layers.forEach(function (k) {
+                btn[k].addEventListener("click", function () {
+                    btn[k].setAttribute("aria-pressed", btn[k].getAttribute("aria-pressed") === "true" ? "false" : "true");
+                    show(k); render();
+                });
+            });
+            function preset(v, all) { n.value = v; M.layers.forEach(function (k) { btn[k].setAttribute("aria-pressed", all ? "true" : "false"); }); render(); }
+            $("io-p-outer").addEventListener("click", function () { preset(100, false); });
+            $("io-p-inner").addEventListener("click", function () { preset(100, true); });
+            $("io-p-reset").addEventListener("click", function () { preset(M.start, false); show("codebase"); });
+            render();
+
+            // Each dot is one piece of work going down a rail on the right edge of every step; the four axes are importance, not a sequence.
+            if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+            var flow = $("io-flow"), layer = $("io-tokens");
+            var hotIds = ["io-s1", "io-s2", "io-s3", "io-s4h", "io-s4h", "io-s5", "io-s6"].map($);
+            var COLOR_AT = 5, DAY = 8000, LIFE = 6000, toks = [], last = 0, spawnAcc = 0.9, redAcc = 0;
+            function points() {
+                var f = flow.getBoundingClientRect(), R = function (id) { return $(id).getBoundingClientRect(); };
+                var rail = function (id) { var r = R(id); return [r.right - 9 - f.left, r.top + r.height / 2 - f.top]; };
+                var s4 = R("io-s4"), h = R("io-s4h"), tr = R("io-tray");
+                return [rail("io-s1"), rail("io-s2"), rail("io-s3"),
+                    [s4.right - 9 - f.left, h.top + h.height / 2 - f.top], [s4.right - 9 - f.left, s4.bottom - 10 - f.top],
+                    rail("io-s5"), rail("io-s6"), [tr.right - 6 - f.left, tr.top - 6 - f.top]];
+            }
+            function spawn() {
+                redAcc += state.p; var isRed = false;
+                if (redAcc >= 1 - 1e-9) { isRed = true; redAcc -= 1; }
+                var el = document.createElement("span"); el.className = "io-tok"; layer.appendChild(el);
+                toks.push({ el: el, t: 0, red: isRed });
+            }
+            function tick(now) {
+                var dt = last ? Math.min(now - last, 100) : 16; last = now;
+                if (!document.hidden && toks.length + state.n > 0) {
+                    spawnAcc += dt * state.n / DAY;
+                    while (spawnAcc >= 1 && toks.length < 120) { spawn(); spawnAcc -= 1; }
+                    var C = points(), seg = C.length - 1, hot = {};
+                    for (var i = toks.length - 1; i >= 0; i--) {
+                        var k = toks[i]; k.t += dt / LIFE;
+                        if (k.t >= 1) { layer.removeChild(k.el); toks.splice(i, 1); continue; }
+                        var x = k.t * seg, j = Math.floor(x), u = x - j, a = C[j], b = C[j + 1];
+                        k.el.style.transform = "translate(" + (a[0] + (b[0] - a[0]) * u).toFixed(1) + "px," + (a[1] + (b[1] - a[1]) * u).toFixed(1) + "px)";
+                        if (j >= COLOR_AT && !k.colored) { k.el.classList.add(k.red ? "bad" : "ok"); k.colored = true; }
+                        if (u < 0.45) hot[j] = true;
+                    }
+                    var on = []; for (var m in hot) on.push(hotIds[m]);
+                    hotIds.forEach(function (el) { el.classList.toggle("hot", on.indexOf(el) >= 0); });
+                }
+                requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-11-23","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"},{"id":"ml","name":"기계 학습","name_en":"Machine learning"},{"id":"llm","name":"언어 모델","name_en":"Language models","parent":"ml"},{"id":"rob","name":"로봇·자동화","name_en":"Robotics and automation"},{"id":"ct","name":"X선·CT 영상","name_en":"X-ray and CT imaging"},{"id":"st","name":"컴퓨터·저장장치","name_en":"Computer storage"},{"id":"wl","name":"무선 통신","name_en":"Wireless communication"},{"id":"cg","name":"컴퓨터 그래픽스","name_en":"Computer graphics"},{"id":"pl","name":"프로그래밍 언어","name_en":"Programming languages"},{"id":"se","name":"소프트웨어 공학","name_en":"Software engineering"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"},{"id":"train-val-calib-test","title":"train·val·calib·test","title_en":"train/val/calib/test","domain":"ml","status":"published","href":"../train-val-calib-test/","summary":"학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold를 위해 칸 하나를 더 두기","summary_en":"Keep one more split for what is fitted after training: the temperature T and the threshold"},{"id":"error-backpropagation","title":"역전파","title_en":"Backpropagation","domain":"ml","status":"published","href":"../error-backpropagation/","summary":"출력의 오차를 뒤로 전해 다층 퍼셉트론의 가운데 층까지 고치기","summary_en":"Pass the output's error backward to correct the middle layer of a multilayer perceptron too"},{"id":"neural-network-sleep","title":"신경망의 잠","title_en":"Sleep for neural networks","domain":"ml","status":"published","href":"../neural-network-sleep/","summary":"학습을 멈추고 잡음을 흘려 연결이 앞뒤 뉴런만 보고 바뀌게 하면, 잊은 옛 과제가 돌아오기도 한다","summary_en":"Stop training and run noise through the network so each connection changes by its two neurons alone, and a forgotten old task can come back"},{"id":"robot-types","title":"로봇의 종류","title_en":"Robot types","domain":"rob","status":"published","href":"../robot-types/","summary":"관절을 잇는 구조가 손끝의 자세를 정하고, 그 자세가 실험실에서 로봇의 쓰임을 정한다","summary_en":"How the joints are joined sets the hand's posture, and the posture sets what a robot does in the lab"},{"id":"hydraulic-pneumatic-microinjector","title":"마이크로인젝터","title_en":"Microinjectors","domain":"rob","status":"published","href":"../hydraulic-pneumatic-microinjector/","summary":"공기로 미는 공압식은 압력을, 기름으로 미는 유압식은 부피를 정한다","summary_en":"A pneumatic injector pushes with air and sets the pressure; a hydraulic one pushes with oil and sets the volume"},{"id":"kimi-k3-1-pro","title":"Kimi K3.1 Pro","title_en":"Kimi K3.1 Pro","domain":"llm","status":"published","href":"../kimi-k3-1-pro/","summary":"몸통은 그대로 두고 사후 학습으로 AA 지수를 44에서 55로 올리기","summary_en":"Raise the AA index from 44 to 55 with post-training, on the same base model"},{"id":"pretraining-posttraining-inference","title":"사전 학습·사후 학습·추론","title_en":"Pre-training, post-training, inference","domain":"llm","status":"published","href":"../pretraining-posttraining-inference/","summary":"사전 학습과 사후 학습은 가중치를 바꾸고, 추론은 가중치를 그대로 둔 채 맥락으로 답한다","summary_en":"Pre-training and post-training change the weights; inference leaves them as they are and answers from the context"},{"id":"xray-ct-registration","title":"X선–CT 정합","title_en":"X-ray to CT registration","domain":"ct","status":"published","href":"../xray-ct-registration/","summary":"엑스레이 필름 한 장은 CT가 찍는 그림자의 한 방향이라서, CT에서 가상 필름을 계산해 필름에 맞출 수 있다","summary_en":"An X-ray film is one view of what a CT scan records, so a virtual film computed from the CT can be matched to it"},{"id":"format-keeps-data","title":"포맷과 데이터 복구","title_en":"Format and data recovery","domain":"st","status":"published","href":"../format-keeps-data/","summary":"포맷과 플래시가 지우는 것은 지도이고, 덮어쓰지 않은 본문은 그대로라서 되살릴 수 있다","summary_en":"Formatting and flashing erase the map, and the data that was not overwritten stays, so it can be recovered"},{"id":"wifi-frequency-bands","title":"와이파이 주파수 대역","title_en":"Wi-Fi frequency bands","domain":"wl","status":"published","href":"../wifi-frequency-bands/","summary":"높은 대역일수록 길이 넓어 빠르지만, 받는 신호가 약하고 콘크리트 벽에서 더 잃는다","summary_en":"Higher bands have wider channels and are faster, but the received signal is weaker and concrete walls take more of it"},{"id":"pixel-art-gaussian-splats","title":"픽셀 아트 가우시안 스플랫","title_en":"Pixel-art Gaussian splats","domain":"cg","status":"published","href":"../pixel-art-gaussian-splats/","summary":"3D 디자인하는 방법 중 하나다. 간단하고 구조적이라 AI가 다루기 용이하다","summary_en":"One way to design in 3D; simple and structured, so AI handles it easily"},{"id":"rust-compiler-ai-coding","title":"Rust 컴파일러와 AI 코딩","title_en":"The Rust compiler and AI coding","domain":"pl","status":"published","href":"../rust-compiler-ai-coding/","summary":"Rust 컴파일러는 AI가 놓친 실수를 실행 전에 막고, 고칠 곳을 적어 준다","summary_en":"The Rust compiler stops the mistakes AI misses before the code runs, and writes down what to fix"},{"id":"inner-outer-loop","title":"inner loop와 outer loop","title_en":"Inner loop and outer loop","domain":"se","status":"published","href":"../inner-outer-loop/","summary":"outer loop를 자동화해 폭증한 일은 견고한 inner loop, 그중에서도 Codebase가 받아 낸다","summary_en":"When an automated outer loop floods in work, a solid inner loop, above all the codebase, takes it in"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"},{"from":"error-backpropagation","to":"pretraining-posttraining-inference"},{"from":"error-backpropagation","to":"neural-network-sleep"},{"from":"rust-compiler-ai-coding","to":"inner-outer-loop"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 64 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (준비 중)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "준비 중";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "지금 이 글";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
