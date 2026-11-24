@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uncompromising engineering: FSD v15 Reality View | Hugh Q Lee</title>
+    <meta name="description" content="It keeps the driving path as it is and sets a 1B Diffusion head beside it on the spare compute (half of the three TRIPs on SoC B), so it gains a new view without taking anything from driving.">
+    <meta name="author" content="Hugh Q Lee">
+    <meta name="keywords" content="Tesla, FSD v15, Reality View, UVE, Universal Vision Encoder, mean-flow, diffusion model, TRIP, AI4, SoC, Qwen-Drive, Alpamayo, VLA, autonomous driving, end-to-end">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://hughqlee.com/knowledge/en/fsd-v15-reality-view/">
+    <!-- 영문판(/knowledge/en/fsd-v15-reality-view/)은 System/build_en.py가 이 페이지에서 만든다. 두 판이 서로를 가리킨다. -->
+    <link rel="alternate" hreflang="ko" href="https://hughqlee.com/knowledge/fsd-v15-reality-view/">
+    <link rel="alternate" hreflang="en" href="https://hughqlee.com/knowledge/en/fsd-v15-reality-view/">
+    <link rel="alternate" hreflang="x-default" href="https://hughqlee.com/knowledge/en/fsd-v15-reality-view/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Hugh Q Lee">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ko_KR">
+    <meta property="og:title" content="Uncompromising engineering: FSD v15 Reality View">
+    <meta property="og:description" content="It keeps the driving path as it is and sets a 1B Diffusion head beside it on the spare compute (half of the three TRIPs on SoC B), so it gains a new view without taking anything from driving.">
+    <meta property="og:url" content="https://hughqlee.com/knowledge/en/fsd-v15-reality-view/">
+    <meta property="og:image" content="https://hughqlee.com/knowledge/en/fsd-v15-reality-view/og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="The structure of Tesla FSD v15: the UVE turns the camera video into a Hidden Feature, which the 3B model (steering and acceleration) and the 1B Diffusion model (Reality View) both read. The view gets half of the three TRIPs on SoC B">
+    <meta property="article:published_time" content="2026-11-24">
+    <meta property="article:modified_time" content="2026-11-24">
+    <meta property="article:author" content="https://hughqlee.com/">
+    <meta property="article:section" content="Knowledge">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Uncompromising engineering: FSD v15 Reality View">
+    <meta name="twitter:description" content="It keeps the driving path as it is and sets a 1B Diffusion head beside it on the spare compute (half of the three TRIPs on SoC B), so it gains a new view without taking anything from driving.">
+    <meta name="twitter:image" content="https://hughqlee.com/knowledge/en/fsd-v15-reality-view/og.png">
+    <meta name="twitter:image:alt" content="The structure of Tesla FSD v15: the UVE turns the camera video into a Hidden Feature, which the 3B model (steering and acceleration) and the 1B Diffusion model (Reality View) both read. The view gets half of the three TRIPs on SoC B">
+    <!-- 검색엔진과 AI 답변 엔진이 읽는 구조화 데이터. FAQPage의 문장은 본문 "자주 묻는 질문"과 같아야 한다. 질문을 늘리면 둘 다 늘린다. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "@id": "https://hughqlee.com/knowledge/en/fsd-v15-reality-view/#article",
+          "headline": "Uncompromising engineering: FSD v15 Reality View",
+          "alternativeHeadline": "How did Tesla draw a new view without taking compute away from driving?",
+          "description": "It keeps the driving path as it is and sets a 1B Diffusion head beside it on the spare compute (half of the three TRIPs on SoC B), so it gains a new view without taking anything from driving.",
+          "abstract": "It keeps the driving path as it is and sets a 1B Diffusion head beside it on the spare compute (half of the three TRIPs on SoC B), so it gains a new view without taking anything from driving.",
+          "inLanguage": "en",
+          "datePublished": "2026-11-24",
+          "dateModified": "2026-11-24",
+          "url": "https://hughqlee.com/knowledge/en/fsd-v15-reality-view/",
+          "mainEntityOfPage": "https://hughqlee.com/knowledge/en/fsd-v15-reality-view/",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://hughqlee.com/knowledge/en/fsd-v15-reality-view/og.png",
+            "width": 1200,
+            "height": 630
+          },
+          "author": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "publisher": {
+            "@id": "https://hughqlee.com/#person"
+          },
+          "isPartOf": {
+            "@id": "https://hughqlee.com/knowledge/en/#collection"
+          },
+          "isAccessibleForFree": true,
+          "citation": [
+            {
+              "@type": "CreativeWork",
+              "name": "Tesla, FSD v15 announcement (X, 2026-11-21)",
+              "url": "https://x.com/Tesla/status/2124222447855743019"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "Ashok Elluswamy, introducing Reality View (X, 2026-11-21)",
+              "url": "https://x.com/aelluswamy/status/2124229978560835880"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "Elon Musk, how Reality View is built (X, 2026-11-22)",
+              "url": "https://x.com/elonmusk/status/2124458557525397780"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "Elon Musk, the compute left for Reality View (X, 2026-11-22)",
+              "url": "https://x.com/elonmusk/status/2124459444620628193"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "Qwen-Drive-1.0 paper (arXiv 2609.00111)",
+              "url": "https://arxiv.org/abs/2609.00111"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "Alpamayo-R1 paper (arXiv 2511.00088)",
+              "url": "https://arxiv.org/abs/2511.00088"
+            },
+            {
+              "@type": "CreativeWork",
+              "name": "Drive Tech Odyssey, \"I built Tesla FSD v15 Reality View myself on a MacBook\" (YouTube, in Korean, 2026-11-23)",
+              "url": "https://youtu.be/voWf5jnca4s"
+            }
+          ],
+          "translationOfWork": {
+            "@id": "https://hughqlee.com/knowledge/fsd-v15-reality-view/#article"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://hughqlee.com/#person",
+          "name": "Hugh Q Lee",
+          "url": "https://hughqlee.com/",
+          "jobTitle": "Vision AI Product Engineer",
+          "sameAs": [
+            "https://github.com/hughqlee",
+            "https://www.linkedin.com/in/hughqlee/",
+            "https://x.com/hughqlee/"
+          ]
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Hugh Q Lee",
+              "item": "https://hughqlee.com/en/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Knowledge",
+              "item": "https://hughqlee.com/knowledge/en/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Uncompromising engineering: FSD v15 Reality View",
+              "item": "https://hughqlee.com/knowledge/en/fsd-v15-reality-view/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://hughqlee.com/knowledge/en/fsd-v15-reality-view/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is Tesla FSD v15 Reality View?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "It is the new in-car screen of FSD v15, which began rolling out on 2026-11-21. It does not show the camera video as it is: a diffusion model of about 1B parameters takes the visual features of the driving model and draws a realistic scene. Arrows for the turns ahead and pins for the parking spot also show what the car intends to do."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What model draws Reality View?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "According to Musk, a conditional mean-flow (diffusion) model of about 1B parameters. It branches off the same UVE features that feed the 3B model producing the driving actions, adds noise to the previous view and redraws it as the current one, and puts out 8 frames at a time (36 fps)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does Reality View take compute away from FSD driving?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "According to Musk, after a small decoder moved into SRAM only half of one of the three TRIPs on SoC B was left, and Reality View is drawn with that remainder. The branch that draws the view does not feed into the 3B model that produces the driving actions."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do Qwen-Drive and Alpamayo make their view?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "In Qwen-Drive-1.0 a BEV perception head reads the features before and after the language model and draws 3D boxes, occupancy, and a map, while a Planning Expert that reads the language model's K/V cache produces the driving plan. Alpamayo writes its reasoning as text instead of a 3D view, and its Action Expert reads that text too before producing a trajectory."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#050607" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+    <script>
+        // 홈페이지와 같은 규칙: 저장된 테마가 있으면 따르고, 없으면 시스템 설정을 따른다. 첫 화면을 그리기 전에 정한다.
+        (function () {
+            var stored = null;
+            try {
+                stored = localStorage.getItem("theme");
+            } catch (error) {
+                stored = null;
+            }
+            var theme = stored === "light" || stored === "dark"
+                ? stored
+                : (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <style>
+        :root {
+            --bg: #050607;
+            --panel: #090d10;
+            --panel-soft: #0d1216;
+            --panel-strong: #111820;
+            --line: #202a33;
+            --line-strong: #3a5666;
+            --text: #e7edf2;
+            --muted: #8b9aa6;
+            --faint: #7b8b96;
+            --accent: #69d2ff;
+            --accent-green: #9ce37d;
+            --accent-warn: #f0c674;
+            --accent-soft: rgba(105, 210, 255, 0.14);
+            --danger: #ff8c8c;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: Inter, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Segoe UI", sans-serif;
+            --radius: 8px;
+            --measure: 720px;
+            color-scheme: dark;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f1f5f8;
+            --panel-strong: #e8eff5;
+            --line: #d6e0e8;
+            --line-strong: #8fa9bd;
+            --text: #18212a;
+            --muted: #53616d;
+            --faint: #5f6d78;
+            --accent: #0969a8;
+            --accent-green: #25723f;
+            --accent-warn: #966a10;
+            --accent-soft: rgba(9, 105, 168, 0.12);
+            --danger: #b42323;
+            color-scheme: light;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            font-size: 17px;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        a { color: var(--accent); text-underline-offset: 3px; }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+        .skip {
+            position: absolute;
+            left: 16px;
+            top: -48px;
+            z-index: 10;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+        }
+        .skip:focus { top: 12px; }
+
+        .wrap { width: min(var(--measure), 100% - 32px); margin-inline: auto; }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 0;
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .crumbs { color: var(--faint); }
+        .crumbs a { color: var(--muted); text-decoration: none; }
+        .crumbs a:hover { color: var(--accent); }
+        .theme-toggle {
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--muted);
+            font: inherit;
+            cursor: pointer;
+        }
+        .theme-toggle:hover { border-color: var(--line-strong); color: var(--text); }
+        .topbar-tools { display: flex; flex-shrink: 0; align-items: center; gap: 8px; }
+        .topbar-tools > * { white-space: nowrap; }
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 6px 12px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .lang-switch:hover { border-color: var(--line-strong); color: var(--text); }
+
+        .hero { padding: 40px 0 32px; border-bottom: 1px solid var(--line); }
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--accent);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.08em;
+        }
+        h1 { margin: 0 0 20px; font-size: clamp(28px, 6vw, 44px); line-height: 1.3; letter-spacing: -0.02em; }
+        .answer { margin: 0; padding-left: 14px; border-left: 3px solid var(--accent); font-size: 19px; }
+
+        section { padding: 32px 0; }
+        h2 { margin: 0 0 12px; font-size: 22px; line-height: 1.4; }
+
+        .panel {
+            padding: 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+        }
+        .hint { margin: 0 0 16px; color: var(--muted); }
+        .demo label {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+        .demo input[type="range"] { width: 100%; min-height: 44px; margin: 4px 0; accent-color: var(--accent); }
+        .meter { height: 10px; overflow: hidden; border-radius: 999px; background: var(--panel-strong); }
+        .meter span { display: block; width: 0; height: 100%; background: var(--accent); transition: width 0.2s ease; }
+        .result { margin: 12px 0 0; font-family: var(--mono); font-size: 15px; }
+
+        .steps { margin: 0; padding-left: 1.4em; }
+        .steps li { margin: 8px 0; }
+        .steps li::marker { color: var(--accent); font-family: var(--mono); }
+
+        .note {
+            padding: 16px 20px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel-soft);
+        }
+        .note p { margin: 6px 0; }
+        .note strong { margin-right: 8px; color: var(--accent-warn); font-family: var(--mono); font-size: 13px; }
+        .note .fact strong { color: var(--accent-green); }
+
+        /* 확인됨 · 가설 · 모름 표시: <span class="tag known">확인됨</span> */
+        .tag {
+            display: inline-block;
+            padding: 4px 6px;
+            border: 1px solid currentColor;
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 12px;
+            line-height: 1;
+            vertical-align: 2px;
+        }
+        .tag.known { color: var(--accent-green); }
+        .tag.guess { color: var(--accent-warn); }
+        .tag.unknown { color: var(--muted); }
+
+        .links { margin: 0; padding-left: 1.2em; }
+        .links li { margin: 6px 0; }
+
+        .faq { display: grid; gap: 8px; }
+        .faq details { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+        .faq summary { min-height: 44px; padding: 11px 16px; font-weight: 600; cursor: pointer; }
+        .faq details[open] summary { border-bottom: 1px solid var(--line); }
+        .faq details p { margin: 0; padding: 12px 16px; }
+
+        /* 지식 지도: 페이지 맨 위, 이 글이 어느 분야에서 어떤 글과 이어지는지. 데이터는 System/지식 지도.md */
+        .kmap { margin: 0 0 28px; padding: 10px 14px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-soft); }
+        .kmap-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-label { color: var(--accent); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+        .kmap-graph { display: block; width: 100%; height: 0; margin: 0; overflow: visible; }
+        .kmap-graph.ready { margin: 8px 0 4px; }
+        .kmap-graph .node rect { fill: var(--panel); stroke: var(--line-strong); stroke-width: 1.2; }
+        .kmap-graph .node text { fill: var(--text); font-family: var(--sans); font-size: 13px; }
+        .kmap-graph .node .soon { fill: var(--muted); font-size: 11px; }
+        .kmap-graph .node.current rect { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+        .kmap-graph .node.current text { font-weight: 700; }
+        .kmap-graph .node.planned rect { fill: none; stroke-dasharray: 4 3; }
+        .kmap-graph .node.planned text { fill: var(--muted); }
+        .kmap-graph a.node { cursor: pointer; }
+        .kmap-graph a.node:hover rect { stroke: var(--accent); }
+        .kmap-graph .here { fill: var(--accent); font-family: var(--sans); font-size: 11px; font-weight: 600; }
+        .kmap-graph .edge { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+        .kmap-graph .edge.on { stroke: var(--accent); }
+        .kmap-graph .tip { fill: var(--line-strong); }
+        .kmap-graph .tip.on { fill: var(--accent); }
+        .kmap-text { margin: 0; color: var(--muted); font-size: 13px; }
+        .kmap-text a { color: var(--text); }
+
+        :root {
+            --rv-act: #afa9ec; --rv-act-soft: rgba(175, 169, 236, 0.14);
+            --rv-dsp: #5dcaa5; --rv-dsp-soft: rgba(93, 202, 165, 0.14);
+            --rv-hf: #f0997b; --rv-hf-soft: rgba(240, 153, 123, 0.14);
+        }
+        :root[data-theme="light"] {
+            --rv-act: #534ab7; --rv-act-soft: #eeedfe;
+            --rv-dsp: #0f6e56; --rv-dsp-soft: #e1f5ee;
+            --rv-hf: #993c1d; --rv-hf-soft: #faece7;
+        }
+        .rv-grid { display: grid; gap: 12px; }
+        .rv-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+        .rv-tabs [role="tab"] { font: inherit; font-size: 14px; font-weight: 600; line-height: 1.3; cursor: pointer; display: grid; gap: 2px; justify-items: center; padding: 8px 6px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--muted); }
+        .rv-tabs [role="tab"] small { font-family: var(--mono); font-size: 11px; font-weight: 400; color: var(--faint); }
+        .rv-tabs #rv-tab-tesla small { color: var(--rv-act); }
+        .rv-tabs [role="tab"][aria-selected="true"] { color: var(--text); border-color: var(--rv-act); background: var(--rv-act-soft); }
+        .rv-tabs [role="tab"]:hover { border-color: var(--line-strong); }
+        .rv-tabs [role="tab"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .rv-grid .card { background: var(--panel-soft); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+        .rv-grid .card.lead { border: 2px solid var(--rv-act); }
+        .rv-grid .card[hidden] { display: none; }
+        .rv-grid svg { width: 100%; max-width: 440px; justify-self: center; display: block; }
+        .rv-grid svg .fork { fill: var(--muted); }
+        .rv-grid .rv-toggle { font: inherit; font-size: 15px; cursor: pointer; border: 1px solid var(--line); background: var(--panel); color: var(--text); border-radius: var(--radius); padding: 8px 10px; }
+        .rv-grid .rv-toggle:hover { border-color: var(--line-strong); }
+        .rv-grid .rv-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .rv-grid .rv-toggle[aria-pressed="true"] { background: var(--rv-dsp-soft); border-color: var(--rv-dsp); }
+        .rv-grid .out { margin: 0; font-size: 14px; color: var(--muted); min-height: 4.8em; }
+        .rv-grid .badge { display: inline-block; font-size: 12px; line-height: 1.5; padding: 0 8px; border-radius: 999px; border: 1px solid; margin-right: 6px; vertical-align: 1px; }
+        .rv-grid .badge.same { color: var(--rv-act); border-color: var(--rv-act); }
+        .rv-grid .badge.chg { color: var(--rv-hf); border-color: var(--rv-hf); }
+        .rv-grid .trip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+        .rv-grid .trip .cell { position: relative; height: 18px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); overflow: hidden; }
+        .rv-grid .trip .cell i { position: absolute; inset: 0 50% 0 0; background: var(--rv-dsp-soft); box-shadow: inset 0 0 0 1px var(--rv-dsp); }
+        .rv-grid .trip-l { margin: 0; font-size: 13px; color: var(--muted); }
+        .rv-grid .trip-l b { color: var(--rv-dsp); font-weight: 600; }
+        .rv-grid svg text { font-family: var(--sans); font-size: 12px; dominant-baseline: central; text-anchor: middle; }
+        .rv-grid svg .t { font-size: 13px; font-weight: 600; }
+        .rv-grid svg .s { font-size: 11px; }
+        .rv-grid .n rect { stroke-width: 1; }
+        .rv-grid .plain rect { fill: var(--panel); stroke: var(--line-strong); } .rv-grid .plain text { fill: var(--text); }
+        .rv-grid .gry rect { fill: var(--panel-strong); stroke: var(--line-strong); } .rv-grid .gry text { fill: var(--text); }
+        .rv-grid .hf rect { fill: var(--rv-hf-soft); stroke: var(--rv-hf); } .rv-grid .hf text { fill: var(--rv-hf); }
+        .rv-grid .act rect { fill: var(--rv-act-soft); stroke: var(--rv-act); } .rv-grid .act text { fill: var(--rv-act); }
+        .rv-grid .dsp rect { fill: var(--rv-dsp-soft); stroke: var(--rv-dsp); } .rv-grid .dsp text { fill: var(--rv-dsp); }
+        .rv-grid .ln { fill: none; stroke-width: 1.5; }
+        .rv-grid .la { stroke: var(--rv-act); } .rv-grid .ld { stroke: var(--rv-dsp); } .rv-grid .lg { stroke: var(--muted); } .rv-grid .lc { stroke: var(--rv-hf); stroke-dasharray: 3 2; }
+        .rv-grid [data-role] { transition: opacity 0.35s; }
+        .rv-grid [data-role="alt"] { opacity: 0; }
+        .rv-grid .card.is-off [data-role="dsp"], .rv-grid .card.is-off [data-role="txt"] { opacity: 0.15; }
+        .rv-grid .card.is-off [data-role="alt"] { opacity: 1; }
+        .rv-grid .card.is-off.changes .actbox rect { stroke-dasharray: 4 3; }
+        .rv-src { margin: 14px 0 0; font-size: 13px; color: var(--faint); }
+        .steps li + li { margin-top: 10px; }
+        .steps b { display: block; }
+        .rv-close { margin: 14px 0 0; }
+        .note + .note { margin-top: 10px; }
+        @media (prefers-reduced-motion: reduce) { .rv-grid [data-role] { transition: none; } }
+        footer {
+            padding: 24px 0 48px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="wrap topbar">
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/en/">hughqlee.com</a> / <a href="/knowledge/en/">knowledge</a>
+        </nav>
+        <div class="topbar-tools">
+            <a class="lang-switch" href="/knowledge/fsd-v15-reality-view/" hreflang="ko" lang="ko">한국어</a>
+            <button id="theme-toggle" class="theme-toggle" type="button">light</button>
+        </div>
+    </header>
+
+    <main id="main" class="wrap">
+        <section class="hero">
+            <!-- 지식 지도: 데이터와 규칙은 System/지식 지도.md. 한 줄 글은 스크립트 없이도 읽히는 같은 내용이다.
+                 이 글: 자율주행 분야의 첫 글 · 먼저 읽을 글과 이어서 읽을 글은 아직 없다 -->
+            <nav class="kmap" aria-label="Knowledge map" data-current="fsd-v15-reality-view">
+                <p class="kmap-head"><span class="kmap-label">KNOWLEDGE MAP</span><span class="kmap-path">Robotics and automation › Autonomous driving</span></p>
+                <svg class="kmap-graph" aria-hidden="true" focusable="false"></svg>
+                <p class="kmap-text">This is the first page in this field. There is nothing to read before or after it yet.</p>
+            </nav>
+            <p class="eyebrow">KNOWLEDGE</p>
+            <h1>Uncompromising engineering: FSD v15 Reality View</h1>
+            <p class="lede">On 2026-11-21, FSD v15 replaced the in-car screen with Reality View. The scene looks filmed from the real road, but it is not camera video: the driving AI draws it. Ashok Elluswamy, who leads Tesla AI, said the view is not only there to look good but shows what the car intends, where it will turn and where it will stop. How did Tesla draw a new view without taking compute away from driving?</p>
+            <p class="answer">It keeps the driving path as it is and sets a 1B Diffusion head beside it on the spare compute (half of the three TRIPs on SoC B), so it gains a new view without taking anything from driving.</p>
+        </section>
+
+        <section aria-labelledby="try-title">
+            <h2 id="try-title">Turn off the view</h2>
+            <div class="panel">
+                <p class="hint">Turn off the view in three driving AIs. Set beside the other two models, Tesla's structure is plain to see.</p>
+                <div class="rv-grid">
+                <div class="rv-tabs" role="tablist" aria-label="Three driving AIs">
+                <button type="button" role="tab" id="rv-tab-tesla" aria-controls="rv-panel-tesla" aria-selected="true">Tesla FSD v15<small>Lead</small></button>
+                <button type="button" role="tab" id="rv-tab-qwen" aria-controls="rv-panel-qwen" aria-selected="false" tabindex="-1">Qwen-Drive-1.0<small>Comparison</small></button>
+                <button type="button" role="tab" id="rv-tab-alpamayo" aria-controls="rv-panel-alpamayo" aria-selected="false" tabindex="-1">Alpamayo 1<small>Comparison</small></button>
+                </div>
+                <div class="card lead" role="tabpanel" id="rv-panel-tesla" aria-labelledby="rv-tab-tesla" data-key="tesla">
+                <svg viewBox="12 0 316 230" role="img" aria-labelledby="rv-t-t"><title id="rv-t-t">Tesla: the 3B model (action) and the 1B Diffusion model (view) read one UVE output side by side</title>
+                <defs><marker id="rv-m-t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+                <g class="n plain"><rect x="95" y="6" width="150" height="28" rx="6"/><text x="170" y="20">Camera video</text></g>
+                <line class="ln lg" x1="170" y1="34" x2="170" y2="46" marker-end="url(#rv-m-t)"/>
+                <g class="n plain"><rect x="95" y="50" width="150" height="30" rx="6"/><text x="170" y="65">UVE · vision encoder</text></g>
+                <line class="ln lg" x1="170" y1="80" x2="170" y2="102" marker-end="url(#rv-m-t)"/>
+                <g class="n hf"><rect x="85" y="106" width="170" height="30" rx="6"/><text x="170" y="121">Hidden Feature · UVE output</text></g>
+                <path class="ln lg" d="M170 136 V152"/><circle class="fork" cx="170" cy="152" r="3"/>
+                <path class="ln la" d="M170 152 H90 V172" marker-end="url(#rv-m-t)"/>
+                <g data-role="dsp">
+                <path class="ln ld" d="M170 152 H250 V172" marker-end="url(#rv-m-t)"/>
+                <g class="n dsp"><rect x="177" y="176" width="146" height="46" rx="8"/><text class="t" x="250" y="192">View · real world</text><text class="s" x="250" y="210">1B Diffusion model</text></g>
+                </g>
+                <g class="n act actbox"><rect x="17" y="176" width="146" height="46" rx="8"/><text class="t" x="90" y="192">Action · steer, accel</text><text class="s" x="90" y="210">3B model</text></g>
+                </svg>
+                <div class="trip" role="img" aria-label="Half of one of the three TRIP compute engines on SoC B goes to the view"><span class="cell"></span><span class="cell"></span><span class="cell"><i data-role="dsp"></i></span></div>
+                <p class="trip-l">Three TRIPs on SoC B · <b>half of one for the view</b></p>
+                <button type="button" class="rv-toggle" aria-pressed="false">Turn off the real world</button>
+                <p class="out" aria-live="polite">Driving (the 3B model) and the view (the 1B Diffusion model) share one UVE output.</p>
+                </div>
+                <div class="card" role="tabpanel" id="rv-panel-qwen" aria-labelledby="rv-tab-qwen" data-key="qwen">
+                <svg viewBox="12 0 316 230" role="img" aria-labelledby="rv-q-t"><title id="rv-q-t">Qwen-Drive: the action reads ②, the view reads ① and ③, side by side</title>
+                <defs><marker id="rv-m-q" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+                <g class="n plain"><rect x="95" y="6" width="150" height="28" rx="6"/><text x="170" y="20">Camera video</text></g>
+                <line class="ln lg" x1="170" y1="34" x2="170" y2="46" marker-end="url(#rv-m-q)"/>
+                <g class="n hf"><rect x="95" y="50" width="150" height="30" rx="6"/><text x="170" y="65">① Encoder output</text></g>
+                <line class="ln lg" x1="170" y1="80" x2="170" y2="86" marker-end="url(#rv-m-q)"/>
+                <g class="n hf"><rect x="95" y="90" width="150" height="30" rx="6"/><text x="170" y="105">② K/V cache</text></g>
+                <line class="ln lg" x1="170" y1="120" x2="170" y2="126" marker-end="url(#rv-m-q)"/>
+                <g class="n hf"><rect x="95" y="130" width="150" height="30" rx="6"/><text x="170" y="145">③ VLM output</text></g>
+                <path class="ln la" d="M95 105 H60 V172" marker-end="url(#rv-m-q)"/>
+                <g data-role="dsp">
+                <path class="ln ld" d="M245 65 H280 V172" marker-end="url(#rv-m-q)"/>
+                <path class="ln ld" d="M245 145 H280"/>
+                <g class="n dsp"><rect x="177" y="176" width="146" height="46" rx="8"/><text class="t" x="250" y="192">View · 3D boxes, occ.</text><text class="s" x="250" y="210">BEV perception head</text></g>
+                </g>
+                <g class="n act actbox"><rect x="17" y="176" width="146" height="46" rx="8"/><text class="t" x="90" y="192">Action · 50 waypoints</text><text class="s" x="90" y="210">1.1B Planning Expert</text></g>
+                </svg>
+                <button type="button" class="rv-toggle" aria-pressed="false">Turn off the BEV head</button>
+                <p class="out" aria-live="polite">The action reads ② (the K/V cache); the view reads ① and ③.</p>
+                </div>
+                <div class="card" role="tabpanel" id="rv-panel-alpamayo" aria-labelledby="rv-tab-alpamayo" data-key="alpamayo">
+                <svg viewBox="12 0 316 230" role="img" aria-labelledby="rv-a-t"><title id="rv-a-t">Alpamayo: the reasoning text piles up in ② and feeds the action, and the same text is the view</title>
+                <defs><marker id="rv-m-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+                <g class="n plain"><rect x="95" y="6" width="150" height="28" rx="6"/><text x="170" y="20">Camera video</text></g>
+                <line class="ln lg" x1="170" y1="34" x2="170" y2="46" marker-end="url(#rv-m-a)"/>
+                <g class="n hf"><rect x="95" y="50" width="150" height="30" rx="6"/><text x="170" y="65">① KV cache (prefill)</text></g>
+                <g data-role="txt">
+                <line class="ln lg" x1="170" y1="80" x2="170" y2="86" marker-end="url(#rv-m-a)"/>
+                <g class="n gry"><rect x="95" y="90" width="150" height="30" rx="6"/><text x="170" y="105">Reasoning text</text></g>
+                <line class="ln lc" x1="170" y1="120" x2="170" y2="126" marker-end="url(#rv-m-a)"/>
+                <g class="n hf"><rect x="95" y="130" width="150" height="30" rx="6"/><text x="170" y="145">② KV cache + text</text></g>
+                <path class="ln la" d="M170 160 V166 H90 V172" marker-end="url(#rv-m-a)"/>
+                </g>
+                <g data-role="dsp">
+                <path class="ln ld" d="M245 105 H280 V172" marker-end="url(#rv-m-a)"/>
+                <g class="n dsp"><rect x="177" y="176" width="146" height="46" rx="8"/><text class="t" x="250" y="192">View · reasoning text</text><text class="s" x="250" y="210">No 3D view</text></g>
+                </g>
+                <path class="ln la" data-role="alt" stroke-dasharray="4 3" d="M95 65 H60 V172" marker-end="url(#rv-m-a)"/>
+                <g class="n act actbox"><rect x="17" y="176" width="146" height="46" rx="8"/><text class="t" x="90" y="192">Action · 64 waypoints</text><text class="s" x="90" y="210">2.3B Action Expert</text></g>
+                </svg>
+                <button type="button" class="rv-toggle" aria-pressed="false">Remove the reasoning text</button>
+                <p class="out" aria-live="polite">The action reads ②, which holds the reasoning text too.</p>
+                </div>
+                </div>
+                <p class="rv-src">Sources: two replies by Musk on X (2026-11-22), the Qwen-Drive-1.0 paper §2.1, the Alpamayo-R1 paper §3.2.2 and §6.2 Table 8</p>
+            </div>
+        </section>
+        <script type="application/json" id="rv-data">{"cards":{"tesla":{"on":"Turn off the real world","back":"Turn back on","changes":false,"idle":"Driving (the 3B model) and the view (the 1B Diffusion model) share one UVE output.","off":"The 3B model reads only the UVE output. The half TRIP that drew the view sits idle."},"qwen":{"on":"Turn off the BEV head","back":"Turn back on","changes":false,"idle":"The action reads ② (the K/V cache); the view reads ① and ③.","off":"The Planning Expert does not read the BEV output. With the view off, it still reads the same ②."},"alpamayo":{"on":"Remove the reasoning text","back":"Put it back","changes":true,"idle":"The action reads ②, which holds the reasoning text too.","off":"Across 75 hard scenarios, a model trained to output only a trajectory, with no text, came too close to another road user in 17% of them. The model that writes the text did so in 11%."}},"badge":{"same":"Action unchanged","chg":"Action changes"}}</script>
+
+        <section aria-labelledby="how-title">
+            <h2 id="how-title">How it works</h2>
+            <ol class="steps">
+                <li><b>Look once, use it twice</b>Tesla reads the camera video once with its vision encoder (UVE) and makes a Hidden Feature: a bundle of numbers inside the model that stands for the images. The 3B model that drives and the 1B Diffusion model that draws the view both read it.</li>
+                <li><b>The view is a branch beside driving</b>The view does not pass through the 3B model, so turning it off leaves what driving reads unchanged. The other two models show the difference. In Qwen-Drive the view (a BEV perception head, a map seen from above) is also a branch beside driving, but it reads separate values from before the language model and after it. In Alpamayo the view (the text that gives the reasons for its decision) sits in front of driving, so removing the text changes how it drives. Across 75 hard scenarios in a simulator, a model trained to output only a trajectory, with no text, came too close to another road user in 17% of them. The model that writes the text did so in 11%.</li>
+                <li><b>It draws with the spare compute</b>The view gets the compute that is left over. According to Musk, after a small decoder moved into the chip's fast memory (SRAM), only half of one of the three compute engines (TRIPs) on the second chip (SoC B) was left. The 1B Diffusion model draws with that half. It does not start from scratch each time: it adds noise to the previous view, redraws it as the current one, and puts out 8 frames at a time (36 fps).</li>
+            </ol>
+            <p class="rv-close">A new view was gained, and driving's share was left alone. In the same v15, Tesla said its handling of safety-critical cases got 25 times better, but it did not credit that to the design of the view.</p>
+        </section>
+
+        <section aria-labelledby="myth-title">
+            <h2 id="myth-title">Common misconceptions</h2>
+            <div class="note">
+                <p><strong>Misconception</strong>Reality View spreads the camera video out by depth and paints it with color.</p>
+                <p class="fact"><strong>In fact</strong>A 1B diffusion model draws it. The video maker who imitated that depth approach on a MacBook also said it differs from Tesla's.</p>
+            </div>
+            <div class="note">
+                <p><strong>Misconception</strong>Tesla made the view lighter and moved the saved compute to driving.</p>
+                <p class="fact"><strong>In fact</strong>Musk describes the reverse order: the half that was left went to the view. He did not say whether it uses less compute than the old view.</p>
+            </div>
+        </section>
+
+        <section id="faq" aria-labelledby="faq-title">
+            <h2 id="faq-title">Frequently asked questions</h2>
+            <div class="faq">
+                <details>
+                    <summary>What is Tesla FSD v15 Reality View?</summary>
+                    <p>It is the new in-car screen of FSD v15, which began rolling out on 2026-11-21. It does not show the camera video as it is: a diffusion model of about 1B parameters takes the visual features of the driving model and draws a realistic scene. Arrows for the turns ahead and pins for the parking spot also show what the car intends to do.</p>
+                </details>
+                <details>
+                    <summary>What model draws Reality View?</summary>
+                    <p>According to Musk, a conditional mean-flow (diffusion) model of about 1B parameters. It branches off the same UVE features that feed the 3B model producing the driving actions, adds noise to the previous view and redraws it as the current one, and puts out 8 frames at a time (36 fps).</p>
+                </details>
+                <details>
+                    <summary>Does Reality View take compute away from FSD driving?</summary>
+                    <p>According to Musk, after a small decoder moved into SRAM only half of one of the three TRIPs on SoC B was left, and Reality View is drawn with that remainder. The branch that draws the view does not feed into the 3B model that produces the driving actions.</p>
+                </details>
+                <details>
+                    <summary>How do Qwen-Drive and Alpamayo make their view?</summary>
+                    <p>In Qwen-Drive-1.0 a BEV perception head reads the features before and after the language model and draws 3D boxes, occupancy, and a map, while a Planning Expert that reads the language model's K/V cache produces the driving plan. Alpamayo writes its reasoning as text instead of a 3D view, and its Action Expert reads that text too before producing a trajectory.</p>
+                </details>
+            </div>
+        </section>
+
+        <section aria-labelledby="more-title">
+            <h2 id="more-title">Further reading</h2>
+            <ul class="links">
+                <li><a href="https://x.com/Tesla/status/2124222447855743019">Tesla, FSD v15 announcement (X, 2026-11-21)</a></li>
+                <li><a href="https://x.com/aelluswamy/status/2124229978560835880">Ashok Elluswamy, introducing Reality View (X, 2026-11-21)</a></li>
+                <li><a href="https://x.com/elonmusk/status/2124458557525397780">Elon Musk, how Reality View is built (X, 2026-11-22)</a></li>
+                <li><a href="https://x.com/elonmusk/status/2124459444620628193">Elon Musk, the compute left for Reality View (X, 2026-11-22)</a></li>
+                <li><a href="https://arxiv.org/abs/2609.00111">Qwen-Drive-1.0 paper (arXiv 2609.00111)</a></li>
+                <li><a href="https://arxiv.org/abs/2511.00088">Alpamayo-R1 paper (arXiv 2511.00088)</a></li>
+                <li><a href="https://youtu.be/voWf5jnca4s">Drive Tech Odyssey, "I built Tesla FSD v15 Reality View myself on a MacBook" (YouTube, in Korean, 2026-11-23)</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="wrap">
+        Last updated <time datetime="2026-11-24">2026-11-24</time> · <a href="/en/">Hugh Q Lee</a> · Translated from the <a href="/knowledge/fsd-v15-reality-view/" hreflang="ko">Korean original</a>
+    </footer>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var toggle = document.getElementById("theme-toggle");
+            function render() {
+                var dark = root.dataset.theme !== "light";
+                toggle.textContent = dark ? "light" : "dark";
+                toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+            }
+            toggle.addEventListener("click", function () {
+                var next = root.dataset.theme === "light" ? "dark" : "light";
+                root.dataset.theme = next;
+                try {
+                    localStorage.setItem("theme", next);
+                } catch (error) {
+                    // 저장할 수 없어도 이번 방문에서는 전환된다.
+                }
+                render();
+            });
+            render();
+        })();
+
+        // 핵심 인터랙션: 화면을 꺼 보기. 탭으로 모델을 고르고, 화면 가지를 끄면 행동이 그대로인지 바뀌는지 보인다.
+        // 스크립트가 없으면 세 패널이 모두 펼쳐져 읽힌다.
+        (function () {
+            var data = JSON.parse(document.getElementById("rv-data").textContent);
+            var tabs = Array.prototype.slice.call(document.querySelectorAll('.rv-tabs [role="tab"]'));
+            function select(tab, focus) {
+                tabs.forEach(function (t) {
+                    var on = t === tab;
+                    t.setAttribute("aria-selected", String(on));
+                    t.tabIndex = on ? 0 : -1;
+                    document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+                });
+                if (focus) tab.focus();
+            }
+            tabs.forEach(function (tab, i) {
+                tab.addEventListener("click", function () { select(tab, false); });
+                tab.addEventListener("keydown", function (e) {
+                    var j = e.key === "ArrowRight" ? (i + 1) % tabs.length
+                        : e.key === "ArrowLeft" ? (i - 1 + tabs.length) % tabs.length
+                        : e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1 : -1;
+                    if (j < 0) return;
+                    e.preventDefault();
+                    select(tabs[j], true);
+                });
+            });
+            select(tabs[0], false);
+            Array.prototype.forEach.call(document.querySelectorAll(".rv-grid .card"), function (card) {
+                var m = data.cards[card.getAttribute("data-key")];
+                var btn = card.querySelector(".rv-toggle");
+                var out = card.querySelector(".out");
+                if (m.changes) card.classList.add("changes");
+                function show(off) {
+                    card.classList.toggle("is-off", off);
+                    btn.setAttribute("aria-pressed", String(off));
+                    btn.textContent = off ? m.back : m.on;
+                    out.textContent = "";
+                    if (off) {
+                        var b = document.createElement("span");
+                        b.className = "badge " + (m.changes ? "chg" : "same");
+                        b.textContent = m.changes ? data.badge.chg : data.badge.same;
+                        out.appendChild(b);
+                    }
+                    out.appendChild(document.createTextNode(off ? m.off : m.idle));
+                }
+                btn.addEventListener("click", function () { show(btn.getAttribute("aria-pressed") !== "true"); });
+            });
+        })();
+    </script>
+    <script type="application/json" id="knowledge-map">{"updated":"2026-11-24","domains":[{"id":"cv","name":"컴퓨터 비전","name_en":"Computer vision"},{"id":"det","name":"물체 탐지","name_en":"Object detection","parent":"cv"},{"id":"mic","name":"현미경 이미징","name_en":"Microscope imaging"},{"id":"ml","name":"기계 학습","name_en":"Machine learning"},{"id":"llm","name":"언어 모델","name_en":"Language models","parent":"ml"},{"id":"rob","name":"로봇·자동화","name_en":"Robotics and automation"},{"id":"ct","name":"X선·CT 영상","name_en":"X-ray and CT imaging"},{"id":"st","name":"컴퓨터·저장장치","name_en":"Computer storage"},{"id":"wl","name":"무선 통신","name_en":"Wireless communication"},{"id":"cg","name":"컴퓨터 그래픽스","name_en":"Computer graphics"},{"id":"pl","name":"프로그래밍 언어","name_en":"Programming languages"},{"id":"se","name":"소프트웨어 공학","name_en":"Software engineering"},{"id":"ad","name":"자율주행","name_en":"Autonomous driving","parent":"rob"}],"nodes":[{"id":"iou-nms","title":"IOU·NMS","title_en":"IOU & NMS","domain":"det","status":"published","href":"../iou-nms/","summary":"두 박스가 얼마나 겹치는지 재고, 한 물체에 박스를 하나만 남기기","summary_en":"Measure how much two boxes overlap, and keep one box per object"},{"id":"yolo-v1","title":"YOLOv1","title_en":"YOLOv1","domain":"det","status":"published","href":"../yolo-v1/","summary":"사진을 7×7 칸으로 나누고 신경망을 한 번만 통과시켜 모든 물체를 찾기","summary_en":"Split the image into a 7×7 grid and find every object in one pass of the network"},{"id":"yolo-v2","title":"YOLOv2","title_en":"YOLOv2","domain":"det","status":"published","href":"../yolo-v2/","summary":"칸마다 앵커 박스 5개로 물체를 나눠 맡고, 패스스루 층으로 세밀한 특징을 더하기","summary_en":"Share the objects among five anchor boxes per cell, and add fine detail with a passthrough layer"},{"id":"yolo-v3","title":"YOLOv3","title_en":"YOLOv3","domain":"det","status":"published","href":"../yolo-v3/","summary":"세 크기의 격자에 앵커 9개를 나눠 크고 작은 물체를 맡기고, 정답마다 앵커 하나에만 물체 있음을 가르치기","summary_en":"Spread nine anchors over grids of three sizes to cover large and small objects, and teach only one anchor per object that it holds an object"},{"id":"map","title":"mAP","title_en":"mAP","domain":"det","status":"planned","summary":"탐지기 전체의 성적 매기기","summary_en":"Score a detector as a whole"},{"id":"phase-contrast-microscopy","title":"위상차 현미경","title_en":"Phase contrast microscopy","domain":"mic","status":"published","href":"../phase-contrast-microscopy/","summary":"투명한 시료가 늦춘 빛을 위상판으로 밝기의 차이로 바꾸기","summary_en":"Turn the delay a transparent specimen gives light into differences in brightness with a phase plate"},{"id":"train-val-calib-test","title":"train·val·calib·test","title_en":"train/val/calib/test","domain":"ml","status":"published","href":"../train-val-calib-test/","summary":"학습이 끝난 뒤 데이터로 정하는 온도 T와 threshold를 위해 칸 하나를 더 두기","summary_en":"Keep one more split for what is fitted after training: the temperature T and the threshold"},{"id":"error-backpropagation","title":"역전파","title_en":"Backpropagation","domain":"ml","status":"published","href":"../error-backpropagation/","summary":"출력의 오차를 뒤로 전해 다층 퍼셉트론의 가운데 층까지 고치기","summary_en":"Pass the output's error backward to correct the middle layer of a multilayer perceptron too"},{"id":"neural-network-sleep","title":"신경망의 잠","title_en":"Sleep for neural networks","domain":"ml","status":"published","href":"../neural-network-sleep/","summary":"학습을 멈추고 잡음을 흘려 연결이 앞뒤 뉴런만 보고 바뀌게 하면, 잊은 옛 과제가 돌아오기도 한다","summary_en":"Stop training and run noise through the network so each connection changes by its two neurons alone, and a forgotten old task can come back"},{"id":"robot-types","title":"로봇의 종류","title_en":"Robot types","domain":"rob","status":"published","href":"../robot-types/","summary":"관절을 잇는 구조가 손끝의 자세를 정하고, 그 자세가 실험실에서 로봇의 쓰임을 정한다","summary_en":"How the joints are joined sets the hand's posture, and the posture sets what a robot does in the lab"},{"id":"hydraulic-pneumatic-microinjector","title":"마이크로인젝터","title_en":"Microinjectors","domain":"rob","status":"published","href":"../hydraulic-pneumatic-microinjector/","summary":"공기로 미는 공압식은 압력을, 기름으로 미는 유압식은 부피를 정한다","summary_en":"A pneumatic injector pushes with air and sets the pressure; a hydraulic one pushes with oil and sets the volume"},{"id":"kimi-k3-1-pro","title":"Kimi K3.1 Pro","title_en":"Kimi K3.1 Pro","domain":"llm","status":"published","href":"../kimi-k3-1-pro/","summary":"몸통은 그대로 두고 사후 학습으로 AA 지수를 44에서 55로 올리기","summary_en":"Raise the AA index from 44 to 55 with post-training, on the same base model"},{"id":"pretraining-posttraining-inference","title":"사전 학습·사후 학습·추론","title_en":"Pre-training, post-training, inference","domain":"llm","status":"published","href":"../pretraining-posttraining-inference/","summary":"사전 학습과 사후 학습은 가중치를 바꾸고, 추론은 가중치를 그대로 둔 채 맥락으로 답한다","summary_en":"Pre-training and post-training change the weights; inference leaves them as they are and answers from the context"},{"id":"xray-ct-registration","title":"X선–CT 정합","title_en":"X-ray to CT registration","domain":"ct","status":"published","href":"../xray-ct-registration/","summary":"엑스레이 필름 한 장은 CT가 찍는 그림자의 한 방향이라서, CT에서 가상 필름을 계산해 필름에 맞출 수 있다","summary_en":"An X-ray film is one view of what a CT scan records, so a virtual film computed from the CT can be matched to it"},{"id":"format-keeps-data","title":"포맷과 데이터 복구","title_en":"Format and data recovery","domain":"st","status":"published","href":"../format-keeps-data/","summary":"포맷과 플래시가 지우는 것은 지도이고, 덮어쓰지 않은 본문은 그대로라서 되살릴 수 있다","summary_en":"Formatting and flashing erase the map, and the data that was not overwritten stays, so it can be recovered"},{"id":"wifi-frequency-bands","title":"와이파이 주파수 대역","title_en":"Wi-Fi frequency bands","domain":"wl","status":"published","href":"../wifi-frequency-bands/","summary":"높은 대역일수록 길이 넓어 빠르지만, 받는 신호가 약하고 콘크리트 벽에서 더 잃는다","summary_en":"Higher bands have wider channels and are faster, but the received signal is weaker and concrete walls take more of it"},{"id":"pixel-art-gaussian-splats","title":"픽셀 아트 가우시안 스플랫","title_en":"Pixel-art Gaussian splats","domain":"cg","status":"published","href":"../pixel-art-gaussian-splats/","summary":"3D 디자인하는 방법 중 하나다. 간단하고 구조적이라 AI가 다루기 용이하다","summary_en":"One way to design in 3D; simple and structured, so AI handles it easily"},{"id":"rust-compiler-ai-coding","title":"Rust 컴파일러와 AI 코딩","title_en":"The Rust compiler and AI coding","domain":"pl","status":"published","href":"../rust-compiler-ai-coding/","summary":"Rust 컴파일러는 AI가 놓친 실수를 실행 전에 막고, 고칠 곳을 적어 준다","summary_en":"The Rust compiler stops the mistakes AI misses before the code runs, and writes down what to fix"},{"id":"inner-outer-loop","title":"inner loop와 outer loop","title_en":"Inner loop and outer loop","domain":"se","status":"published","href":"../inner-outer-loop/","summary":"outer loop를 자동화해 폭증한 일은 견고한 inner loop, 그중에서도 Codebase가 받아 낸다","summary_en":"When an automated outer loop floods in work, a solid inner loop, above all the codebase, takes it in"},{"id":"fsd-v15-reality-view","title":"FSD v15 Reality View","title_en":"FSD v15 Reality View","domain":"ad","status":"published","href":"../fsd-v15-reality-view/","summary":"남은 연산에 1B 확산 헤드를 나란히 붙여, 운전을 깎지 않고 화면을 새로 얻었다","summary_en":"A 1B diffusion head on spare compute, set beside the driving path, adds a new view without taking from driving"}],"edges":[{"from":"iou-nms","to":"yolo-v1"},{"from":"iou-nms","to":"map"},{"from":"yolo-v1","to":"yolo-v2"},{"from":"yolo-v2","to":"yolo-v3"},{"from":"error-backpropagation","to":"pretraining-posttraining-inference"},{"from":"error-backpropagation","to":"neural-network-sleep"},{"from":"rust-compiler-ai-coding","to":"inner-outer-loop"}]}</script>
+    <script>
+        // 지식 지도: 이 글이 어느 분야에서 어떤 글과 이어지는지(먼저 → 다음) 그린다.
+        // 데이터는 System/지식 지도.md의 JSON이고, 모든 페이지가 같은 사본을 가진다. 그래프는 눈으로 보는 용이고,
+        // 같은 내용이 아래 한 줄 글(.kmap-text)에 링크로 있어 키보드·화면 낭독기·스크립트 없는 크롤러도 읽는다.
+        (function () {
+            "use strict";
+            var nav = document.querySelector(".kmap");
+            var source = document.getElementById("knowledge-map");
+            if (!nav || !source) return;
+            var MAP = JSON.parse(source.textContent);
+            MAP.nodes.forEach(function (n) { n.title = n.title_en || n.title; n.summary = n.summary_en || n.summary; });
+            var svg = nav.querySelector(".kmap-graph");
+            var current = nav.getAttribute("data-current");
+            var NS = "http://www.w3.org/2000/svg";
+            var byId = {};
+            MAP.nodes.forEach(function (n) { byId[n.id] = n; });
+            var me = byId[current];
+            if (!me || !svg) return;
+            function el(tag, attrs, parent) {
+                var e = document.createElementNS(NS, tag);
+                Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+                if (parent) parent.appendChild(e);
+                return e;
+            }
+            function touches(e, id) { return e.from === id || e.to === id; }
+            // This page's field, plus any page directly linked to this one.
+            var shown = MAP.nodes.filter(function (n) {
+                return n.domain === me.domain || MAP.edges.some(function (e) { return touches(e, current) && touches(e, n.id); });
+            });
+            var ids = shown.map(function (n) { return n.id; });
+            var edges = MAP.edges.filter(function (e) { return ids.indexOf(e.from) >= 0 && ids.indexOf(e.to) >= 0; });
+            // Column = the longest chain of "read first" before a page.
+            var rank = {};
+            function rankOf(id, trail) {
+                if (rank[id] != null) return rank[id];
+                if (trail.indexOf(id) >= 0) return 0;
+                var r = 0;
+                edges.forEach(function (e) { if (e.to === id) r = Math.max(r, rankOf(e.from, trail.concat(id)) + 1); });
+                rank[id] = r;
+                return r;
+            }
+            ids.forEach(function (id) { rankOf(id, []); });
+            var depth = Math.max.apply(null, ids.map(function (id) { return rank[id]; })) + 1;
+            var layers = [];
+            for (var r = 0; r < depth; r++) layers.push(shown.filter(function (n) { return rank[n.id] === r; }));
+            // Within a column, follow the order of the pages they come from (fewer crossings).
+            for (var q = 1; q < depth; q++) {
+                layers[q].sort(function (a, b) {
+                    function at(n) {
+                        var from = edges.filter(function (e) { return e.to === n.id; }).map(function (e) { return layers[q - 1].indexOf(byId[e.from]); })
+                            .filter(function (i) { return i >= 0; });
+                        return from.length ? from.reduce(function (s, i) { return s + i; }, 0) / from.length : 0;
+                    }
+                    return at(a) - at(b);
+                });
+            }
+            function draw() {
+                while (svg.firstChild) svg.removeChild(svg.firstChild);
+                var W = Math.round(Math.max(260, svg.getBoundingClientRect().width || 600));
+                var vertical = W < 460;
+                var widest = Math.max.apply(null, layers.map(function (l) { return l.length; }));
+                // Narrow screens stack the columns as rows; the row with this page gets room for its "지금 이 글" label.
+                var hasMe = layers.map(function (l) { return l.indexOf(me) >= 0; });
+                var rowY = [], y = 20;
+                for (var r = 0; r < depth; r++) { rowY.push(y); y += 62 + (hasMe[r] ? 14 : 0); }
+                var H = vertical ? rowY[depth - 1] + 21 + (hasMe[depth - 1] ? 16 : 0) : Math.max(1, widest) * 48 + 20;
+                svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+                svg.style.height = H + "px";
+                svg.classList.add("ready");
+                var defs = el("defs", {}, svg);
+                ["", "on"].forEach(function (kind) {
+                    var m = el("marker", { id: "kmap-tip" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+                    el("path", { d: "M0,0 L10,5 L0,10 z", "class": "tip" + (kind ? " on" : "") }, m);
+                });
+                // Sizes: measure each label once.
+                var size = {};
+                shown.forEach(function (n) {
+                    var t = el("text", { x: 0, y: -100, "class": "node" }, svg);
+                    t.textContent = n.title;
+                    t.setAttribute("style", "font-size: 13px; font-weight: 700;");
+                    var w = t.getComputedTextLength ? t.getComputedTextLength() : n.title.length * 8;
+                    svg.removeChild(t);
+                    size[n.id] = { w: Math.max(66, w + (n.status === "planned" ? 100 : 28)), h: 30 };
+                });
+                var pos = {};
+                layers.forEach(function (layer, r) {
+                    layer.forEach(function (n, i) {
+                        pos[n.id] = vertical
+                            ? { x: W * (i + 0.5) / layer.length, y: rowY[r] }
+                            : { x: W * (r + 0.5) / depth, y: H * (i + 0.5) / layer.length - (n.id === current ? 6 : 0) };
+                    });
+                });
+                edges.forEach(function (e) {
+                    var a = pos[e.from], b = pos[e.to], sa = size[e.from], sb = size[e.to];
+                    var on = touches(e, current) ? " on" : "";
+                    var d;
+                    if (vertical) {
+                        var y1 = a.y + sa.h / 2 + (e.from === current ? 18 : 0), y2 = b.y - sb.h / 2 - 3, my = (y1 + y2) / 2;
+                        d = "M" + a.x + "," + y1 + " C" + a.x + "," + my + " " + b.x + "," + my + " " + b.x + "," + y2;
+                    } else {
+                        var x1 = a.x + sa.w / 2, x2 = b.x - sb.w / 2 - 3, mx = (x1 + x2) / 2;
+                        d = "M" + x1 + "," + a.y + " C" + mx + "," + a.y + " " + mx + "," + b.y + " " + x2 + "," + b.y;
+                    }
+                    el("path", { d: d, "class": "edge" + on, "marker-end": "url(#kmap-tip" + on.trim() + ")" }, svg);
+                });
+                shown.forEach(function (n) {
+                    var p = pos[n.id], s = size[n.id];
+                    var cls = "node" + (n.id === current ? " current" : "") + (n.status === "planned" ? " planned" : "");
+                    var link = n.id !== current && n.status !== "planned" && n.href;
+                    var g = link ? el("a", { href: n.href, "class": cls, tabindex: "-1" }, svg) : el("g", { "class": cls }, svg);
+                    el("title", {}, g).textContent = n.title + (n.status === "planned" ? " (coming soon)" : "") + ": " + n.summary;
+                    el("rect", { x: p.x - s.w / 2, y: p.y - s.h / 2, width: s.w, height: s.h, rx: s.h / 2 }, g);
+                    var t = el("text", { x: p.x, y: p.y + 4.5, "text-anchor": "middle" }, g);
+                    t.textContent = n.title;
+                    if (n.status === "planned") {
+                        var soon = el("tspan", { "class": "soon", dx: 6 }, t);
+                        soon.textContent = "coming soon";
+                    }
+                    if (n.id === current) el("text", { x: p.x, y: p.y + s.h / 2 + 12, "text-anchor": "middle", "class": "here" }, svg).textContent = "you are here";
+                });
+            }
+            draw();
+            if ("ResizeObserver" in window) {
+                var last = 0;
+                new ResizeObserver(function () {
+                    var w = Math.round(svg.getBoundingClientRect().width);
+                    if (w && w !== last) { last = w; draw(); }
+                }).observe(svg);
+            }
+        })();
+    </script>
+</body>
+</html>
